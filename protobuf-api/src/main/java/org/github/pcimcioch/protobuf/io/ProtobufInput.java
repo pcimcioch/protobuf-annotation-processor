@@ -69,4 +69,11 @@ public class ProtobufInput {
 
         return result;
     }
+
+    // TODO tests
+    public void skip(long bytes) throws IOException {
+        for (long i = 0; i < bytes; i++) {
+            input.readByte();
+        }
+    }
 }

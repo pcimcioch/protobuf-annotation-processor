@@ -10,6 +10,9 @@ import org.jboss.forge.roaster.model.source.JavaSource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.github.pcimcioch.protobuf.source.MethodBody.body;
+import static org.github.pcimcioch.protobuf.source.MethodBody.param;
+
 // TODO add tests for serialization and deserialization compatibility (object serialized with encodingMethod should be deserializable with decodingMethod)
 public class SourceFactory {
 
@@ -75,12 +78,14 @@ public class SourceFactory {
     }
 
     private void addBuilderMethod(JavaRecordSource messageRecord, MessageDefinition message) {
-        String body = "return new " + message.builderSimpleName() + "();";
+        MethodBody body = body(
+                "return new ${BuilderType}();",
+                param("BuilderType", message.builderSimpleName()));
 
         messageRecord.addMethod()
                 .setPublic()
                 .setName("builder")
                 .setReturnType(message.builderSimpleName())
-                .setBody(body);
+                .setBody(body.toString());
     }
 }

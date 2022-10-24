@@ -7,6 +7,10 @@ import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
+
+import static org.github.pcimcioch.protobuf.source.MethodBody.body;
+import static org.github.pcimcioch.protobuf.source.MethodBody.param;
 
 class EncodingFactory {
 
@@ -17,26 +21,23 @@ class EncodingFactory {
     }
 
     private void addMethodWriteToOutputStream(JavaRecordSource record) {
-        String body = "writeTo(new " +
-                ProtobufOutput.class.getCanonicalName() +
-                "(output));";
+        MethodBody body = body("writeTo(new ${ProtobufOutput}(output));",
+                param("ProtobufOutput", ProtobufOutput.class));
 
         record.addMethod()
                 .setPublic()
                 .setName("writeTo")
-                .setBody(body)
+                .setBody(body.toString())
                 .addThrows(IOException.class)
                 .addParameter(OutputStream.class, "output");
     }
 
     private void addMethodToByteArray(JavaRecordSource record) {
-        StringBuilder body = new StringBuilder();
-
-        body.append("java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();");
-        body.append("writeTo(new ")
-                .append(ProtobufOutput.class.getCanonicalName())
-                .append("(output));");
-        body.append("return output.toByteArray();");
+        MethodBody body = body("""
+                        java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+                        writeTo(new ${ProtobufOutput}(output));
+                        return output.toByteArray();""",
+                param("ProtobufOutput", ProtobufOutput.class));
 
         record.addMethod()
                 .setPublic()
@@ -47,13 +48,14 @@ class EncodingFactory {
     }
 
     private void addMethodWriteToProtobufOutput(JavaRecordSource record, MessageDefinition message) {
-        StringBuilder body = new StringBuilder();
+        MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append("output.writeVarint(")
-                    .append(field.tag())
-                    .append(");");
-            body.append(field.protobufWriteMethod("output", field.name())).append(";");
+            body.append("""
+                            output.writeVarint(${tag});
+                            ${writeToOutput};""",
+                    param("tag", field.tag()),
+                            param("writeToOutput", field.protobufWriteMethod("output", field.name())));
         }
 
         record.addMethod()

@@ -5,7 +5,8 @@ import org.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 
-import java.util.stream.Collectors;
+import static org.github.pcimcioch.protobuf.source.MethodBody.body;
+import static org.github.pcimcioch.protobuf.source.MethodBody.param;
 
 // TODO should be record's inner class
 class BuilderFactory {
@@ -37,28 +38,29 @@ class BuilderFactory {
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
-        String parameters = message.fields().stream()
-                .map(FieldDefinition::name)
-                .collect(Collectors.joining(", "));
-        String body = "return new " + message.messageTypeSimpleName() + "(" + parameters + ");";
+        MethodBody body = body("return new ${MessageType}(${ConstructorParameters});",
+                param("MessageType", message.messageTypeSimpleName()),
+                param("ConstructorParameters", message.fields()));
 
         builderClass.addMethod()
                 .setPublic()
                 .setName("build")
                 .setReturnType(message.messageTypeSimpleName())
-                .setBody(body);
+                .setBody(body.toString());
     }
 
     private void addSetterMethods(JavaClassSource builderClass, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
-            String body = "this." + field.name() + "=" + field.name() + ";\n" +
-                    "return this;";
+            MethodBody body = body("""
+                            this.${field} = ${field};
+                            return this;""",
+                    param("field", field));
 
             builderClass.addMethod()
                     .setPublic()
                     .setName(field.name())
                     .setReturnType(message.builderSimpleName())
-                    .setBody(body)
+                    .setBody(body.toString())
                     .addParameter(field.typeName(), field.name());
         }
     }
