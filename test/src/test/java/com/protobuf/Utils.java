@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.test;
+package com.protobuf;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 

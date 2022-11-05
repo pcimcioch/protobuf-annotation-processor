@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.test.model;
+package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.annotation.Field;
 import com.github.pcimcioch.protobuf.annotation.Message;

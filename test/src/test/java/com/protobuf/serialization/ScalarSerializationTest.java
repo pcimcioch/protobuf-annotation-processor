@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.test.serialization;
+package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.test.FullRecord;
 import org.junit.jupiter.api.Nested;
@@ -8,10 +8,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.github.pcimcioch.protobuf.test.ProtobufAssertion.assertProto;
-import static com.github.pcimcioch.protobuf.test.ProtobufBuilder.proto;
-import static com.github.pcimcioch.protobuf.test.Utils.b;
-import static com.github.pcimcioch.protobuf.test.Utils.ba;
+import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.protobuf.ProtobufBuilder.proto;
+import static com.protobuf.Utils.b;
+import static com.protobuf.Utils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
 

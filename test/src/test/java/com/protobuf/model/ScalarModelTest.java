@@ -1,10 +1,10 @@
-package com.github.pcimcioch.protobuf.test.model;
+package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.test.FullRecord;
 import com.github.pcimcioch.protobuf.test.SimpleRecord;
 import org.junit.jupiter.api.Test;
 
-import static com.github.pcimcioch.protobuf.test.Utils.ba;
+import static com.protobuf.Utils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScalarModelTest {
