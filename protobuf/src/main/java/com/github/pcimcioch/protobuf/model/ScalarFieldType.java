@@ -14,86 +14,86 @@ public enum ScalarFieldType {
     /**
      * double
      */
-    DOUBLE("double", "double", "0d", I64, "%s.writeDouble(%s)", "%s.readDouble()"),
+    DOUBLE("double", new TypeName("double"), "0d", I64, "%s.writeDouble(%s)", "%s.readDouble()"),
 
     /**
      * float
      */
-    FLOAT("float", "float", "0f", I32, "%s.writeFloat(%s)", "%s.readFloat()"),
+    FLOAT("float", new TypeName("float"), "0f", I32, "%s.writeFloat(%s)", "%s.readFloat()"),
 
     /**
      * int32
      */
-    INT32("int32", "int", "0", VARINT, "%s.writeVarint(%s)", "(int) %s.readVarint()"),
+    INT32("int32", new TypeName("int"), "0", VARINT, "%s.writeVarint(%s)", "(int) %s.readVarint()"),
 
     /**
      * int64
      */
-    INT64("int64", "long", "0L", VARINT, "%s.writeVarint(%s)", "%s.readVarint()"),
+    INT64("int64", new TypeName("long"), "0L", VARINT, "%s.writeVarint(%s)", "%s.readVarint()"),
 
     /**
      * uint32
      */
-    UINT32("uint32", "int", "0", VARINT, "%s.writeVarint(%s)", "(int) %s.readVarint()"),
+    UINT32("uint32", new TypeName("int"), "0", VARINT, "%s.writeVarint(%s)", "(int) %s.readVarint()"),
 
     /**
      * uint64
      */
-    UINT64("uint64", "long", "0L", VARINT, "%s.writeVarint(%s)", "%s.readVarint()"),
+    UINT64("uint64", new TypeName("long"), "0L", VARINT, "%s.writeVarint(%s)", "%s.readVarint()"),
 
     /**
      * sint32
      */
-    SINT32("sint32", "int", "0", VARINT, "%s.writeZigZag(%s)", "(int) %s.readZigZag()"),
+    SINT32("sint32", new TypeName("int"), "0", VARINT, "%s.writeZigZag(%s)", "(int) %s.readZigZag()"),
 
     /**
      * sint64
      */
-    SINT64("sint64", "long", "0L", VARINT, "%s.writeZigZag(%s)", "%s.readZigZag()"),
+    SINT64("sint64", new TypeName("long"), "0L", VARINT, "%s.writeZigZag(%s)", "%s.readZigZag()"),
 
     /**
      * fixed32
      */
-    FIXED32("fixed32", "int", "0", I32, "%s.writeFixedInt(%s)", "%s.readFixedInt()"),
+    FIXED32("fixed32", new TypeName("int"), "0", I32, "%s.writeFixedInt(%s)", "%s.readFixedInt()"),
 
     /**
      * fixed64
      */
-    FIXED64("fixed64", "long", "0L", I64, "%s.writeFixedLong(%s)", "%s.readFixedLong()"),
+    FIXED64("fixed64", new TypeName("long"), "0L", I64, "%s.writeFixedLong(%s)", "%s.readFixedLong()"),
 
     /**
      * sfixed32
      */
-    SFIXED32("sfixed32", "int", "0", I32, "%s.writeFixedInt(%s)", "%s.readFixedInt()"),
+    SFIXED32("sfixed32", new TypeName("int"), "0", I32, "%s.writeFixedInt(%s)", "%s.readFixedInt()"),
 
     /**
      * sfixed64
      */
-    SFIXED64("sfixed64", "long", "0L", I64, "%s.writeFixedLong(%s)", "%s.readFixedLong()"),
+    SFIXED64("sfixed64", new TypeName("long"), "0L", I64, "%s.writeFixedLong(%s)", "%s.readFixedLong()"),
 
     /**
      * bool
      */
-    BOOL("bool", "boolean", "false", VARINT, "%s.writeBoolean(%s)", "%s.readBoolean()"),
+    BOOL("bool", new TypeName("boolean"), "false", VARINT, "%s.writeBoolean(%s)", "%s.readBoolean()"),
 
     /**
      * string
      */
-    STRING("string", "String", "\"\"", LEN, "%s.writeString(%s)", "%s.readString()"),
+    STRING("string", new TypeName("String"), "\"\"", LEN, "%s.writeString(%s)", "%s.readString()"),
 
     /**
      * bytes
      */
-    BYTES("bytes", "com.github.pcimcioch.protobuf.dto.ByteArray", "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY", LEN, "%s.writeBytes(%s.data())", "new com.github.pcimcioch.protobuf.dto.ByteArray(%s.readBytes())");
+    BYTES("bytes", new TypeName("com.github.pcimcioch.protobuf.dto.ByteArray"), "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY", LEN, "%s.writeBytes(%s.data())", "new com.github.pcimcioch.protobuf.dto.ByteArray(%s.readBytes())");
 
     private final String protoType;
-    private final String fieldJavaType;
+    private final TypeName fieldJavaType;
     private final String defaultValue;
     private final WireType wireType;
     private final String writeMethodTemplate;
     private final String readMethodTemplate;
 
-    ScalarFieldType(String protoType, String fieldJavaType, String defaultValue, WireType wireType, String writeMethodTemplate, String readMethodTemplate) {
+    ScalarFieldType(String protoType, TypeName fieldJavaType, String defaultValue, WireType wireType, String writeMethodTemplate, String readMethodTemplate) {
         this.protoType = protoType;
         this.fieldJavaType = fieldJavaType;
         this.defaultValue = defaultValue;
@@ -107,7 +107,7 @@ public enum ScalarFieldType {
      *
      * @return java type
      */
-    public String fieldJavaType() {
+    public TypeName fieldJavaType() {
         return fieldJavaType;
     }
 

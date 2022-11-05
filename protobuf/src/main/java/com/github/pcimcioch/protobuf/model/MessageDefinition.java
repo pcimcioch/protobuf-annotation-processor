@@ -21,30 +21,21 @@ public class MessageDefinition {
     }
 
     /**
-     * Returns java simple name of the message (the part without package)
+     * Returns java type name of this message
      *
-     * @return simple name
+     * @return java type name of this message
      */
-    public String messageTypeSimpleName() {
-        return name.simpleName();
+    public TypeName name() {
+        return name;
     }
 
     /**
-     * Returns java package of this message
+     * Returns java type name of the builder for this message
      *
-     * @return package
+     * @return java type name of the builder
      */
-    public String messageTypePackage() {
-        return name.packageName();
-    }
-
-    /**
-     * Returns java simple name of the builder for this message
-     *
-     * @return simple name of the builder
-     */
-    public String builderSimpleName() {
-        return name.simpleName() + "Builder";
+    public TypeName builderName() {
+        return new TypeName(name.canonicalName() + "Builder");
     }
 
     /**

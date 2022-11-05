@@ -12,6 +12,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 
+@SuppressWarnings("unchecked")
 class MethodBody {
 
     private static final Formatters formatters = new Formatters();

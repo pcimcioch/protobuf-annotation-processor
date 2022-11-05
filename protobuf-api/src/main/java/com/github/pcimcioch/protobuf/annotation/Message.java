@@ -13,13 +13,6 @@ import java.lang.annotation.Target;
 public @interface Message {
 
     /**
-     * Package of the Message. Will be translated to java package
-     *
-     * @return package of the message
-     */
-    String packageName();
-
-    /**
      * Message name
      *
      * @return message name

@@ -12,8 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Message(
-        packageName = "com.github.pcimcioch.protobuf.test",
-        name = "SimpleRecord",
+        name = "com.github.pcimcioch.protobuf.test.SimpleRecord",
         fields = {
                 @Field(type = "int32", name = "amount", number = 0),
                 @Field(type = "double", name = "latitude", number = 1),

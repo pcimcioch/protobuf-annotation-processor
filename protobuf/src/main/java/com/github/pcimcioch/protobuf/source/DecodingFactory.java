@@ -27,7 +27,7 @@ class DecodingFactory {
         messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
-                .setReturnType(message.messageTypeSimpleName())
+                .setReturnType(message.name().canonicalName())
                 .setName("parse")
                 .setBody(body.toString())
                 .addThrows(IOException.class)
@@ -41,7 +41,7 @@ class DecodingFactory {
         messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
-                .setReturnType(message.messageTypeSimpleName())
+                .setReturnType(message.name().canonicalName())
                 .setName("parse")
                 .setBody(body.toString())
                 .addThrows(IOException.class)
@@ -60,7 +60,7 @@ class DecodingFactory {
                 
                 return builder.build();
                 """,
-                param("BuilderType", message.builderSimpleName()),
+                param("BuilderType", message.builderName().canonicalName()),
                 param("readTag", readTag()),
                 param("readFields", readFields(message)),
                 param("unknownFieldSupport", unknownFieldSupport()));
@@ -68,7 +68,7 @@ class DecodingFactory {
         messageRecord.addMethod()
                 .setPrivate()
                 .setStatic(true)
-                .setReturnType(message.messageTypeSimpleName())
+                .setReturnType(message.name().canonicalName())
                 .setName("parse")
                 .setBody(body.toString())
                 .addThrows(IOException.class)

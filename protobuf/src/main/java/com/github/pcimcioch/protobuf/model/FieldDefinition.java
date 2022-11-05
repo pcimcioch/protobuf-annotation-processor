@@ -53,7 +53,7 @@ public class FieldDefinition {
      *
      * @return java type name
      */
-    public String typeName() {
+    public TypeName typeName() {
         return type.fieldJavaType();
     }
 

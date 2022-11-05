@@ -30,7 +30,7 @@ public class ModelFactory {
 
     private MessageDefinition buildMessage(Message message) {
         return new MessageDefinition(
-                new TypeName(message.packageName(), message.name()),
+                new TypeName(message.name()),
                 Arrays.stream(message.fields()).map(this::buildField).toList()
         );
     }

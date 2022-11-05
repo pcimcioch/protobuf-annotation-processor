@@ -23,8 +23,8 @@ class BuilderFactory {
 
     private JavaClassSource buildSourceFile(MessageDefinition message) {
         return Roaster.create(JavaClassSource.class)
-                .setPackage(message.messageTypePackage())
-                .setName(message.builderSimpleName());
+                .setPackage(message.builderName().packageName())
+                .setName(message.builderName().simpleName());
     }
 
     private void addFields(JavaClassSource builderClass, MessageDefinition message) {
@@ -32,20 +32,20 @@ class BuilderFactory {
             builderClass.addField()
                     .setName(field.name())
                     .setPrivate()
-                    .setType(field.typeName())
+                    .setType(field.typeName().canonicalName())
                     .setLiteralInitializer(field.defaultValue());
         }
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
         MethodBody body = body("return new ${MessageType}(${ConstructorParameters});",
-                param("MessageType", message.messageTypeSimpleName()),
+                param("MessageType", message.name().canonicalName()),
                 param("ConstructorParameters", message.fields()));
 
         builderClass.addMethod()
                 .setPublic()
                 .setName("build")
-                .setReturnType(message.messageTypeSimpleName())
+                .setReturnType(message.name().canonicalName())
                 .setBody(body.toString());
     }
 
@@ -59,9 +59,9 @@ class BuilderFactory {
             builderClass.addMethod()
                     .setPublic()
                     .setName(field.name())
-                    .setReturnType(message.builderSimpleName())
+                    .setReturnType(message.builderName().canonicalName())
                     .setBody(body.toString())
-                    .addParameter(field.typeName(), field.name());
+                    .addParameter(field.typeName().canonicalName(), field.name());
         }
     }
 }

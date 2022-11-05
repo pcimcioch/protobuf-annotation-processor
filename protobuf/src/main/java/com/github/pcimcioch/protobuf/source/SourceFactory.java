@@ -4,7 +4,6 @@ import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
@@ -81,13 +80,13 @@ public class SourceFactory {
 
     private JavaRecordSource buildSourceFile(MessageDefinition message) {
         return Roaster.create(JavaRecordSource.class)
-                .setPackage(message.messageTypePackage())
-                .setName(message.messageTypeSimpleName());
+                .setPackage(message.name().packageName())
+                .setName(message.name().simpleName());
     }
 
     private void addRecordComponents(JavaRecordSource record, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
-            record.addRecordComponent(field.typeName(), field.name());
+            record.addRecordComponent(field.typeName().canonicalName(), field.name());
         }
     }
 
@@ -102,13 +101,13 @@ public class SourceFactory {
     private void addBuilderMethod(JavaRecordSource messageRecord, MessageDefinition message) {
         MethodBody body = body(
                 "return new ${BuilderType}();",
-                param("BuilderType", message.builderSimpleName()));
+                param("BuilderType", message.builderName().canonicalName()));
 
         messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
                 .setName("builder")
-                .setReturnType(message.builderSimpleName())
+                .setReturnType(message.builderName().canonicalName())
                 .setBody(body.toString());
     }
 }

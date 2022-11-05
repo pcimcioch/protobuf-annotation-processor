@@ -4,8 +4,7 @@ import com.github.pcimcioch.protobuf.annotation.Field;
 import com.github.pcimcioch.protobuf.annotation.Message;
 
 @Message(
-        packageName = "com.github.pcimcioch.protobuf.test",
-        name = "FullRecord",
+        name = "com.github.pcimcioch.protobuf.test.FullRecord",
         fields = {
                 @Field(type = "double", name = "_double", number = 0),
                 @Field(type = "float", name = "_float", number = 1),
