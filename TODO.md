@@ -1,12 +1,7 @@
-[] Deserialize message from binary
-[] Add README file
-[] Add some javadocs
 [] Support Enums <https://developers.google.com/protocol-buffers/docs/proto3#enum>
-[] Support Repeatable (packed only) <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules>
 [] Model validation - Created model should be validated (for duplicated tags etc)
+[] Support Repeatable (packed only) <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules>
 [] Embedded messages - Support embedded messages <https://developers.google.com/protocol-buffers/docs/proto3#other>
-[] Tests with compatibility using protoc
-[] Add publishing
 [] Maps support <https://developers.google.com/protocol-buffers/docs/proto3#maps>
 
 [] Improvement - do not save default values

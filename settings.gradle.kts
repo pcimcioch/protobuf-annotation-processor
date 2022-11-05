@@ -1,5 +1,5 @@
-rootProject.name = "protobuf-processor"
+rootProject.name = "protobuf-annotation-processor"
 
 include("protobuf-api")
-include("protobuf-annotation-processor")
+include("protobuf")
 include("test")

@@ -5,10 +5,9 @@ plugins {
 subprojects {
     apply(plugin = "java")
 
-    group = "org.github.pcimcioch"
-    version = "1.0.0"
+    group = "com.github.pcimcioch"
 
-    configure<JavaPluginExtension> {
+    java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
