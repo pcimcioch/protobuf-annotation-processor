@@ -28,9 +28,6 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
     private final ModelFactory modelFactory = new ModelFactory();
     private final SourceFactory sourceFactory = new SourceFactory();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         List<Message> messageAnnotations = getAllAnnotations(roundEnv);

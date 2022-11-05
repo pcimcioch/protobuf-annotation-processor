@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
-import org.apache.commons.text.StringSubstitutor;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ class MethodBody {
     static {
         formatters.register(FieldDefinition.class, FieldDefinition::name);
         formatters.register(Class.class, Class::getCanonicalName);
-        formatters.register(List.class, list -> list.stream().map(formatters::format).collect(joining(", ")));
+        formatters.register(List.class, list -> list.stream().map(formatters::format).collect(joining(", ")).toString());
     }
 
     private MethodBody() {
@@ -41,7 +40,7 @@ class MethodBody {
     }
 
     MethodBody append(String sourcePattern, Parameter... parameters) {
-        Map<String, Object> formattedParameters = Arrays.stream(parameters)
+        Map<String, String> formattedParameters = Arrays.stream(parameters)
                 .collect(toMap(Parameter::key, p -> formatters.format(p.value())));
         builder.append(StringSubstitutor.replace(sourcePattern, formattedParameters));
 
@@ -57,24 +56,24 @@ class MethodBody {
     }
 
     private static final class Formatters {
-        private final Map<Class<?>, Function<?, Object>> mappers = new HashMap<>();
+        private final Map<Class<?>, Function<?, String>> mappers = new HashMap<>();
 
-        private <T> void register(Class<T> type, Function<T, Object> mapper) {
+        private <T> void register(Class<T> type, Function<T, String> mapper) {
             mappers.put(type, mapper);
         }
 
-        private <T> Object format(T value) {
+        private <T> String format(T value) {
             return findMapper(value).apply(value);
         }
 
-        private <T> Function<T, Object> findMapper(T value) {
-            for (Entry<Class<?>, Function<?, Object>> entry : mappers.entrySet()) {
+        private <T> Function<T, String> findMapper(T value) {
+            for (Entry<Class<?>, Function<?, String>> entry : mappers.entrySet()) {
                 if (entry.getKey().isAssignableFrom(value.getClass())) {
-                    return (Function<T, Object>) entry.getValue();
+                    return (Function<T, String>) entry.getValue();
                 }
             }
 
-            return (Function<T, Object>) Function.identity();
+            return Object::toString;
         }
     }
 }

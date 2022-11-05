@@ -4,9 +4,10 @@ import com.github.pcimcioch.protobuf.test.FullRecord;
 import com.github.pcimcioch.protobuf.test.SimpleRecord;
 import org.junit.jupiter.api.Test;
 
+import static com.github.pcimcioch.protobuf.test.Utils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ModelTest {
+class ScalarModelTest {
 
     @Test
     void simpleRecord() {
@@ -25,7 +26,7 @@ class ModelTest {
         FullRecord record = new FullRecord(
                 10d, 20f,
                 30, 40L, 50, 60L, 70, 80L, 90, 100L, 110, 120L,
-                true, "test", new byte[]{1, 20, 3}
+                true, "test", ba(1, 20, 3)
         );
 
         // then
@@ -43,6 +44,6 @@ class ModelTest {
         assertThat(record.sfixed64()).isEqualTo(120L);
         assertThat(record.bool()).isTrue();
         assertThat(record.string()).isEqualTo("test");
-        assertThat(record.bytes()).isEqualTo(new byte[]{1, 20, 3});
+        assertThat(record.bytes()).isEqualTo(ba(1, 20, 3));
     }
 }

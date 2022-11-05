@@ -534,6 +534,51 @@ class ProtobufIOTest {
         }
     }
 
+    @Nested
+    class Skip {
+        @Test
+        void skipZero() throws IOException {
+            // given
+            ProtobufInput input = input(b(0, 0, 0, 10));
+
+            // when
+            input.skip(0);
+
+            // then
+            assertThat(input.readFixedInt()).isEqualTo(10);
+        }
+
+        @Test
+        void skip() throws IOException {
+            // given
+            ProtobufInput input = input(b(10, 20, 30, 0, 0, 0, 10));
+
+            // when
+            input.skip(3);
+
+            // then
+            assertThat(input.readFixedInt()).isEqualTo(10);
+        }
+
+        @Test
+        void skipAll() throws IOException {
+            // given
+            ProtobufInput input = input(b(10, 20, 30));
+
+            // when
+            input.skip(3);
+
+            // then
+            assertThatThrownBy(() -> input.skip(1)).isInstanceOf(EOFException.class);
+        }
+
+        @Test
+        void skipTooMany() {
+            // when then
+            assertThatThrownBy(() -> input(b(10, 20, 30)).skip(4)).isInstanceOf(EOFException.class);
+        }
+    }
+
     private ProtobufOutput output() {
         return new ProtobufOutput(output);
     }

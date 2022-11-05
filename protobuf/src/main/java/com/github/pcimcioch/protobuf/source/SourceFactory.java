@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
@@ -12,11 +13,6 @@ import java.util.List;
 
 import static com.github.pcimcioch.protobuf.source.MethodBody.body;
 import static com.github.pcimcioch.protobuf.source.MethodBody.param;
-
-// TODO add tests for serialization
-// TODO add tests for deserialization
-// TODO add tests for serialization and deserialization compatibility (object serialized with encodingMethod should be deserializable with decodingMethod)
-// TODO add tests for compatibility with google protobuf
 
 /**
  * Creates java source code for the protobuf transfer objects

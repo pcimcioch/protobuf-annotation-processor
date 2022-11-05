@@ -138,7 +138,6 @@ public class ProtobufInput {
      * @param bytes number of bytes to skip
      * @throws IOException in case of any data read error
      */
-    // TODO tests
     public void skip(long bytes) throws IOException {
         for (long i = 0; i < bytes; i++) {
             input.readByte();

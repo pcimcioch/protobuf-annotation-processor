@@ -84,7 +84,7 @@ public enum ScalarFieldType {
     /**
      * bytes
      */
-    BYTES("bytes", "byte[]", "new byte[0]", LEN, "%s.writeBytes(%s)", "%s.readBytes()");
+    BYTES("bytes", "com.github.pcimcioch.protobuf.dto.ByteArray", "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY", LEN, "%s.writeBytes(%s.data())", "new com.github.pcimcioch.protobuf.dto.ByteArray(%s.readBytes())");
 
     private final String protoType;
     private final String fieldJavaType;

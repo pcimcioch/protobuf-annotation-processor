@@ -6,7 +6,7 @@ package com.github.pcimcioch.protobuf.model;
  * @param packageName java package
  * @param simpleName  java simple name
  */
-public record TypeName(
+public record TypeName (
         String packageName,
         String simpleName
 ) {

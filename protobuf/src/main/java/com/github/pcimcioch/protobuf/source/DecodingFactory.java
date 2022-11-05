@@ -109,6 +109,7 @@ class DecodingFactory {
                     param("ProtobufParseException", ProtobufParseException.class),
                     param("fieldName", field.name()),
                     param("inputRead", field.protobufReadMethod("input")));
+            first = false;
         }
 
         return body;
