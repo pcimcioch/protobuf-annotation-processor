@@ -5,7 +5,7 @@ package com.github.pcimcioch.protobuf.model;
  */
 public class FieldDefinition {
     private final String name;
-    private final ScalarFieldType type;
+    private final FieldType type;
     private final int number;
 
     /**
@@ -15,7 +15,7 @@ public class FieldDefinition {
      * @param type   type of the field
      * @param number number of the field
      */
-    public FieldDefinition(String name, ScalarFieldType type, int number) {
+    public FieldDefinition(String name, FieldType type, int number) {
         this.name = name;
         this.type = type;
         this.number = number;

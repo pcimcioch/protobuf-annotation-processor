@@ -18,7 +18,6 @@ only serialization logic. By definition, they are immutable and provide good equ
 You can define your protobuf schema using only java annotations
 ```java
 @Message(
-        packageName = "com.example",
         name = "SimpleRecord",
         fields = {
                 @Field(type = "int32", name = "amount", number = 0),
