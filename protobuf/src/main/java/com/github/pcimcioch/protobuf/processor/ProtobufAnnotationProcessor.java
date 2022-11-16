@@ -37,7 +37,6 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
             generateSources(model);
         } catch (Exception ex) {
             processingEnv.getMessager().printMessage(ERROR, "Unable to build source: " + ex.getMessage());
-            // TODO rethrow ex?
         }
 
         return true;

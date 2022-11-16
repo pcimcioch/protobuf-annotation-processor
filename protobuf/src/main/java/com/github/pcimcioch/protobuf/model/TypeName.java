@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.model;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +74,19 @@ public class TypeName {
     @Override
     public String toString() {
         return canonicalName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TypeName typeName = (TypeName) o;
+        return packageName.equals(typeName.packageName) && parentClassesName.equals(typeName.parentClassesName) && simpleName.equals(typeName.simpleName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(packageName, parentClassesName, simpleName);
     }
 
     /**
