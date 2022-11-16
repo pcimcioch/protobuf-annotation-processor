@@ -2,6 +2,8 @@ package com.github.pcimcioch.protobuf.model;
 
 import java.util.Optional;
 
+import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.TypeName.simpleName;
 import static com.github.pcimcioch.protobuf.model.WireType.I32;
 import static com.github.pcimcioch.protobuf.model.WireType.I64;
 import static com.github.pcimcioch.protobuf.model.WireType.LEN;
@@ -15,8 +17,8 @@ public enum ScalarFieldType implements FieldType {
      * double
      */
     DOUBLE("double",
-            new TypeName("double"),
-            new TypeName("Double"),
+            simpleName("double"),
+            simpleName("Double"),
             "0d",
             I64,
             "%s.writeDouble(%s)",
@@ -26,8 +28,8 @@ public enum ScalarFieldType implements FieldType {
      * float
      */
     FLOAT("float",
-            new TypeName("float"),
-            new TypeName("Float"),
+            simpleName("float"),
+            simpleName("Float"),
             "0f",
             I32,
             "%s.writeFloat(%s)",
@@ -37,8 +39,8 @@ public enum ScalarFieldType implements FieldType {
      * int32
      */
     INT32("int32",
-            new TypeName("int"),
-            new TypeName("Integer"),
+            simpleName("int"),
+            simpleName("Integer"),
             "0",
             VARINT,
             "%s.writeVarint(%s)",
@@ -48,8 +50,8 @@ public enum ScalarFieldType implements FieldType {
      * int64
      */
     INT64("int64",
-            new TypeName("long"),
-            new TypeName("Long"),
+            simpleName("long"),
+            simpleName("Long"),
             "0L",
             VARINT,
             "%s.writeVarint(%s)",
@@ -59,8 +61,8 @@ public enum ScalarFieldType implements FieldType {
      * uint32
      */
     UINT32("uint32",
-            new TypeName("int"),
-            new TypeName("Integer"),
+            simpleName("int"),
+            simpleName("Integer"),
             "0",
             VARINT,
             "%s.writeVarint(%s)",
@@ -70,8 +72,8 @@ public enum ScalarFieldType implements FieldType {
      * uint64
      */
     UINT64("uint64",
-            new TypeName("long"),
-            new TypeName("Long"),
+            simpleName("long"),
+            simpleName("Long"),
             "0L",
             VARINT,
             "%s.writeVarint(%s)",
@@ -81,8 +83,8 @@ public enum ScalarFieldType implements FieldType {
      * sint32
      */
     SINT32("sint32",
-            new TypeName("int"),
-            new TypeName("Integer"),
+            simpleName("int"),
+            simpleName("Integer"),
             "0",
             VARINT,
             "%s.writeZigZag(%s)",
@@ -92,8 +94,8 @@ public enum ScalarFieldType implements FieldType {
      * sint64
      */
     SINT64("sint64",
-            new TypeName("long"),
-            new TypeName("Long"),
+            simpleName("long"),
+            simpleName("Long"),
             "0L",
             VARINT,
             "%s.writeZigZag(%s)",
@@ -103,8 +105,8 @@ public enum ScalarFieldType implements FieldType {
      * fixed32
      */
     FIXED32("fixed32",
-            new TypeName("int"),
-            new TypeName("Integer"),
+            simpleName("int"),
+            simpleName("Integer"),
             "0",
             I32,
             "%s.writeFixedInt(%s)",
@@ -114,8 +116,8 @@ public enum ScalarFieldType implements FieldType {
      * fixed64
      */
     FIXED64("fixed64",
-            new TypeName("long"),
-            new TypeName("Long"),
+            simpleName("long"),
+            simpleName("Long"),
             "0L",
             I64,
             "%s.writeFixedLong(%s)",
@@ -125,8 +127,8 @@ public enum ScalarFieldType implements FieldType {
      * sfixed32
      */
     SFIXED32("sfixed32",
-            new TypeName("int"),
-            new TypeName("Integer"),
+            simpleName("int"),
+            simpleName("Integer"),
             "0",
             I32,
             "%s.writeFixedInt(%s)",
@@ -136,8 +138,8 @@ public enum ScalarFieldType implements FieldType {
      * sfixed64
      */
     SFIXED64("sfixed64",
-            new TypeName("long"),
-            new TypeName("Long"),
+            simpleName("long"),
+            simpleName("Long"),
             "0L",
             I64,
             "%s.writeFixedLong(%s)",
@@ -147,8 +149,8 @@ public enum ScalarFieldType implements FieldType {
      * bool
      */
     BOOL("bool",
-            new TypeName("boolean"),
-            new TypeName("Boolean"),
+            simpleName("boolean"),
+            simpleName("Boolean"),
             "false",
             VARINT,
             "%s.writeBoolean(%s)",
@@ -158,8 +160,8 @@ public enum ScalarFieldType implements FieldType {
      * string
      */
     STRING("string",
-            new TypeName("String"),
-            new TypeName("String"),
+            simpleName("String"),
+            simpleName("String"),
             "\"\"",
             LEN,
             "%s.writeString(%s)",
@@ -169,8 +171,8 @@ public enum ScalarFieldType implements FieldType {
      * bytes
      */
     BYTES("bytes",
-            new TypeName("com.github.pcimcioch.protobuf.dto.ByteArray"),
-            new TypeName("com.github.pcimcioch.protobuf.dto.ByteArray"),
+            canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"),
+            canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"),
             "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY",
             LEN,
             "%s.writeBytes(%s.data())",

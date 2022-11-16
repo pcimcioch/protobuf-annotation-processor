@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+
 /**
  * Create model from annotations
  */
@@ -51,15 +53,15 @@ public class ModelFactory {
         String messageName = message.name();
 
         if (messageName == null) {
-            return new TypeName("");
+            return canonicalName("");
         }
         if (messageName.startsWith(".")) {
-            return new TypeName(annotationPackageName + messageName);
+            return canonicalName(annotationPackageName + messageName);
         }
         if (messageName.contains(".")) {
-            return new TypeName(messageName);
+            return canonicalName(messageName);
         }
-        return new TypeName(annotationPackageName + "." + messageName);
+        return canonicalName(annotationPackageName + "." + messageName);
     }
 
     private List<FieldDefinition> buildFields(Message message) {

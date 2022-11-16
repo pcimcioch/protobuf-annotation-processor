@@ -14,6 +14,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
@@ -31,8 +32,13 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ProtoDefinitions model = buildModel(getAnnotatedElements(roundEnv));
-        generateSources(model);
+        try {
+            ProtoDefinitions model = buildModel(getAnnotatedElements(roundEnv));
+            generateSources(model);
+        } catch (Exception ex) {
+            processingEnv.getMessager().printMessage(ERROR, "Unable to build source: " + ex.getMessage());
+            // TODO rethrow ex?
+        }
 
         return true;
     }
@@ -45,16 +51,11 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
         return modelFactory.buildProtoDefinitions(elements);
     }
 
-    private void generateSources(ProtoDefinitions model) {
-        try {
-            for (SourceFile sourceFile : sourceFactory.buildSource(model)) {
-                try (Writer writer = processingEnv.getFiler().createSourceFile(sourceFile.canonicalName()).openWriter()) {
-                    writer.write(sourceFile.source());
-                }
+    private void generateSources(ProtoDefinitions model) throws IOException {
+        for (SourceFile sourceFile : sourceFactory.buildSource(model)) {
+            try (Writer writer = processingEnv.getFiler().createSourceFile(sourceFile.canonicalName()).openWriter()) {
+                writer.write(sourceFile.source());
             }
-        } catch (Exception ex) {
-            processingEnv.getMessager().printMessage(ERROR, "Unable to build source: " + ex.getMessage());
-            // TODO rethrow ex?
         }
     }
 }

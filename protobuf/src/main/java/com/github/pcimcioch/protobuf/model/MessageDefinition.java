@@ -2,6 +2,8 @@ package com.github.pcimcioch.protobuf.model;
 
 import java.util.List;
 
+import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+
 /**
  * Message definition
  */
@@ -35,7 +37,7 @@ public class MessageDefinition {
      * @return java type name of the builder
      */
     public TypeName builderName() {
-        return new TypeName(name.canonicalName() + "Builder");
+        return canonicalName(name.canonicalName() + "Builder");
     }
 
     /**
