@@ -6,13 +6,9 @@ import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ScalarFieldType;
 import com.github.pcimcioch.protobuf.model.TypeName;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.PackageElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 
@@ -22,13 +18,13 @@ import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 public class ModelFactory {
 
     /**
-     * Create model from annotated elements
+     * Create model from protobuf files
      *
-     * @param elements annotated elements
+     * @param protoFiles protobuf files
      * @return model
      */
-    public ProtoDefinitions buildProtoDefinitions(Set<? extends Element> elements) {
-        List<MessageDefinition> messages = elements.stream()
+    public ProtoDefinitions buildProtoDefinitions(List<ProtoFile> protoFiles) {
+        List<MessageDefinition> messages = protoFiles.stream()
                 .map(this::buildMessages)
                 .flatMap(List::stream)
                 .toList();
@@ -36,11 +32,11 @@ public class ModelFactory {
         return new ProtoDefinitions(messages);
     }
 
-    private List<MessageDefinition> buildMessages(Element element) {
+    private List<MessageDefinition> buildMessages(ProtoFile file) {
         List<MessageDefinition> messages = new ArrayList<>();
-        for (Message message : element.getAnnotationsByType(Message.class)) {
+        for (Message message : file.messages()) {
             messages.add(new MessageDefinition(
-                    buildMessageName(element, message),
+                    buildMessageName(file, message),
                     buildFields(message)
             ));
         }
@@ -48,8 +44,8 @@ public class ModelFactory {
         return messages;
     }
 
-    private static TypeName buildMessageName(Element element, Message message) {
-        String annotationPackageName = packageOf(element).getQualifiedName().toString();
+    private static TypeName buildMessageName(ProtoFile file, Message message) {
+        String annotationPackageName = file.getOption(Option.javaPackage).orElse("");
         String messageName = message.name();
 
         if (messageName == null) {
@@ -78,15 +74,6 @@ public class ModelFactory {
 
     private ScalarFieldType buildFieldType(String type) {
         return ScalarFieldType.fromProtoType(type).orElse(null);
-    }
-
-    private static PackageElement packageOf(Element element) {
-        Element enclosing = element;
-        while (enclosing.getKind() != ElementKind.PACKAGE) {
-            enclosing = enclosing.getEnclosingElement();
-        }
-
-        return (PackageElement) enclosing;
     }
 
 }
