@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.io;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.exception.ProtobufParseException;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,11 +31,15 @@ public class ProtobufReader {
     /**
      * Reads tag
      *
-     * @return tag
+     * @return tag or null if end of input reached
      * @throws IOException in case of any data read error
      */
     public Tag tag() throws IOException {
-        return new Tag(input.readVarint());
+        try {
+            return new Tag(input.readVarint());
+        } catch (EOFException ex) {
+            return null;
+        }
     }
 
     /**

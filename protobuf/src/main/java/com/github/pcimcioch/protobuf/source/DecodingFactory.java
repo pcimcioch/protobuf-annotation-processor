@@ -2,12 +2,11 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.io.ProtobufReader;
 import com.github.pcimcioch.protobuf.io.Tag;
-import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -53,20 +52,20 @@ class DecodingFactory {
 
     private void addParseProtobufInputMethod(JavaRecordSource messageRecord, MessageDefinition message) {
         MethodBody body = body("""
-                $BuilderType builder = new $BuilderType();
-                
-                while (true) {
-                    $readTag
-                    $readFields
-                    $unknownFieldSupport
-                }
-                
-                return builder.build();
-                """,
+                        $BuilderType builder = new $BuilderType();
+                                        
+                        $Tag tag = null;
+                        while ((tag = reader.tag()) != null) {
+                            $readFields
+                        }
+                                        
+                        return builder.build();
+                        """,
                 param("BuilderType", message.builderName()),
-                param("readTag", readTag()),
-                param("readFields", readFields(message)),
-                param("unknownFieldSupport", unknownFieldSupport()));
+                param("Tag", Tag.class),
+                param("readFields", readFields(message)));
+
+        System.out.println(body.toString());
 
         messageRecord.addMethod()
                 .setPrivate()
@@ -78,19 +77,6 @@ class DecodingFactory {
                 .addParameter(ProtobufReader.class, "reader");
     }
 
-    private MethodBody readTag() {
-        return body("""
-                $Tag tag = null;
-                try {
-                    tag = reader.tag();
-                } catch ($EOFException ex) {
-                    break;
-                }
-                """,
-                param("Tag", Tag.class),
-                param("EOFException", EOFException.class));
-    }
-
     private MethodBody readFields(MessageDefinition message) {
         MethodBody body = body();
         boolean first = true;
@@ -99,7 +85,6 @@ class DecodingFactory {
             if (!first) {
                 body.append("else ");
             }
-            // TODO replace with switch
             body.append("""
                             if (tag.number() == $fieldNumber) {
                                 builder.$fieldName(reader.$readMethod(tag, "$fieldName"));
@@ -111,14 +96,12 @@ class DecodingFactory {
             first = false;
         }
 
-        return body;
-    }
+        body.append("""
+                else {
+                    reader.skip(tag);
+                }
+                """);
 
-    private MethodBody unknownFieldSupport() {
-        return body("""
-                        else {
-                            reader.skip(tag);
-                        }
-                        """);
+        return body;
     }
 }
