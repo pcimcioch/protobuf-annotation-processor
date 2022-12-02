@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,12 +25,14 @@ class EncodingFactory {
         MethodBody body = body("writeTo(new $ProtobufWriter(output));",
                 param("ProtobufWriter", ProtobufWriter.class));
 
-        record.addMethod()
+        MethodSource<JavaRecordSource> method = record.addMethod()
                 .setPublic()
+                .setReturnTypeVoid()
                 .setName("writeTo")
-                .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(OutputStream.class, "output");
+                .setBody(body.toString());
+        method.addParameter(OutputStream.class, "output");
+        method.addAnnotation(Override.class);
     }
 
     private void addMethodToByteArray(JavaRecordSource record) {
@@ -40,12 +43,13 @@ class EncodingFactory {
                 param("ByteArrayOutputStream", ByteArrayOutputStream.class),
                 param("ProtobufWriter", ProtobufWriter.class));
 
-        record.addMethod()
+        MethodSource<JavaRecordSource> method = record.addMethod()
                 .setPublic()
-                .setName("toByteArray")
-                .setBody(body.toString())
                 .setReturnType(byte[].class)
-                .addThrows(IOException.class);
+                .setName("toByteArray")
+                .addThrows(IOException.class)
+                .setBody(body.toString());
+        method.addAnnotation(Override.class);
     }
 
     private void addMethodWriteToProtobufWriter(JavaRecordSource record, MessageDefinition message) {
@@ -58,11 +62,12 @@ class EncodingFactory {
                     param("name", field.name()));
         }
 
-        record.addMethod()
+        MethodSource<JavaRecordSource> method = record.addMethod()
                 .setPrivate()
+                .setReturnTypeVoid()
                 .setName("writeTo")
-                .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(ProtobufWriter.class, "writer");
+                .setBody(body.toString());
+        method.addParameter(ProtobufWriter.class, "writer");
     }
 }

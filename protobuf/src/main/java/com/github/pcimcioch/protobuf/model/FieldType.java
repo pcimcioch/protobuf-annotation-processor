@@ -13,16 +13,6 @@ public interface FieldType {
     TypeName fieldJavaType();
 
     /**
-     * Returns wrapper java type of the field. For primitives this will be their boxing type, in other case it is the same as
-     * a {@link #fieldJavaType()}. Wrapper type must be nullable and usable in generic types.
-     *
-     * @return java type
-     */
-    default TypeName wrapperJavaType() {
-        return fieldJavaType();
-    }
-
-    /**
      * Returns default java value for this type
      *
      * @return default value
@@ -30,11 +20,11 @@ public interface FieldType {
     String defaultValue();
 
     /**
-     * Returns wire type for this type
+     * Returns java code that added to the field will check for it having default value
      *
-     * @return wire type
+     * @return code that checks for default value
      */
-    WireType wireType();
+    String defaultCheck();
 
     /**
      * Returns name of java method from {@link com.github.pcimcioch.protobuf.io.ProtobufWriter} and
@@ -43,4 +33,11 @@ public interface FieldType {
      * @return java method name
      */
     String ioMethod();
+
+    /**
+     * Returns whether this type should be required to be non-null
+     *
+     * @return whether this type should be required to be non-null
+     */
+    boolean requireNonNull();
 }

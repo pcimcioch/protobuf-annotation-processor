@@ -15,8 +15,8 @@ protobuf {
     }
 }
 
-sourceSets {
-    named("main") {
-        java.srcDir("build/generated/source/proto/main/java")
-    }
-}
+//sourceSets {
+//    named("main") {
+//        java.srcDir("build/generated/source/proto/main/java")
+//    }
+//}

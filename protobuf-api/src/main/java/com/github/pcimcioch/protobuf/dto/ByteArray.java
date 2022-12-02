@@ -1,10 +1,12 @@
 package com.github.pcimcioch.protobuf.dto;
 
 import java.util.Arrays;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
- * Wrapper for {@code byte[]} that provides equals and hashcode comparing by array content, not array identity
+ * Wrapper for {@code byte[]} that provides equals and hashcode comparing by array content, not array identity.
+ * This structure is immutable.
  *
  * @param data byte array to wrap
  */
@@ -15,13 +17,25 @@ public record ByteArray(byte[] data) {
      */
     public static final ByteArray EMPTY = new ByteArray(new byte[0]);
 
+
     /**
      * Constructor
      *
      * @param data byte array
      */
     public ByteArray(byte[] data) {
-        this.data = Objects.requireNonNull(data, "Data cannot be null");
+        requireNonNull(data, "Data cannot be null");
+        this.data = Arrays.copyOf(data, data.length);
+    }
+
+    /**
+     * Returns byte array
+     *
+     * @return byte array
+     */
+    @Override
+    public byte[] data() {
+        return Arrays.copyOf(data, data.length);
     }
 
     @Override

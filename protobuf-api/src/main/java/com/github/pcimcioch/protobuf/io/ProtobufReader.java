@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
-import com.github.pcimcioch.protobuf.exception.ProtobufParseException;
 
 import java.io.EOFException;
 import java.io.IOException;

@@ -13,6 +13,7 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 /**
  * Writes protobuf data
  */
+// TODO do not save default values + tests for it
 public class ProtobufWriter {
 
     private final ProtobufOutput output;

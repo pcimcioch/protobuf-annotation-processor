@@ -15,16 +15,16 @@ class ProtoDefinitionsTest {
     void correctDefinition() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
         ));
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
         ));
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example2.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
         ));
         MessageDefinition message4 = new MessageDefinition(canonicalName("com.example.Parent.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
         ));
 
         // when then
@@ -51,13 +51,13 @@ class ProtoDefinitionsTest {
     void duplicatedMessageName() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
         ));
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.OtherType"), List.of(
-                new FieldDefinition("name2", ScalarFieldType.BOOL, 1)
+                new FieldDefinition("name2", ScalarFieldType.BOOL, 2)
         ));
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name3", ScalarFieldType.BOOL, 0)
+                new FieldDefinition("name3", ScalarFieldType.BOOL, 1)
         ));
 
         // when then

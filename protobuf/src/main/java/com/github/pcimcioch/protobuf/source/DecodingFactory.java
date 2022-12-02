@@ -5,6 +5,7 @@ import com.github.pcimcioch.protobuf.io.Tag;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,28 +27,28 @@ class DecodingFactory {
                 param("ProtobufReader", ProtobufReader.class),
                 param("ByteArrayInputStream", ByteArrayInputStream.class));
 
-        messageRecord.addMethod()
+        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
                 .setReturnType(message.name().canonicalName())
                 .setName("parse")
-                .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(byte[].class, "data");
+                .setBody(body.toString());
+        method.addParameter(byte[].class, "data");
     }
 
     private void addParseStreamMethod(JavaRecordSource messageRecord, MessageDefinition message) {
         MethodBody body = body("return parse(new $ProtobufReader(stream));",
                 param("ProtobufReader", ProtobufReader.class));
 
-        messageRecord.addMethod()
+        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
                 .setReturnType(message.name().canonicalName())
                 .setName("parse")
-                .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(InputStream.class, "stream");
+                .setBody(body.toString());
+        method.addParameter(InputStream.class, "stream");
     }
 
     private void addParseProtobufInputMethod(JavaRecordSource messageRecord, MessageDefinition message) {
@@ -65,16 +66,14 @@ class DecodingFactory {
                 param("Tag", Tag.class),
                 param("readFields", readFields(message)));
 
-        System.out.println(body.toString());
-
-        messageRecord.addMethod()
+        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
                 .setPrivate()
                 .setStatic(true)
                 .setReturnType(message.name().canonicalName())
                 .setName("parse")
-                .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(ProtobufReader.class, "reader");
+                .setBody(body.toString());
+        method.addParameter(ProtobufReader.class, "reader");
     }
 
     private MethodBody readFields(MessageDefinition message) {

@@ -1,13 +1,19 @@
 package com.protobuf;
 
+import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.io.ProtobufInput;
+import com.github.pcimcioch.protobuf.test.FullRecord;
+import org.assertj.core.api.iterable.ThrowingExtractor;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ProtobufAssertion {
 
@@ -15,6 +21,45 @@ public class ProtobufAssertion {
 
     private ProtobufAssertion(InputStream inputStream) {
         this.input = new ProtobufInput(inputStream);
+    }
+
+    public static <T extends ProtobufMessage> ProtobufAssertion assertProto(T message) throws IOException {
+        return new ProtobufAssertion(new ByteArrayInputStream(serialize(message)));
+    }
+
+    public static <T> T deserialize(ByteArrayOutputStream output,
+                                    ThrowingExtractor<byte[], T, IOException> bytesParser,
+                                    ThrowingExtractor<InputStream, T, IOException> inputParser) throws IOException {
+        return deserialize(output.toByteArray(), bytesParser, inputParser);
+    }
+
+    public static <T> T deserialize(byte[] data,
+                                    ThrowingExtractor<byte[], T, IOException> bytesParser,
+                                    ThrowingExtractor<InputStream, T, IOException> inputParser) throws IOException {
+        T recordRaw = bytesParser.extractThrows(data);
+        T recordStream;
+
+        try (ByteArrayInputStream in = new ByteArrayInputStream(data)) {
+            recordStream = inputParser.extractThrows(in);
+        }
+
+        assertThat(recordRaw).isEqualTo(recordStream);
+
+        return recordRaw;
+    }
+
+    public static <T extends ProtobufMessage> byte[] serialize(T record) throws IOException {
+        byte[] rawData = record.toByteArray();
+        byte[] streamData;
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            record.writeTo(out);
+            streamData = out.toByteArray();
+        }
+
+        assertThat(rawData).isEqualTo(streamData);
+
+        return rawData;
     }
 
     public ProtobufAssertion _double(long number, double expectedValue) throws IOException {
@@ -199,9 +244,5 @@ public class ProtobufAssertion {
 
     public void end() {
         assertThatThrownBy(input::readBoolean).isInstanceOf(EOFException.class);
-    }
-
-    public static ProtobufAssertion assertProto(byte[] bytes) {
-        return new ProtobufAssertion(new ByteArrayInputStream(bytes));
     }
 }

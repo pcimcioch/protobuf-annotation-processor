@@ -4,11 +4,11 @@ import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import static com.github.pcimcioch.protobuf.source.MethodBody.body;
 import static com.github.pcimcioch.protobuf.source.MethodBody.param;
 
-// TODO should be record's inner class
 class BuilderFactory {
 
     JavaClassSource buildBuilder(MessageDefinition message) {
@@ -23,6 +23,9 @@ class BuilderFactory {
 
     private JavaClassSource buildSourceFile(MessageDefinition message) {
         return Roaster.create(JavaClassSource.class)
+                .setPublic()
+                .setStatic(true)
+                .setFinal(true)
                 .setPackage(message.builderName().packageName())
                 .setName(message.builderName().simpleName());
     }
@@ -30,9 +33,9 @@ class BuilderFactory {
     private void addFields(JavaClassSource builderClass, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
             builderClass.addField()
-                    .setName(field.name())
                     .setPrivate()
                     .setType(field.typeName().canonicalName())
+                    .setName(field.name())
                     .setLiteralInitializer(field.defaultValue());
         }
     }
@@ -44,8 +47,8 @@ class BuilderFactory {
 
         builderClass.addMethod()
                 .setPublic()
-                .setName("build")
                 .setReturnType(message.name().canonicalName())
+                .setName("build")
                 .setBody(body.toString());
     }
 
@@ -56,12 +59,12 @@ class BuilderFactory {
                             return this;""",
                     param("field", field));
 
-            builderClass.addMethod()
+            MethodSource<JavaClassSource> method = builderClass.addMethod()
                     .setPublic()
-                    .setName(field.name())
                     .setReturnType(message.builderName().canonicalName())
-                    .setBody(body.toString())
-                    .addParameter(field.typeName().canonicalName(), field.name());
+                    .setName(field.name())
+                    .setBody(body.toString());
+            method.addParameter(field.typeName().canonicalName(), field.name());
         }
     }
 }

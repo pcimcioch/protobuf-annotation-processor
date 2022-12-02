@@ -1,14 +1,17 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.pcimcioch.protobuf.source.MethodBody.body;
 import static com.github.pcimcioch.protobuf.source.MethodBody.param;
@@ -55,14 +58,13 @@ public class SourceFactory {
      * Builds java source files from the protobuf model
      *
      * @param model model
-     * @return java souce files
+     * @return java source files
      */
     public List<SourceFile> buildSource(ProtoDefinitions model) {
         List<SourceFile> sources = new ArrayList<>();
 
         for (MessageDefinition message : model.messages()) {
             sources.add(new SourceFile(buildMessageRecord(message)));
-            sources.add(new SourceFile(builderFactory.buildBuilder(message)));
         }
 
         return sources;
@@ -70,10 +72,12 @@ public class SourceFactory {
 
     private JavaRecordSource buildMessageRecord(MessageDefinition message) {
         JavaRecordSource messageRecord = buildSourceFile(message);
+        addConstructor(messageRecord, message);
         addRecordComponents(messageRecord, message);
         addEncodingMethods(messageRecord, message);
         addDecodingMethods(messageRecord, message);
         addBuilderMethod(messageRecord, message);
+        addBuilderClass(messageRecord, message);
 
         return messageRecord;
     }
@@ -81,7 +85,32 @@ public class SourceFactory {
     private JavaRecordSource buildSourceFile(MessageDefinition message) {
         return Roaster.create(JavaRecordSource.class)
                 .setPackage(message.name().packageName())
-                .setName(message.name().simpleName());
+                .setName(message.name().simpleName())
+                .addInterface(ProtobufMessage.class);
+    }
+
+    // TODO it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
+    private void addConstructor(JavaRecordSource messageRecord, MessageDefinition message) {
+        MethodBody body = body();
+        for (FieldDefinition field : message.fields()) {
+            if (field.requireNonNull()) {
+                body.append("this.$fieldName = $Objects.requireNonNull($fieldName, \"Field $fieldName cannot be null\");",
+                        param("fieldName", field),
+                        param("Objects", Objects.class));
+            } else {
+                body.append("this.$fieldName = $fieldName;",
+                        param("fieldName", field));
+            }
+        }
+
+        MethodSource<JavaRecordSource> constructor = messageRecord.addMethod()
+                .setPublic()
+                .setConstructor(true)
+                .setBody(body.toString());
+
+        for (FieldDefinition field : message.fields()) {
+            constructor.addParameter(field.typeName().canonicalName(), field.name());
+        }
     }
 
     private void addRecordComponents(JavaRecordSource record, MessageDefinition message) {
@@ -106,8 +135,12 @@ public class SourceFactory {
         messageRecord.addMethod()
                 .setPublic()
                 .setStatic(true)
-                .setName("builder")
                 .setReturnType(message.builderName().canonicalName())
+                .setName("builder")
                 .setBody(body.toString());
+    }
+
+    private void addBuilderClass(JavaRecordSource messageRecord, MessageDefinition message) {
+        messageRecord.addNestedType(builderFactory.buildBuilder(message));
     }
 }

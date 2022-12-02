@@ -20,7 +20,7 @@ class FieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> new FieldDefinition(name, ScalarFieldType.BOOL, 0))
+        assertThatCode(() -> new FieldDefinition(name, ScalarFieldType.BOOL, 1))
                 .doesNotThrowAnyException();
     }
 
@@ -50,6 +50,14 @@ class FieldDefinitionTest {
     void negativeNumber() {
         // when then
         assertThatThrownBy(() -> new FieldDefinition("name", ScalarFieldType.BOOL, -1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Number must be positive");
+    }
+
+    @Test
+    void zeroNumber() {
+        // when then
+        assertThatThrownBy(() -> new FieldDefinition("name", ScalarFieldType.BOOL, 0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }

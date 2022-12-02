@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.exception;
+package com.github.pcimcioch.protobuf.io;
 
 import java.io.Serial;
 

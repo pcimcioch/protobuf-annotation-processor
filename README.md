@@ -129,24 +129,24 @@ This library will support only `proto3` specification
 
 Current feature support:
 
-| Feature                   | Link                                                                                | Support                                    |
-|---------------------------|-------------------------------------------------------------------------------------|--------------------------------------------|
-| Proto2                    | <https://developers.google.com/protocol-buffers/docs/proto>                         | Not planned to be supported                |
-| Proto3                    | <https://developers.google.com/protocol-buffers/docs/proto3>                        | Partial support (see details below)        |
-| Scalar Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#scalar>                 | Supported                                  |
-| Default Values            | <https://developers.google.com/protocol-buffers/docs/proto3#default>                | Supported                                  |
-| Packages                  | <https://developers.google.com/protocol-buffers/docs/proto3#packages>               | Supported                                  |
-| Repeated Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | Not yet supported                          |
-| Optional Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | Not yet supported                          |
-| Enumerations              | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | Not yet supported                          |
-| Reserved Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | Not yet supported                          |
-| Using Other Message Types | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | Not yet supported                          |
-| Nested Types              | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | Not yet supported                          |
-| Unknown Fields            | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | Ignored, not included in serialized object |
-| Maps                      | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | Not yet supported                          |
-| Options                   | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | Not yet supported                          |
-| Any                       | <https://developers.google.com/protocol-buffers/docs/proto3#any>                    | Not planned to be supported                |
-| Oneof                     | <https://developers.google.com/protocol-buffers/docs/proto3#oneof>                  | Not planned to be supported                |
-| Services                  | <https://developers.google.com/protocol-buffers/docs/proto3#services>               | Not planned to be supported                |
-| JSON Mapping              | <https://developers.google.com/protocol-buffers/docs/proto3#json>                   | Not planned to be supported                |
-| Options                   | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | Not planned to be supported                |
+| Feature                   | Link                                                                                | Support                                                 |
+|---------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------|
+| Proto2                    | <https://developers.google.com/protocol-buffers/docs/proto>                         | Not planned to be supported                             |
+| Proto3                    | <https://developers.google.com/protocol-buffers/docs/proto3>                        | Partial support (see details below)                     |
+| Scalar Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#scalar>                 | Supported                                               |
+| Default Values            | <https://developers.google.com/protocol-buffers/docs/proto3#default>                | Supported                                               |
+| Packages                  | <https://developers.google.com/protocol-buffers/docs/proto3#packages>               | Supported                                               |
+| Repeated Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | Not yet supported                                       |
+| Optional Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | Not yet supported                                       |
+| Enumerations              | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | Not yet supported                                       |
+| Reserved Fields           | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | Not yet supported                                       |
+| Using Other Message Types | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | Not yet supported                                       |
+| Nested Types              | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | Not yet supported                                       |
+| Unknown Fields            | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | Ignored, not included in serialized object              |
+| Maps                      | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | Not yet supported                                       |
+| Options                   | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | java_package supported, java_multiple_files always true |
+| Any                       | <https://developers.google.com/protocol-buffers/docs/proto3#any>                    | Not planned to be supported                             |
+| Oneof                     | <https://developers.google.com/protocol-buffers/docs/proto3#oneof>                  | Not planned to be supported                             |
+| Services                  | <https://developers.google.com/protocol-buffers/docs/proto3#services>               | Not planned to be supported                             |
+| JSON Mapping              | <https://developers.google.com/protocol-buffers/docs/proto3#json>                   | Not planned to be supported                             |
+| Options                   | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | Not planned to be supported                             |

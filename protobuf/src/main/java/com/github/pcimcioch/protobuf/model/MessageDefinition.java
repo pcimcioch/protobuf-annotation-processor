@@ -39,7 +39,7 @@ public class MessageDefinition {
      * @return java type name of the builder
      */
     public TypeName builderName() {
-        return canonicalName(name.canonicalName() + "Builder");
+        return canonicalName(name.canonicalName() + ".Builder");
     }
 
     /**

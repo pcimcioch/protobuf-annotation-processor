@@ -42,15 +42,6 @@ public class FieldDefinition {
     }
 
     /**
-     * Returns wire type of the field
-     *
-     * @return wire type
-     */
-    public WireType wireType() {
-        return type.wireType();
-    }
-
-    /**
      * Returns java type name
      *
      * @return java type name
@@ -78,6 +69,15 @@ public class FieldDefinition {
         return type.defaultValue();
     }
 
+    /**
+     * Returns whether this field should be required to be non-null
+     *
+     * @return whether this field should be required to be non-null
+     */
+    public boolean requireNonNull() {
+        return type.requireNonNull();
+    }
+
     private static final class Valid {
         private static final Pattern namePattern = Pattern.compile("^[a-zA-z_][a-zA-Z0-9_]*$");
 
@@ -89,7 +89,7 @@ public class FieldDefinition {
         }
 
         private static int number(int number) {
-            if (number < 0) {
+            if (number <= 0) {
                 throw new IllegalArgumentException("Number must be positive, but was: " + number);
             }
             return number;
