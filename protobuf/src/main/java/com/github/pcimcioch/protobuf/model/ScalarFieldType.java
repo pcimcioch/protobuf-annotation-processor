@@ -21,7 +21,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Double"),
             "0d",
             I64,
-            "%s.writeDouble(%s)",
+            "%s._double(%d, %s)",
             "%s.readDouble()"),
 
     /**
@@ -32,7 +32,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Float"),
             "0f",
             I32,
-            "%s.writeFloat(%s)",
+            "%s._float(%d, %s)",
             "%s.readFloat()"),
 
     /**
@@ -43,7 +43,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.writeVarint(%s)",
+            "%s.int32(%d, %s)",
             "(int) %s.readVarint()"),
 
     /**
@@ -54,7 +54,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.writeVarint(%s)",
+            "%s.int64(%d, %s)",
             "%s.readVarint()"),
 
     /**
@@ -65,7 +65,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.writeVarint(%s)",
+            "%s.uint32(%d, %s)",
             "(int) %s.readVarint()"),
 
     /**
@@ -76,7 +76,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.writeVarint(%s)",
+            "%s.uint64(%d, %s)",
             "%s.readVarint()"),
 
     /**
@@ -87,7 +87,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.writeZigZag(%s)",
+            "%s.sint32(%d, %s)",
             "(int) %s.readZigZag()"),
 
     /**
@@ -98,7 +98,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.writeZigZag(%s)",
+            "%s.sint64(%d, %s)",
             "%s.readZigZag()"),
 
     /**
@@ -109,7 +109,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             I32,
-            "%s.writeFixedInt(%s)",
+            "%s.fixed32(%d, %s)",
             "%s.readFixedInt()"),
 
     /**
@@ -120,7 +120,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             I64,
-            "%s.writeFixedLong(%s)",
+            "%s.fixed64(%d, %s)",
             "%s.readFixedLong()"),
 
     /**
@@ -131,7 +131,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             I32,
-            "%s.writeFixedInt(%s)",
+            "%s.sfixed32(%d, %s)",
             "%s.readFixedInt()"),
 
     /**
@@ -142,7 +142,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             I64,
-            "%s.writeFixedLong(%s)",
+            "%s.sfixed64(%d, %s)",
             "%s.readFixedLong()"),
 
     /**
@@ -153,7 +153,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Boolean"),
             "false",
             VARINT,
-            "%s.writeBoolean(%s)",
+            "%s.bool(%d, %s)",
             "%s.readBoolean()"),
 
     /**
@@ -164,7 +164,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("String"),
             "\"\"",
             LEN,
-            "%s.writeString(%s)",
+            "%s.string(%d, %s)",
             "%s.readString()"),
 
     /**
@@ -175,7 +175,7 @@ public enum ScalarFieldType implements FieldType {
             canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"),
             "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY",
             LEN,
-            "%s.writeBytes(%s.data())",
+            "%s.bytes(%d, %s)",
             "new com.github.pcimcioch.protobuf.dto.ByteArray(%s.readBytes())");
 
     private final String protoType;
@@ -217,8 +217,8 @@ public enum ScalarFieldType implements FieldType {
     }
 
     @Override
-    public String writeMethod(String outputName, String parameterName) {
-        return String.format(writeMethodTemplate, outputName, parameterName);
+    public String writeMethod(String outputName, int number, String parameterName) {
+        return String.format(writeMethodTemplate, outputName, number, parameterName);
     }
 
     @Override

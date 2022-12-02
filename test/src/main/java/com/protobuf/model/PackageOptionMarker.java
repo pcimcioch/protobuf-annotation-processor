@@ -19,5 +19,5 @@ import static com.github.pcimcioch.protobuf.annotation.Field.int32;
         name = ".test.PackageOptionPartial",
         fields = @Field(type = int32, name = "test", number = 0)
 )
-public class PackageOptionMarker {
+class PackageOptionMarker {
 }

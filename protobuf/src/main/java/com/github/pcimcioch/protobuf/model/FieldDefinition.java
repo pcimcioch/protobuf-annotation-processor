@@ -66,7 +66,7 @@ public class FieldDefinition {
      * @return java code
      */
     public String protobufWriteMethod(String outputName) {
-        return type.writeMethod(outputName, name);
+        return type.writeMethod(outputName, number, name);
     }
 
     /**
@@ -86,15 +86,6 @@ public class FieldDefinition {
      */
     public String defaultValue() {
         return type.defaultValue();
-    }
-
-    /**
-     * Returns protobuf tag for this field
-     *
-     * @return tag
-     */
-    public int tag() {
-        return (number << 3) | type.wireType().id();
     }
 
     private static final class Valid {

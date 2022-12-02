@@ -1,5 +1,6 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.test.FullRecord;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.protobuf.ProtobufAssertion.assertProto;
-import static com.protobuf.ProtobufBuilder.proto;
 import static com.protobuf.Utils.b;
 import static com.protobuf.Utils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,10 +119,12 @@ class ScalarSerializationTest {
     @Nested
     class Deserialization {
 
+        private final ByteArrayOutputStream data = new ByteArrayOutputStream();
+        private final ProtobufWriter proto = new ProtobufWriter(data);
+
         @Test
         void emptyObject() throws IOException {
             // given
-            byte[] data = proto().data();
 
             // when
             FullRecord record = deserialize(data);
@@ -150,23 +152,21 @@ class ScalarSerializationTest {
         @Test
         void fullObject() throws IOException {
             // given
-            byte[] data = proto()
-                    ._double(0, 10d)
-                    ._float(1, 20f)
-                    .int32(2, 30)
-                    .int64(3, 40L)
-                    .uint32(4, 50)
-                    .uint64(5, 60L)
-                    .sint32(6, 70)
-                    .sint64(7, 80L)
-                    .fixed32(8, 90)
-                    .fixed64(9, 100L)
-                    .sfixed32(10, 110)
-                    .sfixed64(11, 120L)
-                    .bool(12, true)
-                    .string(13, "test")
-                    .bytes(14, b(1, 20, 3))
-                    .data();
+            proto._double(0, 10d);
+            proto._float(1, 20f);
+            proto.int32(2, 30);
+            proto.int64(3, 40L);
+            proto.uint32(4, 50);
+            proto.uint64(5, 60L);
+            proto.sint32(6, 70);
+            proto.sint64(7, 80L);
+            proto.fixed32(8, 90);
+            proto.fixed64(9, 100L);
+            proto.sfixed32(10, 110);
+            proto.sfixed64(11, 120L);
+            proto.bool(12, true);
+            proto.string(13, "test");
+            proto.bytes(14, ba(1, 20, 3));
 
             // when
             FullRecord record = deserialize(data);
@@ -194,14 +194,12 @@ class ScalarSerializationTest {
         @Test
         void partialObject() throws IOException {
             // given
-            byte[] data = proto()
-                    ._double(0, 10d)
-                    .int64(3, 40L)
-                    .sint32(6, 70)
-                    .sfixed32(10, 110)
-                    .bool(12, true)
-                    .string(13, "test")
-                    .data();
+            proto._double(0, 10d);
+            proto.int64(3, 40L);
+            proto.sint32(6, 70);
+            proto.sfixed32(10, 110);
+            proto.bool(12, true);
+            proto.string(13, "test");
 
             // when
             FullRecord record = deserialize(data);
@@ -229,23 +227,21 @@ class ScalarSerializationTest {
         @Test
         void fullObjectReverseOrder() throws IOException {
             // given
-            byte[] data = proto()
-                    .bytes(14, b(1, 20, 3))
-                    .string(13, "test")
-                    .bool(12, true)
-                    .sfixed64(11, 120L)
-                    .sfixed32(10, 110)
-                    .fixed64(9, 100L)
-                    .fixed32(8, 90)
-                    .sint64(7, 80L)
-                    .sint32(6, 70)
-                    .uint64(5, 60L)
-                    .uint32(4, 50)
-                    .int64(3, 40L)
-                    .int32(2, 30)
-                    ._float(1, 20f)
-                    ._double(0, 10d)
-                    .data();
+            proto.bytes(14, ba(1, 20, 3));
+            proto.string(13, "test");
+            proto.bool(12, true);
+            proto.sfixed64(11, 120L);
+            proto.sfixed32(10, 110);
+            proto.fixed64(9, 100L);
+            proto.fixed32(8, 90);
+            proto.sint64(7, 80L);
+            proto.sint32(6, 70);
+            proto.uint64(5, 60L);
+            proto.uint32(4, 50);
+            proto.int64(3, 40L);
+            proto.int32(2, 30);
+            proto._float(1, 20f);
+            proto._double(0, 10d);
 
             // when
             FullRecord record = deserialize(data);
@@ -340,6 +336,10 @@ class ScalarSerializationTest {
         assertThat(rawData).isEqualTo(streamData);
 
         return rawData;
+    }
+
+    private static FullRecord deserialize(ByteArrayOutputStream output) throws IOException {
+        return deserialize(output.toByteArray());
     }
 
     private static FullRecord deserialize(byte[] data) throws IOException {

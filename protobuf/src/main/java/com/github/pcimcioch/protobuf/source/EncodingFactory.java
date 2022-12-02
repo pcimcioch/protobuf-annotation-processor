@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.io.ProtobufOutput;
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
@@ -16,12 +16,12 @@ class EncodingFactory {
     void addEncodingMethods(JavaRecordSource messageRecord, MessageDefinition message) {
         addMethodWriteToOutputStream(messageRecord);
         addMethodToByteArray(messageRecord);
-        addMethodWriteToProtobufOutput(messageRecord, message);
+        addMethodWriteToProtobufWriter(messageRecord, message);
     }
 
     private void addMethodWriteToOutputStream(JavaRecordSource record) {
-        MethodBody body = body("writeTo(new ${ProtobufOutput}(output));",
-                param("ProtobufOutput", ProtobufOutput.class));
+        MethodBody body = body("writeTo(new ${ProtobufWriter}(output));",
+                param("ProtobufWriter", ProtobufWriter.class));
 
         record.addMethod()
                 .setPublic()
@@ -34,9 +34,9 @@ class EncodingFactory {
     private void addMethodToByteArray(JavaRecordSource record) {
         MethodBody body = body("""
                         java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
-                        writeTo(new ${ProtobufOutput}(output));
+                        writeTo(new ${ProtobufWriter}(output));
                         return output.toByteArray();""",
-                param("ProtobufOutput", ProtobufOutput.class));
+                param("ProtobufWriter", ProtobufWriter.class));
 
         record.addMethod()
                 .setPublic()
@@ -46,14 +46,11 @@ class EncodingFactory {
                 .addThrows(IOException.class);
     }
 
-    private void addMethodWriteToProtobufOutput(JavaRecordSource record, MessageDefinition message) {
+    private void addMethodWriteToProtobufWriter(JavaRecordSource record, MessageDefinition message) {
         MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append("""
-                            output.writeVarint(${tag});
-                            ${writeToOutput};""",
-                    param("tag", field.tag()),
+            body.append("${writeToOutput};",
                             param("writeToOutput", field.protobufWriteMethod("output")));
         }
 
@@ -62,6 +59,6 @@ class EncodingFactory {
                 .setName("writeTo")
                 .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(ProtobufOutput.class, "output");
+                .addParameter(ProtobufWriter.class, "output");
     }
 }

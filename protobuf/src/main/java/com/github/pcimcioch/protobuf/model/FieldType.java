@@ -40,10 +40,11 @@ public interface FieldType {
      * Returns java code to write this field to given output
      *
      * @param outputName    output name
+     * @param number        number of the field
      * @param parameterName name of the parameter storing this scalar type
      * @return java code
      */
-    String writeMethod(String outputName, String parameterName);
+    String writeMethod(String outputName, int number, String parameterName);
 
     /**
      * Returns java code to read this field from given input
