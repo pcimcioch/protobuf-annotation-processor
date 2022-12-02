@@ -21,7 +21,7 @@ class EncodingFactory {
     }
 
     private void addMethodWriteToOutputStream(JavaRecordSource record) {
-        MethodBody body = body("writeTo(new ${ProtobufWriter}(output));",
+        MethodBody body = body("writeTo(new $ProtobufWriter(output));",
                 param("ProtobufWriter", ProtobufWriter.class));
 
         record.addMethod()
@@ -34,8 +34,8 @@ class EncodingFactory {
 
     private void addMethodToByteArray(JavaRecordSource record) {
         MethodBody body = body("""
-                        java.io.ByteArrayOutputStream output = new ${ByteArrayOutputStream}();
-                        writeTo(new ${ProtobufWriter}(output));
+                        $ByteArrayOutputStream output = new $ByteArrayOutputStream();
+                        writeTo(new $ProtobufWriter(output));
                         return output.toByteArray();""",
                 param("ByteArrayOutputStream", ByteArrayOutputStream.class),
                 param("ProtobufWriter", ProtobufWriter.class));
@@ -52,7 +52,7 @@ class EncodingFactory {
         MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append("writer.${writerMethod}(${number}, ${name});",
+            body.append("writer.$writerMethod($number, $name);",
                     param("writerMethod", field.ioMethod()),
                     param("number", field.number()),
                     param("name", field.name()));

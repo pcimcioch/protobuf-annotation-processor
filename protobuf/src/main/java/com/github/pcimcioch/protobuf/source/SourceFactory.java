@@ -100,8 +100,8 @@ public class SourceFactory {
 
     private void addBuilderMethod(JavaRecordSource messageRecord, MessageDefinition message) {
         MethodBody body = body(
-                "return new ${BuilderType}();",
-                param("BuilderType", message.builderName().canonicalName()));
+                "return new $BuilderType();",
+                param("BuilderType", message.builderName()));
 
         messageRecord.addMethod()
                 .setPublic()

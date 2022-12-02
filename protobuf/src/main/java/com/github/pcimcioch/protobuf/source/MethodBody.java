@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ class MethodBody {
     static {
         formatters.register(FieldDefinition.class, FieldDefinition::name);
         formatters.register(Class.class, Class::getCanonicalName);
+        formatters.register(TypeName.class, TypeName::canonicalName);
         formatters.register(List.class, list -> list.stream().map(formatters::format).collect(joining(", ")).toString());
     }
 

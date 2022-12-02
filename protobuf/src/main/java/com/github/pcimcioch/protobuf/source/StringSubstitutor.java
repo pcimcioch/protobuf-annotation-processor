@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 final class StringSubstitutor {
-    private static final Pattern tokenPattern = Pattern.compile("\\$\\{([^}]*)}");
+    private static final Pattern tokenPattern = Pattern.compile("\\$([a-zA-Z0-9]+)");
 
     private StringSubstitutor() {
     }

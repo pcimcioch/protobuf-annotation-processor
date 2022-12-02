@@ -23,7 +23,7 @@ class DecodingFactory {
     }
 
     private void addParseBytesMethod(JavaRecordSource messageRecord, MessageDefinition message) {
-        MethodBody body = body("return parse(new ${ProtobufReader}(new ${ByteArrayInputStream}(data)));",
+        MethodBody body = body("return parse(new $ProtobufReader(new $ByteArrayInputStream(data)));",
                 param("ProtobufReader", ProtobufReader.class),
                 param("ByteArrayInputStream", ByteArrayInputStream.class));
 
@@ -38,7 +38,7 @@ class DecodingFactory {
     }
 
     private void addParseStreamMethod(JavaRecordSource messageRecord, MessageDefinition message) {
-        MethodBody body = body("return parse(new ${ProtobufReader}(stream));",
+        MethodBody body = body("return parse(new $ProtobufReader(stream));",
                 param("ProtobufReader", ProtobufReader.class));
 
         messageRecord.addMethod()
@@ -53,17 +53,17 @@ class DecodingFactory {
 
     private void addParseProtobufInputMethod(JavaRecordSource messageRecord, MessageDefinition message) {
         MethodBody body = body("""
-                ${BuilderType} builder = new ${BuilderType}();
+                $BuilderType builder = new $BuilderType();
                 
                 while (true) {
-                    ${readTag}
-                    ${readFields}
-                    ${unknownFieldSupport}
+                    $readTag
+                    $readFields
+                    $unknownFieldSupport
                 }
                 
                 return builder.build();
                 """,
-                param("BuilderType", message.builderName().canonicalName()),
+                param("BuilderType", message.builderName()),
                 param("readTag", readTag()),
                 param("readFields", readFields(message)),
                 param("unknownFieldSupport", unknownFieldSupport()));
@@ -80,10 +80,10 @@ class DecodingFactory {
 
     private MethodBody readTag() {
         return body("""
-                ${Tag} tag = null;
+                $Tag tag = null;
                 try {
                     tag = reader.tag();
-                } catch (${EOFException} ex) {
+                } catch ($EOFException ex) {
                     break;
                 }
                 """,
@@ -99,9 +99,10 @@ class DecodingFactory {
             if (!first) {
                 body.append("else ");
             }
+            // TODO replace with switch
             body.append("""
-                            if (tag.number() == ${fieldNumber}) {
-                                builder.${fieldName}(reader.${readMethod}(tag, "${fieldName}"));
+                            if (tag.number() == $fieldNumber) {
+                                builder.$fieldName(reader.$readMethod(tag, "$fieldName"));
                             }
                             """,
                     param("fieldNumber", field.number()),

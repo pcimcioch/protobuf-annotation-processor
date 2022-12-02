@@ -38,8 +38,8 @@ class BuilderFactory {
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
-        MethodBody body = body("return new ${MessageType}(${ConstructorParameters});",
-                param("MessageType", message.name().canonicalName()),
+        MethodBody body = body("return new $MessageType($ConstructorParameters);",
+                param("MessageType", message.name()),
                 param("ConstructorParameters", message.fields()));
 
         builderClass.addMethod()
@@ -52,7 +52,7 @@ class BuilderFactory {
     private void addSetterMethods(JavaClassSource builderClass, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
             MethodBody body = body("""
-                            this.${field} = ${field};
+                            this.$field = $field;
                             return this;""",
                     param("field", field));
 
