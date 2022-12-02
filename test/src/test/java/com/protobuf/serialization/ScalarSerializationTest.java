@@ -265,6 +265,53 @@ class ScalarSerializationTest {
                     .bytes(ba(1, 20, 3))
                     .build());
         }
+
+        @Test
+        void unknownFields() throws IOException {
+            // given
+            proto.fixed32(20, 1234);
+            proto.fixed64(21, 1234L);
+            proto.int32(22, 100);
+            proto.bytes(23, ba(10, 20, 30, 40, 50));
+
+            proto._double(0, 10d);
+            proto._float(1, 20f);
+            proto.int32(2, 30);
+            proto.int64(3, 40L);
+            proto.uint32(4, 50);
+            proto.uint64(5, 60L);
+            proto.sint32(6, 70);
+            proto.sint64(7, 80L);
+            proto.fixed32(8, 90);
+            proto.fixed64(9, 100L);
+            proto.sfixed32(10, 110);
+            proto.sfixed64(11, 120L);
+            proto.bool(12, true);
+            proto.string(13, "test");
+            proto.bytes(14, ba(1, 20, 3));
+
+            // when
+            FullRecord record = deserialize(data);
+
+            // then
+            assertThat(record).isEqualTo(FullRecord.builder()
+                    ._double(10d)
+                    ._float(20f)
+                    .int32(30)
+                    .int64(40L)
+                    .uint32(50)
+                    .uint64(60L)
+                    .sint32(70)
+                    .sint64(80L)
+                    .fixed32(90)
+                    .fixed64(100L)
+                    .sfixed32(110)
+                    .sfixed64(120L)
+                    .bool(true)
+                    .string("test")
+                    .bytes(ba(1, 20, 3))
+                    .build());
+        }
     }
 
     @Nested

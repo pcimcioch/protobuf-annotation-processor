@@ -37,20 +37,10 @@ public interface FieldType {
     WireType wireType();
 
     /**
-     * Returns java code to write this field to given output
+     * Returns name of java method from {@link com.github.pcimcioch.protobuf.io.ProtobufWriter} and
+     * {@link com.github.pcimcioch.protobuf.io.ProtobufReader} used to write and read this field
      *
-     * @param outputName    output name
-     * @param number        number of the field
-     * @param parameterName name of the parameter storing this scalar type
-     * @return java code
+     * @return java method name
      */
-    String writeMethod(String outputName, int number, String parameterName);
-
-    /**
-     * Returns java code to read this field from given input
-     *
-     * @param inputName input name
-     * @return java code
-     */
-    String readMethod(String inputName);
+    String ioMethod();
 }

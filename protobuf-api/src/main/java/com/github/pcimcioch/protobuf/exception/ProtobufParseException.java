@@ -13,9 +13,10 @@ public class ProtobufParseException extends RuntimeException {
     /**
      * Constructor
      *
-     * @param message error message
+     * @param messageFormat error message format
+     * @param params        format parameters
      */
-    public ProtobufParseException(String message) {
-        super(message);
+    public ProtobufParseException(String messageFormat, Object... params) {
+        super(String.format(messageFormat, params));
     }
 }

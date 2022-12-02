@@ -60,23 +60,13 @@ public class FieldDefinition {
     }
 
     /**
-     * Returns java code to write this field to given output
+     * Returns name of java method from {@link com.github.pcimcioch.protobuf.io.ProtobufWriter} and
+     * {@link com.github.pcimcioch.protobuf.io.ProtobufReader} used to write and read this field
      *
-     * @param outputName output name
-     * @return java code
+     * @return java method name
      */
-    public String protobufWriteMethod(String outputName) {
-        return type.writeMethod(outputName, number, name);
-    }
-
-    /**
-     * Returns java code to read this field from given input
-     *
-     * @param inputName input name
-     * @return java code
-     */
-    public String protobufReadMethod(String inputName) {
-        return type.readMethod(inputName);
+    public String ioMethod() {
+        return type.ioMethod();
     }
 
     /**

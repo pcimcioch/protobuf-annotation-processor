@@ -1,11 +1,13 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.io.ProtobufInput;
+import com.github.pcimcioch.protobuf.io.ProtobufReader;
+import com.github.pcimcioch.protobuf.io.Tag;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
-import com.github.pcimcioch.protobuf.exception.ProtobufParseException;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
+import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,8 +23,9 @@ class DecodingFactory {
     }
 
     private void addParseBytesMethod(JavaRecordSource messageRecord, MessageDefinition message) {
-        MethodBody body = body("return parse(new ${ProtobufInput}(new java.io.ByteArrayInputStream(data)));",
-                param("ProtobufInput", ProtobufInput.class));
+        MethodBody body = body("return parse(new ${ProtobufReader}(new ${ByteArrayInputStream}(data)));",
+                param("ProtobufReader", ProtobufReader.class),
+                param("ByteArrayInputStream", ByteArrayInputStream.class));
 
         messageRecord.addMethod()
                 .setPublic()
@@ -35,8 +38,8 @@ class DecodingFactory {
     }
 
     private void addParseStreamMethod(JavaRecordSource messageRecord, MessageDefinition message) {
-        MethodBody body = body("return parse(new ${ProtobufInput}(stream));",
-                param("ProtobufInput", ProtobufInput.class));
+        MethodBody body = body("return parse(new ${ProtobufReader}(stream));",
+                param("ProtobufReader", ProtobufReader.class));
 
         messageRecord.addMethod()
                 .setPublic()
@@ -72,20 +75,20 @@ class DecodingFactory {
                 .setName("parse")
                 .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(ProtobufInput.class, "input");
+                .addParameter(ProtobufReader.class, "reader");
     }
 
     private MethodBody readTag() {
         return body("""
-                long tag = 0L;
+                ${Tag} tag = null;
                 try {
-                    tag = input.readVarint();
-                } catch (java.io.EOFException ex) {
+                    tag = reader.tag();
+                } catch (${EOFException} ex) {
                     break;
                 }
-                long number = tag >>> 3;
-                int wireType = (int) tag & 0b111;
-                """);
+                """,
+                param("Tag", Tag.class),
+                param("EOFException", EOFException.class));
     }
 
     private MethodBody readFields(MessageDefinition message) {
@@ -97,18 +100,13 @@ class DecodingFactory {
                 body.append("else ");
             }
             body.append("""
-                            if (number == ${fieldNumber}) {
-                                if (wireType != ${fieldWireType}) {
-                                    throw new ${ProtobufParseException}("Field [name=${fieldName}, number=${fieldNumber}] incorrect wire type. Expected ${fieldWireType}, got " + wireType);
-                                }
-                                builder.${fieldName}(${inputRead});
+                            if (tag.number() == ${fieldNumber}) {
+                                builder.${fieldName}(reader.${readMethod}(tag, "${fieldName}"));
                             }
                             """,
                     param("fieldNumber", field.number()),
-                    param("fieldWireType", field.wireType().id()),
-                    param("ProtobufParseException", ProtobufParseException.class),
                     param("fieldName", field.name()),
-                    param("inputRead", field.protobufReadMethod("input")));
+                    param("readMethod", field.ioMethod()));
             first = false;
         }
 
@@ -118,25 +116,8 @@ class DecodingFactory {
     private MethodBody unknownFieldSupport() {
         return body("""
                         else {
-                            switch(wireType) {
-                                case 0:
-                                    input.readVarint();
-                                    break;
-                                case 1:
-                                    input.skip(8);
-                                    break;
-                                case 2:
-                                    input.skip(input.readVarint());
-                                    break;
-                                case 3: throw new ${ProtobufParseException}("Wire Type SGROUP is not supported");
-                                case 4: throw new ${ProtobufParseException}("Wire Type EGROUP is not supported");
-                                case 5:
-                                    input.skip(4);
-                                    break;
-                                default: throw new ${ProtobufParseException}("Unknown wire type " + wireType);
-                            }
+                            reader.skip(tag);
                         }
-                        """,
-                param("ProtobufParseException", ProtobufParseException.class));
+                        """);
     }
 }

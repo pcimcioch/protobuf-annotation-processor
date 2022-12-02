@@ -5,6 +5,7 @@ import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -33,9 +34,10 @@ class EncodingFactory {
 
     private void addMethodToByteArray(JavaRecordSource record) {
         MethodBody body = body("""
-                        java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+                        java.io.ByteArrayOutputStream output = new ${ByteArrayOutputStream}();
                         writeTo(new ${ProtobufWriter}(output));
                         return output.toByteArray();""",
+                param("ByteArrayOutputStream", ByteArrayOutputStream.class),
                 param("ProtobufWriter", ProtobufWriter.class));
 
         record.addMethod()
@@ -50,8 +52,10 @@ class EncodingFactory {
         MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append("${writeToOutput};",
-                            param("writeToOutput", field.protobufWriteMethod("output")));
+            body.append("writer.${writerMethod}(${number}, ${name});",
+                    param("writerMethod", field.ioMethod()),
+                    param("number", field.number()),
+                    param("name", field.name()));
         }
 
         record.addMethod()
@@ -59,6 +63,6 @@ class EncodingFactory {
                 .setName("writeTo")
                 .setBody(body.toString())
                 .addThrows(IOException.class)
-                .addParameter(ProtobufWriter.class, "output");
+                .addParameter(ProtobufWriter.class, "writer");
     }
 }

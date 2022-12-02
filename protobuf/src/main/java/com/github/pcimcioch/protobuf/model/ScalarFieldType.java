@@ -21,8 +21,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Double"),
             "0d",
             I64,
-            "%s._double(%d, %s)",
-            "%s.readDouble()"),
+            "_double"),
 
     /**
      * float
@@ -32,8 +31,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Float"),
             "0f",
             I32,
-            "%s._float(%d, %s)",
-            "%s.readFloat()"),
+            "_float"),
 
     /**
      * int32
@@ -43,8 +41,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.int32(%d, %s)",
-            "(int) %s.readVarint()"),
+            "int32"),
 
     /**
      * int64
@@ -54,8 +51,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.int64(%d, %s)",
-            "%s.readVarint()"),
+            "int64"),
 
     /**
      * uint32
@@ -65,8 +61,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.uint32(%d, %s)",
-            "(int) %s.readVarint()"),
+            "uint32"),
 
     /**
      * uint64
@@ -76,8 +71,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.uint64(%d, %s)",
-            "%s.readVarint()"),
+            "uint64"),
 
     /**
      * sint32
@@ -87,8 +81,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             VARINT,
-            "%s.sint32(%d, %s)",
-            "(int) %s.readZigZag()"),
+            "sint32"),
 
     /**
      * sint64
@@ -98,8 +91,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             VARINT,
-            "%s.sint64(%d, %s)",
-            "%s.readZigZag()"),
+            "sint64"),
 
     /**
      * fixed32
@@ -109,8 +101,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             I32,
-            "%s.fixed32(%d, %s)",
-            "%s.readFixedInt()"),
+            "fixed32"),
 
     /**
      * fixed64
@@ -120,8 +111,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             I64,
-            "%s.fixed64(%d, %s)",
-            "%s.readFixedLong()"),
+            "fixed64"),
 
     /**
      * sfixed32
@@ -131,8 +121,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Integer"),
             "0",
             I32,
-            "%s.sfixed32(%d, %s)",
-            "%s.readFixedInt()"),
+            "sfixed32"),
 
     /**
      * sfixed64
@@ -142,8 +131,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Long"),
             "0L",
             I64,
-            "%s.sfixed64(%d, %s)",
-            "%s.readFixedLong()"),
+            "sfixed64"),
 
     /**
      * bool
@@ -153,8 +141,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("Boolean"),
             "false",
             VARINT,
-            "%s.bool(%d, %s)",
-            "%s.readBoolean()"),
+            "bool"),
 
     /**
      * string
@@ -164,8 +151,7 @@ public enum ScalarFieldType implements FieldType {
             simpleName("String"),
             "\"\"",
             LEN,
-            "%s.string(%d, %s)",
-            "%s.readString()"),
+            "string"),
 
     /**
      * bytes
@@ -175,25 +161,22 @@ public enum ScalarFieldType implements FieldType {
             canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"),
             "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY",
             LEN,
-            "%s.bytes(%d, %s)",
-            "new com.github.pcimcioch.protobuf.dto.ByteArray(%s.readBytes())");
+            "bytes");
 
     private final String protoType;
     private final TypeName fieldJavaType;
     private final TypeName wrapperJavaType;
     private final String defaultValue;
     private final WireType wireType;
-    private final String writeMethodTemplate;
-    private final String readMethodTemplate;
+    private final String ioMethod;
 
-    ScalarFieldType(String protoType, TypeName fieldJavaType, TypeName wrapperJavaType, String defaultValue, WireType wireType, String writeMethodTemplate, String readMethodTemplate) {
+    ScalarFieldType(String protoType, TypeName fieldJavaType, TypeName wrapperJavaType, String defaultValue, WireType wireType, String ioMethod) {
         this.protoType = protoType;
         this.fieldJavaType = fieldJavaType;
         this.wrapperJavaType = wrapperJavaType;
         this.defaultValue = defaultValue;
         this.wireType = wireType;
-        this.writeMethodTemplate = writeMethodTemplate;
-        this.readMethodTemplate = readMethodTemplate;
+        this.ioMethod = ioMethod;
     }
 
     @Override
@@ -217,13 +200,8 @@ public enum ScalarFieldType implements FieldType {
     }
 
     @Override
-    public String writeMethod(String outputName, int number, String parameterName) {
-        return String.format(writeMethodTemplate, outputName, number, parameterName);
-    }
-
-    @Override
-    public String readMethod(String inputName) {
-        return String.format(readMethodTemplate, inputName);
+    public String ioMethod() {
+        return ioMethod;
     }
 
     /**

@@ -1,20 +1,15 @@
 package com.github.pcimcioch.protobuf.io;
 
 enum WireType {
-    VARINT(0),
-    I64(1),
-    LEN(2),
-    SGROUP(3),
-    EGROUP(4),
-    I32(5);
+    ;
 
-    private final int id;
+    static final int VARINT = 0;
+    static final int I64 = 1;
+    static final int LEN = 2;
+    static final int SGROUP = 3;
+    static final int EGROUP = 4;
+    static final int I32 = 5;
 
-    WireType(int id) {
-        this.id = id;
-    }
-
-    int id() {
-        return id;
-    }
+    static final int WIRE_BITS = 3;
+    static final int WIRE_MASK = (1 << WIRE_BITS) - 1;
 }
