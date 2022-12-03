@@ -1,12 +1,12 @@
 package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.annotation.Field;
+import com.github.pcimcioch.protobuf.annotation.JavaPackage;
 import com.github.pcimcioch.protobuf.annotation.Message;
-import com.github.pcimcioch.protobuf.annotation.Option;
 
 import static com.github.pcimcioch.protobuf.annotation.Field.int32;
 
-@Option(name = Option.javaPackage, value = "com.protobuf.test")
+@JavaPackage("com.protobuf.test")
 @Message(
         name = "PackageOptionSimple",
         fields = @Field(type = int32, name = "test", number = 1)

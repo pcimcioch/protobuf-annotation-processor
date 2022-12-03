@@ -1,9 +1,11 @@
 package com.github.pcimcioch.protobuf.processor;
 
+import com.github.pcimcioch.protobuf.annotation.Enumeration;
+import com.github.pcimcioch.protobuf.annotation.Enumerations;
+import com.github.pcimcioch.protobuf.annotation.JavaPackage;
 import com.github.pcimcioch.protobuf.annotation.Message;
 import com.github.pcimcioch.protobuf.annotation.Messages;
 import com.github.pcimcioch.protobuf.annotation.ModelFactory;
-import com.github.pcimcioch.protobuf.annotation.Option;
 import com.github.pcimcioch.protobuf.annotation.ProtoFile;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.source.SourceFactory;
@@ -21,6 +23,7 @@ import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static javax.tools.Diagnostic.Kind.ERROR;
@@ -31,6 +34,8 @@ import static javax.tools.Diagnostic.Kind.ERROR;
 @SupportedAnnotationTypes({
         "com.github.pcimcioch.protobuf.annotation.Message",
         "com.github.pcimcioch.protobuf.annotation.Messages",
+        "com.github.pcimcioch.protobuf.annotation.Enumeration",
+        "com.github.pcimcioch.protobuf.annotation.Enumerations",
         "com.github.pcimcioch.protobuf.annotation.Option"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
@@ -53,24 +58,19 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
     }
 
     private List<ProtoFile> getAnnotatedElements(RoundEnvironment roundEnv) {
-        return roundEnv.getElementsAnnotatedWithAny(Set.of(Message.class, Messages.class)).stream()
+        return roundEnv.getElementsAnnotatedWithAny(Set.of(Message.class, Messages.class, Enumeration.class, Enumerations.class)).stream()
                 .map(this::toProtoFile)
                 .toList();
     }
 
     private ProtoFile toProtoFile(Element element) {
-        ProtoFile protoFile = new ProtoFile(
-                element.getAnnotationsByType(Option.class),
-                element.getAnnotationsByType(Message.class)
-        );
+        Message[] messages = element.getAnnotationsByType(Message.class);
+        Enumeration[] enumerations = element.getAnnotationsByType(Enumeration.class);
+        String javaPackage = Optional.ofNullable(element.getAnnotation(JavaPackage.class))
+                .map(JavaPackage::value)
+                .orElseGet(() -> packageOf(element).getQualifiedName().toString());
 
-        if (!protoFile.hasOption(Option.javaPackage)) {
-            String annotationPackageName = packageOf(element).getQualifiedName().toString();
-            protoFile.addOption(Option.javaPackage, annotationPackageName);
-        }
-
-
-        return protoFile;
+        return new ProtoFile(javaPackage, List.of(messages), List.of(enumerations));
     }
 
     private ProtoDefinitions buildModel(List<ProtoFile> protoFiles) {

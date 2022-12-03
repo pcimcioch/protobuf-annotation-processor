@@ -66,6 +66,7 @@ public class SourceFactory {
         for (MessageDefinition message : model.messages()) {
             sources.add(new SourceFile(buildMessageRecord(message)));
         }
+        // TODO generate enums
 
         return sources;
     }

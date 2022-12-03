@@ -6,27 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Option
+ * Repeatable container for {@link Enumeration}
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-public @interface Option {
+public @interface Enumerations {
     /**
-     * Option name
+     * Enumerations
      *
-     * @return name
+     * @return enumerations
      */
-    String name();
-
-    /**
-     * Option value
-     *
-     * @return value
-     */
-    String value();
-
-    /**
-     * Set default java package for all structures in this file
-     */
-    String javaPackage = "java_package";
+    Enumeration[] value();
 }

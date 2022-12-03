@@ -9,14 +9,18 @@ import java.util.Set;
  */
 public class ProtoDefinitions {
     private final List<MessageDefinition> messages;
+    private final List<EnumerationDefinition> enumerations;
 
     /**
      * Constructor
      *
      * @param messages all messages in this model
+     * @param enumerations all enumerations in this model
      */
-    public ProtoDefinitions(List<MessageDefinition> messages) {
+    public ProtoDefinitions(List<MessageDefinition> messages, List<EnumerationDefinition> enumerations) {
         this.messages = Valid.messages(messages);
+        this.enumerations = Valid.enumerations(enumerations);
+        Valid.names(messages, enumerations);
     }
 
     /**
@@ -28,21 +32,45 @@ public class ProtoDefinitions {
         return messages;
     }
 
+    /**
+     * Returns all enumerations in this model
+     *
+     * @return enumerations
+     */
+    public List<EnumerationDefinition> enumerations() {
+        return enumerations;
+    }
+
     private static final class Valid {
 
         private static List<MessageDefinition> messages(List<MessageDefinition> messages) {
             if (messages == null) {
-                throw new IllegalArgumentException("Message can be empty, but not null");
+                throw new IllegalArgumentException("Messages can be empty, but not null");
             }
 
+            return messages;
+        }
+
+        private static List<EnumerationDefinition> enumerations(List<EnumerationDefinition> enumerations) {
+            if (enumerations == null) {
+                throw new IllegalArgumentException("Enumerations can be empty, but not null");
+            }
+
+            return enumerations;
+        }
+
+        private static void names(List<MessageDefinition> messages, List<EnumerationDefinition> enumerations) {
             Set<TypeName> names = new HashSet<>();
             for (MessageDefinition message : messages) {
                 if (!names.add(message.name())) {
                     throw new IllegalArgumentException("Duplicated message name: " + message.name());
                 }
             }
-
-            return messages;
+            for (EnumerationDefinition enumeration : enumerations) {
+                if (!names.add(enumeration.name())) {
+                    throw new IllegalArgumentException("Duplicated enumeration name: " + enumeration.name());
+                }
+            }
         }
     }
 }

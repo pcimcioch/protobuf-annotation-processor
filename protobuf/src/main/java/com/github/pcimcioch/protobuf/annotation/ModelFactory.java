@@ -1,14 +1,16 @@
 package com.github.pcimcioch.protobuf.annotation;
 
+import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ScalarFieldType;
 import com.github.pcimcioch.protobuf.model.TypeName;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 
@@ -25,29 +27,24 @@ public class ModelFactory {
      */
     public ProtoDefinitions buildProtoDefinitions(List<ProtoFile> protoFiles) {
         List<MessageDefinition> messages = protoFiles.stream()
-                .map(this::buildMessages)
-                .flatMap(List::stream)
+                .flatMap(this::buildMessages)
+                .toList();
+        List<EnumerationDefinition> enumerations = protoFiles.stream()
+                .flatMap(this::buildEnumerations)
                 .toList();
 
-        return new ProtoDefinitions(messages);
+        return new ProtoDefinitions(messages, enumerations);
     }
 
-    private List<MessageDefinition> buildMessages(ProtoFile file) {
-        List<MessageDefinition> messages = new ArrayList<>();
-        for (Message message : file.messages()) {
-            messages.add(new MessageDefinition(
-                    buildMessageName(file, message),
-                    buildFields(message)
-            ));
-        }
-
-        return messages;
+    private Stream<MessageDefinition> buildMessages(ProtoFile file) {
+        return file.messages().stream()
+                .map(message -> new MessageDefinition(
+                        buildName(file.javaPackage(), message.name()),
+                        buildFields(message)
+                ));
     }
 
-    private static TypeName buildMessageName(ProtoFile file, Message message) {
-        String annotationPackageName = file.getOption(Option.javaPackage).orElse("");
-        String messageName = message.name();
-
+    private static TypeName buildName(String annotationPackageName, String messageName) {
         if (messageName == null) {
             return canonicalName("");
         }
@@ -61,7 +58,9 @@ public class ModelFactory {
     }
 
     private List<FieldDefinition> buildFields(Message message) {
-        return Arrays.stream(message.fields()).map(this::buildField).toList();
+        return Arrays.stream(message.fields())
+                .map(this::buildField)
+                .toList();
     }
 
     private FieldDefinition buildField(Field field) {
@@ -76,4 +75,22 @@ public class ModelFactory {
         return ScalarFieldType.fromProtoType(type).orElse(null);
     }
 
+    private Stream<EnumerationDefinition> buildEnumerations(ProtoFile file) {
+        return file.enumerations().stream()
+                .map(enumeration -> new EnumerationDefinition(
+                        buildName(file.javaPackage(), enumeration.name()),
+                        enumeration.allowAlias(),
+                        buildEnumerationElements(enumeration)
+                ));
+    }
+
+    private List<EnumerationElementDefinition> buildEnumerationElements(Enumeration enumeration) {
+        return Arrays.stream(enumeration.elements())
+                .map(this::buildEnumerationElement)
+                .toList();
+    }
+
+    private EnumerationElementDefinition buildEnumerationElement(EnumerationElement element) {
+        return new EnumerationElementDefinition(element.name(), element.number());
+    }
 }
