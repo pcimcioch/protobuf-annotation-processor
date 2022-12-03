@@ -20,13 +20,6 @@ public interface FieldType {
     String defaultValue();
 
     /**
-     * Returns java code that added to the field will check for it having default value
-     *
-     * @return code that checks for default value
-     */
-    String defaultCheck();
-
-    /**
      * Returns name of java method from {@link com.github.pcimcioch.protobuf.io.ProtobufWriter} and
      * {@link com.github.pcimcioch.protobuf.io.ProtobufReader} used to write and read this field
      *

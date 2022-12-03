@@ -1,25 +1,28 @@
 package com.github.pcimcioch.protobuf.io;
 
-import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * Reads protobuf types from raw data input.
  */
+@SuppressWarnings("PointlessBitwiseExpression")
 public class ProtobufInput {
     private static final byte PAYLOAD_MASK = 0b01111111;
 
-    private final DataInputStream input;
+    private final byte[] readBuffer = new byte[8];
+    private final InputStream in;
 
     /**
      * Constructor. Given input stream will not be closed by this class in any way
      *
-     * @param input input stream to read data from
+     * @param in input stream to read data from
      */
-    public ProtobufInput(InputStream input) {
-        this.input = new DataInputStream(input);
+    public ProtobufInput(InputStream in) {
+        this.in = in;
     }
 
     /**
@@ -29,7 +32,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public int readFixedInt() throws IOException {
-        return input.readInt();
+        return readInt();
     }
 
     /**
@@ -39,7 +42,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public long readFixedLong() throws IOException {
-        return input.readLong();
+        return readLong();
     }
 
     /**
@@ -49,7 +52,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public double readDouble() throws IOException {
-        return input.readDouble();
+        return Double.longBitsToDouble(readLong());
     }
 
     /**
@@ -59,7 +62,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public float readFloat() throws IOException {
-        return input.readFloat();
+        return Float.intBitsToFloat(readInt());
     }
 
     /**
@@ -69,7 +72,11 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public boolean readBoolean() throws IOException {
-        return input.readBoolean();
+        int ch = in.read();
+        if (ch < 0) {
+            throw new EOFException();
+        }
+        return (ch != 0);
     }
 
     /**
@@ -91,7 +98,7 @@ public class ProtobufInput {
     public byte[] readBytes() throws IOException {
         int length = (int) readVarint();
         byte[] bytes = new byte[length];
-        input.readFully(bytes);
+        readFully(bytes);
         return bytes;
     }
 
@@ -123,7 +130,7 @@ public class ProtobufInput {
         int shift = 0;
 
         do {
-            read = input.readByte();
+            read = readByte();
             significantBytes = read & PAYLOAD_MASK;
             result |= significantBytes << shift;
             shift += 7;
@@ -140,7 +147,53 @@ public class ProtobufInput {
      */
     public void skip(long bytes) throws IOException {
         for (long i = 0; i < bytes; i++) {
-            input.readByte();
+            readByte();
+        }
+    }
+
+    private byte readByte() throws IOException {
+        int ch = in.read();
+        if (ch < 0) {
+            throw new EOFException();
+        }
+        return (byte) (ch);
+    }
+
+    private int readInt() throws IOException {
+        int ch4 = in.read();
+        int ch3 = in.read();
+        int ch2 = in.read();
+        int ch1 = in.read();
+        if ((ch1 | ch2 | ch3 | ch4) < 0)
+            throw new EOFException();
+        return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    }
+
+    private long readLong() throws IOException {
+        readFully(readBuffer, 0, 8);
+        return (((long) readBuffer[7] << 56) +
+                ((long) (readBuffer[6] & 255) << 48) +
+                ((long) (readBuffer[5] & 255) << 40) +
+                ((long) (readBuffer[4] & 255) << 32) +
+                ((long) (readBuffer[3] & 255) << 24) +
+                ((readBuffer[2] & 255) << 16) +
+                ((readBuffer[1] & 255) << 8) +
+                ((readBuffer[0] & 255) << 0));
+    }
+
+    private void readFully(byte[] b) throws IOException {
+        readFully(b, 0, b.length);
+    }
+
+    private void readFully(byte[] b, int off, int len) throws IOException {
+        Objects.checkFromIndexSize(off, len, b.length);
+        int n = 0;
+        while (n < len) {
+            int count = in.read(b, off + n, len - n);
+            if (count < 0) {
+                throw new EOFException();
+            }
+            n += count;
         }
     }
 }

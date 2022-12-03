@@ -1,6 +1,7 @@
 package com.protobuf;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.google.protobuf.ByteString;
 
 public final class Utils {
     private Utils() {
@@ -17,5 +18,9 @@ public final class Utils {
 
     public static ByteArray ba(int... bytes) {
         return new ByteArray(b(bytes));
+    }
+
+    public static ByteString bs(int... bytes) {
+        return ByteString.copyFrom(b(bytes));
     }
 }

@@ -38,6 +38,15 @@ public record ByteArray(byte[] data) {
         return Arrays.copyOf(data, data.length);
     }
 
+    /**
+     * Returns whether this structure is empty
+     *
+     * @return whether it is empty
+     */
+    public boolean isEmpty() {
+        return data.length == 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

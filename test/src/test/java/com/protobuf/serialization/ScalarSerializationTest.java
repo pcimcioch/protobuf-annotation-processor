@@ -2,6 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.test.FullRecord;
+import com.github.pcimcioch.protobuf.test.FullRecordProto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import static com.protobuf.ProtobufAssertion.deserialize;
 import static com.protobuf.ProtobufAssertion.serialize;
 import static com.protobuf.Utils.b;
 import static com.protobuf.Utils.ba;
+import static com.protobuf.Utils.bs;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -57,21 +59,6 @@ class ScalarSerializationTest {
 
             // when then
             assertProto(record)
-                    ._double(1, 0d)
-                    ._float(2, 0f)
-                    .int32(3, 0)
-                    .int64(4, 0L)
-                    .uint32(5, 0)
-                    .uint64(6, 0L)
-                    .sint32(7, 0)
-                    .sint64(8, 0L)
-                    .fixed32(9, 0)
-                    .fixed64(10, 0L)
-                    .sfixed32(11, 0)
-                    .sfixed64(12, 0L)
-                    .bool(13, false)
-                    .string(14, "")
-                    .bytes(15, b())
                     .end();
         }
 
@@ -90,20 +77,11 @@ class ScalarSerializationTest {
             // when then
             assertProto(record)
                     ._double(1, 10d)
-                    ._float(2, 0f)
-                    .int32(3, 0)
                     .int64(4, 40L)
-                    .uint32(5, 0)
-                    .uint64(6, 0L)
                     .sint32(7, 70)
-                    .sint64(8, 0L)
-                    .fixed32(9, 0)
-                    .fixed64(10, 0L)
                     .sfixed32(11, 110)
-                    .sfixed64(12, 0L)
                     .bool(13, true)
                     .string(14, "test")
-                    .bytes(15, b())
                     .end();
         }
     }
@@ -370,6 +348,125 @@ class ScalarSerializationTest {
 
     @Nested
     class ExternalCompatibility {
-        // TODO implement tests of protoc compatibility
+
+        @Test
+        void emptyObject() throws IOException {
+            // given
+            FullRecord our = FullRecord.builder().build();
+            FullRecordProto proto = FullRecordProto.newBuilder().build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        @Test
+        void partialObject() throws IOException {
+            // given
+            FullRecord our = FullRecord.builder()
+                    ._double(10d)
+                    .int64(40L)
+                    .sint32(70)
+                    .sfixed32(110)
+                    .bool(true)
+                    .string("test")
+                    .build();
+            FullRecordProto proto = FullRecordProto.newBuilder()
+                    .setDouble(10d)
+                    .setInt64(40L)
+                    .setSint32(70)
+                    .setSfixed32(110)
+                    .setBool(true)
+                    .setString("test")
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        @Test
+        void fullObject() throws IOException {
+            // given
+            FullRecord our = FullRecord.builder()
+                    ._double(10d)
+                    ._float(20f)
+                    .int32(30)
+                    .int64(40L)
+                    .uint32(50)
+                    .uint64(60L)
+                    .sint32(70)
+                    .sint64(80L)
+                    .fixed32(90)
+                    .fixed64(100L)
+                    .sfixed32(110)
+                    .sfixed64(120L)
+                    .bool(true)
+                    .string("test")
+                    .bytes(ba(1, 20, 3))
+                    .build();
+            FullRecordProto proto = FullRecordProto.newBuilder()
+                    .setDouble(10d)
+                    .setFloat(20f)
+                    .setInt32(30)
+                    .setInt64(40L)
+                    .setUint32(50)
+                    .setUint64(60L)
+                    .setSint32(70)
+                    .setSint64(80L)
+                    .setFixed32(90)
+                    .setFixed64(100L)
+                    .setSfixed32(110)
+                    .setSfixed64(120L)
+                    .setBool(true)
+                    .setString("test")
+                    .setBytes(bs(1, 20, 3))
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        @Test
+        void utf8String() throws IOException {
+            // given
+            FullRecord our = FullRecord.builder()
+                    .string("test ąęść \t\n\r")
+                    .build();
+            FullRecordProto proto = FullRecordProto.newBuilder()
+                    .setString("test ąęść \t\n\r")
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        void assertProtoEqual(FullRecord our, FullRecordProto proto) {
+            assertThat(our._double()).isEqualTo(proto.getDouble());
+            assertThat(our._float()).isEqualTo(proto.getFloat());
+            assertThat(our.int32()).isEqualTo(proto.getInt32());
+            assertThat(our.int64()).isEqualTo(proto.getInt64());
+            assertThat(our.uint32()).isEqualTo(proto.getUint32());
+            assertThat(our.uint64()).isEqualTo(proto.getUint64());
+            assertThat(our.sint32()).isEqualTo(proto.getSint32());
+            assertThat(our.sint64()).isEqualTo(proto.getSint64());
+            assertThat(our.fixed32()).isEqualTo(proto.getFixed32());
+            assertThat(our.fixed64()).isEqualTo(proto.getFixed64());
+            assertThat(our.sfixed32()).isEqualTo(proto.getSfixed32());
+            assertThat(our.sfixed64()).isEqualTo(proto.getSfixed64());
+            assertThat(our.bool()).isEqualTo(proto.getBool());
+            assertThat(our.string()).isEqualTo(proto.getString());
+            assertThat(our.bytes().data()).containsExactly(proto.getBytes().toByteArray());
+        }
     }
 }

@@ -13,7 +13,6 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 /**
  * Writes protobuf data
  */
-// TODO do not save default values + tests for it
 public class ProtobufWriter {
 
     private final ProtobufOutput output;
@@ -34,10 +33,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void _double(long number, double value) throws IOException {
-        Tag tag = new Tag(number, I64);
-        output.writeVarint(tag.value());
-        output.writeDouble(value);
+    public void _double(int number, double value) throws IOException {
+        if (value != 0d) {
+            Tag tag = new Tag(number, I64);
+            output.writeVarint(tag.value());
+            output.writeDouble(value);
+        }
     }
 
     /**
@@ -47,10 +48,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void _float(long number, float value) throws IOException {
-        Tag tag = new Tag(number, I32);
-        output.writeVarint(tag.value());
-        output.writeFloat(value);
+    public void _float(int number, float value) throws IOException {
+        if (value != 0f) {
+            Tag tag = new Tag(number, I32);
+            output.writeVarint(tag.value());
+            output.writeFloat(value);
+        }
     }
 
     /**
@@ -60,10 +63,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void int32(long number, int value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeVarint(value);
+    public void int32(int number, int value) throws IOException {
+        if (value != 0) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeVarint(value);
+        }
     }
 
     /**
@@ -73,10 +78,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void int64(long number, long value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeVarint(value);
+    public void int64(int number, long value) throws IOException {
+        if (value != 0L) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeVarint(value);
+        }
     }
 
     /**
@@ -86,10 +93,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void uint32(long number, int value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeVarint(value);
+    public void uint32(int number, int value) throws IOException {
+        if (value != 0) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeVarint(value);
+        }
     }
 
     /**
@@ -99,10 +108,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void uint64(long number, long value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeVarint(value);
+    public void uint64(int number, long value) throws IOException {
+        if (value != 0L) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeVarint(value);
+        }
     }
 
     /**
@@ -112,10 +123,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void sint32(long number, int value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeZigZag(value);
+    public void sint32(int number, int value) throws IOException {
+        if (value != 0) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeZigZag(value);
+        }
     }
 
     /**
@@ -125,10 +138,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void sint64(long number, long value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeZigZag(value);
+    public void sint64(int number, long value) throws IOException {
+        if (value != 0L) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeZigZag(value);
+        }
     }
 
     /**
@@ -138,10 +153,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void fixed32(long number, int value) throws IOException {
-        Tag tag = new Tag(number, I32);
-        output.writeVarint(tag.value());
-        output.writeFixedInt(value);
+    public void fixed32(int number, int value) throws IOException {
+        if (value != 0) {
+            Tag tag = new Tag(number, I32);
+            output.writeVarint(tag.value());
+            output.writeFixedInt(value);
+        }
     }
 
     /**
@@ -151,10 +168,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void fixed64(long number, long value) throws IOException {
-        Tag tag = new Tag(number, I64);
-        output.writeVarint(tag.value());
-        output.writeFixedLong(value);
+    public void fixed64(int number, long value) throws IOException {
+        if (value != 0L) {
+            Tag tag = new Tag(number, I64);
+            output.writeVarint(tag.value());
+            output.writeFixedLong(value);
+        }
     }
 
     /**
@@ -164,10 +183,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void sfixed32(long number, int value) throws IOException {
-        Tag tag = new Tag(number, I32);
-        output.writeVarint(tag.value());
-        output.writeFixedInt(value);
+    public void sfixed32(int number, int value) throws IOException {
+        if (value != 0) {
+            Tag tag = new Tag(number, I32);
+            output.writeVarint(tag.value());
+            output.writeFixedInt(value);
+        }
     }
 
     /**
@@ -177,10 +198,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void sfixed64(long number, long value) throws IOException {
-        Tag tag = new Tag(number, I64);
-        output.writeVarint(tag.value());
-        output.writeFixedLong(value);
+    public void sfixed64(int number, long value) throws IOException {
+        if (value != 0L) {
+            Tag tag = new Tag(number, I64);
+            output.writeVarint(tag.value());
+            output.writeFixedLong(value);
+        }
     }
 
     /**
@@ -190,10 +213,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void bool(long number, boolean value) throws IOException {
-        Tag tag = new Tag(number, VARINT);
-        output.writeVarint(tag.value());
-        output.writeBoolean(value);
+    public void bool(int number, boolean value) throws IOException {
+        if (value) {
+            Tag tag = new Tag(number, VARINT);
+            output.writeVarint(tag.value());
+            output.writeBoolean(true);
+        }
     }
 
     /**
@@ -203,10 +228,12 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void string(long number, String value) throws IOException {
-        Tag tag = new Tag(number, LEN);
-        output.writeVarint(tag.value());
-        output.writeString(value);
+    public void string(int number, String value) throws IOException {
+        if (!"".equals(value)) {
+            Tag tag = new Tag(number, LEN);
+            output.writeVarint(tag.value());
+            output.writeString(value);
+        }
     }
 
     /**
@@ -216,9 +243,11 @@ public class ProtobufWriter {
      * @param value  value to write
      * @throws IOException in case of any data write error
      */
-    public void bytes(long number, ByteArray value) throws IOException {
-        Tag tag = new Tag(number, LEN);
-        output.writeVarint(tag.value());
-        output.writeBytes(value.data());
+    public void bytes(int number, ByteArray value) throws IOException {
+        if (!value.isEmpty()) {
+            Tag tag = new Tag(number, LEN);
+            output.writeVarint(tag.value());
+            output.writeBytes(value.data());
+        }
     }
 }

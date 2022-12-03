@@ -7,7 +7,7 @@ package com.github.pcimcioch.protobuf.io;
  * @param wireType field wire type
  */
 public record Tag(
-        long number,
+        int number,
         int wireType
 ) {
 
@@ -17,7 +17,7 @@ public record Tag(
      * @param value value
      */
     public Tag(long value) {
-        this(value >>> WireType.WIRE_BITS, (int) value & WireType.WIRE_MASK);
+        this((int) (value >>> WireType.WIRE_BITS), (int) (value & WireType.WIRE_MASK));
     }
 
     /**
@@ -26,6 +26,6 @@ public record Tag(
      * @return integer representation
      */
     public long value() {
-        return number << WireType.WIRE_BITS | wireType;
+        return (long) number << WireType.WIRE_BITS | wireType;
     }
 }

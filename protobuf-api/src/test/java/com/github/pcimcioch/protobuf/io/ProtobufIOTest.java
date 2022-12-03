@@ -43,16 +43,16 @@ class ProtobufIOTest {
         static Stream<Arguments> arguments() {
             return Stream.of(
                     Arguments.of(0, b(0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(1, b(0b0, 0b0, 0b0, 0b1)),
-                    Arguments.of(15, b(0b0, 0b0, 0b0, 0b00001111)),
-                    Arguments.of(255, b(0b0, 0b0, 0b0, 0b11111111)),
-                    Arguments.of(1000, b(0b0, 0b0, 0b11, 0b11101000)),
-                    Arguments.of(Integer.MAX_VALUE, b(0b01111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(1, b(0b1, 0b0, 0b0, 0b0)),
+                    Arguments.of(15, b(0b00001111, 0b0, 0b0, 0b0)),
+                    Arguments.of(255, b(0b11111111, 0b0, 0b0, 0b0)),
+                    Arguments.of(1000, b(0b11101000, 0b11, 0b0, 0b0)),
+                    Arguments.of(Integer.MAX_VALUE, b(0b11111111, 0b11111111, 0b11111111, 0b01111111)),
                     Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-15, b(0b11111111, 0b11111111, 0b11111111, 0b11110001)),
-                    Arguments.of(-255, b(0b11111111, 0b11111111, 0b11111111, 0b1)),
-                    Arguments.of(-1000, b(0b11111111, 0b11111111, 0b11111100, 0b00011000)),
-                    Arguments.of(Integer.MIN_VALUE, b(0b10000000, 0b0, 0b0, 0b0))
+                    Arguments.of(-15, b(0b11110001, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-255, b(0b1, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-1000, b(0b00011000, 0b11111100, 0b11111111, 0b11111111)),
+                    Arguments.of(Integer.MIN_VALUE, b(0b0, 0b0, 0b0, 0b10000000))
             );
         }
 
@@ -96,18 +96,18 @@ class ProtobufIOTest {
         static Stream<Arguments> arguments() {
             return Stream.of(
                     Arguments.of(0, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(1, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b1)),
-                    Arguments.of(15, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b00001111)),
-                    Arguments.of(255, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b11111111)),
-                    Arguments.of(1000, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b11, 0b11101000)),
-                    Arguments.of(123456789123L, b(0b0, 0b0, 0b0, 0b11100, 0b10111110, 0b10011001, 0b00011010, 0b10000011)),
-                    Arguments.of(Long.MAX_VALUE, b(0b01111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(1, b(0b1, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
+                    Arguments.of(15, b(0b00001111, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
+                    Arguments.of(255, b(0b11111111, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
+                    Arguments.of(1000, b(0b11101000, 0b11, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
+                    Arguments.of(123456789123L, b(0b10000011,0b00011010,0b10011001,0b10111110,0b11100,0b0,0b0,0b0)),
+                    Arguments.of(Long.MAX_VALUE, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b01111111)),
                     Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-15, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11110001)),
-                    Arguments.of(-255, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b1)),
-                    Arguments.of(-1000, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111100, 0b00011000)),
-                    Arguments.of(-123456789123L, b(0b11111111, 0b11111111, 0b11111111, 0b11100011, 0b01000001, 0b01100110, 0b11100101, 0b01111101)),
-                    Arguments.of(Long.MIN_VALUE, b(0b10000000, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0))
+                    Arguments.of(-15, b(0b11110001, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-255, b(0b1, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-1000, b(0b00011000, 0b11111100,0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-123456789123L, b(0b01111101,0b11100101,0b01100110,0b01000001,0b11100011,0b11111111,0b11111111,0b11111111)),
+                    Arguments.of(Long.MIN_VALUE, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b10000000))
             );
         }
 
@@ -155,13 +155,13 @@ class ProtobufIOTest {
         static Stream<Arguments> arguments() {
             return Stream.of(
                     Arguments.of(0f, b(0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(1f, b(0b00111111, 0b10000000, 0b00000000, 0b00000000)),
-                    Arguments.of(123.456f, b(0b01000010, 0b11110110, 0b11101001, 0b01111001)),
-                    Arguments.of(Float.MAX_VALUE, b(0b01111111, 0b01111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-0f, b(0b10000000, 0b0, 0b0, 0b0)),
-                    Arguments.of(-1f, b(0b10111111, 0b10000000, 0b00000000, 0b00000000)),
-                    Arguments.of(-123.456f, b(0b11000010, 0b11110110, 0b11101001, 0b01111001)),
-                    Arguments.of(Float.MIN_VALUE, b(0b0, 0b0, 0b0, 0b1))
+                    Arguments.of(1f, b(0b00000000, 0b00000000, 0b10000000, 0b00111111)),
+                    Arguments.of(123.456f, b(0b01111001, 0b11101001, 0b11110110, 0b01000010)),
+                    Arguments.of(Float.MAX_VALUE, b(0b11111111, 0b11111111, 0b01111111, 0b01111111)),
+                    Arguments.of(-0f, b(0b0, 0b0, 0b0, 0b10000000)),
+                    Arguments.of(-1f, b(0b00000000, 0b00000000, 0b10000000, 0b10111111)),
+                    Arguments.of(-123.456f, b(0b01111001, 0b11101001, 0b11110110, 0b11000010)),
+                    Arguments.of(Float.MIN_VALUE, b(0b1, 0b0, 0b0, 0b0))
             );
         }
 
@@ -205,13 +205,13 @@ class ProtobufIOTest {
         static Stream<Arguments> arguments() {
             return Stream.of(
                     Arguments.of(0d, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(1d, b(0b00111111, 0b11110000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000)),
-                    Arguments.of(123456789.123456789d, b(0b01000001, 0b10011101, 0b01101111, 0b00110100, 0b01010100, 0b01111110, 0b01101011, 0b01110101)),
-                    Arguments.of(Double.MAX_VALUE, b(0b1111111, 0b11101111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-0d, b(0b10000000, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(-1d, b(0b10111111, 0b11110000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000)),
-                    Arguments.of(-123456789.123456789d, b(0b11000001, 0b10011101, 0b01101111, 0b00110100, 0b01010100, 0b01111110, 0b01101011, 0b01110101)),
-                    Arguments.of(Double.MIN_VALUE, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b1))
+                    Arguments.of(1d, b(0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11110000, 0b00111111)),
+                    Arguments.of(123456789.123456789d, b(0b01110101, 0b01101011, 0b01111110, 0b01010100, 0b00110100, 0b01101111, 0b10011101, 0b01000001)),
+                    Arguments.of(Double.MAX_VALUE, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11101111, 0b1111111)),
+                    Arguments.of(-0d, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b10000000)),
+                    Arguments.of(-1d, b(0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11110000, 0b10111111)),
+                    Arguments.of(-123456789.123456789d, b(0b01110101, 0b01101011, 0b01111110, 0b01010100, 0b00110100, 0b01101111, 0b10011101, 0b11000001)),
+                    Arguments.of(Double.MIN_VALUE, b(0b1, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0))
             );
         }
 
@@ -506,8 +506,8 @@ class ProtobufIOTest {
 
             // then
             assertBinary(b(
-                    0b0, 0b0, 0b11, 0b11101000, // 1000 fixed int
-                    0b0, 0b0, 0b0, 0b11100, 0b10111110, 0b10011001, 0b00011010, 0b10000011, // 123456789123L fixed long
+                    0b11101000, 0b11, 0b0, 0b0, // 1000 fixed int
+                    0b10000011, 0b00011010, 0b10011001, 0b10111110, 0b11100, 0b0, 0b0, 0b0, // 123456789123L fixed long
                     0b11000000, 0b11000100, 0b00000111, // 123456 varint
                     0b11, 97, 98, 99, // "abc" string
                     0b100 // 2 zig zag
@@ -518,8 +518,8 @@ class ProtobufIOTest {
         void read() throws IOException {
             // given
             ProtobufInput input = input(b(
-                    0b0, 0b0, 0b11, 0b11101000, // 1000 fixed int
-                    0b0, 0b0, 0b0, 0b11100, 0b10111110, 0b10011001, 0b00011010, 0b10000011, // 123456789123L fixed long
+                    0b11101000, 0b11, 0b0, 0b0, // 1000 fixed int
+                    0b10000011, 0b00011010, 0b10011001, 0b10111110, 0b11100, 0b0, 0b0, 0b0, // 123456789123L fixed long
                     0b11000000, 0b11000100, 0b00000111, // 123456 varint
                     0b11, 97, 98, 99, // "abc" string
                     0b100 // 2 zig zag
@@ -539,7 +539,7 @@ class ProtobufIOTest {
         @Test
         void skipZero() throws IOException {
             // given
-            ProtobufInput input = input(b(0, 0, 0, 10));
+            ProtobufInput input = input(b(10, 0, 0, 0));
 
             // when
             input.skip(0);
@@ -551,7 +551,7 @@ class ProtobufIOTest {
         @Test
         void skip() throws IOException {
             // given
-            ProtobufInput input = input(b(10, 20, 30, 0, 0, 0, 10));
+            ProtobufInput input = input(b(10, 20, 30, 10, 0, 0, 0));
 
             // when
             input.skip(3);

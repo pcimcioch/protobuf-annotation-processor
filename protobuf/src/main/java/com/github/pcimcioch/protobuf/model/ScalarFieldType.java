@@ -15,7 +15,6 @@ public enum ScalarFieldType implements FieldType {
     DOUBLE("double",
             simpleName("double"),
             "0d",
-            "== 0d",
             "_double",
             false),
 
@@ -25,7 +24,6 @@ public enum ScalarFieldType implements FieldType {
     FLOAT("float",
             simpleName("float"),
             "0f",
-            "== 0f",
             "_float",
             false),
 
@@ -35,7 +33,6 @@ public enum ScalarFieldType implements FieldType {
     INT32("int32",
             simpleName("int"),
             "0",
-            "== 0",
             "int32",
             false),
 
@@ -45,7 +42,6 @@ public enum ScalarFieldType implements FieldType {
     INT64("int64",
             simpleName("long"),
             "0L",
-            "== 0L",
             "int64",
             false),
 
@@ -55,7 +51,6 @@ public enum ScalarFieldType implements FieldType {
     UINT32("uint32",
             simpleName("int"),
             "0",
-            "== 0",
             "uint32",
             false),
 
@@ -65,7 +60,6 @@ public enum ScalarFieldType implements FieldType {
     UINT64("uint64",
             simpleName("long"),
             "0L",
-            "== 0L",
             "uint64",
             false),
 
@@ -75,7 +69,6 @@ public enum ScalarFieldType implements FieldType {
     SINT32("sint32",
             simpleName("int"),
             "0",
-            "== 0",
             "sint32",
             false),
 
@@ -85,7 +78,6 @@ public enum ScalarFieldType implements FieldType {
     SINT64("sint64",
             simpleName("long"),
             "0L",
-            "== 0L",
             "sint64",
             false),
 
@@ -95,7 +87,6 @@ public enum ScalarFieldType implements FieldType {
     FIXED32("fixed32",
             simpleName("int"),
             "0",
-            "== 0",
             "fixed32",
             false),
 
@@ -105,7 +96,6 @@ public enum ScalarFieldType implements FieldType {
     FIXED64("fixed64",
             simpleName("long"),
             "0L",
-            "== 0L",
             "fixed64",
             false),
 
@@ -115,7 +105,6 @@ public enum ScalarFieldType implements FieldType {
     SFIXED32("sfixed32",
             simpleName("int"),
             "0",
-            "== 0",
             "sfixed32",
             false),
 
@@ -125,7 +114,6 @@ public enum ScalarFieldType implements FieldType {
     SFIXED64("sfixed64",
             simpleName("long"),
             "0L",
-            "== 0L",
             "sfixed64",
             false),
 
@@ -135,7 +123,6 @@ public enum ScalarFieldType implements FieldType {
     BOOL("bool",
             simpleName("boolean"),
             "false",
-            "== false",
             "bool",
             false),
 
@@ -145,7 +132,6 @@ public enum ScalarFieldType implements FieldType {
     STRING("string",
             simpleName("String"),
             "\"\"",
-            ".equals(\"\")",
             "string",
             true),
 
@@ -155,23 +141,19 @@ public enum ScalarFieldType implements FieldType {
     BYTES("bytes",
             canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"),
             "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY",
-            ".isEmpty()",
             "bytes",
             true);
 
     private final String protoType;
     private final TypeName fieldJavaType;
     private final String defaultValue;
-    private final String defaultCheck;
     private final String ioMethod;
     private final boolean requireNonNull;
 
-    ScalarFieldType(String protoType, TypeName fieldJavaType, String defaultValue, String defaultCheck, String ioMethod,
-                    boolean requireNonNull) {
+    ScalarFieldType(String protoType, TypeName fieldJavaType, String defaultValue, String ioMethod, boolean requireNonNull) {
         this.protoType = protoType;
         this.fieldJavaType = fieldJavaType;
         this.defaultValue = defaultValue;
-        this.defaultCheck = defaultCheck;
         this.ioMethod = ioMethod;
         this.requireNonNull = requireNonNull;
     }
@@ -184,11 +166,6 @@ public enum ScalarFieldType implements FieldType {
     @Override
     public String defaultValue() {
         return defaultValue;
-    }
-
-    @Override
-    public String defaultCheck() {
-        return defaultCheck;
     }
 
     @Override
