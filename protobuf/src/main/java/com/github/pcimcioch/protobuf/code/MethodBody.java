@@ -1,7 +1,6 @@
-package com.github.pcimcioch.protobuf.source;
+package com.github.pcimcioch.protobuf.code;
 
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,8 +12,11 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Method body builder
+ */
 @SuppressWarnings("unchecked")
-class MethodBody {
+public class MethodBody {
 
     private static final Formatters formatters = new Formatters();
 
@@ -30,22 +32,48 @@ class MethodBody {
     private MethodBody() {
     }
 
-    static Parameter param(String key, Object value) {
+    /**
+     * Creates parameter used in body template substitution
+     *
+     * @param key   substitution key
+     * @param value substitution value
+     * @return parameter
+     */
+    public static Parameter param(String key, Object value) {
         return new Parameter(key, value);
     }
 
-    static MethodBody body(String sourcePattern, Parameter... parameters) {
-        return body().append(sourcePattern, parameters);
+    /**
+     * Creates body from the template
+     *
+     * @param sourceTemplate source code template
+     * @param parameters     parameters to fill in source code template
+     * @return filled method body
+     */
+    public static MethodBody body(String sourceTemplate, Parameter... parameters) {
+        return body().append(sourceTemplate, parameters);
     }
 
-    static MethodBody body() {
+    /**
+     * Returns empty body
+     *
+     * @return body
+     */
+    public static MethodBody body() {
         return new MethodBody();
     }
 
-    MethodBody append(String sourcePattern, Parameter... parameters) {
+    /**
+     * Appends source code body template to the body
+     *
+     * @param sourceTemplate source code template
+     * @param parameters     parameters to fill in source code template
+     * @return method body with new code appended
+     */
+    public MethodBody append(String sourceTemplate, Parameter... parameters) {
         Map<String, String> formattedParameters = Arrays.stream(parameters)
                 .collect(toMap(Parameter::key, p -> formatters.format(p.value())));
-        builder.append(StringSubstitutor.replace(sourcePattern, formattedParameters));
+        builder.append(StringSubstitutor.replace(sourceTemplate, formattedParameters));
 
         return this;
     }
@@ -55,7 +83,13 @@ class MethodBody {
         return builder.toString();
     }
 
-    record Parameter(String key, Object value) {
+    /**
+     * Source code template parameter
+     *
+     * @param key   key
+     * @param value value
+     */
+    public record Parameter(String key, Object value) {
     }
 
     private static final class Formatters {

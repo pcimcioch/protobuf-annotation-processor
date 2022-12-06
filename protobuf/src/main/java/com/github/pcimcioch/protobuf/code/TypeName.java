@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.code;
 
 import java.util.Objects;
 import java.util.regex.Matcher;

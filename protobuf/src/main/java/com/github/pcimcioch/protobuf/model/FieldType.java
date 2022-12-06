@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.code.TypeName;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
+
 /**
  * Describes type of field
  */
@@ -33,4 +36,12 @@ public interface FieldType {
      * @return whether this type should be required to be non-null
      */
     boolean requireNonNull();
+
+    /**
+     * Adds builder methods to set up field of this type
+     *
+     * @param builderClass builder source
+     * @param field        field name
+     */
+    void addBuilderMethods(JavaClassSource builderClass, String field);
 }

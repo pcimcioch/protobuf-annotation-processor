@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.io.ProtobufReader;
 import com.github.pcimcioch.protobuf.io.Tag;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
@@ -11,8 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.github.pcimcioch.protobuf.source.MethodBody.body;
-import static com.github.pcimcioch.protobuf.source.MethodBody.param;
+import static com.github.pcimcioch.protobuf.code.MethodBody.body;
+import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 
 class DecodingFactory {
 

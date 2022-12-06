@@ -6,13 +6,13 @@ import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ScalarFieldType;
-import com.github.pcimcioch.protobuf.model.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 
 /**
  * Create model from annotations
@@ -64,16 +64,16 @@ public class ModelFactory {
     }
 
     private FieldDefinition buildField(Field field) {
-        // TODO support enum fields
         return new FieldDefinition(
                 field.name(),
-                buildFieldType(field.type()),
+                buildFieldType(field),
                 field.number()
         );
     }
 
-    private ScalarFieldType buildFieldType(String type) {
-        return ScalarFieldType.fromProtoType(type).orElse(null);
+    private ScalarFieldType buildFieldType(Field field) {
+        // TODO support enum fields
+        return ScalarFieldType.fromProtoType(field.type()).orElse(null);
     }
 
     private Stream<EnumerationDefinition> buildEnumerations(ProtoFile file) {

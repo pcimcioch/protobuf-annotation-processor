@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

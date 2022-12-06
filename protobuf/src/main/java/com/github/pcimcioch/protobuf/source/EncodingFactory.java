@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
@@ -10,8 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static com.github.pcimcioch.protobuf.source.MethodBody.body;
-import static com.github.pcimcioch.protobuf.source.MethodBody.param;
+import static com.github.pcimcioch.protobuf.code.MethodBody.body;
+import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 
 class EncodingFactory {
 

@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.code.TypeName;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
+
 import java.util.regex.Pattern;
 
 /**
@@ -76,6 +79,15 @@ public class FieldDefinition {
      */
     public boolean requireNonNull() {
         return type.requireNonNull();
+    }
+
+    /**
+     * Adds builder methods to set up this field
+     *
+     * @param builderClass builder source
+     */
+    public void addBuilderMethods(JavaClassSource builderClass) {
+        type.addBuilderMethods(builderClass, name);
     }
 
     private static final class Valid {

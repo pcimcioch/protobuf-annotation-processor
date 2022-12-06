@@ -1,10 +1,12 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.code.TypeName;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 
 /**
  * Message definition
