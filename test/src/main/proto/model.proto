@@ -21,3 +21,13 @@ message FullRecordProto {
     string string = 14;
     bytes bytes = 15;
 }
+
+enum SimpleEnumProto {
+    FIRST = 0;
+    SECOND = 1;
+    THIRD = 2;
+}
+
+message SimpleEnumMessageProto {
+    SimpleEnumProto order = 1;
+}

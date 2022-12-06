@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
@@ -109,5 +110,20 @@ class EnumerationDefinitionTest {
         assertThatThrownBy(() -> new EnumerationDefinition(name, false, List.of(element1, element2, element3)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enum must contain element with number 0");
+    }
+
+    @Test
+    void nullElement() {
+        // given
+        TypeName name = canonicalName("com.example.MyType");
+        List<EnumerationElementDefinition> elements = new ArrayList<>();
+        elements.add(new EnumerationElementDefinition("TEST1", 0));
+        elements.add(new EnumerationElementDefinition("TEST2", 1));
+        elements.add(null);
+
+        // when
+        assertThatThrownBy(() -> new EnumerationDefinition(name, false, elements))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Null element in enumeration");
     }
 }

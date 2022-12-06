@@ -70,6 +70,10 @@ public class MessageDefinition {
             Set<Integer> numbers = new HashSet<>();
 
             for (FieldDefinition field : fields) {
+                if (field == null) {
+                    throw new IllegalArgumentException("Null field");
+                }
+
                 // TODO [Validate] that for each enum element named "x" we are reserving names "x" and "xValue"
                 if (!names.add(field.name())) {
                     throw new IllegalArgumentException("Duplicated field name: " + field.name());

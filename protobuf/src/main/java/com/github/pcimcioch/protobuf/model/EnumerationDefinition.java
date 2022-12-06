@@ -60,6 +60,10 @@ public class EnumerationDefinition {
             Set<Integer> numbers = new HashSet<>();
 
             for (EnumerationElementDefinition element : elements) {
+                if (element == null) {
+                    throw new IllegalArgumentException("Null element in enumeration");
+                }
+
                 if (!names.add(element.name())) {
                     throw new IllegalArgumentException("Duplicated element name: " + element.name());
                 }

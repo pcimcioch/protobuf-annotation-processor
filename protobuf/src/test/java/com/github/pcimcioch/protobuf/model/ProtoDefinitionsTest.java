@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
@@ -120,5 +121,51 @@ class ProtoDefinitionsTest {
         assertThatThrownBy(() -> new ProtoDefinitions(List.of(message1), List.of(enum1)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated enumeration name: com.example.MyType");
+    }
+
+    @Test
+    void nullMessage() {
+        // given
+        List<MessageDefinition> messages = new ArrayList<>();
+        List<EnumerationDefinition> enumerations = new ArrayList<>();
+
+        messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+        )));
+        messages.add(null);
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
+                new EnumerationElementDefinition("TEST", 0)
+        )));
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType2"), false, List.of(
+                new EnumerationElementDefinition("TEST", 0)
+        )));
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Null message");
+    }
+
+    @Test
+    void nullEnumeration() {
+        // given
+        List<MessageDefinition> messages = new ArrayList<>();
+        List<EnumerationDefinition> enumerations = new ArrayList<>();
+
+        messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+        )));
+        messages.add(new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
+                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+        )));
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
+                new EnumerationElementDefinition("TEST", 0)
+        )));
+        enumerations.add(null);
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Null enumeration");
     }
 }

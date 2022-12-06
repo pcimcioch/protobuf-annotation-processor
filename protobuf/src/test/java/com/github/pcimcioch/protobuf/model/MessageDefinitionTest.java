@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
@@ -82,5 +83,20 @@ class MessageDefinitionTest {
         assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated field number: 1");
+    }
+
+    @Test
+    void nullField() {
+        // given
+        TypeName name = canonicalName("com.example.MyType");
+        List<FieldDefinition> fields = new ArrayList<>();
+        fields.add(new FieldDefinition("test1", ScalarFieldType.BOOL, 1));
+        fields.add(new FieldDefinition("test2", ScalarFieldType.INT32, 2));
+        fields.add(null);
+
+        // when
+        assertThatThrownBy(() -> new MessageDefinition(name, fields))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Null field");
     }
 }

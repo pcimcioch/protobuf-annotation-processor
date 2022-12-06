@@ -8,7 +8,6 @@ import java.util.Set;
  * Full protobuf model definitions
  */
 public class ProtoDefinitions {
-    // TODO [validate] in all lists validate not null values
     private final List<MessageDefinition> messages;
     private final List<EnumerationDefinition> enumerations;
 
@@ -48,6 +47,11 @@ public class ProtoDefinitions {
             if (messages == null) {
                 throw new IllegalArgumentException("Messages can be empty, but not null");
             }
+            for (MessageDefinition message : messages) {
+                if (message == null) {
+                    throw new IllegalArgumentException("Null message");
+                }
+            }
 
             return messages;
         }
@@ -55,6 +59,11 @@ public class ProtoDefinitions {
         private static List<EnumerationDefinition> enumerations(List<EnumerationDefinition> enumerations) {
             if (enumerations == null) {
                 throw new IllegalArgumentException("Enumerations can be empty, but not null");
+            }
+            for (EnumerationDefinition enumeration : enumerations) {
+                if (enumeration == null) {
+                    throw new IllegalArgumentException("Null enumeration");
+                }
             }
 
             return enumerations;
