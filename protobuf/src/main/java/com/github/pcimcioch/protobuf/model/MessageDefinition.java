@@ -1,12 +1,10 @@
 package com.github.pcimcioch.protobuf.model;
 
-import com.github.pcimcioch.protobuf.code.TypeName;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 
 /**
  * Message definition
@@ -72,7 +70,7 @@ public class MessageDefinition {
             Set<Integer> numbers = new HashSet<>();
 
             for (FieldDefinition field : fields) {
-                // TODO validate that for each enum element named "x" we are reserving names "x" and "xValue"
+                // TODO [Validate] that for each enum element named "x" we are reserving names "x" and "xValue"
                 if (!names.add(field.name())) {
                     throw new IllegalArgumentException("Duplicated field name: " + field.name());
                 }

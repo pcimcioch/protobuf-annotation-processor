@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.model;
 
-import com.github.pcimcioch.protobuf.code.TypeName;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,8 +7,8 @@ import java.util.Set;
 /**
  * Full protobuf model definitions
  */
-// TODO validate enum field types. So that enumType defined in EnumerationFieldType exists in ProtoDefinitions
 public class ProtoDefinitions {
+    // TODO [validate] in all lists validate not null values
     private final List<MessageDefinition> messages;
     private final List<EnumerationDefinition> enumerations;
 

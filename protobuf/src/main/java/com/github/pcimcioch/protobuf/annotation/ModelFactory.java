@@ -2,17 +2,17 @@ package com.github.pcimcioch.protobuf.annotation;
 
 import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
+import com.github.pcimcioch.protobuf.model.EnumerationFieldType;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ScalarFieldType;
-import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
-
-import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 
 /**
  * Create model from annotations
@@ -25,61 +25,48 @@ public class ModelFactory {
      * @param protoFiles protobuf files
      * @return model
      */
-    public ProtoDefinitions buildProtoDefinitions(List<ProtoFile> protoFiles) {
-        List<MessageDefinition> messages = protoFiles.stream()
-                .flatMap(this::buildMessages)
+    public ProtoDefinitions buildProtoDefinitions(ProtoFiles protoFiles) {
+        List<MessageDefinition> messages = protoFiles.files().stream()
+                .flatMap(protoFile -> buildMessages(protoFiles, protoFile))
                 .toList();
-        List<EnumerationDefinition> enumerations = protoFiles.stream()
+        List<EnumerationDefinition> enumerations = protoFiles.files().stream()
                 .flatMap(this::buildEnumerations)
                 .toList();
 
         return new ProtoDefinitions(messages, enumerations);
     }
 
-    private Stream<MessageDefinition> buildMessages(ProtoFile file) {
-        return file.messages().stream()
+    private Stream<MessageDefinition> buildMessages(ProtoFiles protoFiles, ProtoFile protoFile) {
+        return protoFile.messages().stream()
                 .map(message -> new MessageDefinition(
-                        buildName(file.javaPackage(), message.name()),
-                        buildFields(message)
+                        protoFile.nameOf(message.name()),
+                        buildFields(protoFiles, protoFile, message)
                 ));
     }
 
-    private static TypeName buildName(String annotationPackageName, String messageName) {
-        if (messageName == null) {
-            return canonicalName("");
-        }
-        if (messageName.startsWith(".")) {
-            return canonicalName(annotationPackageName + messageName);
-        }
-        if (messageName.contains(".")) {
-            return canonicalName(messageName);
-        }
-        return canonicalName(annotationPackageName + "." + messageName);
-    }
-
-    private List<FieldDefinition> buildFields(Message message) {
+    private List<FieldDefinition> buildFields(ProtoFiles protoFiles, ProtoFile protoFile, Message message) {
         return Arrays.stream(message.fields())
-                .map(this::buildField)
+                .map(field -> this.buildField(protoFiles, protoFile, field))
                 .toList();
     }
 
-    private FieldDefinition buildField(Field field) {
-        return new FieldDefinition(
-                field.name(),
-                buildFieldType(field),
-                field.number()
-        );
+    private FieldDefinition buildField(ProtoFiles protoFiles, ProtoFile protoFile, Field field) {
+        Optional<ScalarFieldType> scalar = ScalarFieldType.fromProtoType(field.type());
+        if (scalar.isPresent()) {
+            return new FieldDefinition(field.name(), scalar.get(), field.number());
+        }
+        TypeName fieldType = protoFile.nameOf(field.type());
+        if (protoFiles.containsEnumeration(fieldType)) {
+            return new FieldDefinition(EnumerationFieldType.fieldName(field.name()), new EnumerationFieldType(fieldType), field.number());
+        }
+
+        return new FieldDefinition(field.name(), null, field.number());
     }
 
-    private ScalarFieldType buildFieldType(Field field) {
-        // TODO support enum fields
-        return ScalarFieldType.fromProtoType(field.type()).orElse(null);
-    }
-
-    private Stream<EnumerationDefinition> buildEnumerations(ProtoFile file) {
-        return file.enumerations().stream()
+    private Stream<EnumerationDefinition> buildEnumerations(ProtoFile protoFile) {
+        return protoFile.enumerations().stream()
                 .map(enumeration -> new EnumerationDefinition(
-                        buildName(file.javaPackage(), enumeration.name()),
+                        protoFile.nameOf(enumeration.name()),
                         enumeration.allowAlias(),
                         buildEnumerationElements(enumeration)
                 ));

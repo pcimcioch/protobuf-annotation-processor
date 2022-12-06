@@ -22,6 +22,7 @@ final class MessageFactory {
         JavaRecordSource source = buildSourceFile(message);
         addConstructor(source, message);
         addRecordComponents(source, message);
+        addFieldMethods(source, message);
         addEncodingMethods(source, message);
         addDecodingMethods(source, message);
         addBuilderMethod(source, message);
@@ -37,7 +38,7 @@ final class MessageFactory {
                 .addInterface(ProtobufMessage.class);
     }
 
-    // TODO it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
+    // TODO [issue] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
     private void addConstructor(JavaRecordSource source, MessageDefinition message) {
         MethodBody body = body();
         for (FieldDefinition field : message.fields()) {
@@ -64,6 +65,12 @@ final class MessageFactory {
     private void addRecordComponents(JavaRecordSource source, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
             source.addRecordComponent(field.typeName().canonicalName(), field.name());
+        }
+    }
+
+    private void addFieldMethods(JavaRecordSource source, MessageDefinition message) {
+        for (FieldDefinition field : message.fields()) {
+            field.addMessageMethods(source);
         }
     }
 

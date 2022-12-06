@@ -2,6 +2,8 @@ package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.annotation.Enumeration;
 import com.github.pcimcioch.protobuf.annotation.EnumerationElement;
+import com.github.pcimcioch.protobuf.annotation.Field;
+import com.github.pcimcioch.protobuf.annotation.Message;
 
 @Enumeration(
         name = "SimpleEnum",
@@ -11,5 +13,11 @@ import com.github.pcimcioch.protobuf.annotation.EnumerationElement;
                 @EnumerationElement(name = "THIRD", number = 2)
         }
 )
-public class SimpleEnumMarker {
+@Message(
+        name = "SimpleEnumMessage",
+        fields = {
+                @Field(type = "SimpleEnum", name = "order", number = 1)
+        }
+)
+class SimpleEnumMarker {
 }

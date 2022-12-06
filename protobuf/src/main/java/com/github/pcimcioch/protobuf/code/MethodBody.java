@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.code;
 
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
 import java.util.HashMap;

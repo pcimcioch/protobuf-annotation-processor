@@ -1,6 +1,5 @@
 package com.github.pcimcioch.protobuf.model;
 
-import com.github.pcimcioch.protobuf.code.TypeName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

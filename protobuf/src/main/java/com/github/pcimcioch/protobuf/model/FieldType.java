@@ -1,7 +1,7 @@
 package com.github.pcimcioch.protobuf.model;
 
-import com.github.pcimcioch.protobuf.code.TypeName;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
 /**
  * Describes type of field
@@ -40,8 +40,16 @@ public interface FieldType {
     /**
      * Adds builder methods to set up field of this type
      *
-     * @param builderClass builder source
+     * @param builderClass builder class source
      * @param field        field name
      */
     void addBuilderMethods(JavaClassSource builderClass, String field);
+
+    /**
+     * Adds additional methods to the message record containing field of this type
+     *
+     * @param messageRecord message record source
+     * @param field         field name
+     */
+    void addMessageMethods(JavaRecordSource messageRecord, String field);
 }

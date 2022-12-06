@@ -7,6 +7,7 @@ import com.github.pcimcioch.protobuf.annotation.Message;
 import com.github.pcimcioch.protobuf.annotation.Messages;
 import com.github.pcimcioch.protobuf.annotation.ModelFactory;
 import com.github.pcimcioch.protobuf.annotation.ProtoFile;
+import com.github.pcimcioch.protobuf.annotation.ProtoFiles;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.source.SourceFactory;
 import com.github.pcimcioch.protobuf.source.SourceFactory.SourceFile;
@@ -47,7 +48,7 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
-            List<ProtoFile> protoFiles = getAnnotatedElements(roundEnv);
+            ProtoFiles protoFiles = getAnnotatedElements(roundEnv);
             ProtoDefinitions model = buildModel(protoFiles);
             generateSources(model);
         } catch (Exception ex) {
@@ -57,10 +58,11 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
         return true;
     }
 
-    private List<ProtoFile> getAnnotatedElements(RoundEnvironment roundEnv) {
-        return roundEnv.getElementsAnnotatedWithAny(Set.of(Message.class, Messages.class, Enumeration.class, Enumerations.class)).stream()
+    private ProtoFiles getAnnotatedElements(RoundEnvironment roundEnv) {
+        List<ProtoFile> files = roundEnv.getElementsAnnotatedWithAny(Set.of(Message.class, Messages.class, Enumeration.class, Enumerations.class)).stream()
                 .map(this::toProtoFile)
                 .toList();
+        return new ProtoFiles(files);
     }
 
     private ProtoFile toProtoFile(Element element) {
@@ -73,7 +75,7 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
         return new ProtoFile(javaPackage, List.of(messages), List.of(enumerations));
     }
 
-    private ProtoDefinitions buildModel(List<ProtoFile> protoFiles) {
+    private ProtoDefinitions buildModel(ProtoFiles protoFiles) {
         return modelFactory.buildProtoDefinitions(protoFiles);
     }
 

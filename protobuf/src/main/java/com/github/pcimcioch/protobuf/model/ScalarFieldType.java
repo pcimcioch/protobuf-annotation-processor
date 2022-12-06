@@ -1,16 +1,16 @@
 package com.github.pcimcioch.protobuf.model;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
-import com.github.pcimcioch.protobuf.code.TypeName;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.Optional;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
-import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
-import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.TypeName.simpleName;
 
 /**
  * Types of scalar fields available in protobuf specification
@@ -188,8 +188,8 @@ public enum ScalarFieldType implements FieldType {
     @Override
     public void addBuilderMethods(JavaClassSource builderClass, String field) {
         MethodBody body = body("""
-                            this.$field = $field;
-                            return this;""",
+                        this.$field = $field;
+                        return this;""",
                 param("field", field)
         );
 
@@ -199,6 +199,11 @@ public enum ScalarFieldType implements FieldType {
                 .setName(field)
                 .setBody(body.toString());
         method.addParameter(fieldJavaType().canonicalName(), field);
+    }
+
+    @Override
+    public void addMessageMethods(JavaRecordSource messageRecord, String field) {
+        // do nothing
     }
 
     /**

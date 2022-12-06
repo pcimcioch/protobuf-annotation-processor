@@ -1,7 +1,7 @@
 package com.github.pcimcioch.protobuf.model;
 
-import com.github.pcimcioch.protobuf.code.TypeName;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaRecordSource;
 
 import java.util.regex.Pattern;
 
@@ -88,6 +88,15 @@ public class FieldDefinition {
      */
     public void addBuilderMethods(JavaClassSource builderClass) {
         type.addBuilderMethods(builderClass, name);
+    }
+
+    /**
+     * Adds message methods to set up this field
+     *
+     * @param messageRecord message source
+     */
+    public void addMessageMethods(JavaRecordSource messageRecord) {
+        type.addMessageMethods(messageRecord, name);
     }
 
     private static final class Valid {
