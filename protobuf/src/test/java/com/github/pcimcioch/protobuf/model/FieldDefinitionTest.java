@@ -41,7 +41,7 @@ class FieldDefinitionTest {
     @Test
     void nullFieldType() {
         // when then
-        assertThatThrownBy(() -> new FieldDefinition("name", null, 0))
+        assertThatThrownBy(() -> new FieldDefinition("name", null, 1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Must provide field type");
     }

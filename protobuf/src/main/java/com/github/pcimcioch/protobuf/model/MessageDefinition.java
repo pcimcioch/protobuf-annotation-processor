@@ -67,14 +67,13 @@ public class MessageDefinition {
             }
 
             Set<String> names = new HashSet<>();
+            Set<Integer> numbers = new HashSet<>();
+
             for (FieldDefinition field : fields) {
+                // TODO validate that for each enum element named "x" we are reserving names "x" and "xValue"
                 if (!names.add(field.name())) {
                     throw new IllegalArgumentException("Duplicated field name: " + field.name());
                 }
-            }
-
-            Set<Integer> numbers = new HashSet<>();
-            for (FieldDefinition field : fields) {
                 if (!numbers.add(field.number())) {
                     throw new IllegalArgumentException("Duplicated field number: " + field.number());
                 }

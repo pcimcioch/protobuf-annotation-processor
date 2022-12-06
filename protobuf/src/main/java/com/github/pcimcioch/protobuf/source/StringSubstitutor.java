@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.source;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +18,9 @@ final class StringSubstitutor {
         while (myMatcher.find()) {
             String field = myMatcher.group(1);
             myMatcher.appendReplacement(sb, "");
-            sb.append(parameters.get(field));
+            String value = Optional.ofNullable(parameters.get(field))
+                    .orElseThrow(() -> new IllegalStateException("Missing string substitution argument " + field));
+            sb.append(value);
         }
 
         myMatcher.appendTail(sb);

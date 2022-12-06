@@ -52,6 +52,7 @@ class BuilderFactory {
                 .setBody(body.toString());
     }
 
+    // TODO Should be part of FieldDefinition
     private void addSetterMethods(JavaClassSource builderClass, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
             MethodBody body = body("""

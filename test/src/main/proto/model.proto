@@ -4,12 +4,6 @@ option java_package = "com.github.pcimcioch.protobuf.test";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
-message SimpleRecordProto {
-    int32 amount = 1;
-    double latitude = 2;
-    double longitude = 3;
-}
-
 message FullRecordProto {
     double _double = 1;
     float _float = 2;

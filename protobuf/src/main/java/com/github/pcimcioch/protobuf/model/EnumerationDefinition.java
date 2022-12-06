@@ -1,16 +1,15 @@
 package com.github.pcimcioch.protobuf.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Enumeration Definition
  */
-// TODO add validation
-// TODO add tests
 public class EnumerationDefinition {
     private final TypeName name;
     private final List<EnumerationElementDefinition> elements;
-    private final boolean allowAlias;
 
     /**
      * Constructor
@@ -20,9 +19,8 @@ public class EnumerationDefinition {
      * @param elements   elements of the enumeration
      */
     public EnumerationDefinition(TypeName name, boolean allowAlias, List<EnumerationElementDefinition> elements) {
-        this.name = name;
-        this.elements = elements;
-        this.allowAlias = allowAlias;
+        this.name = Valid.name(name);
+        this.elements = Valid.elements(elements, allowAlias);
     }
 
     /**
@@ -35,20 +33,48 @@ public class EnumerationDefinition {
     }
 
     /**
-     * Returns whether aliases are allowed
-     *
-     * @return whether aliases are allowed
-     */
-    public boolean allowAlias() {
-        return allowAlias;
-    }
-
-    /**
      * Returns elements of this enumeration
      *
      * @return elements
      */
     public List<EnumerationElementDefinition> elements() {
         return elements;
+    }
+
+    private static final class Valid {
+
+        private static TypeName name(TypeName name) {
+            if (name == null) {
+                throw new IllegalArgumentException("Enum name cannot be null");
+            }
+
+            return name;
+        }
+
+        private static List<EnumerationElementDefinition> elements(List<EnumerationElementDefinition> elements, boolean allowAlias) {
+            if (elements == null || elements.isEmpty()) {
+                throw new IllegalArgumentException("Enum must have at least one element");
+            }
+
+            Set<String> names = new HashSet<>();
+            Set<Integer> numbers = new HashSet<>();
+
+            for (EnumerationElementDefinition element : elements) {
+                if (!names.add(element.name())) {
+                    throw new IllegalArgumentException("Duplicated element name: " + element.name());
+                }
+                if (!numbers.add(element.number())) {
+                    if (!allowAlias) {
+                        throw new IllegalArgumentException("Duplicated element number: " + element.number());
+                    }
+                }
+            }
+
+            if (!numbers.contains(0)) {
+                throw new IllegalArgumentException("Enum must contain element with number 0");
+            }
+
+            return elements;
+        }
     }
 }

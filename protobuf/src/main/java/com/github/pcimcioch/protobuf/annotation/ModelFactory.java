@@ -64,6 +64,7 @@ public class ModelFactory {
     }
 
     private FieldDefinition buildField(Field field) {
+        // TODO support enum fields
         return new FieldDefinition(
                 field.name(),
                 buildFieldType(field.type()),
