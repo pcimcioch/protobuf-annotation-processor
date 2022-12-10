@@ -8,8 +8,6 @@ import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
-import java.util.Objects;
-
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 
@@ -20,9 +18,9 @@ final class MessageFactory {
 
     JavaRecordSource buildMessageRecord(MessageDefinition message) {
         JavaRecordSource source = buildSourceFile(message);
+
         addConstructor(source, message);
-        addRecordComponents(source, message);
-        addFieldMethods(source, message);
+        addFieldCode(source, message);
         addEncodingMethods(source, message);
         addDecodingMethods(source, message);
         addBuilderMethod(source, message);
@@ -38,39 +36,21 @@ final class MessageFactory {
                 .addInterface(ProtobufMessage.class);
     }
 
+    private void addFieldCode(JavaRecordSource source, MessageDefinition message) {
+        for (FieldDefinition field : message.fields()) {
+            field.addMessageCode(source);
+        }
+    }
+
     // TODO [issue] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
     private void addConstructor(JavaRecordSource source, MessageDefinition message) {
-        MethodBody body = body();
-        for (FieldDefinition field : message.fields()) {
-            if (field.requireNonNull()) {
-                body.append("this.$fieldName = $Objects.requireNonNull($fieldName, \"Field $fieldName cannot be null\");",
-                        param("fieldName", field),
-                        param("Objects", Objects.class));
-            } else {
-                body.append("this.$fieldName = $fieldName;",
-                        param("fieldName", field));
-            }
-        }
-
         MethodSource<JavaRecordSource> constructor = source.addMethod()
                 .setPublic()
                 .setConstructor(true)
-                .setBody(body.toString());
+                .setBody(body().toString());
 
         for (FieldDefinition field : message.fields()) {
-            constructor.addParameter(field.typeName().canonicalName(), field.name());
-        }
-    }
-
-    private void addRecordComponents(JavaRecordSource source, MessageDefinition message) {
-        for (FieldDefinition field : message.fields()) {
-            source.addRecordComponent(field.typeName().canonicalName(), field.name());
-        }
-    }
-
-    private void addFieldMethods(JavaRecordSource source, MessageDefinition message) {
-        for (FieldDefinition field : message.fields()) {
-            field.addMessageMethods(source);
+            field.addMessageConstructorCode(constructor);
         }
     }
 

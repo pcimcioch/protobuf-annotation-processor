@@ -74,9 +74,10 @@ public class MessageDefinition {
                     throw new IllegalArgumentException("Null field");
                 }
 
-                // TODO [Validate] that for each enum element named "x" we are reserving names "x" and "xValue"
-                if (!names.add(field.name())) {
-                    throw new IllegalArgumentException("Duplicated field name: " + field.name());
+                for (String fieldName : field.fieldNames()) {
+                    if (!names.add(fieldName)) {
+                        throw new IllegalArgumentException("Duplicated field name: " + fieldName);
+                    }
                 }
                 if (!numbers.add(field.number())) {
                     throw new IllegalArgumentException("Duplicated field number: " + field.number());

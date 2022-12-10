@@ -69,7 +69,8 @@ final class EnumerationFactory {
                         if (this == $unrecognized) {
                           throw new IllegalArgumentException("Unrecognized enum does not have a number");
                         }
-                        return number;""",
+                        return number;
+                        """,
                 param("unrecognized", UNRECOGNIZED_ELEMENT_NAME)
         );
 

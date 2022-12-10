@@ -79,29 +79,20 @@ class DecodingFactory {
 
     private MethodBody readFields(MessageDefinition message) {
         MethodBody body = body();
-        boolean first = true;
 
         for (FieldDefinition field : message.fields()) {
-            if (!first) {
-                body.append("else ");
-            }
-            body.append("""
-                            if (tag.number() == $fieldNumber) {
-                                builder.$fieldName(reader.$readMethod(tag, "$fieldName"));
-                            }
-                            """,
-                    param("fieldNumber", field.number()),
-                    param("fieldName", field.name()),
-                    param("readMethod", field.ioMethod()));
-            first = false;
+            body
+                    .appendExceptFirst("else ")
+                    .append("if (tag.number() == $fieldNumber) {", param("fieldNumber", field.number()))
+                    .append(field.decodingCode())
+                    .append("}");
         }
 
-        body.append("""
+        return body.append("""
                 else {
                     reader.skip(tag);
                 }
-                """);
-
-        return body;
+                """
+        );
     }
 }

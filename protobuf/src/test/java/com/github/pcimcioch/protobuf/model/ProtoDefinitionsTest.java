@@ -15,16 +15,16 @@ class ProtoDefinitionsTest {
     void correctDefinition() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example2.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         MessageDefinition message4 = new MessageDefinition(canonicalName("com.example.Parent.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
                 new EnumerationElementDefinition("TEST", 0)
@@ -73,13 +73,13 @@ class ProtoDefinitionsTest {
     void duplicatedMessageName() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.OtherType"), List.of(
-                new FieldDefinition("name2", ScalarFieldType.BOOL, 2)
+                scalarField("name2", 2)
         ));
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name3", ScalarFieldType.BOOL, 1)
+                scalarField("name3", 1)
         ));
 
         // when then
@@ -111,7 +111,7 @@ class ProtoDefinitionsTest {
     void duplicatedNameAmongMessageAndEnum() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         ));
         EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("com.example.MyType"), false, List.of(
                 new EnumerationElementDefinition("TEST", 0)
@@ -130,7 +130,7 @@ class ProtoDefinitionsTest {
         List<EnumerationDefinition> enumerations = new ArrayList<>();
 
         messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         )));
         messages.add(null);
         enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
@@ -153,10 +153,10 @@ class ProtoDefinitionsTest {
         List<EnumerationDefinition> enumerations = new ArrayList<>();
 
         messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         )));
         messages.add(new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
-                new FieldDefinition("name1", ScalarFieldType.BOOL, 1)
+                scalarField("name1", 1)
         )));
         enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
                 new EnumerationElementDefinition("TEST", 0)
@@ -167,5 +167,9 @@ class ProtoDefinitionsTest {
         assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null enumeration");
+    }
+
+    private static ScalarFieldDefinition scalarField(String test1, int number) {
+        return ScalarFieldDefinition.create(test1, number, "bool").orElseThrow();
     }
 }

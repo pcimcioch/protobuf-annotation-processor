@@ -6,6 +6,8 @@ import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 
+import java.util.List;
+
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 
@@ -14,9 +16,8 @@ class BuilderFactory {
     JavaClassSource buildBuilder(MessageDefinition message) {
         JavaClassSource builderClass = buildSourceFile(message);
 
-        addFields(builderClass, message);
+        addFieldCode(builderClass, message);
         addBuildMethod(builderClass, message);
-        addSetterMethods(builderClass, message);
 
         return builderClass;
     }
@@ -30,31 +31,25 @@ class BuilderFactory {
                 .setName(message.builderName().simpleName());
     }
 
-    private void addFields(JavaClassSource builderClass, MessageDefinition message) {
+    private void addFieldCode(JavaClassSource builderClass, MessageDefinition message) {
         for (FieldDefinition field : message.fields()) {
-            builderClass.addField()
-                    .setPrivate()
-                    .setType(field.typeName().canonicalName())
-                    .setName(field.name())
-                    .setLiteralInitializer(field.defaultValue());
+            field.addBuilderCode(builderClass);
         }
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
-        MethodBody body = body("return new $MessageType($ConstructorParameters);",
+        List<String> constructorParameters = message.fields().stream()
+                .map(FieldDefinition::builderField)
+                .toList();
+
+        MethodBody body = body("return new $MessageType($constructorParameters);",
                 param("MessageType", message.name()),
-                param("ConstructorParameters", message.fields()));
+                param("constructorParameters", constructorParameters));
 
         builderClass.addMethod()
                 .setPublic()
                 .setReturnType(message.name().canonicalName())
                 .setName("build")
                 .setBody(body.toString());
-    }
-
-    private void addSetterMethods(JavaClassSource builderClass, MessageDefinition message) {
-        for (FieldDefinition field : message.fields()) {
-            field.addBuilderMethods(builderClass);
-        }
     }
 }

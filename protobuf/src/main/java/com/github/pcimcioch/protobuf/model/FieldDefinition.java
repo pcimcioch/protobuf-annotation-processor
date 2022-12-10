@@ -1,129 +1,99 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.code.MethodBody;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Field definition
+ * Message field
  */
-public class FieldDefinition {
-    private final String name;
-    private final FieldType type;
-    private final int number;
+public interface FieldDefinition {
 
     /**
-     * Constructor
-     *
-     * @param name   name of the field
-     * @param type   type of the field
-     * @param number number of the field
-     */
-    public FieldDefinition(String name, FieldType type, int number) {
-        this.name = Valid.name(name);
-        this.type = Valid.type(type);
-        this.number = Valid.number(number);
-    }
-
-    /**
-     * Returns name of the field
-     *
-     * @return name
-     */
-    public String name() {
-        return name;
-    }
-
-    /**
-     * Returns number of the field
+     * Returns number used by this field
      *
      * @return number
      */
-    public int number() {
-        return number;
-    }
+    int number();
 
     /**
-     * Returns java type name
+     * Returns field names reserved by this field
      *
-     * @return java type name
+     * @return field names
      */
-    public TypeName typeName() {
-        return type.fieldJavaType();
-    }
+    List<String> fieldNames();
 
     /**
-     * Returns name of java method from {@link com.github.pcimcioch.protobuf.io.ProtobufWriter} and
-     * {@link com.github.pcimcioch.protobuf.io.ProtobufReader} used to write and read this field
+     * Adds builder code. Normally it is field and setter method[s]
      *
-     * @return java method name
+     * @param builderClass builder class
      */
-    public String ioMethod() {
-        return type.ioMethod();
-    }
+    void addBuilderCode(JavaClassSource builderClass);
 
     /**
-     * Returns default value for this field
+     * Returns field name that has to be passed to the message record constructor when building
      *
-     * @return default value
+     * @return field name
      */
-    public String defaultValue() {
-        return type.defaultValue();
-    }
+    String builderField();
 
     /**
-     * Returns whether this field should be required to be non-null
+     * Returns code for decoding this field
      *
-     * @return whether this field should be required to be non-null
+     * @return decoding code
      */
-    public boolean requireNonNull() {
-        return type.requireNonNull();
-    }
+    MethodBody decodingCode();
 
     /**
-     * Adds builder methods to set up this field
+     * Returns code for encoding this field
      *
-     * @param builderClass builder source
+     * @return encoding code
      */
-    public void addBuilderMethods(JavaClassSource builderClass) {
-        type.addBuilderMethods(builderClass, name);
-    }
+    MethodBody encodingCode();
 
     /**
-     * Adds message methods to set up this field
+     * Adds message code. Normally it is field and sometimes getter methods
      *
-     * @param messageRecord message source
+     * @param messageRecord message record
      */
-    public void addMessageMethods(JavaRecordSource messageRecord) {
-        type.addMessageMethods(messageRecord, name);
-    }
+    void addMessageCode(JavaRecordSource messageRecord);
 
-    private static final class Valid {
+    /**
+     * Adds constructor code. Normally parameter and field assignment with optional validation
+     *
+     * @param constructor message constructor
+     */
+    void addMessageConstructorCode(MethodSource<JavaRecordSource> constructor);
+
+    /**
+     * Validations for basic field components
+     */
+    final class Valid {
         private static final Pattern namePattern = Pattern.compile("^[a-zA-z_][a-zA-Z0-9_]*$");
 
-        private static FieldType type(FieldType type) {
-            if (type == null) {
-                throw new IllegalArgumentException("Must provide field type");
-            }
-            return type;
-        }
-
-        private static int number(int number) {
+        static void number(int number) {
             if (number <= 0) {
                 throw new IllegalArgumentException("Number must be positive, but was: " + number);
             }
-            return number;
         }
 
-        private static String name(String name) {
+        static void name(String name) {
             if (name == null) {
                 throw new IllegalArgumentException("Incorrect field name: <null>");
             }
             if (!namePattern.matcher(name).matches()) {
                 throw new IllegalArgumentException("Incorrect field name: " + name);
             }
-            return name;
+        }
+
+        static void type(TypeName type) {
+            if (type == null) {
+                throw new IllegalArgumentException("Must provide enum type");
+            }
         }
     }
 }

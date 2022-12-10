@@ -1,6 +1,5 @@
 package com.github.pcimcioch.protobuf.code;
 
-import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
@@ -22,9 +21,9 @@ public class MethodBody {
     private static final Formatters formatters = new Formatters();
 
     private final StringBuilder builder = new StringBuilder();
+    private boolean isFirst = true;
 
     static {
-        formatters.register(FieldDefinition.class, FieldDefinition::name);
         formatters.register(Class.class, Class::getCanonicalName);
         formatters.register(TypeName.class, TypeName::canonicalName);
         formatters.register(List.class, list -> list.stream().map(formatters::format).collect(joining(", ")).toString());
@@ -77,6 +76,35 @@ public class MethodBody {
         builder.append(StringSubstitutor.replace(sourceTemplate, formattedParameters));
 
         return this;
+    }
+
+    /**
+     * Appends source code body
+     *
+     * @param body source code to append
+     * @return method body with new code appended
+     */
+    public MethodBody append(MethodBody body) {
+        builder.append(body.toString());
+
+        return this;
+    }
+
+    /**
+     * Appends source code except first time of this call
+     *
+     * @param sourceTemplate source code template
+     * @param parameters     parameters to fill in source code template
+     * @return method body with new code appended if it is not the first call
+     */
+    public MethodBody appendExceptFirst(String sourceTemplate, Parameter... parameters) {
+        if (isFirst) {
+            isFirst = false;
+            return this;
+        }
+
+        return append(sourceTemplate, parameters);
+
     }
 
     @Override

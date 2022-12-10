@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class FieldDefinitionTest {
+class ScalarFieldDefinitionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -20,7 +20,7 @@ class FieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> new FieldDefinition(name, ScalarFieldType.BOOL, 1))
+        assertThatCode(() -> ScalarFieldDefinition.create(name, 1, "bool"))
                 .doesNotThrowAnyException();
     }
 
@@ -33,23 +33,15 @@ class FieldDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> new FieldDefinition(name, ScalarFieldType.BOOL, 0))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create(name, 1, "bool"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Incorrect field name");
     }
 
     @Test
-    void nullFieldType() {
-        // when then
-        assertThatThrownBy(() -> new FieldDefinition("name", null, 1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Must provide field type");
-    }
-
-    @Test
     void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> new FieldDefinition("name", ScalarFieldType.BOOL, -1))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", -1, "bool"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -57,7 +49,7 @@ class FieldDefinitionTest {
     @Test
     void zeroNumber() {
         // when then
-        assertThatThrownBy(() -> new FieldDefinition("name", ScalarFieldType.BOOL, 0))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", 0, "bool"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }

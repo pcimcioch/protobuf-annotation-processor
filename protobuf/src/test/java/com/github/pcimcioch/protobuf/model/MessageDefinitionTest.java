@@ -15,9 +15,9 @@ class MessageDefinitionTest {
     void correctMessage() {
         // given
         TypeName name = canonicalName("com.example.MyType");
-        FieldDefinition field1 = new FieldDefinition("test1", ScalarFieldType.BOOL, 1);
-        FieldDefinition field2 = new FieldDefinition("test2", ScalarFieldType.INT32, 2);
-        FieldDefinition field3 = new FieldDefinition("test3", ScalarFieldType.STRING, 3);
+        FieldDefinition field1 = scalarField("test1", 1, "bool");
+        FieldDefinition field2 = scalarField("test2", 2, "int32");
+        FieldDefinition field3 = scalarField("test3", 3, "string");
 
         // when
         assertThatCode(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
@@ -27,7 +27,7 @@ class MessageDefinitionTest {
     @Test
     void nullName() {
         // given
-        FieldDefinition field = new FieldDefinition("test", ScalarFieldType.BOOL, 1);
+        FieldDefinition field = scalarField("test", 1, "bool");
 
         // when then
         assertThatThrownBy(() -> new MessageDefinition(null, List.of(field)))
@@ -61,9 +61,9 @@ class MessageDefinitionTest {
     void duplicatedFieldName() {
         // given
         TypeName name = canonicalName("com.example.MyType");
-        FieldDefinition field1 = new FieldDefinition("test", ScalarFieldType.BOOL, 1);
-        FieldDefinition field2 = new FieldDefinition("test2", ScalarFieldType.INT32, 2);
-        FieldDefinition field3 = new FieldDefinition("test", ScalarFieldType.STRING, 3);
+        FieldDefinition field1 = scalarField("test", 1, "bool");
+        FieldDefinition field2 = scalarField("test2", 2, "int32");
+        FieldDefinition field3 = scalarField("test", 3, "string");
 
         // when then
         assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
@@ -72,12 +72,25 @@ class MessageDefinitionTest {
     }
 
     @Test
+    void duplicatedEnumValueName() {
+        // given
+        TypeName name = canonicalName("com.example.MyType");
+        FieldDefinition field1 = scalarField("testValue", 1, "bool");
+        FieldDefinition field2 = enumerationField("test", 2, canonicalName("com.example.TestEnum"));
+
+        // when then
+        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Duplicated field name: testValue");
+    }
+
+    @Test
     void duplicatedFieldNumbers() {
         // given
         TypeName name = canonicalName("com.example.MyType");
-        FieldDefinition field1 = new FieldDefinition("test1", ScalarFieldType.BOOL, 1);
-        FieldDefinition field2 = new FieldDefinition("test2", ScalarFieldType.INT32, 2);
-        FieldDefinition field3 = new FieldDefinition("test3", ScalarFieldType.STRING, 1);
+        FieldDefinition field1 = scalarField("test1", 1, "bool");
+        FieldDefinition field2 = scalarField("test2", 2, "int32");
+        FieldDefinition field3 = scalarField("test3", 1, "string");
 
         // when then
         assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
@@ -90,13 +103,21 @@ class MessageDefinitionTest {
         // given
         TypeName name = canonicalName("com.example.MyType");
         List<FieldDefinition> fields = new ArrayList<>();
-        fields.add(new FieldDefinition("test1", ScalarFieldType.BOOL, 1));
-        fields.add(new FieldDefinition("test2", ScalarFieldType.INT32, 2));
+        fields.add(scalarField("test1", 1, "bool"));
+        fields.add(scalarField("test2", 2, "int32"));
         fields.add(null);
 
         // when
         assertThatThrownBy(() -> new MessageDefinition(name, fields))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null field");
+    }
+
+    private static ScalarFieldDefinition scalarField(String name, int number, String protoType) {
+        return ScalarFieldDefinition.create(name, number, protoType).orElseThrow();
+    }
+
+    private static EnumerationFieldDefinition enumerationField(String name, int number, TypeName type) {
+        return EnumerationFieldDefinition.create(name, number, type);
     }
 }

@@ -1,29 +1,12 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.code.MethodBody;
-import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
-import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
-import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
-import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
-import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.model.source.JavaEnumSource;
-import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-import static com.github.pcimcioch.protobuf.model.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
-import static com.github.pcimcioch.protobuf.code.MethodBody.body;
-import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 
 /**
  * Creates java source code for the protobuf transfer objects

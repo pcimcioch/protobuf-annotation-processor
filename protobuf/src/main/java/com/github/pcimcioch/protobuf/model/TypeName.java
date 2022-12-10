@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.model;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +11,16 @@ import java.util.regex.Pattern;
 public class TypeName {
     private static final Pattern simpleTypePattern = Pattern.compile("^[a-zA-Z]+$");
     private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<parent>(\\.[A-Z][A-Za-z0-9_]*)*)(?<simple>\\.[A-Z][A-Za-z0-9_]*)$");
+    private static final Set<TypeName> PRIMITIVE_TYPES = Set.of(
+            simpleName("byte"),
+            simpleName("short"),
+            simpleName("int"),
+            simpleName("long"),
+            simpleName("float"),
+            simpleName("double"),
+            simpleName("char"),
+            simpleName("boolean")
+    );
 
     private final String packageName;
     private final String parentClassesName;
@@ -69,6 +80,15 @@ public class TypeName {
         }
 
         return canonicalName + simpleName;
+    }
+
+    /**
+     * Returns whether this type is java primitive type
+     *
+     * @return whether this type is java primitive type
+     */
+    public boolean isPrimitive() {
+        return PRIMITIVE_TYPES.contains(this);
     }
 
     @Override

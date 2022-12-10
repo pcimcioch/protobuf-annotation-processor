@@ -2,11 +2,11 @@ package com.github.pcimcioch.protobuf.annotation;
 
 import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
-import com.github.pcimcioch.protobuf.model.EnumerationFieldType;
+import com.github.pcimcioch.protobuf.model.EnumerationFieldDefinition;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
-import com.github.pcimcioch.protobuf.model.ScalarFieldType;
+import com.github.pcimcioch.protobuf.model.ScalarFieldDefinition;
 import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
@@ -51,16 +51,17 @@ public class ModelFactory {
     }
 
     private FieldDefinition buildField(ProtoFiles protoFiles, ProtoFile protoFile, Field field) {
-        Optional<ScalarFieldType> scalar = ScalarFieldType.fromProtoType(field.type());
+        Optional<ScalarFieldDefinition> scalar = ScalarFieldDefinition.create(field.name(), field.number(), field.type());
         if (scalar.isPresent()) {
-            return new FieldDefinition(field.name(), scalar.get(), field.number());
-        }
-        TypeName fieldType = protoFile.nameOf(field.type());
-        if (protoFiles.containsEnumeration(fieldType)) {
-            return new FieldDefinition(EnumerationFieldType.fieldName(field.name()), new EnumerationFieldType(fieldType), field.number());
+            return scalar.get();
         }
 
-        return new FieldDefinition(field.name(), null, field.number());
+        TypeName fieldType = protoFile.nameOf(field.type());
+        if (protoFiles.containsEnumeration(fieldType)) {
+            return EnumerationFieldDefinition.create(field.name(), field.number(), fieldType);
+        }
+
+        return null;
     }
 
     private Stream<EnumerationDefinition> buildEnumerations(ProtoFile protoFile) {

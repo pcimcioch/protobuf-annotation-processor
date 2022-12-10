@@ -57,10 +57,7 @@ class EncodingFactory {
         MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append("writer.$writerMethod($number, $name);",
-                    param("writerMethod", field.ioMethod()),
-                    param("number", field.number()),
-                    param("name", field.name()));
+            body.append(field.encodingCode());
         }
 
         MethodSource<JavaRecordSource> method = record.addMethod()
