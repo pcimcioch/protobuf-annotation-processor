@@ -20,7 +20,7 @@ class ScalarFieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> ScalarFieldDefinition.create(name, 1, "bool"))
+        assertThatCode(() -> ScalarFieldDefinition.create(name, 1, "bool", false))
                 .doesNotThrowAnyException();
     }
 
@@ -33,7 +33,7 @@ class ScalarFieldDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> ScalarFieldDefinition.create(name, 1, "bool"))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create(name, 1, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Incorrect field name");
     }
@@ -41,7 +41,7 @@ class ScalarFieldDefinitionTest {
     @Test
     void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", -1, "bool"))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", -1, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -49,7 +49,7 @@ class ScalarFieldDefinitionTest {
     @Test
     void zeroNumber() {
         // when then
-        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", 0, "bool"))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", 0, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }

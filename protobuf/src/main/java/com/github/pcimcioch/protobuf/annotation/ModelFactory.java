@@ -51,14 +51,14 @@ public class ModelFactory {
     }
 
     private FieldDefinition buildField(ProtoFiles protoFiles, ProtoFile protoFile, Field field) {
-        Optional<ScalarFieldDefinition> scalar = ScalarFieldDefinition.create(field.name(), field.number(), field.type());
+        Optional<ScalarFieldDefinition> scalar = ScalarFieldDefinition.create(field.name(), field.number(), field.type(), field.deprecated());
         if (scalar.isPresent()) {
             return scalar.get();
         }
 
         TypeName fieldType = protoFile.nameOf(field.type());
         if (protoFiles.containsEnumeration(fieldType)) {
-            return EnumerationFieldDefinition.create(field.name(), field.number(), fieldType);
+            return EnumerationFieldDefinition.create(field.name(), field.number(), fieldType, field.deprecated());
         }
 
         return null;

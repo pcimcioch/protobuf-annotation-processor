@@ -2,7 +2,6 @@ package com.protobuf;
 
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.io.ProtobufInput;
-import com.github.pcimcioch.protobuf.test.FullRecord;
 import org.assertj.core.api.iterable.ThrowingExtractor;
 
 import java.io.ByteArrayInputStream;
@@ -10,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

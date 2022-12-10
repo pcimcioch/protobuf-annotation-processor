@@ -30,6 +30,13 @@ public @interface Field {
     int number();
 
     /**
+     * Whether field is deprecated
+     *
+     * @return whether field is deprecated
+     */
+    boolean deprecated() default false;
+
+    /**
      * double
      */
     String _double = "double";

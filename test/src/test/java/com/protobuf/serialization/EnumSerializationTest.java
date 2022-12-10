@@ -1,10 +1,10 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.github.pcimcioch.protobuf.test.SimpleEnumMessageProto;
-import com.github.pcimcioch.protobuf.test.SimpleEnumProto;
 import com.protobuf.model.SimpleEnum;
 import com.protobuf.model.SimpleEnumMessage;
+import com.protobuf.model.SimpleEnumMessageProto;
+import com.protobuf.model.SimpleEnumProto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,5 @@
 package com.protobuf.model;
 
-import com.github.pcimcioch.protobuf.test.FullRecord;
-import com.github.pcimcioch.protobuf.test.SimpleRecord;
 import org.junit.jupiter.api.Test;
 
 import static com.protobuf.Utils.ba;

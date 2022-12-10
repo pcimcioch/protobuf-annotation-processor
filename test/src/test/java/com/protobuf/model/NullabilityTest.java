@@ -1,6 +1,5 @@
 package com.protobuf.model;
 
-import com.github.pcimcioch.protobuf.test.FullRecord;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

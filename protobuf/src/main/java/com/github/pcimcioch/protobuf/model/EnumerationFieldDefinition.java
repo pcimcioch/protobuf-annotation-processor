@@ -1,7 +1,9 @@
 package com.github.pcimcioch.protobuf.model;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
@@ -13,21 +15,10 @@ import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 /**
  * Enumeration field definition
  */
-public class EnumerationFieldDefinition implements FieldDefinition {
+public class EnumerationFieldDefinition extends FieldDefinition {
 
-    private final String name;
-    private final int number;
-    private final TypeName type;
-
-    private EnumerationFieldDefinition(String name, int number, TypeName type) {
-        this.name = name;
-        this.number = number;
-        this.type = type;
-    }
-
-    @Override
-    public int number() {
-        return number;
+    private EnumerationFieldDefinition(String name, int number, TypeName type, boolean deprecated) {
+        super(name, number, type, deprecated);
     }
 
     @Override
@@ -38,11 +29,12 @@ public class EnumerationFieldDefinition implements FieldDefinition {
     @Override
     public void addBuilderCode(JavaClassSource builderClass) {
         // field
-        builderClass.addField()
+        FieldSource<JavaClassSource> field = builderClass.addField()
                 .setPrivate()
                 .setType("int")
                 .setName(valueName())
                 .setLiteralInitializer("0");
+        applyDeprecated(field);
 
         // value setter
         MethodBody valueBody = body("""
@@ -58,6 +50,7 @@ public class EnumerationFieldDefinition implements FieldDefinition {
                 .setName(valueName())
                 .setBody(valueBody.toString());
         valueMethod.addParameter("int", valueName());
+        applyDeprecated(valueMethod);
 
         // enum setter
         MethodBody enumBody = body("return this.$valueName($enumName.number());",
@@ -70,7 +63,8 @@ public class EnumerationFieldDefinition implements FieldDefinition {
                 .setReturnType(builderClass)
                 .setName(enumName())
                 .setBody(enumBody.toString());
-        enumMethod.addParameter(type.canonicalName(), enumName());
+        enumMethod.addParameter(type().canonicalName(), enumName());
+        applyDeprecated(enumMethod);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class EnumerationFieldDefinition implements FieldDefinition {
     @Override
     public MethodBody encodingCode() {
         return MethodBody.body("writer.int32($number, $name);",
-                param("number", number),
+                param("number", number()),
                 param("name", valueName())
         );
     }
@@ -96,19 +90,21 @@ public class EnumerationFieldDefinition implements FieldDefinition {
     @Override
     public void addMessageCode(JavaRecordSource messageRecord) {
         // field
-        messageRecord.addRecordComponent("int", valueName());
+        JavaRecordComponentSource component = messageRecord.addRecordComponent("int", valueName());
+        applyDeprecated(component);
 
         // enum getter
         MethodBody body = body("return $enumType.forNumber($valueName);",
-                param("enumType", type),
+                param("enumType", type()),
                 param("valueName", valueName())
         );
 
-        messageRecord.addMethod()
+        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
                 .setPublic()
-                .setReturnType(type.canonicalName())
+                .setReturnType(type().canonicalName())
                 .setName(enumName())
                 .setBody(body.toString());
+        applyDeprecated(method);
     }
 
     @Override
@@ -122,26 +118,23 @@ public class EnumerationFieldDefinition implements FieldDefinition {
     }
 
     private String enumName() {
-        return name;
+        return name();
     }
 
     private String valueName() {
-        return name + "Value";
+        return name() + "Value";
     }
 
     /**
      * Creates enumeration field definition
      *
-     * @param name   name of the field
-     * @param number number of the field
-     * @param type   java enum type
+     * @param name       name of the field
+     * @param number     number of the field
+     * @param type       java enum type
+     * @param deprecated whether field is deprecated
      * @return new enumeration field
      */
-    public static EnumerationFieldDefinition create(String name, int number, TypeName type) {
-        Valid.name(name);
-        Valid.number(number);
-        Valid.type(type);
-
-        return new EnumerationFieldDefinition(name, number, type);
+    public static EnumerationFieldDefinition create(String name, int number, TypeName type, boolean deprecated) {
+        return new EnumerationFieldDefinition(name, number, type, deprecated);
     }
 }

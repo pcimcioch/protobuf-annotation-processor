@@ -114,10 +114,10 @@ class MessageDefinitionTest {
     }
 
     private static ScalarFieldDefinition scalarField(String name, int number, String protoType) {
-        return ScalarFieldDefinition.create(name, number, protoType).orElseThrow();
+        return ScalarFieldDefinition.create(name, number, protoType, false).orElseThrow();
     }
 
     private static EnumerationFieldDefinition enumerationField(String name, int number, TypeName type) {
-        return EnumerationFieldDefinition.create(name, number, type);
+        return EnumerationFieldDefinition.create(name, number, type, false);
     }
 }

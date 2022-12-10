@@ -1,8 +1,8 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.github.pcimcioch.protobuf.test.FullRecord;
-import com.github.pcimcioch.protobuf.test.FullRecordProto;
+import com.protobuf.model.FullRecord;
+import com.protobuf.model.FullRecordProto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

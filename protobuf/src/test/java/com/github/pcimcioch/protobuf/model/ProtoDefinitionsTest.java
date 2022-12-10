@@ -170,6 +170,6 @@ class ProtoDefinitionsTest {
     }
 
     private static ScalarFieldDefinition scalarField(String test1, int number) {
-        return ScalarFieldDefinition.create(test1, number, "bool").orElseThrow();
+        return ScalarFieldDefinition.create(test1, number, "bool", false).orElseThrow();
     }
 }
