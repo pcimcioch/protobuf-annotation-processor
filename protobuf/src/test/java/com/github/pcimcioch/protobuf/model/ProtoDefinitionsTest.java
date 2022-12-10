@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -11,33 +12,35 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProtoDefinitionsTest {
 
+    private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
+
     @Test
     void correctDefinition() {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name1", 1)
-        ));
+        ), NO_RESERVED);
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
                 scalarField("name1", 1)
-        ));
+        ), NO_RESERVED);
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example2.MyType"), List.of(
                 scalarField("name1", 1)
-        ));
+        ), NO_RESERVED);
         MessageDefinition message4 = new MessageDefinition(canonicalName("com.example.Parent.MyType"), List.of(
                 scalarField("name1", 1)
-        ));
-        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
+        ), NO_RESERVED);
+        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("enum.com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
-        EnumerationDefinition enum2 = new EnumerationDefinition(canonicalName("enum.com.example.MyType2"), false, List.of(
+        ), false, NO_RESERVED);
+        EnumerationDefinition enum2 = new EnumerationDefinition(canonicalName("enum.com.example.MyType2"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
-        EnumerationDefinition enum3 = new EnumerationDefinition(canonicalName("enum.com.example2.MyType"), false, List.of(
+        ), false, NO_RESERVED);
+        EnumerationDefinition enum3 = new EnumerationDefinition(canonicalName("enum.com.example2.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
-        EnumerationDefinition enum4 = new EnumerationDefinition(canonicalName("enum.com.example.Parent.MyType"), false, List.of(
+        ), false, NO_RESERVED);
+        EnumerationDefinition enum4 = new EnumerationDefinition(canonicalName("enum.com.example.Parent.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
+        ), false, NO_RESERVED);
 
         // when then
         assertThatCode(() -> new ProtoDefinitions(
@@ -74,13 +77,13 @@ class ProtoDefinitionsTest {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name1", 1)
-        ));
+        ), NO_RESERVED);
         MessageDefinition message2 = new MessageDefinition(canonicalName("com.example.OtherType"), List.of(
                 scalarField("name2", 2)
-        ));
+        ), NO_RESERVED);
         MessageDefinition message3 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name3", 1)
-        ));
+        ), NO_RESERVED);
 
         // when then
         assertThatThrownBy(() -> new ProtoDefinitions(List.of(message1, message2, message3), List.of()))
@@ -91,15 +94,15 @@ class ProtoDefinitionsTest {
     @Test
     void duplicatedEnumName() {
         // given
-        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("com.example.MyType"), false, List.of(
+        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
-        EnumerationDefinition enum2 = new EnumerationDefinition(canonicalName("com.example.OtherType"), false, List.of(
+        ), false, NO_RESERVED);
+        EnumerationDefinition enum2 = new EnumerationDefinition(canonicalName("com.example.OtherType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
-        EnumerationDefinition enum3 = new EnumerationDefinition(canonicalName("com.example.MyType"), false, List.of(
+        ), false, NO_RESERVED);
+        EnumerationDefinition enum3 = new EnumerationDefinition(canonicalName("com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
+        ), false, NO_RESERVED);
 
         // when then
         assertThatThrownBy(() -> new ProtoDefinitions(List.of(), List.of(enum1, enum2, enum3)))
@@ -112,10 +115,10 @@ class ProtoDefinitionsTest {
         // given
         MessageDefinition message1 = new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name1", 1)
-        ));
-        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("com.example.MyType"), false, List.of(
+        ), NO_RESERVED);
+        EnumerationDefinition enum1 = new EnumerationDefinition(canonicalName("com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        ));
+        ), false, NO_RESERVED);
 
         // when then
         assertThatThrownBy(() -> new ProtoDefinitions(List.of(message1), List.of(enum1)))
@@ -131,14 +134,14 @@ class ProtoDefinitionsTest {
 
         messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name1", 1)
-        )));
+        ), NO_RESERVED));
         messages.add(null);
-        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        )));
-        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType2"), false, List.of(
+        ), false, NO_RESERVED));
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType2"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        )));
+        ), false, NO_RESERVED));
 
         // when then
         assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
@@ -154,13 +157,13 @@ class ProtoDefinitionsTest {
 
         messages.add(new MessageDefinition(canonicalName("com.example.MyType"), List.of(
                 scalarField("name1", 1)
-        )));
+        ), NO_RESERVED));
         messages.add(new MessageDefinition(canonicalName("com.example.MyType2"), List.of(
                 scalarField("name1", 1)
-        )));
-        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), false, List.of(
+        ), NO_RESERVED));
+        enumerations.add(new EnumerationDefinition(canonicalName("enum.com.example.MyType"), List.of(
                 new EnumerationElementDefinition("TEST", 0)
-        )));
+        ), false, NO_RESERVED));
         enumerations.add(null);
 
         // when then

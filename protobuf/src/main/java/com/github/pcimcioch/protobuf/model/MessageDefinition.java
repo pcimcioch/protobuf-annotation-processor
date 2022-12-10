@@ -16,12 +16,13 @@ public class MessageDefinition {
     /**
      * Constructor
      *
-     * @param name   name of the message
-     * @param fields fields of the message
+     * @param name     name of the message
+     * @param fields   fields of the message
+     * @param reserved reserved fields
      */
-    public MessageDefinition(TypeName name, List<FieldDefinition> fields) {
+    public MessageDefinition(TypeName name, List<FieldDefinition> fields, ReservedDefinition reserved) {
         this.name = Valid.name(name);
-        this.fields = Valid.fields(fields);
+        this.fields = Valid.fields(fields, reserved);
     }
 
     /**
@@ -61,7 +62,7 @@ public class MessageDefinition {
             return name;
         }
 
-        private static List<FieldDefinition> fields(List<FieldDefinition> fields) {
+        private static List<FieldDefinition> fields(List<FieldDefinition> fields, ReservedDefinition reserved) {
             if (fields == null || fields.isEmpty()) {
                 throw new IllegalArgumentException("Message must have at least one field");
             }
@@ -84,7 +85,7 @@ public class MessageDefinition {
                 }
             }
 
-            return fields;
+            return reserved.validFields(fields);
         }
     }
 }

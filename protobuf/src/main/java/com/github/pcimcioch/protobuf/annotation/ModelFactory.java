@@ -6,13 +6,18 @@ import com.github.pcimcioch.protobuf.model.EnumerationFieldDefinition;
 import com.github.pcimcioch.protobuf.model.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
+import com.github.pcimcioch.protobuf.model.ReservedDefinition;
+import com.github.pcimcioch.protobuf.model.ReservedDefinition.Range;
 import com.github.pcimcioch.protobuf.model.ScalarFieldDefinition;
 import com.github.pcimcioch.protobuf.model.TypeName;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Create model from annotations
@@ -40,7 +45,8 @@ public class ModelFactory {
         return protoFile.messages().stream()
                 .map(message -> new MessageDefinition(
                         protoFile.nameOf(message.name()),
-                        buildFields(protoFiles, protoFile, message)
+                        buildFields(protoFiles, protoFile, message),
+                        buildReserved(message.reserved())
                 ));
     }
 
@@ -68,8 +74,8 @@ public class ModelFactory {
         return protoFile.enumerations().stream()
                 .map(enumeration -> new EnumerationDefinition(
                         protoFile.nameOf(enumeration.name()),
-                        enumeration.allowAlias(),
-                        buildEnumerationElements(enumeration)
+                        buildEnumerationElements(enumeration), enumeration.allowAlias(),
+                        buildReserved(enumeration.reserved())
                 ));
     }
 
@@ -81,5 +87,17 @@ public class ModelFactory {
 
     private EnumerationElementDefinition buildEnumerationElement(EnumerationElement element) {
         return new EnumerationElementDefinition(element.name(), element.number());
+    }
+
+    private ReservedDefinition buildReserved(Reserved reserved) {
+        Set<String> names = Set.of(reserved.names());
+        Set<Integer> numbers = Arrays.stream(reserved.numbers())
+                .boxed()
+                .collect(toSet());
+        Set<Range> ranges = Arrays.stream(reserved.ranges())
+                .map(range -> new Range(range.from(), range.to()))
+                .collect(toSet());
+
+        return new ReservedDefinition(names, numbers, ranges);
     }
 }

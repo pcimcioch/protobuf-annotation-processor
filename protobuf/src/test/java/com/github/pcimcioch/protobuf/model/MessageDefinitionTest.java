@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MessageDefinitionTest {
+
+    private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
     @Test
     void correctMessage() {
@@ -20,7 +23,7 @@ class MessageDefinitionTest {
         FieldDefinition field3 = scalarField("test3", 3, "string");
 
         // when
-        assertThatCode(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
+        assertThatCode(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
                 .doesNotThrowAnyException();
     }
 
@@ -30,7 +33,7 @@ class MessageDefinitionTest {
         FieldDefinition field = scalarField("test", 1, "bool");
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(null, List.of(field)))
+        assertThatThrownBy(() -> new MessageDefinition(null, List.of(field), NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Message name cannot be null");
     }
@@ -41,7 +44,7 @@ class MessageDefinitionTest {
         TypeName name = canonicalName("com.example.MyType");
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(name, null))
+        assertThatThrownBy(() -> new MessageDefinition(name, null, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Message must have at least one field");
     }
@@ -52,7 +55,7 @@ class MessageDefinitionTest {
         TypeName name = canonicalName("com.example.MyType");
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(name, List.of()))
+        assertThatThrownBy(() -> new MessageDefinition(name, List.of(), NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Message must have at least one field");
     }
@@ -66,7 +69,7 @@ class MessageDefinitionTest {
         FieldDefinition field3 = scalarField("test", 3, "string");
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
+        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated field name: test");
     }
@@ -79,7 +82,7 @@ class MessageDefinitionTest {
         FieldDefinition field2 = enumerationField("test", 2, canonicalName("com.example.TestEnum"));
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2)))
+        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2), NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated field name: testValue");
     }
@@ -93,7 +96,7 @@ class MessageDefinitionTest {
         FieldDefinition field3 = scalarField("test3", 1, "string");
 
         // when then
-        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3)))
+        assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated field number: 1");
     }
@@ -108,7 +111,7 @@ class MessageDefinitionTest {
         fields.add(null);
 
         // when
-        assertThatThrownBy(() -> new MessageDefinition(name, fields))
+        assertThatThrownBy(() -> new MessageDefinition(name, fields, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null field");
     }

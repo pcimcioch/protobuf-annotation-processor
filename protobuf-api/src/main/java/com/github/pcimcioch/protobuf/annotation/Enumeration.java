@@ -34,4 +34,11 @@ public @interface Enumeration {
      * @return elements
      */
     EnumerationElement[] elements();
+
+    /**
+     * Reserved elements and numbers
+     *
+     * @return reserved
+     */
+    Reserved reserved() default @Reserved;
 }

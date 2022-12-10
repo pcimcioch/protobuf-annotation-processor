@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EnumerationDefinitionTest {
+
+    private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
     @Test
     void correctEnumeration() {
@@ -20,7 +23,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element3 = new EnumerationElementDefinition("TEST3", 2);
 
         // when
-        assertThatCode(() -> new EnumerationDefinition(name, false, List.of(element1, element2, element3)))
+        assertThatCode(() -> new EnumerationDefinition(name, List.of(element1, element2, element3), false, NO_RESERVED))
                 .doesNotThrowAnyException();
     }
 
@@ -30,7 +33,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element = new EnumerationElementDefinition("TEST", 0);
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(null, false, List.of(element)))
+        assertThatThrownBy(() -> new EnumerationDefinition(null, List.of(element), false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enum name cannot be null");
     }
@@ -41,7 +44,7 @@ class EnumerationDefinitionTest {
         TypeName name = canonicalName("com.example.MyType");
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, null))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, null, false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enum must have at least one element");
     }
@@ -52,7 +55,7 @@ class EnumerationDefinitionTest {
         TypeName name = canonicalName("com.example.MyType");
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, List.of()))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, List.of(), false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enum must have at least one element");
     }
@@ -66,7 +69,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element3 = new EnumerationElementDefinition("TEST", 2);
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, List.of(element1, element2, element3)))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, List.of(element1, element2, element3), false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated element name: TEST");
     }
@@ -80,7 +83,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element3 = new EnumerationElementDefinition("TEST3", 1);
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, List.of(element1, element2, element3)))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, List.of(element1, element2, element3), false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated element number: 1");
     }
@@ -94,7 +97,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element3 = new EnumerationElementDefinition("TEST3", 1);
 
         // when then
-        assertThatCode(() -> new EnumerationDefinition(name, true, List.of(element1, element2, element3)))
+        assertThatCode(() -> new EnumerationDefinition(name, List.of(element1, element2, element3), true, NO_RESERVED))
                 .doesNotThrowAnyException();
     }
 
@@ -107,7 +110,7 @@ class EnumerationDefinitionTest {
         EnumerationElementDefinition element3 = new EnumerationElementDefinition("TEST3", 3);
 
         // when then
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, List.of(element1, element2, element3)))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, List.of(element1, element2, element3), false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enum must contain element with number 0");
     }
@@ -122,7 +125,7 @@ class EnumerationDefinitionTest {
         elements.add(null);
 
         // when
-        assertThatThrownBy(() -> new EnumerationDefinition(name, false, elements))
+        assertThatThrownBy(() -> new EnumerationDefinition(name, elements, false, NO_RESERVED))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null element in enumeration");
     }

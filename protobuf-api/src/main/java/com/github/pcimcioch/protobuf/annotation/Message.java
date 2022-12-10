@@ -27,6 +27,13 @@ public @interface Message {
      * @return fields
      */
     Field[] fields();
+
+    /**
+     * Reserved fields and numbers
+     *
+     * @return reserved
+     */
+    Reserved reserved() default @Reserved;
 }
 
 

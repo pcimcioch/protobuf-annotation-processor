@@ -15,12 +15,13 @@ public class EnumerationDefinition {
      * Constructor
      *
      * @param name       name of the enumeration
-     * @param allowAlias whether to allow aliases
      * @param elements   elements of the enumeration
+     * @param allowAlias whether to allow aliases
+     * @param reserved   reserved elements
      */
-    public EnumerationDefinition(TypeName name, boolean allowAlias, List<EnumerationElementDefinition> elements) {
+    public EnumerationDefinition(TypeName name, List<EnumerationElementDefinition> elements, boolean allowAlias, ReservedDefinition reserved) {
         this.name = Valid.name(name);
-        this.elements = Valid.elements(elements, allowAlias);
+        this.elements = Valid.elements(elements, allowAlias, reserved);
     }
 
     /**
@@ -51,7 +52,7 @@ public class EnumerationDefinition {
             return name;
         }
 
-        private static List<EnumerationElementDefinition> elements(List<EnumerationElementDefinition> elements, boolean allowAlias) {
+        private static List<EnumerationElementDefinition> elements(List<EnumerationElementDefinition> elements, boolean allowAlias, ReservedDefinition reserved) {
             if (elements == null || elements.isEmpty()) {
                 throw new IllegalArgumentException("Enum must have at least one element");
             }
@@ -78,7 +79,7 @@ public class EnumerationDefinition {
                 throw new IllegalArgumentException("Enum must contain element with number 0");
             }
 
-            return elements;
+            return reserved.validElements(elements);
         }
     }
 }
