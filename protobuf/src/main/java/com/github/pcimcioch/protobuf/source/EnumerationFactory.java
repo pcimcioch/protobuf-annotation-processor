@@ -15,7 +15,6 @@ import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 import static com.github.pcimcioch.protobuf.model.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
 
-// TODO add tests for enums
 final class EnumerationFactory {
 
     JavaEnumSource buildEnumerationEnum(EnumerationDefinition enumeration) {
