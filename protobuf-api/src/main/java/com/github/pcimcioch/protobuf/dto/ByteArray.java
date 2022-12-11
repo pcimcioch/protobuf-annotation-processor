@@ -7,34 +7,30 @@ import static java.util.Objects.requireNonNull;
 /**
  * Wrapper for {@code byte[]} that provides equals and hashcode comparing by array content, not array identity.
  * This structure is immutable.
- *
- * @param data byte array to wrap
  */
-public record ByteArray(byte[] data) {
+public final class ByteArray {
 
     /**
      * Empty array. More efficient than creating new empty byte array
      */
     public static final ByteArray EMPTY = new ByteArray(new byte[0]);
 
-
     /**
-     * Constructor
-     *
-     * @param data byte array
+     * Byte array
      */
-    public ByteArray(byte[] data) {
+    private final byte[] data;
+
+    private ByteArray(byte[] data) {
         requireNonNull(data, "Data cannot be null");
-        this.data = Arrays.copyOf(data, data.length);
+        this.data = data;
     }
 
     /**
-     * Returns byte array
+     * Returns new byte array
      *
-     * @return byte array
+     * @return byte array copy
      */
-    @Override
-    public byte[] data() {
+    public byte[] toByteArray() {
         return Arrays.copyOf(data, data.length);
     }
 
@@ -45,6 +41,25 @@ public record ByteArray(byte[] data) {
      */
     public boolean isEmpty() {
         return data.length == 0;
+    }
+
+    /**
+     * Returns data length
+     *
+     * @return data length
+     */
+    public int length() {
+        return data.length;
+    }
+
+    /**
+     * Returns byte at given position
+     *
+     * @param index position
+     * @return byte
+     */
+    public byte get(int index) {
+        return data[index];
     }
 
     @Override
@@ -58,5 +73,59 @@ public record ByteArray(byte[] data) {
     @Override
     public int hashCode() {
         return Arrays.hashCode(data);
+    }
+
+    /**
+     * Creates ByteArray from byte[]. Data will be copied
+     *
+     * @param data byte array
+     * @return ByteArray
+     */
+    public static ByteArray fromByteArray(byte[] data) {
+        return new ByteArray(Arrays.copyOf(data, data.length));
+    }
+
+    /**
+     * Returns builder that can be used to initialize ByteArray in efficient way without data copying
+     *
+     * @param length data length
+     * @return ByteArray builder
+     */
+    public static Builder builder(int length) {
+        return new Builder(length);
+    }
+
+    /**
+     * Builder that can be used to initialize ByteArray in efficient way without data copying
+     */
+    public static final class Builder {
+        private byte[] data;
+
+        private Builder(int length) {
+            this.data = new byte[length];
+        }
+
+        /**
+         * Set byte at given position
+         *
+         * @param index position
+         * @param value byte to set
+         * @return builder
+         */
+        public Builder set(int index, byte value) {
+            data[index] = value;
+            return this;
+        }
+
+        /**
+         * Builds a ByteArray. Builder cannot be used after this operation
+         *
+         * @return ByteArray
+         */
+        public ByteArray build() {
+            byte[] toPass = this.data;
+            this.data = null;
+            return new ByteArray(toPass);
+        }
     }
 }

@@ -17,7 +17,7 @@ public final class ByteUtils {
     }
 
     public static ByteArray ba(int... bytes) {
-        return new ByteArray(b(bytes));
+        return ByteArray.fromByteArray(b(bytes));
     }
 
     public static ByteString bs(int... bytes) {

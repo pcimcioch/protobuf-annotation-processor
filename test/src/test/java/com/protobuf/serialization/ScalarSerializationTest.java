@@ -464,7 +464,7 @@ class ScalarSerializationTest {
             assertThat(our.sfixed64()).isEqualTo(proto.getSfixed64());
             assertThat(our.bool()).isEqualTo(proto.getBool());
             assertThat(our.string()).isEqualTo(proto.getString());
-            assertThat(our.bytes().data()).containsExactly(proto.getBytes().toByteArray());
+            assertThat(our.bytes().toByteArray()).containsExactly(proto.getBytes().toByteArray());
         }
     }
 }

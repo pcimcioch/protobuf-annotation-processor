@@ -248,7 +248,7 @@ public class ProtobufWriter {
         if (!value.isEmpty()) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
-            output.writeBytes(value.data());
+            output.writeByteArray(value);
         }
     }
 

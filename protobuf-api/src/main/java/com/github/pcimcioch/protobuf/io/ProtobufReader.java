@@ -233,7 +233,7 @@ public class ProtobufReader {
      */
     public ByteArray bytes(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, LEN);
-        return new ByteArray(input.readBytes());
+        return input.readByteArray();
     }
 
     /**

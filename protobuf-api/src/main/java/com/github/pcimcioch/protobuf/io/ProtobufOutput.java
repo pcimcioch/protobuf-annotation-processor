@@ -1,5 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.ByteArray;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +14,6 @@ public class ProtobufOutput {
     private static final long PAYLOAD_MASK = 0b01111111;
     private static final int CONTINUATION_MASK = 0b10000000;
 
-    private final byte[] writeBuffer = new byte[8];
     private final OutputStream out;
 
     /**
@@ -92,7 +93,24 @@ public class ProtobufOutput {
      */
     public void writeBytes(byte[] value) throws IOException {
         writeVarint(value.length);
-        write(value);
+
+        for (byte b : value) {
+            out.write(b);
+        }
+    }
+
+    /**
+     * Writes undefined number of bytes to the stream
+     *
+     * @param value bytes array
+     * @throws IOException in case of any data write error
+     */
+    public void writeByteArray(ByteArray value) throws IOException {
+        writeVarint(value.length());
+
+        for (int i = 0; i < value.length(); i++) {
+            out.write(value.get(i));
+        }
     }
 
     /**
@@ -124,48 +142,25 @@ public class ProtobufOutput {
             if (value != 0) {
                 toWrite |= CONTINUATION_MASK;
             }
-            writeByte(toWrite);
+            out.write(toWrite);
         } while (value != 0);
     }
 
-    private void writeByte(int value) throws IOException {
-        out.write(value);
-    }
-
     private void writeInt(int value) throws IOException {
-        writeBuffer[0] = (byte) (value >>> 0);
-        writeBuffer[1] = (byte) (value >>> 8);
-        writeBuffer[2] = (byte) (value >>> 16);
-        writeBuffer[3] = (byte) (value >>> 24);
-        out.write(writeBuffer, 0, 4);
+        out.write(value >>> 0);
+        out.write(value >>> 8);
+        out.write(value >>> 16);
+        out.write(value >>> 24);
     }
 
     private void writeLong(long value) throws IOException {
-        writeBuffer[0] = (byte) (value >>> 0);
-        writeBuffer[1] = (byte) (value >>> 8);
-        writeBuffer[2] = (byte) (value >>> 16);
-        writeBuffer[3] = (byte) (value >>> 24);
-        writeBuffer[4] = (byte) (value >>> 32);
-        writeBuffer[5] = (byte) (value >>> 40);
-        writeBuffer[6] = (byte) (value >>> 48);
-        writeBuffer[7] = (byte) (value >>> 56);
-        out.write(writeBuffer, 0, 8);
-    }
-
-    private void write(byte[] b) throws IOException {
-        write(b, 0, b.length);
-    }
-
-    private void write(byte[] b, int off, int len) throws IOException {
-        if ((off | len | (b.length - (len + off)) | (off + len)) < 0)
-            throw new IndexOutOfBoundsException();
-
-        for (int i = 0 ; i < len ; i++) {
-            write(b[off + i]);
-        }
-    }
-
-    void write(int b) throws IOException {
-        out.write(b);
+        out.write((int) (value >>> 0));
+        out.write((int) (value >>> 8));
+        out.write((int) (value >>> 16));
+        out.write((int) (value >>> 24));
+        out.write((int) (value >>> 32));
+        out.write((int) (value >>> 40));
+        out.write((int) (value >>> 48));
+        out.write((int) (value >>> 56));
     }
 }

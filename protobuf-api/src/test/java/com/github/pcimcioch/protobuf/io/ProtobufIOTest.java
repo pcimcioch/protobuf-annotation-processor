@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.ByteArray;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -454,6 +455,50 @@ class ProtobufIOTest {
     }
 
     @Nested
+    class ByteArrays {
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void write(ByteArray value, byte[] bytes) throws IOException {
+            // when
+            output().writeByteArray(value);
+
+            // then
+            assertBinary(bytes);
+        }
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void read(ByteArray value, byte[] bytes) throws IOException {
+            // when then
+            assertThat(input(bytes).readByteArray()).isEqualTo(value);
+        }
+
+        static Stream<Arguments> arguments() {
+            return Stream.of(
+                    Arguments.of(ba(), b(0b0)),
+                    Arguments.of(ba(0b1, 0b11111111, 0b10101010), b(0b11, 0b1, 0b11111111, 0b10101010))
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unfinishedArguments")
+        void readUnfinished(byte[] bytes) {
+            // when then
+            assertThatThrownBy(() -> input(bytes).readByteArray())
+                    .isInstanceOf(EOFException.class);
+        }
+
+        static Stream<byte[]> unfinishedArguments() {
+            return Stream.of(
+                    b(),
+                    b(0b1),
+                    b(0b11, 0b1, 0b01)
+            );
+        }
+    }
+
+    @Nested
     class ZigZag {
 
         @ParameterizedTest
@@ -610,5 +655,9 @@ class ProtobufIOTest {
             bytes[i] = (byte) values[i];
         }
         return bytes;
+    }
+
+    private static ByteArray ba(int... values) {
+        return ByteArray.fromByteArray(b(values));
     }
 }
