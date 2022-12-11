@@ -1,12 +1,17 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.model.field.ScalarFieldDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
+import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

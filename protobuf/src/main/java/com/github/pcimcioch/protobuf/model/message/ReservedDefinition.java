@@ -1,4 +1,6 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.message;
+
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 
 import java.util.List;
 import java.util.Set;

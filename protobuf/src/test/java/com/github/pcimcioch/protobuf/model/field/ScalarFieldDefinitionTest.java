@@ -1,5 +1,6 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.field;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -7,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class EnumerationElementDefinitionTest {
+class ScalarFieldDefinitionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -19,7 +20,7 @@ class EnumerationElementDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> new EnumerationElementDefinition(name, 0))
+        assertThatCode(() -> ScalarFieldDefinition.create(name, 1, "bool", false))
                 .doesNotThrowAnyException();
     }
 
@@ -32,19 +33,24 @@ class EnumerationElementDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> new EnumerationElementDefinition(name, 0))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create(name, 1, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Incorrect enum name");
+                .hasMessageContaining("Incorrect field name");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "UNRECOGNIZED"
-    })
-    void reservedNames(String name) {
+    @Test
+    void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> new EnumerationElementDefinition(name, 0))
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", -1, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Used restricted enum name");
+                .hasMessageContaining("Number must be positive");
+    }
+
+    @Test
+    void zeroNumber() {
+        // when then
+        assertThatThrownBy(() -> ScalarFieldDefinition.create("name", 0, "bool", false))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Number must be positive");
     }
 }

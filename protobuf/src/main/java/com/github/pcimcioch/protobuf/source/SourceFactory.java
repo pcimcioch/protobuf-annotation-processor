@@ -1,7 +1,7 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
-import com.github.pcimcioch.protobuf.model.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import org.jboss.forge.roaster.model.source.JavaSource;
 

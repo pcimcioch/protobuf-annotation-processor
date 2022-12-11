@@ -1,12 +1,13 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.message;
 
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

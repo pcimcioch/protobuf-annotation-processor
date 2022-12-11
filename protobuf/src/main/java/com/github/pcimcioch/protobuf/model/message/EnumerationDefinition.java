@@ -1,4 +1,6 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.message;
+
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.HashSet;
 import java.util.List;

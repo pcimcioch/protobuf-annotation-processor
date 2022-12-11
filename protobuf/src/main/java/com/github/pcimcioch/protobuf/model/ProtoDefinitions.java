@@ -1,5 +1,9 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

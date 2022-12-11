@@ -2,8 +2,8 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
-import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
-import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaEnumSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
-import static com.github.pcimcioch.protobuf.model.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
+import static com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
 
 final class EnumerationFactory {
 

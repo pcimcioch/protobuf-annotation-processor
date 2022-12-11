@@ -1,15 +1,16 @@
 package com.github.pcimcioch.protobuf.annotation;
 
-import com.github.pcimcioch.protobuf.model.EnumerationDefinition;
-import com.github.pcimcioch.protobuf.model.EnumerationElementDefinition;
-import com.github.pcimcioch.protobuf.model.EnumerationFieldDefinition;
-import com.github.pcimcioch.protobuf.model.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
-import com.github.pcimcioch.protobuf.model.ReservedDefinition;
-import com.github.pcimcioch.protobuf.model.ReservedDefinition.Range;
-import com.github.pcimcioch.protobuf.model.ScalarFieldDefinition;
-import com.github.pcimcioch.protobuf.model.TypeName;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.model.field.EnumerationFieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.MessageFieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.ScalarFieldDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
+import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
+import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
+import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,8 +67,11 @@ public class ModelFactory {
         if (protoFiles.containsEnumeration(fieldType)) {
             return EnumerationFieldDefinition.create(field.name(), field.number(), fieldType, field.deprecated());
         }
+        if (protoFiles.containsMessage(fieldType)) {
+            return MessageFieldDefinition.create(field.name(), field.number(), fieldType, field.deprecated());
+        }
 
-        return null;
+        throw new IllegalArgumentException("Cannot find field type for " + field.type());
     }
 
     private Stream<EnumerationDefinition> buildEnumerations(ProtoFile protoFile) {

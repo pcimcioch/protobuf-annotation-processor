@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -248,6 +249,21 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
             output.writeBytes(value.data());
+        }
+    }
+
+    /**
+     * Write message
+     *
+     * @param number  field number
+     * @param message message to write
+     * @throws IOException in case of any data write error
+     */
+    public void message(int number, ProtobufMessage message) throws IOException {
+        if (message != null) {
+            Tag tag = new Tag(number, LEN);
+            output.writeVarint(tag.value());
+            output.writeBytes(message.toByteArray()); // TODO this is very inefficient. But it works
         }
     }
 }

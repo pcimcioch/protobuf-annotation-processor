@@ -1,6 +1,7 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
@@ -13,8 +14,8 @@ import java.util.Optional;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
-import static com.github.pcimcioch.protobuf.model.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 
 /**
  * Scalar field available in Protobuf documentation
@@ -77,7 +78,7 @@ public class ScalarFieldDefinition extends FieldDefinition {
 
     @Override
     public MethodBody encodingCode() {
-        return MethodBody.body("writer.$writerMethod($number, $name);",
+        return body("writer.$writerMethod($number, $name);",
                 param("writerMethod", ioMethod),
                 param("number", number()),
                 param("name", name())

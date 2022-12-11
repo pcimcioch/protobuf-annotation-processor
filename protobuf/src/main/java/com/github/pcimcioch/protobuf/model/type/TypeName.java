@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.type;
 
 import java.util.Objects;
 import java.util.Set;

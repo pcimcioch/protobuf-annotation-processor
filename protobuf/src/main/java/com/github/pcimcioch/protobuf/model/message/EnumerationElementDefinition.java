@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.message;
 
 import java.util.Set;
 import java.util.regex.Pattern;

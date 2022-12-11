@@ -1,10 +1,10 @@
 package com.github.pcimcioch.protobuf.annotation;
 
-import com.github.pcimcioch.protobuf.model.TypeName;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.List;
 
-import static com.github.pcimcioch.protobuf.model.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 
 /**
  * Represents protobuf file that contains multiple protobuf structures

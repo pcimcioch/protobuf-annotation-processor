@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.annotation;
 
-import com.github.pcimcioch.protobuf.model.TypeName;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.List;
 

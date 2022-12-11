@@ -3,8 +3,8 @@ package com.github.pcimcioch.protobuf.source;
 import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.io.ProtobufReader;
 import com.github.pcimcioch.protobuf.io.Tag;
-import com.github.pcimcioch.protobuf.model.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 

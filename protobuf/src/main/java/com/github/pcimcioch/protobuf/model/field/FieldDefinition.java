@@ -1,6 +1,7 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
@@ -24,6 +25,15 @@ public abstract class FieldDefinition {
         this.number = Valid.number(number);
         this.type = Valid.type(type);
         this.deprecated = deprecated;
+    }
+
+    /**
+     * Field name
+     *
+     * @return field name
+     */
+    public String name() {
+        return name;
     }
 
     /**
@@ -83,10 +93,6 @@ public abstract class FieldDefinition {
      * @param constructor message constructor
      */
     abstract public void addMessageConstructorCode(MethodSource<JavaRecordSource> constructor);
-
-    String name() {
-        return name;
-    }
 
     TypeName type() {
         return type;

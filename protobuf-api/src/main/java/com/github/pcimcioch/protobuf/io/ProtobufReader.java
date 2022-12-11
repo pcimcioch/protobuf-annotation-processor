@@ -237,6 +237,39 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads message
+     *
+     * @param tag       tag
+     * @param fieldName field name
+     * @param factory   message from bytes factory
+     * @param <T>       type of message
+     * @return message
+     * @throws IOException in case of any data read error
+     */
+    public <T> T message(Tag tag, String fieldName, MessageFactory<T> factory) throws IOException {
+        assertWireType(tag, fieldName, LEN);
+        return factory.parse(input.readBytes()); // TODO this is very inefficient. But it works
+    }
+
+    /**
+     * Factory that creates message from byte array
+     *
+     * @param <T> type of the message
+     */
+    @FunctionalInterface
+    public interface MessageFactory<T> {
+
+        /**
+         * Creates message from byte array
+         *
+         * @param data bytes
+         * @return new message
+         * @throws IOException in case of any data read error
+         */
+        T parse(byte[] data) throws IOException;
+    }
+
+    /**
      * Skips unknown value
      *
      * @param tag tag

@@ -1,6 +1,7 @@
-package com.github.pcimcioch.protobuf.model;
+package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
