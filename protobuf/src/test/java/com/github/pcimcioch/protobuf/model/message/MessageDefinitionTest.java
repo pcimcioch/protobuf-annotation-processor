@@ -10,29 +10,33 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MessageDefinitionTest {
 
+    private static final TypeName NAME = canonicalName("com.example.MyType");
     private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
     @Test
     void correctMessage() {
         // given
-        TypeName name = canonicalName("com.example.MyType");
-        FieldDefinition field1 = scalarField("test1", 1, "bool");
-        FieldDefinition field2 = scalarField("test2", 2, "int32");
-        FieldDefinition field3 = scalarField("test3", 3, "string");
+        List<FieldDefinition> fields = asList(
+                scalarField("test1", 1, "bool"),
+                scalarField("test2", 2, "int32"),
+                scalarField("test3", 3, "string")
+        );
 
         // when
-        assertThatCode(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
+        assertThatCode(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                 .doesNotThrowAnyException();
     }
 
@@ -42,10 +46,12 @@ class MessageDefinitionTest {
         @Test
         void nullName() {
             // given
-            FieldDefinition field = scalarField("test", 1, "bool");
+            List<FieldDefinition> fields = singletonList(
+                    scalarField("test", 1, "bool")
+            );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(null, List.of(field), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(null, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message name cannot be null");
         }
@@ -56,22 +62,16 @@ class MessageDefinitionTest {
 
         @Test
         void nullFields() {
-            // given
-            TypeName name = canonicalName("com.example.MyType");
-
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(name, null, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, null, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message must have at least one field");
         }
 
         @Test
         void emptyFields() {
-            // given
-            TypeName name = canonicalName("com.example.MyType");
-
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, emptyList(), NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message must have at least one field");
         }
@@ -79,13 +79,14 @@ class MessageDefinitionTest {
         @Test
         void duplicatedFieldName() {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field1 = scalarField("test", 1, "bool");
-            FieldDefinition field2 = scalarField("test2", 2, "int32");
-            FieldDefinition field3 = scalarField("test", 3, "string");
+            List<FieldDefinition> fields = asList(
+                    scalarField("test", 1, "bool"),
+                    scalarField("test2", 2, "int32"),
+                    scalarField("test", 3, "string")
+            );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field name: test");
         }
@@ -93,12 +94,13 @@ class MessageDefinitionTest {
         @Test
         void duplicatedEnumValueName() {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field1 = scalarField("testValue", 1, "bool");
-            FieldDefinition field2 = enumerationField("test", 2, canonicalName("com.example.TestEnum"));
+            List<FieldDefinition> fields = asList(
+                    scalarField("testValue", 1, "bool"),
+                    enumerationField("test", 2, canonicalName("com.example.TestEnum"))
+            );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field name: testValue");
         }
@@ -106,13 +108,14 @@ class MessageDefinitionTest {
         @Test
         void duplicatedFieldNumbers() {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field1 = scalarField("test1", 1, "bool");
-            FieldDefinition field2 = scalarField("test2", 2, "int32");
-            FieldDefinition field3 = scalarField("test3", 1, "string");
+            List<FieldDefinition> fields = asList(
+                    scalarField("test1", 1, "bool"),
+                    scalarField("test2", 2, "int32"),
+                    scalarField("test3", 1, "string")
+            );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(field1, field2, field3), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field number: 1");
         }
@@ -120,14 +123,14 @@ class MessageDefinitionTest {
         @Test
         void nullField() {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            List<FieldDefinition> fields = new ArrayList<>();
-            fields.add(scalarField("test1", 1, "bool"));
-            fields.add(scalarField("test2", 2, "int32"));
-            fields.add(null);
+            List<FieldDefinition> fields = asList(
+                    scalarField("test1", 1, "bool"),
+                    scalarField("test2", 2, "int32"),
+                    null
+            );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(name, fields, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Null field");
         }
@@ -146,11 +149,12 @@ class MessageDefinitionTest {
         @ValueSource(strings = {"name", "name1", "reserved", "reserved3"})
         void correctFieldNames(String fieldName) {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field = scalarField(fieldName, 1, "bool");
+            List<FieldDefinition> fields = singletonList(
+                    scalarField(fieldName, 1, "bool")
+            );
 
             // when
-            assertThatCode(() -> new MessageDefinition(name, List.of(field), RESERVED))
+            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED))
                     .doesNotThrowAnyException();
         }
 
@@ -158,11 +162,12 @@ class MessageDefinitionTest {
         @ValueSource(ints = {1, 2, 99, 103, 199, 301, 999})
         void correctFieldNumbers(int fieldNumber) {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field = scalarField("test", fieldNumber, "bool");
+            List<FieldDefinition> fields = singletonList(
+                    scalarField("test", fieldNumber, "bool")
+            );
 
             // when
-            assertThatCode(() -> new MessageDefinition(name, List.of(field), RESERVED))
+            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED))
                     .doesNotThrowAnyException();
         }
 
@@ -170,11 +175,12 @@ class MessageDefinitionTest {
         @ValueSource(strings = {"reserved1", "reserved2"})
         void incorrectFieldNames(String fieldName) {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field = scalarField(fieldName, 1, "bool");
+            List<FieldDefinition> fields = singletonList(
+                    scalarField(fieldName, 1, "bool")
+            );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(field), RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("is reserved");
         }
@@ -183,11 +189,12 @@ class MessageDefinitionTest {
         @ValueSource(ints = {100, 101, 102, 200, 256, 300, 1000, 1234567, MAX_VALUE})
         void incorrectFieldNumbers(int fieldNumber) {
             // given
-            TypeName name = canonicalName("com.example.MyType");
-            FieldDefinition field = scalarField("test", fieldNumber, "bool");
+            List<FieldDefinition> fields = singletonList(
+                    scalarField("test", fieldNumber, "bool")
+            );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(name, List.of(field), RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("is reserved");
         }

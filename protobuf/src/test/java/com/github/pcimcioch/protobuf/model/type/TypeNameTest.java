@@ -36,7 +36,8 @@ class TypeNameTest {
     @MethodSource("incorrectSimpleNames")
     void failFromIncorrectSimpleNames(String name) {
         // when then
-        assertThatThrownBy(() -> TypeName.simpleName(name)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TypeName.simpleName(name))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     static Stream<String> incorrectSimpleNames() {
@@ -76,7 +77,8 @@ class TypeNameTest {
     @MethodSource("incorrectCanonicalNames")
     void failFromIncorrectCanonicalNames(String name) {
         // when then
-        assertThatThrownBy(() -> TypeName.canonicalName(name)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> TypeName.canonicalName(name))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     static Stream<String> incorrectCanonicalNames() {
