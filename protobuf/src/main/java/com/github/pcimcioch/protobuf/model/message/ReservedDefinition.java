@@ -8,7 +8,6 @@ import java.util.Set;
 /**
  * Reserved elements definition
  */
-// TODO add tests
 public class ReservedDefinition {
     private final Set<String> names;
     private final Set<Integer> numbers;

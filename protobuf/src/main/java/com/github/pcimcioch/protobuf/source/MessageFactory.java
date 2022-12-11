@@ -42,7 +42,7 @@ final class MessageFactory {
         }
     }
 
-    // TODO [issue] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
+    // TODO [improvement] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
     private void addConstructor(JavaRecordSource source, MessageDefinition message) {
         MethodSource<JavaRecordSource> constructor = source.addMethod()
                 .setPublic()

@@ -13,7 +13,8 @@ class NullabilityTest {
         Throwable thrown = catchThrowable(() -> FullRecord.builder().string(null).build());
 
         // then
-        assertThat(thrown).isInstanceOf(NullPointerException.class);
+        assertThat(thrown)
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -22,6 +23,7 @@ class NullabilityTest {
         Throwable thrown = catchThrowable(() -> FullRecord.builder().bytes(null).build());
 
         // then
-        assertThat(thrown).isInstanceOf(NullPointerException.class);
+        assertThat(thrown)
+                .isInstanceOf(NullPointerException.class);
     }
 }

@@ -263,7 +263,7 @@ public class ProtobufWriter {
         if (message != null) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
-            output.writeBytes(message.toByteArray()); // TODO this is very inefficient. But it works
+            output.writeBytes(message.toByteArray()); //TODO this is very inefficient. But it works
         }
     }
 }

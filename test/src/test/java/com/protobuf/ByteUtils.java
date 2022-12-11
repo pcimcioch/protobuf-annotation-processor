@@ -3,8 +3,8 @@ package com.protobuf;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.google.protobuf.ByteString;
 
-public final class Utils {
-    private Utils() {
+public final class ByteUtils {
+    private ByteUtils() {
     }
 
     public static byte[] b(int... bytes) {

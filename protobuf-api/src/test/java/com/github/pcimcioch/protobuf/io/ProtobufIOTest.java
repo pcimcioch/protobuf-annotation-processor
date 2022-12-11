@@ -60,7 +60,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readFixedInt()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readFixedInt())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -115,7 +116,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readFixedLong()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readFixedLong())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -169,7 +171,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readFloat()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readFloat())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -219,7 +222,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readDouble()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readDouble())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -283,7 +287,8 @@ class ProtobufIOTest {
         @Test
         void readUnfinished() {
             // when then
-            assertThatThrownBy(() -> input(new byte[0]).readBoolean()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(new byte[0]).readBoolean())
+                    .isInstanceOf(EOFException.class);
         }
     }
 
@@ -327,7 +332,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readVarint()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readVarint())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -343,7 +349,8 @@ class ProtobufIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001);
 
             // when
-            assertThatCode(() -> input(bytes).readVarint()).doesNotThrowAnyException();
+            assertThatCode(() -> input(bytes).readVarint())
+                    .doesNotThrowAnyException();
         }
 
         @Test
@@ -352,7 +359,8 @@ class ProtobufIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000011);
 
             // when
-            assertThatCode(() -> input(bytes).readVarint()).doesNotThrowAnyException();
+            assertThatCode(() -> input(bytes).readVarint())
+                    .doesNotThrowAnyException();
         }
     }
 
@@ -388,7 +396,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readString()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readString())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -431,7 +440,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readBytes()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readBytes())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -481,7 +491,8 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readZigZag()).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(bytes).readZigZag())
+                    .isInstanceOf(EOFException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -569,13 +580,15 @@ class ProtobufIOTest {
             input.skip(3);
 
             // then
-            assertThatThrownBy(() -> input.skip(1)).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input.skip(1))
+                    .isInstanceOf(EOFException.class);
         }
 
         @Test
         void skipTooMany() {
             // when then
-            assertThatThrownBy(() -> input(b(10, 20, 30)).skip(4)).isInstanceOf(EOFException.class);
+            assertThatThrownBy(() -> input(b(10, 20, 30)).skip(4))
+                    .isInstanceOf(EOFException.class);
         }
     }
 

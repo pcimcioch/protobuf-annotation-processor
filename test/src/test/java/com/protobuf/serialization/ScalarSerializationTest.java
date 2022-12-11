@@ -12,9 +12,9 @@ import java.io.IOException;
 import static com.protobuf.ProtobufAssertion.assertProto;
 import static com.protobuf.ProtobufAssertion.deserialize;
 import static com.protobuf.ProtobufAssertion.serialize;
-import static com.protobuf.Utils.b;
-import static com.protobuf.Utils.ba;
-import static com.protobuf.Utils.bs;
+import static com.protobuf.ByteUtils.b;
+import static com.protobuf.ByteUtils.ba;
+import static com.protobuf.ByteUtils.bs;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -94,8 +94,6 @@ class ScalarSerializationTest {
 
         @Test
         void emptyObject() throws IOException {
-            // given
-
             // when
             FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
 

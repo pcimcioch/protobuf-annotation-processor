@@ -2,7 +2,7 @@ package com.protobuf.model;
 
 import org.junit.jupiter.api.Test;
 
-import static com.protobuf.Utils.ba;
+import static com.protobuf.ByteUtils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScalarModelTest {
