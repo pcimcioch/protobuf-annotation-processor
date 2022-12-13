@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.model;
 
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.field.ScalarFieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -152,7 +151,7 @@ class ProtoDefinitionsTest {
     private static MessageDefinition message(String typeCanonical) {
         TypeName type = canonicalName(typeCanonical);
         List<FieldDefinition> fields = singletonList(
-                ScalarFieldDefinition.create("name1", 1, "bool", false).orElseThrow()
+                FieldDefinition.scalar("name1", 1, "bool", false).orElseThrow()
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 

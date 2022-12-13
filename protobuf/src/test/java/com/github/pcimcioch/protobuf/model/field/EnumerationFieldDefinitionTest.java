@@ -21,7 +21,7 @@ class EnumerationFieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> EnumerationFieldDefinition.create(name, 1, canonicalName("com.example.TestEnum"), false))
+        assertThatCode(() -> FieldDefinition.enumeration(name, 1, canonicalName("com.example.TestEnum"), false))
                 .doesNotThrowAnyException();
     }
 
@@ -34,7 +34,7 @@ class EnumerationFieldDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> EnumerationFieldDefinition.create(name, 1, canonicalName("com.example.TestEnum"), false))
+        assertThatThrownBy(() -> FieldDefinition.enumeration(name, 1, canonicalName("com.example.TestEnum"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Incorrect field name");
     }
@@ -42,15 +42,15 @@ class EnumerationFieldDefinitionTest {
     @Test
     void nullType() {
         // when then
-        assertThatThrownBy(() -> EnumerationFieldDefinition.create("name", 1, null, false))
+        assertThatThrownBy(() -> FieldDefinition.enumeration("name", 1, null, false))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Must provide enum type");
+                .hasMessageContaining("Must provide field type");
     }
 
     @Test
     void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> EnumerationFieldDefinition.create("name", -1, canonicalName("com.example.TestEnum"), false))
+        assertThatThrownBy(() -> FieldDefinition.enumeration("name", -1, canonicalName("com.example.TestEnum"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -58,7 +58,7 @@ class EnumerationFieldDefinitionTest {
     @Test
     void zeroNumber() {
         // when then
-        assertThatThrownBy(() -> EnumerationFieldDefinition.create("name", 0, canonicalName("com.example.TestEnum"), false))
+        assertThatThrownBy(() -> FieldDefinition.enumeration("name", 0, canonicalName("com.example.TestEnum"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }

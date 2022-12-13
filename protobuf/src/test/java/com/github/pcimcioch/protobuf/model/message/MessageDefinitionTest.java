@@ -1,8 +1,6 @@
 package com.github.pcimcioch.protobuf.model.message;
 
-import com.github.pcimcioch.protobuf.model.field.EnumerationFieldDefinition;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.field.ScalarFieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.junit.jupiter.api.Nested;
@@ -89,20 +87,6 @@ class MessageDefinitionTest {
             assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field name: test");
-        }
-
-        @Test
-        void duplicatedEnumValueName() {
-            // given
-            List<FieldDefinition> fields = asList(
-                    scalarField("testValue", 1, "bool"),
-                    enumerationField("test", 2, canonicalName("com.example.TestEnum"))
-            );
-
-            // when then
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Duplicated field name: testValue");
         }
 
         @Test
@@ -200,11 +184,7 @@ class MessageDefinitionTest {
         }
     }
 
-    private static ScalarFieldDefinition scalarField(String name, int number, String protoType) {
-        return ScalarFieldDefinition.create(name, number, protoType, false).orElseThrow();
-    }
-
-    private static EnumerationFieldDefinition enumerationField(String name, int number, TypeName type) {
-        return EnumerationFieldDefinition.create(name, number, type, false);
+    private static FieldDefinition scalarField(String name, int number, String protoType) {
+        return FieldDefinition.scalar(name, number, protoType, false).orElseThrow();
     }
 }

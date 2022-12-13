@@ -57,7 +57,10 @@ class EncodingFactory {
         MethodBody body = body();
 
         for (FieldDefinition field : message.fields()) {
-            body.append(field.encodingCode());
+            body.append(encodingCode(field),
+                    param("number", field.number()),
+                    param("name", field.javaFieldName())
+            );
         }
 
         MethodSource<JavaRecordSource> method = record.addMethod()
@@ -67,5 +70,26 @@ class EncodingFactory {
                 .addThrows(IOException.class)
                 .setBody(body.toString());
         method.addParameter(ProtobufWriter.class, "writer");
+    }
+
+    private String encodingCode(FieldDefinition field) {
+        return switch(field.protoType()) {
+            case DOUBLE -> "writer._double($number, $name);";
+            case FLOAT -> "writer._float($number, $name);";
+            case INT32, ENUM -> "writer.int32($number, $name);";
+            case INT64 -> "writer.int64($number, $name);";
+            case UINT32 -> "writer.uint32($number, $name);";
+            case UINT64 -> "writer.uint64($number, $name);";
+            case SINT32 -> "writer.sint32($number, $name);";
+            case SINT64 -> "writer.sint64($number, $name);";
+            case FIXED32 -> "writer.fixed32($number, $name);";
+            case FIXED64 -> "writer.fixed64($number, $name);";
+            case SFIXED32 -> "writer.sfixed32($number, $name);";
+            case SFIXED64 -> "writer.sfixed64($number, $name);";
+            case BOOL -> "writer.bool($number, $name);";
+            case STRING -> "writer.string($number, $name);";
+            case MESSAGE -> "writer.message($number, $name);";
+            case BYTES -> "writer.bytes($number, $name);";
+        };
     }
 }

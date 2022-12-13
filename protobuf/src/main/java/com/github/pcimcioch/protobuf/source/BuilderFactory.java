@@ -2,21 +2,45 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.ProtoType;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
+import static com.github.pcimcioch.protobuf.model.field.ProtoType.ENUM;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 
 class BuilderFactory {
+
+    private static final Map<TypeName, String> DEFAULTS = Map.of(
+            simpleName("double"), "0d",
+            simpleName("float"), "0f",
+            simpleName("int"), "0",
+            simpleName("long"), "0L",
+            simpleName("boolean"), "false",
+            simpleName("String"), "\"\"",
+            canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), "com.github.pcimcioch.protobuf.dto.ByteArray.EMPTY"
+    );
 
     JavaClassSource buildBuilder(MessageDefinition message) {
         JavaClassSource builderClass = buildSourceFile(message);
 
-        addFieldCode(builderClass, message);
+        for (FieldDefinition field : message.fields()) {
+            addField(builderClass, field);
+            addSetter(builderClass, field);
+            if (field.protoType() == ENUM) {
+                addEnumSetters(builderClass, field);
+            }
+        }
         addBuildMethod(builderClass, message);
 
         return builderClass;
@@ -31,15 +55,50 @@ class BuilderFactory {
                 .setName(message.builderName().simpleName());
     }
 
-    private void addFieldCode(JavaClassSource builderClass, MessageDefinition message) {
-        for (FieldDefinition field : message.fields()) {
-            field.addBuilderCode(builderClass);
-        }
+    private void addField(JavaClassSource builderClass, FieldDefinition field) {
+        FieldSource<JavaClassSource> fieldSource = builderClass.addField()
+                .setPrivate()
+                .setType(field.javaFieldType().canonicalName())
+                .setName(field.javaFieldName())
+                .setLiteralInitializer(DEFAULTS.getOrDefault(field.javaFieldType(), "null"));
+        field.applyDeprecated(fieldSource);
+    }
+
+    private void addSetter(JavaClassSource builderClass, FieldDefinition field) {
+        MethodBody body = body("""
+                        this.$field = $field;
+                        return this;
+                        """,
+                param("field", field.javaFieldName())
+        );
+
+        MethodSource<JavaClassSource> method = builderClass.addMethod()
+                .setPublic()
+                .setReturnType(builderClass)
+                .setName(field.javaFieldName())
+                .setBody(body.toString());
+        method.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
+        field.applyDeprecated(method);
+    }
+
+    private void addEnumSetters(JavaClassSource builderClass, FieldDefinition field) {
+        MethodBody enumBody = body("return this.$valueName($enumName.number());",
+                param("valueName", field.javaFieldName()),
+                param("enumName", field.name())
+        );
+
+        MethodSource<JavaClassSource> enumMethod = builderClass.addMethod()
+                .setPublic()
+                .setReturnType(builderClass)
+                .setName(field.name())
+                .setBody(enumBody.toString());
+        enumMethod.addParameter(field.type().canonicalName(), field.name());
+        field.applyDeprecated(enumMethod);
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
         List<String> constructorParameters = message.fields().stream()
-                .map(FieldDefinition::builderField)
+                .map(FieldDefinition::javaFieldName)
                 .toList();
 
         MethodBody body = body("return new $MessageType($constructorParameters);",

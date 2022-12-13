@@ -21,7 +21,7 @@ class MessageFieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> MessageFieldDefinition.create(name, 1, canonicalName("com.example.TestMessage"), false))
+        assertThatCode(() -> FieldDefinition.message(name, 1, canonicalName("com.example.TestMessage"), false))
                 .doesNotThrowAnyException();
     }
 
@@ -34,7 +34,7 @@ class MessageFieldDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> MessageFieldDefinition.create(name, 1, canonicalName("com.example.TestMessage"), false))
+        assertThatThrownBy(() -> FieldDefinition.message(name, 1, canonicalName("com.example.TestMessage"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Incorrect field name");
     }
@@ -42,15 +42,15 @@ class MessageFieldDefinitionTest {
     @Test
     void nullType() {
         // when then
-        assertThatThrownBy(() -> MessageFieldDefinition.create("name", 1, null, false))
+        assertThatThrownBy(() -> FieldDefinition.message("name", 1, null, false))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Must provide enum type");
+                .hasMessageContaining("Must provide field type");
     }
 
     @Test
     void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> MessageFieldDefinition.create("name", -1, canonicalName("com.example.TestMessage"), false))
+        assertThatThrownBy(() -> FieldDefinition.message("name", -1, canonicalName("com.example.TestMessage"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -58,7 +58,7 @@ class MessageFieldDefinitionTest {
     @Test
     void zeroNumber() {
         // when then
-        assertThatThrownBy(() -> MessageFieldDefinition.create("name", 0, canonicalName("com.example.TestMessage"), false))
+        assertThatThrownBy(() -> FieldDefinition.message("name", 0, canonicalName("com.example.TestMessage"), false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }

@@ -1,7 +1,7 @@
 package com.github.pcimcioch.protobuf.model.message;
 
-import com.github.pcimcioch.protobuf.model.type.TypeName;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.HashSet;
 import java.util.List;
@@ -78,10 +78,8 @@ public class MessageDefinition {
                     throw new IllegalArgumentException("Null field");
                 }
 
-                for (String fieldName : field.fieldNames()) {
-                    if (!names.add(fieldName)) {
-                        throw new IllegalArgumentException("Duplicated field name: " + fieldName);
-                    }
+                if (!names.add(field.name())) {
+                    throw new IllegalArgumentException("Duplicated field name: " + field.name());
                 }
                 if (!numbers.add(field.number())) {
                     throw new IllegalArgumentException("Duplicated field number: " + field.number());

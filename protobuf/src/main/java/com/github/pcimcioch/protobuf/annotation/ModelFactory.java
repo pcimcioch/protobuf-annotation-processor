@@ -1,16 +1,13 @@
 package com.github.pcimcioch.protobuf.annotation;
 
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
-import com.github.pcimcioch.protobuf.model.type.TypeName;
-import com.github.pcimcioch.protobuf.model.field.EnumerationFieldDefinition;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.field.MessageFieldDefinition;
-import com.github.pcimcioch.protobuf.model.field.ScalarFieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
+import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,17 +55,17 @@ public class ModelFactory {
     }
 
     private FieldDefinition buildField(ProtoFiles protoFiles, ProtoFile protoFile, Field field) {
-        Optional<ScalarFieldDefinition> scalar = ScalarFieldDefinition.create(field.name(), field.number(), field.type(), field.deprecated());
+        Optional<FieldDefinition> scalar = FieldDefinition.scalar(field.name(), field.number(), field.type(), field.deprecated());
         if (scalar.isPresent()) {
             return scalar.get();
         }
 
         TypeName fieldType = protoFile.nameOf(field.type());
         if (protoFiles.containsEnumeration(fieldType)) {
-            return EnumerationFieldDefinition.create(field.name(), field.number(), fieldType, field.deprecated());
+            return FieldDefinition.enumeration(field.name(), field.number(), fieldType, field.deprecated());
         }
         if (protoFiles.containsMessage(fieldType)) {
-            return MessageFieldDefinition.create(field.name(), field.number(), fieldType, field.deprecated());
+            return FieldDefinition.message(field.name(), field.number(), fieldType, field.deprecated());
         }
 
         throw new IllegalArgumentException("Cannot find field type for " + field.type());

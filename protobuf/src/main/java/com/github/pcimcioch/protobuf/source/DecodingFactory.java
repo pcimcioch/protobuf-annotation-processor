@@ -84,7 +84,10 @@ class DecodingFactory {
             body
                     .appendExceptFirst("else ")
                     .append("if (tag.number() == $fieldNumber) {", param("fieldNumber", field.number()))
-                    .append(field.decodingCode())
+                    .append(decodingCode(field),
+                            param("fieldName", field.javaFieldName()),
+                            param("Type", field.javaFieldType())
+                    )
                     .append("}");
         }
 
@@ -94,5 +97,26 @@ class DecodingFactory {
                 }
                 """
         );
+    }
+
+    private String decodingCode(FieldDefinition field) {
+        return switch (field.protoType()) {
+            case DOUBLE -> "builder.$fieldName(reader._double(tag, \"$fieldName\"));";
+            case FLOAT -> "builder.$fieldName(reader._float(tag, \"$fieldName\"));";
+            case INT32, ENUM -> "builder.$fieldName(reader.int32(tag, \"$fieldName\"));";
+            case INT64 -> "builder.$fieldName(reader.int64(tag, \"$fieldName\"));";
+            case UINT32 -> "builder.$fieldName(reader.uint32(tag, \"$fieldName\"));";
+            case UINT64 -> "builder.$fieldName(reader.uint64(tag, \"$fieldName\"));";
+            case SINT32 -> "builder.$fieldName(reader.sint32(tag, \"$fieldName\"));";
+            case SINT64 -> "builder.$fieldName(reader.sint64(tag, \"$fieldName\"));";
+            case FIXED32 -> "builder.$fieldName(reader.fixed32(tag, \"$fieldName\"));";
+            case FIXED64 -> "builder.$fieldName(reader.fixed64(tag, \"$fieldName\"));";
+            case SFIXED32 -> "builder.$fieldName(reader.sfixed32(tag, \"$fieldName\"));";
+            case SFIXED64 -> "builder.$fieldName(reader.sfixed64(tag, \"$fieldName\"));";
+            case BOOL -> "builder.$fieldName(reader.bool(tag, \"$fieldName\"));";
+            case STRING -> "builder.$fieldName(reader.string(tag, \"$fieldName\"));";
+            case BYTES -> "builder.$fieldName(reader.bytes(tag, \"$fieldName\"));";
+            case MESSAGE -> "builder.$fieldName(reader.message(tag, \"$fieldName\", $Type::parse));";
+        };
     }
 }
