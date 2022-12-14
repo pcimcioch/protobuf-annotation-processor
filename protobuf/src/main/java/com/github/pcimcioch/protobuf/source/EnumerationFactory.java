@@ -20,7 +20,7 @@ final class EnumerationFactory {
     JavaEnumSource buildEnumerationEnum(EnumerationDefinition enumeration) {
         JavaEnumSource source = buildSourceFile(enumeration);
         addElements(source, enumeration);
-        addFields(source);
+        addNumberField(source);
         addConstructor(source);
         addNumberMethod(source);
         addFactoryMethod(source, enumeration);
@@ -47,7 +47,7 @@ final class EnumerationFactory {
                 .setConstructorArguments("-1");
     }
 
-    private void addFields(JavaEnumSource source) {
+    private void addNumberField(JavaEnumSource source) {
         source.addField()
                 .setPrivate()
                 .setFinal(true)
@@ -94,10 +94,11 @@ final class EnumerationFactory {
                 );
             }
         }
-        body.append("default -> $unrecognized;",
-                param("unrecognized", UNRECOGNIZED_ELEMENT_NAME)
-        );
-        body.append("};");
+        body
+                .append("default -> $unrecognized;",
+                        param("unrecognized", UNRECOGNIZED_ELEMENT_NAME)
+                )
+                .append("};");
 
         MethodSource<JavaEnumSource> method = source.addMethod()
                 .setPublic()

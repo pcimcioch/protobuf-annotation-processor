@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ScalarFieldDefinitionTest {
+class FieldDefinitionTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -52,5 +52,21 @@ class ScalarFieldDefinitionTest {
         assertThatThrownBy(() -> FieldDefinition.scalar("name", 0, "bool", false))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
+    }
+
+    @Test
+    void nullEnumType() {
+        // when then
+        assertThatThrownBy(() -> FieldDefinition.enumeration("name", 1, null, false))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Must provide field type");
+    }
+
+    @Test
+    void nullMessageType() {
+        // when then
+        assertThatThrownBy(() -> FieldDefinition.message("name", 1, null, false))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Must provide field type");
     }
 }

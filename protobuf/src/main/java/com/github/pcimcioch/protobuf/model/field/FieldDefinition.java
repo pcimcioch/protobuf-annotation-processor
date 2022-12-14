@@ -6,30 +6,29 @@ import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.BOOL;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.BYTES;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.DOUBLE;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.ENUM;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.FIXED32;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.FIXED64;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.FLOAT;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.INT32;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.INT64;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.MESSAGE;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.SFIXED32;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.SFIXED64;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.SINT32;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.SINT64;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.STRING;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.UINT32;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.UINT64;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BYTES;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FIXED32;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FIXED64;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FLOAT;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.INT32;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.INT64;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SFIXED32;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SFIXED64;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SINT32;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SINT64;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.STRING;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT32;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 
 /**
  * Message field
  */
-// TODO make tests
 public class FieldDefinition {
 
     private static final TypeName ENUM_VALUE_TYPE = simpleName("int");
@@ -38,54 +37,98 @@ public class FieldDefinition {
     private final int number;
     private final TypeName type;
     private final boolean deprecated;
-    private final ProtoType protoType;
+    private final ProtoKind protoKind;
 
-    private FieldDefinition(String name, int number, TypeName type, ProtoType protoType, boolean deprecated) {
+    private FieldDefinition(String name, int number, TypeName type, ProtoKind protoKind, boolean deprecated) {
         this.name = Valid.name(name);
         this.number = Valid.number(number);
         this.type = Valid.type(type);
-        this.protoType = Valid.protoType(protoType);
+        this.protoKind = Valid.protoType(protoKind);
         this.deprecated = deprecated;
     }
 
+    /**
+     * Returns protobuf field name
+     *
+     * @return protobuf field name
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * Returns number of the field
+     *
+     * @return number of the field
+     */
     public int number() {
         return number;
     }
 
+    /**
+     * Returns protobuf type of the field
+     *
+     * @return protobuf type of the field
+     */
     public TypeName type() {
         return type;
     }
 
-    public ProtoType protoType() {
-        return protoType;
+    /**
+     * Returns protobuf kind of the field
+     *
+     * @return protobuf kind of the field
+     */
+    public ProtoKind protoKind() {
+        return protoKind;
     }
 
+    /**
+     * return field java type
+     *
+     * @return field java type
+     */
     public TypeName javaFieldType() {
-        if (protoType == ENUM) {
+        if (protoKind == ENUM) {
             return ENUM_VALUE_TYPE;
         } else {
             return type;
         }
     }
 
+    /**
+     * Returns field name in java code
+     *
+     * @return field name
+     */
     public String javaFieldName() {
-        if (protoType == ENUM) {
+        if (protoKind == ENUM) {
             return name + "Value";
         } else {
             return name;
         }
     }
 
-    public void applyDeprecated(AnnotationTargetSource<?, ?> source) {
+    /**
+     * Apply any deprecated annotations if this field is deprecated
+     *
+     * @param source source code
+     */
+    public void handleDeprecated(AnnotationTargetSource<?, ?> source) {
         if (deprecated) {
             source.addAnnotation(Deprecated.class);
         }
     }
 
+    /**
+     * Creates new scalar field
+     *
+     * @param name       name
+     * @param number     number
+     * @param protoType  protobuf type name
+     * @param deprecated deprecated
+     * @return scalar field
+     */
     public static Optional<FieldDefinition> scalar(String name, int number, String protoType, boolean deprecated) {
         return switch (protoType) {
             case "double" -> Optional.of(new FieldDefinition(name, number, simpleName("double"), DOUBLE, deprecated));
@@ -108,13 +151,121 @@ public class FieldDefinition {
         };
     }
 
+    /**
+     * Creates new enumeration field
+     *
+     * @param name       name
+     * @param number     number
+     * @param type       type
+     * @param deprecated deprecated
+     * @return new field
+     */
     public static FieldDefinition enumeration(String name, int number, TypeName type, boolean deprecated) {
         return new FieldDefinition(name, number, type, ENUM, deprecated);
     }
 
+    /**
+     * Creates new message field
+     *
+     * @param name       name
+     * @param number     number
+     * @param type       type
+     * @param deprecated deprecated
+     * @return new field
+     */
     // TODO Add integration tests
     public static FieldDefinition message(String name, int number, TypeName type, boolean deprecated) {
         return new FieldDefinition(name, number, type, MESSAGE, deprecated);
+    }
+
+    /**
+     * Protobuf field type
+     */
+    public enum ProtoKind {
+        /**
+         * double
+         */
+        DOUBLE,
+
+        /**
+         * float
+         */
+        FLOAT,
+
+        /**
+         * int32
+         */
+        INT32,
+
+        /**
+         * int64
+         */
+        INT64,
+
+        /**
+         * uint32
+         */
+        UINT32,
+
+        /**
+         * uint64
+         */
+        UINT64,
+
+        /**
+         * sint32
+         */
+        SINT32,
+
+        /**
+         * sint64
+         */
+        SINT64,
+
+        /**
+         * fixed32
+         */
+        FIXED32,
+
+        /**
+         * fixed64
+         */
+        FIXED64,
+
+        /**
+         * sfixed32
+         */
+        SFIXED32,
+
+        /**
+         * sfixed64
+         */
+        SFIXED64,
+
+        /**
+         * bool
+         */
+        BOOL,
+
+        /**
+         * string
+         */
+        STRING,
+
+        /**
+         * bytes
+         */
+        BYTES,
+
+        /**
+         * Enumeration
+         */
+        ENUM,
+
+        /**
+         * Other message
+         */
+        MESSAGE;
     }
 
     private static final class Valid {
@@ -147,7 +298,7 @@ public class FieldDefinition {
             return type;
         }
 
-        private static ProtoType protoType(ProtoType type) {
+        private static ProtoKind protoType(ProtoKind type) {
             if (type == null) {
                 throw new IllegalArgumentException("Must provide proto type");
             }

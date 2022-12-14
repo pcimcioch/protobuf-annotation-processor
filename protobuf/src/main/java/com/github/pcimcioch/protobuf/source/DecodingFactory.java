@@ -100,7 +100,7 @@ class DecodingFactory {
     }
 
     private String decodingCode(FieldDefinition field) {
-        return switch (field.protoType()) {
+        return switch (field.protoKind()) {
             case DOUBLE -> "builder.$fieldName(reader._double(tag, \"$fieldName\"));";
             case FLOAT -> "builder.$fieldName(reader._float(tag, \"$fieldName\"));";
             case INT32, ENUM -> "builder.$fieldName(reader.int32(tag, \"$fieldName\"));";

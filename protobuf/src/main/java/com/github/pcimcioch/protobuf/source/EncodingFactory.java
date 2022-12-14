@@ -73,7 +73,7 @@ class EncodingFactory {
     }
 
     private String encodingCode(FieldDefinition field) {
-        return switch(field.protoType()) {
+        return switch(field.protoKind()) {
             case DOUBLE -> "writer._double($number, $name);";
             case FLOAT -> "writer._float($number, $name);";
             case INT32, ENUM -> "writer.int32($number, $name);";

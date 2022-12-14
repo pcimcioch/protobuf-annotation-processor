@@ -12,7 +12,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 
 final class MessageFactory {
     private final EncodingFactory encodingFactory = new EncodingFactory();
@@ -24,7 +24,7 @@ final class MessageFactory {
 
         for (FieldDefinition field : message.fields()) {
             addField(source, field);
-            if (field.protoType() == ENUM) {
+            if (field.protoKind() == ENUM) {
                 addEnumGetter(source, field);
             }
         }
@@ -46,7 +46,7 @@ final class MessageFactory {
 
     private void addField(JavaRecordSource source, FieldDefinition field) {
         JavaRecordComponentSource component = source.addRecordComponent(field.javaFieldType().canonicalName(), field.javaFieldName());
-        field.applyDeprecated(component);
+        field.handleDeprecated(component);
     }
 
     private void addEnumGetter(JavaRecordSource source, FieldDefinition field) {
@@ -60,7 +60,7 @@ final class MessageFactory {
                 .setReturnType(field.type().canonicalName())
                 .setName(field.name())
                 .setBody(body.toString());
-        field.applyDeprecated(method);
+        field.handleDeprecated(method);
     }
 
     // TODO [improvement] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275

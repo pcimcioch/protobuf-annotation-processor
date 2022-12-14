@@ -2,7 +2,6 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.field.ProtoType;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.Roaster;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
-import static com.github.pcimcioch.protobuf.model.field.ProtoType.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 
@@ -37,8 +36,8 @@ class BuilderFactory {
         for (FieldDefinition field : message.fields()) {
             addField(builderClass, field);
             addSetter(builderClass, field);
-            if (field.protoType() == ENUM) {
-                addEnumSetters(builderClass, field);
+            if (field.protoKind() == ENUM) {
+                addEnumSetter(builderClass, field);
             }
         }
         addBuildMethod(builderClass, message);
@@ -61,7 +60,7 @@ class BuilderFactory {
                 .setType(field.javaFieldType().canonicalName())
                 .setName(field.javaFieldName())
                 .setLiteralInitializer(DEFAULTS.getOrDefault(field.javaFieldType(), "null"));
-        field.applyDeprecated(fieldSource);
+        field.handleDeprecated(fieldSource);
     }
 
     private void addSetter(JavaClassSource builderClass, FieldDefinition field) {
@@ -78,10 +77,10 @@ class BuilderFactory {
                 .setName(field.javaFieldName())
                 .setBody(body.toString());
         method.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
-        field.applyDeprecated(method);
+        field.handleDeprecated(method);
     }
 
-    private void addEnumSetters(JavaClassSource builderClass, FieldDefinition field) {
+    private void addEnumSetter(JavaClassSource builderClass, FieldDefinition field) {
         MethodBody enumBody = body("return this.$valueName($enumName.number());",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
@@ -93,7 +92,7 @@ class BuilderFactory {
                 .setName(field.name())
                 .setBody(enumBody.toString());
         enumMethod.addParameter(field.type().canonicalName(), field.name());
-        field.applyDeprecated(enumMethod);
+        field.handleDeprecated(enumMethod);
     }
 
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
