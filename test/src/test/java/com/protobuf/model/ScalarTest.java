@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static com.protobuf.ByteUtils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ScalarModelTest {
+class ScalarTest {
 
     @Test
     void simpleRecord() {
@@ -31,6 +31,17 @@ class ScalarModelTest {
         assertThat(record.amount()).isEqualTo(10);
         assertThat(record.latitude()).isEqualTo(20.0);
         assertThat(record.longitude()).isEqualTo(30.0);
+    }
+
+    @Test
+    void simpleRecordDefault() {
+        // when
+        SimpleRecord record = SimpleRecord.builder().build();
+
+        // then
+        assertThat(record.amount()).isEqualTo(0);
+        assertThat(record.latitude()).isEqualTo(0d);
+        assertThat(record.longitude()).isEqualTo(0d);
     }
 
     @Test
@@ -97,5 +108,28 @@ class ScalarModelTest {
         assertThat(record.bool()).isTrue();
         assertThat(record.string()).isEqualTo("test");
         assertThat(record.bytes()).isEqualTo(ba(1, 20, 3));
+    }
+
+    @Test
+    void fullRecordDefault() {
+        // when
+        FullRecord record = FullRecord.builder().build();
+
+        // then
+        assertThat(record._double()).isEqualTo(0d);
+        assertThat(record._float()).isEqualTo(0f);
+        assertThat(record.int32()).isEqualTo(0);
+        assertThat(record.int64()).isEqualTo(0L);
+        assertThat(record.uint32()).isEqualTo(0);
+        assertThat(record.uint64()).isEqualTo(0L);
+        assertThat(record.sint32()).isEqualTo(0);
+        assertThat(record.sint64()).isEqualTo(0L);
+        assertThat(record.fixed32()).isEqualTo(0);
+        assertThat(record.fixed64()).isEqualTo(0L);
+        assertThat(record.sfixed32()).isEqualTo(0);
+        assertThat(record.sfixed64()).isEqualTo(0L);
+        assertThat(record.bool()).isFalse();
+        assertThat(record.string()).isEqualTo("");
+        assertThat(record.bytes()).isEqualTo(ba());
     }
 }

@@ -22,6 +22,16 @@ class EnumTest {
     }
 
     @Test
+    void simpleEnumDefault() {
+        // when
+        SimpleEnumMessage enumeration = SimpleEnumMessage.builder().build();
+
+        // then
+        assertThat(enumeration.orderValue()).isEqualTo(0);
+        assertThat(enumeration.order()).isEqualTo(FIRST);
+    }
+
+    @Test
     void simpleEnumBuilderValue() {
         // when
         SimpleEnumMessage enumeration = SimpleEnumMessage.builder()

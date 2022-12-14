@@ -449,7 +449,7 @@ class ScalarSerializationTest {
             assertProtoEqual(FullRecord.parse(protoBytes), proto);
         }
 
-        void assertProtoEqual(FullRecord our, FullRecordProto proto) {
+        private void assertProtoEqual(FullRecord our, FullRecordProto proto) {
             assertThat(our._double()).isEqualTo(proto.getDouble());
             assertThat(our._float()).isEqualTo(proto.getFloat());
             assertThat(our.int32()).isEqualTo(proto.getInt32());

@@ -173,7 +173,6 @@ public class FieldDefinition {
      * @param deprecated deprecated
      * @return new field
      */
-    // TODO Add integration tests
     public static FieldDefinition message(String name, int number, TypeName type, boolean deprecated) {
         return new FieldDefinition(name, number, type, MESSAGE, deprecated);
     }

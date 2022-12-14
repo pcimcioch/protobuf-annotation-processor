@@ -181,12 +181,12 @@ class EnumSerializationTest {
             assertProtoEqual(SimpleEnumMessage.parse(protoBytes), proto);
         }
 
-        void assertProtoEqual(SimpleEnumMessage our, SimpleEnumMessageProto proto) {
+        private void assertProtoEqual(SimpleEnumMessage our, SimpleEnumMessageProto proto) {
             assertThat(our.orderValue()).isEqualTo(proto.getOrderValue());
             assertProtoEquals(our.order(), proto.getOrder());
         }
 
-        void assertProtoEquals(SimpleEnum our, SimpleEnumProto proto) {
+        private void assertProtoEquals(SimpleEnum our, SimpleEnumProto proto) {
             SimpleEnumProto transformed = switch (our) {
                 case FIRST -> SimpleEnumProto.FIRST;
                 case SECOND -> SimpleEnumProto.SECOND;

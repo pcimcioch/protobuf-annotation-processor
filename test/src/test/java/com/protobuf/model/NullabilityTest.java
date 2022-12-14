@@ -3,6 +3,7 @@ package com.protobuf.model;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 class NullabilityTest {
@@ -25,5 +26,12 @@ class NullabilityTest {
         // then
         assertThat(thrown)
                 .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void messageType() {
+        // when
+        assertThatCode(() -> OtherMessageRecord.builder().address(null).build())
+                .doesNotThrowAnyException();
     }
 }
