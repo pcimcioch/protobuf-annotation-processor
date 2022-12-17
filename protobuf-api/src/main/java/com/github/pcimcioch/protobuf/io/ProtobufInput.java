@@ -86,6 +86,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public String readString() throws IOException {
+        // TODO can it be more efficient?
         return new String(readBytes(), StandardCharsets.UTF_8);
     }
 

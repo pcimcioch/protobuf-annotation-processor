@@ -1,24 +1,20 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.FullRecord;
 import com.protobuf.model.FullRecordProto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.protobuf.ProtobufAssertion.assertProto;
-import static com.protobuf.ProtobufAssertion.deserialize;
-import static com.protobuf.ProtobufAssertion.serialize;
 import static com.protobuf.ByteUtils.b;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.bs;
+import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ScalarSerializationTest {
+class ScalarSerializationTest extends SerializationTest {
 
     @Nested
     class Serialization {
@@ -33,7 +29,7 @@ class ScalarSerializationTest {
             );
 
             // when then
-            assertProto(record)
+            assertProto(serialize(record))
                     ._double(1, 10d)
                     ._float(2, 20f)
                     .int32(3, 30)
@@ -58,7 +54,7 @@ class ScalarSerializationTest {
             FullRecord record = FullRecord.builder().build();
 
             // when then
-            assertProto(record)
+            assertProto(serialize(record))
                     .end();
         }
 
@@ -75,7 +71,7 @@ class ScalarSerializationTest {
                     .build();
 
             // when then
-            assertProto(record)
+            assertProto(serialize(record))
                     ._double(1, 10d)
                     .int64(4, 40L)
                     .sint32(7, 70)
@@ -89,13 +85,10 @@ class ScalarSerializationTest {
     @Nested
     class Deserialization {
 
-        private final ByteArrayOutputStream data = new ByteArrayOutputStream();
-        private final ProtobufWriter proto = new ProtobufWriter(data);
-
         @Test
         void emptyObject() throws IOException {
             // when
-            FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
+            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, new byte[0]);
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -119,25 +112,26 @@ class ScalarSerializationTest {
 
         @Test
         void fullObject() throws IOException {
-            // given
-            proto._double(1, 10d);
-            proto._float(2, 20f);
-            proto.int32(3, 30);
-            proto.int64(4, 40L);
-            proto.uint32(5, 50);
-            proto.uint64(6, 60L);
-            proto.sint32(7, 70);
-            proto.sint64(8, 80L);
-            proto.fixed32(9, 90);
-            proto.fixed64(10, 100L);
-            proto.sfixed32(11, 110);
-            proto.sfixed64(12, 120L);
-            proto.bool(13, true);
-            proto.string(14, "test");
-            proto.bytes(15, ba(1, 20, 3));
-
-            // when
-            FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
+            // given when
+            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+                    ._double(1, 10d)
+                    ._float(2, 20f)
+                    .int32(3, 30)
+                    .int64(4, 40L)
+                    .uint32(5, 50)
+                    .uint64(6, 60L)
+                    .sint32(7, 70)
+                    .sint64(8, 80L)
+                    .fixed32(9, 90)
+                    .fixed64(10, 100L)
+                    .fixed32(9, 90)
+                    .fixed64(10, 100L)
+                    .sfixed32(11, 110)
+                    .sfixed64(12, 120L)
+                    .bool(13, true)
+                    .string(14, "test")
+                    .bytes(15, ba(1, 20, 3))
+            );
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -161,16 +155,15 @@ class ScalarSerializationTest {
 
         @Test
         void partialObject() throws IOException {
-            // given
-            proto._double(1, 10d);
-            proto.int64(4, 40L);
-            proto.sint32(7, 70);
-            proto.sfixed32(11, 110);
-            proto.bool(13, true);
-            proto.string(14, "test");
-
-            // when
-            FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
+            // given when
+            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+                    ._double(1, 10d)
+                    .int64(4, 40L)
+                    .sint32(7, 70)
+                    .sfixed32(11, 110)
+                    .bool(13, true)
+                    .string(14, "test")
+            );
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -194,25 +187,24 @@ class ScalarSerializationTest {
 
         @Test
         void fullObjectReverseOrder() throws IOException {
-            // given
-            proto.bytes(15, ba(1, 20, 3));
-            proto.string(14, "test");
-            proto.bool(13, true);
-            proto.sfixed64(12, 120L);
-            proto.sfixed32(11, 110);
-            proto.fixed64(10, 100L);
-            proto.fixed32(9, 90);
-            proto.sint64(8, 80L);
-            proto.sint32(7, 70);
-            proto.uint64(6, 60L);
-            proto.uint32(5, 50);
-            proto.int64(4, 40L);
-            proto.int32(3, 30);
-            proto._float(2, 20f);
-            proto._double(1, 10d);
-
-            // when
-            FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
+            // given when
+            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+                    .bytes(15, ba(1, 20, 3))
+                    .string(14, "test")
+                    .bool(13, true)
+                    .sfixed64(12, 120L)
+                    .sfixed32(11, 110)
+                    .fixed64(10, 100L)
+                    .fixed32(9, 90)
+                    .sint64(8, 80L)
+                    .sint32(7, 70)
+                    .uint64(6, 60L)
+                    .uint32(5, 50)
+                    .int64(4, 40L)
+                    .int32(3, 30)
+                    ._float(2, 20f)
+                    ._double(1, 10d)
+            );
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -236,41 +228,41 @@ class ScalarSerializationTest {
 
         @Test
         void unknownFields() throws IOException {
-            // given
-            proto._double(21, 100d);
-            proto._float(22, 200f);
-            proto.int32(23, 300);
-            proto.int64(24, 400L);
-            proto.uint32(25, 500);
-            proto.uint64(26, 600L);
-            proto.sint32(27, 700);
-            proto.sint64(28, 800L);
-            proto.fixed32(29, 900);
-            proto.fixed64(30, 1000L);
-            proto.sfixed32(31, 1100);
-            proto.sfixed64(32, 1200L);
-            proto.bool(33, false);
-            proto.string(34, "foobar");
-            proto.bytes(35, ba(10, 20, 30, 40, 50));
-
-            proto._double(1, 10d);
-            proto._float(2, 20f);
-            proto.int32(3, 30);
-            proto.int64(4, 40L);
-            proto.uint32(5, 50);
-            proto.uint64(6, 60L);
-            proto.sint32(7, 70);
-            proto.sint64(8, 80L);
-            proto.fixed32(9, 90);
-            proto.fixed64(10, 100L);
-            proto.sfixed32(11, 110);
-            proto.sfixed64(12, 120L);
-            proto.bool(13, true);
-            proto.string(14, "test");
-            proto.bytes(15, ba(1, 20, 3));
-
-            // when
-            FullRecord record = deserialize(data, FullRecord::parse, FullRecord::parse);
+            // given when
+            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+                    // unknown
+                    ._double(21, 100d)
+                    ._float(22, 200f)
+                    .int32(23, 300)
+                    .int64(24, 400L)
+                    .uint32(25, 500)
+                    .uint64(26, 600L)
+                    .sint32(27, 700)
+                    .sint64(28, 800L)
+                    .fixed32(29, 900)
+                    .fixed64(30, 1000L)
+                    .sfixed32(31, 1100)
+                    .sfixed64(32, 1200L)
+                    .bool(33, false)
+                    .string(34, "foobar")
+                    .bytes(35, ba(10, 20, 30, 40, 50))
+                    // record
+                    ._double(1, 10d)
+                    ._float(2, 20f)
+                    .int32(3, 30)
+                    .int64(4, 40L)
+                    .uint32(5, 50)
+                    .uint64(6, 60L)
+                    .sint32(7, 70)
+                    .sint64(8, 80L)
+                    .fixed32(9, 90)
+                    .fixed64(10, 100L)
+                    .sfixed32(11, 110)
+                    .sfixed64(12, 120L)
+                    .bool(13, true)
+                    .string(14, "test")
+                    .bytes(15, ba(1, 20, 3))
+            );
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -302,7 +294,7 @@ class ScalarSerializationTest {
             FullRecord record = FullRecord.builder().build();
 
             // when
-            FullRecord deserialized = deserialize(serialize(record), FullRecord::parse, FullRecord::parse);
+            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -318,7 +310,7 @@ class ScalarSerializationTest {
             );
 
             // when
-            FullRecord deserialized = deserialize(serialize(record), FullRecord::parse, FullRecord::parse);
+            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -337,7 +329,7 @@ class ScalarSerializationTest {
                     .build();
 
             // when
-            FullRecord deserialized = deserialize(serialize(record), FullRecord::parse, FullRecord::parse);
+            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);

@@ -1,6 +1,5 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.SimpleEnum;
 import com.protobuf.model.SimpleEnumMessage;
 import com.protobuf.model.SimpleEnumMessageProto;
@@ -8,15 +7,12 @@ import com.protobuf.model.SimpleEnumProto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.protobuf.ProtobufAssertion.assertProto;
-import static com.protobuf.ProtobufAssertion.deserialize;
-import static com.protobuf.ProtobufAssertion.serialize;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EnumSerializationTest {
+class EnumSerializationTest extends SerializationTest {
 
     @Nested
     class Serialization {
@@ -27,7 +23,7 @@ class EnumSerializationTest {
             SimpleEnumMessage record = new SimpleEnumMessage(2);
 
             // when then
-            assertProto(record)
+            assertProto(serialize(record))
                     .int32(1, 2)
                     .end();
         }
@@ -38,7 +34,7 @@ class EnumSerializationTest {
             SimpleEnumMessage record = SimpleEnumMessage.builder().build();
 
             // when then
-            assertProto(record)
+            assertProto(serialize(record))
                     .end();
         }
     }
@@ -46,15 +42,10 @@ class EnumSerializationTest {
     @Nested
     class Deserialization {
 
-        private final ByteArrayOutputStream data = new ByteArrayOutputStream();
-        private final ProtobufWriter proto = new ProtobufWriter(data);
-
         @Test
         void emptyObject() throws IOException {
-            // given
-
-            // when
-            SimpleEnumMessage record = deserialize(data, SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            // given when
+            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, new byte[0]);
 
             // then
             assertThat(record).isEqualTo(SimpleEnumMessage.builder()
@@ -64,11 +55,10 @@ class EnumSerializationTest {
 
         @Test
         void fullObject() throws IOException {
-            // given
-            proto.int32(1, 2);
-
-            // when
-            SimpleEnumMessage record = deserialize(data, SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            // given when
+            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writer -> writer
+                    .int32(1, 2)
+            );
 
             // then
             assertThat(record).isEqualTo(SimpleEnumMessage.builder()
@@ -78,11 +68,10 @@ class EnumSerializationTest {
 
         @Test
         void unknownEnum() throws IOException {
-            // given
-            proto.int32(1, 10);
-
-            // when
-            SimpleEnumMessage record = deserialize(data, SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            // given when
+            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writer -> writer
+                    .int32(1, 10)
+            );
 
             // then
             assertThat(record).isEqualTo(SimpleEnumMessage.builder()
@@ -100,7 +89,7 @@ class EnumSerializationTest {
             SimpleEnumMessage record = SimpleEnumMessage.builder().build();
 
             // when
-            SimpleEnumMessage deserialized = deserialize(serialize(record), SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -112,7 +101,7 @@ class EnumSerializationTest {
             SimpleEnumMessage record = new SimpleEnumMessage(2);
 
             // when
-            SimpleEnumMessage deserialized = deserialize(serialize(record), SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -124,7 +113,7 @@ class EnumSerializationTest {
             SimpleEnumMessage record = new SimpleEnumMessage(10);
 
             // when
-            SimpleEnumMessage deserialized = deserialize(serialize(record), SimpleEnumMessage::parse, SimpleEnumMessage::parse);
+            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);

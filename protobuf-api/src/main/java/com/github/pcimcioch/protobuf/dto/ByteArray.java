@@ -10,10 +10,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class ByteArray {
 
-    /**
-     * Empty array. More efficient than creating new empty byte array
-     */
-    public static final ByteArray EMPTY = new ByteArray(new byte[0]);
+    private static final ByteArray EMPTY = new ByteArray(new byte[0]);
 
     /**
      * Byte array
@@ -73,6 +70,15 @@ public final class ByteArray {
     @Override
     public int hashCode() {
         return Arrays.hashCode(data);
+    }
+
+    /**
+     * Returns empty array. More efficient than creating new empty byte array
+     *
+     * @return empty byte array
+     */
+    public static ByteArray empty() {
+        return EMPTY;
     }
 
     /**

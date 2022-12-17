@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static com.github.pcimcioch.protobuf.dto.ProtoDto.isDefault;
 import static com.github.pcimcioch.protobuf.io.WireType.I32;
 import static com.github.pcimcioch.protobuf.io.WireType.I64;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
@@ -32,14 +33,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void _double(int number, double value) throws IOException {
-        if (value != 0d) {
+    public ProtobufWriter _double(int number, double value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
             output.writeDouble(value);
         }
+
+        return this;
     }
 
     /**
@@ -47,14 +51,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void _float(int number, float value) throws IOException {
-        if (value != 0f) {
+    public ProtobufWriter _float(int number, float value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I32);
             output.writeVarint(tag.value());
             output.writeFloat(value);
         }
+
+        return this;
     }
 
     /**
@@ -62,14 +69,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void int32(int number, int value) throws IOException {
-        if (value != 0) {
+    public ProtobufWriter int32(int number, int value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
         }
+
+        return this;
     }
 
     /**
@@ -77,14 +87,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void int64(int number, long value) throws IOException {
-        if (value != 0L) {
+    public ProtobufWriter int64(int number, long value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
         }
+
+        return this;
     }
 
     /**
@@ -92,14 +105,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void uint32(int number, int value) throws IOException {
-        if (value != 0) {
+    public ProtobufWriter uint32(int number, int value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
         }
+
+        return this;
     }
 
     /**
@@ -107,14 +123,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void uint64(int number, long value) throws IOException {
-        if (value != 0L) {
+    public ProtobufWriter uint64(int number, long value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
         }
+
+        return this;
     }
 
     /**
@@ -122,14 +141,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void sint32(int number, int value) throws IOException {
-        if (value != 0) {
+    public ProtobufWriter sint32(int number, int value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeZigZag(value);
         }
+
+        return this;
     }
 
     /**
@@ -137,14 +159,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void sint64(int number, long value) throws IOException {
-        if (value != 0L) {
+    public ProtobufWriter sint64(int number, long value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeZigZag(value);
         }
+
+        return this;
     }
 
     /**
@@ -152,14 +177,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void fixed32(int number, int value) throws IOException {
-        if (value != 0) {
+    public ProtobufWriter fixed32(int number, int value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I32);
             output.writeVarint(tag.value());
             output.writeFixedInt(value);
         }
+
+        return this;
     }
 
     /**
@@ -167,14 +195,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void fixed64(int number, long value) throws IOException {
-        if (value != 0L) {
+    public ProtobufWriter fixed64(int number, long value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
             output.writeFixedLong(value);
         }
+
+        return this;
     }
 
     /**
@@ -182,14 +213,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void sfixed32(int number, int value) throws IOException {
-        if (value != 0) {
+    public ProtobufWriter sfixed32(int number, int value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I32);
             output.writeVarint(tag.value());
             output.writeFixedInt(value);
         }
+
+        return this;
     }
 
     /**
@@ -197,14 +231,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void sfixed64(int number, long value) throws IOException {
-        if (value != 0L) {
+    public ProtobufWriter sfixed64(int number, long value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
             output.writeFixedLong(value);
         }
+
+        return this;
     }
 
     /**
@@ -212,14 +249,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void bool(int number, boolean value) throws IOException {
-        if (value) {
+    public ProtobufWriter bool(int number, boolean value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeBoolean(true);
         }
+
+        return this;
     }
 
     /**
@@ -227,14 +267,17 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void string(int number, String value) throws IOException {
-        if (!"".equals(value)) {
+    public ProtobufWriter string(int number, String value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
             output.writeString(value);
         }
+
+        return this;
     }
 
     /**
@@ -242,28 +285,34 @@ public class ProtobufWriter {
      *
      * @param number field number
      * @param value  value to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void bytes(int number, ByteArray value) throws IOException {
-        if (!value.isEmpty()) {
+    public ProtobufWriter bytes(int number, ByteArray value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
             output.writeByteArray(value);
         }
+
+        return this;
     }
 
     /**
      * Write message
      *
-     * @param number  field number
-     * @param message message to write
+     * @param number field number
+     * @param value  message to write
+     * @return this
      * @throws IOException in case of any data write error
      */
-    public void message(int number, ProtobufMessage message) throws IOException {
-        if (message != null) {
+    public ProtobufWriter message(int number, ProtobufMessage value) throws IOException {
+        if (!isDefault(value)) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
-            output.writeBytes(message.toByteArray()); //TODO this is very inefficient. But it works
+            output.writeBytes(value.toByteArray()); //TODO this is very inefficient. But it works
         }
+
+        return this;
     }
 }
