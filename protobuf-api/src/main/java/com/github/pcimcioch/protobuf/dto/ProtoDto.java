@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Utils for Protobuf Data Transfer Objects
@@ -87,7 +87,7 @@ public final class ProtoDto {
      * @param <T>   type of message
      * @return value copy
      */
-    public static <T extends ProtobufMessage> T copy(T value) {
+    public static <T extends ProtobufMessage<T>> T copy(T value) {
         return requireNonNull(value);
     }
 
@@ -169,5 +169,94 @@ public final class ProtoDto {
      */
     public static boolean isDefault(ProtobufMessage value) {
         return value.isEmpty();
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static int merge(int current, int toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static long merge(long current, long toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static float merge(float current, float toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static double merge(double current, double toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static boolean merge(boolean current, boolean toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static String merge(String current, String toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static ByteArray merge(ByteArray current, ByteArray toMerge) {
+        return isDefault(toMerge) ? current : toMerge;
+    }
+
+    /**
+     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @param <T>     type of the message
+     * @return current if toMerge is default, toMerge otherwise
+     */
+    public static <T extends ProtobufMessage<T>> T merge(T current, T toMerge) {
+        return current.merge(toMerge);
     }
 }

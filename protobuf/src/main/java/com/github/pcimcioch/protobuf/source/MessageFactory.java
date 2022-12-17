@@ -32,7 +32,8 @@ final class MessageFactory {
         addEncodingMethods(source, message);
         addDecodingMethods(source, message);
         addEmptyMethods(source, message);
-        addBuilderMethod(source, message);
+        addMergeMethod(source, message);
+        addBuilderMethods(source, message);
         addBuilderClass(source, message);
 
         return source;
@@ -42,7 +43,7 @@ final class MessageFactory {
         return Roaster.create(JavaRecordSource.class)
                 .setPackage(message.name().packageName())
                 .setName(message.name().simpleName())
-                .addInterface(ProtobufMessage.class);
+                .addInterface(ProtobufMessage.class.getCanonicalName() + "<" + message.name().simpleName() + ">");
     }
 
     private void addField(JavaRecordSource source, FieldDefinition field) {
@@ -93,7 +94,7 @@ final class MessageFactory {
     }
 
     private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
-        // TODO [issue] there should be static final EMPTY field, but rooster doesn't support it yet
+        // TODO [improvement] there should be static final EMPTY field, but rooster doesn't support it yet
         MethodBody emptyBody = body("return builder().build();");
         source.addMethod()
                 .setPublic()
@@ -111,17 +112,43 @@ final class MessageFactory {
         isMEmptyMethod.addAnnotation(Override.class);
     }
 
-    private void addBuilderMethod(JavaRecordSource source, MessageDefinition message) {
-        MethodBody body = body(
+    // TODO add tests for merge method in builder
+    // TODO add tests for OtherMessage using merge
+    private void addMergeMethod(JavaRecordSource source, MessageDefinition message) {
+        MethodBody body = body("return toBuilder().merge(toMerge).build();");
+
+        MethodSource<JavaRecordSource> method = source.addMethod()
+                .setPublic()
+                .setReturnType(message.name().simpleName())
+                .setName("merge")
+                .setBody(body.toString());
+        method.addAnnotation(Override.class);
+        method.addParameter(message.name().simpleName(), "toMerge");
+    }
+
+    private void addBuilderMethods(JavaRecordSource source, MessageDefinition message) {
+        MethodBody toBuilderBody = body("return builder()");
+        for (FieldDefinition field : message.fields()) {
+            toBuilderBody.append(".$field($field)",
+                    param("field", field.javaFieldName()));
+        }
+        toBuilderBody.append(";");
+
+        source.addMethod()
+                .setPublic()
+                .setReturnType(message.builderName().canonicalName())
+                .setName("toBuilder")
+                .setBody(toBuilderBody.toString());
+
+        MethodBody builderBody = body(
                 "return new $BuilderType();",
                 param("BuilderType", message.builderName()));
-
         source.addMethod()
                 .setPublic()
                 .setStatic(true)
                 .setReturnType(message.builderName().canonicalName())
                 .setName("builder")
-                .setBody(body.toString());
+                .setBody(builderBody.toString());
     }
 
     private void addBuilderClass(JavaRecordSource source, MessageDefinition message) {

@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
@@ -18,6 +19,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
+import static java.util.Locale.ENGLISH;
 
 class BuilderFactory {
 
@@ -40,8 +42,12 @@ class BuilderFactory {
             if (field.protoKind() == ENUM) {
                 addEnumSetter(builderClass, field);
             }
+            if (field.protoKind() == MESSAGE) {
+                addFieldMerge(builderClass, field);
+            }
         }
         addBuildMethod(builderClass, message);
+        addMergeMethod(builderClass, message);
 
         return builderClass;
     }
@@ -103,6 +109,24 @@ class BuilderFactory {
         field.handleDeprecated(enumMethod);
     }
 
+    private void addFieldMerge(JavaClassSource builderClass, FieldDefinition field) {
+        MethodBody body = body("""
+                        this.$field = $ProtoDto.merge(this.$field, $field);
+                        return this;
+                        """,
+                param("field", field.javaFieldName()),
+                param("ProtoDto", ProtoDto.class)
+        );
+
+        MethodSource<JavaClassSource> method = builderClass.addMethod()
+                .setPublic()
+                .setReturnType(builderClass)
+                .setName(field.javaFieldNamePrefixed("merge"))
+                .setBody(body.toString());
+        method.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
+        field.handleDeprecated(method);
+    }
+
     private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
         List<String> constructorParameters = message.fields().stream()
                 .map(FieldDefinition::javaFieldName)
@@ -117,5 +141,23 @@ class BuilderFactory {
                 .setReturnType(message.name().canonicalName())
                 .setName("build")
                 .setBody(body.toString());
+    }
+
+    private void addMergeMethod(JavaClassSource builderClass, MessageDefinition message) {
+        MethodBody body = body();
+        for (FieldDefinition field : message.fields()) {
+            body.append("this.$field = $ProtoDto.merge(this.$field, toMerge.$field());",
+                    param("field", field.javaFieldName()),
+                    param("ProtoDto", ProtoDto.class)
+            );
+        }
+        body.append("return this;");
+
+        MethodSource<JavaClassSource> method = builderClass.addMethod()
+                .setPublic()
+                .setReturnType(builderClass)
+                .setName("merge")
+                .setBody(body.toString());
+        method.addParameter(message.name().canonicalName(), "toMerge");
     }
 }

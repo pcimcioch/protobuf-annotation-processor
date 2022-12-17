@@ -140,7 +140,7 @@ Current feature support:
 | Optional Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
 | Enumerations                | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | ✔️ Supported                         |
 | Reserved Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | ✔️ Supported                         |
-| Using Other Message Types   | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | ⏳ Not yet supported                  |
+| Using Other Message Types   | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | ✔️ Supported                         |
 | Nested Types                | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | ⏳ Not yet supported                  |
 | Unknown Fields              | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | ⏳ Not yet supported                  |
 | Maps                        | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | ⏳ Not yet supported                  |

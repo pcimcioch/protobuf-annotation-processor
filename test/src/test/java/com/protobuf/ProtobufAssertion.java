@@ -1,6 +1,5 @@
 package com.protobuf;
 
-import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.io.ProtobufInput;
 
 import java.io.ByteArrayInputStream;
@@ -21,7 +20,7 @@ public class ProtobufAssertion {
         this.input = new ProtobufInput(inputStream);
     }
 
-    public static <T extends ProtobufMessage> ProtobufAssertion assertProto(byte[] data) throws IOException {
+    public static ProtobufAssertion assertProto(byte[] data) throws IOException {
         return new ProtobufAssertion(new ByteArrayInputStream(data));
     }
 

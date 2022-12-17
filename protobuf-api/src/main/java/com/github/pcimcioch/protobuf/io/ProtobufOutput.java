@@ -82,7 +82,6 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeString(String value) throws IOException {
-        // TODO can it be more efficient?
         writeBytes(value.getBytes(StandardCharsets.UTF_8));
     }
 

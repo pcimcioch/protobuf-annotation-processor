@@ -25,6 +25,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
+import static java.util.Locale.ENGLISH;
 
 /**
  * Message field
@@ -118,6 +119,16 @@ public class FieldDefinition {
         if (deprecated) {
             source.addAnnotation(Deprecated.class);
         }
+    }
+
+    /**
+     * Returns field name in java code prefixed in camelCase
+     *
+     * @param prefix prefix to use
+     * @return prefixed java field name
+     */
+    public String javaFieldNamePrefixed(String prefix) {
+        return prefix + javaFieldName().substring(0, 1).toUpperCase(ENGLISH) + javaFieldName().substring(1);
     }
 
     /**

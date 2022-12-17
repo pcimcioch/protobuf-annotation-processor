@@ -45,7 +45,7 @@ abstract class SerializationTest {
         return recordRaw;
     }
 
-    protected <T extends ProtobufMessage> byte[] serialize(T record) throws IOException {
+    protected <T extends ProtobufMessage<T>> byte[] serialize(T record) throws IOException {
         byte[] rawData = record.toByteArray();
         byte[] streamData;
 

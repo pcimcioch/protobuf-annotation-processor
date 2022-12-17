@@ -6,7 +6,7 @@ import java.io.OutputStream;
 /**
  * Protobuf message type
  */
-public interface ProtobufMessage {
+public interface ProtobufMessage<T extends ProtobufMessage<T>> {
 
     /**
      * Writes this message as binary to the given output stream
@@ -30,4 +30,13 @@ public interface ProtobufMessage {
      * @return whether this message is empty
      */
     boolean isEmpty();
+
+    /**
+     * Returns new message that was created by merging given message into this. Merging is done by replacing
+     * non-default fields from toMerge
+     *
+     * @param toMerge message to merge
+     * @return new message
+     */
+    T merge(T toMerge);
 }
