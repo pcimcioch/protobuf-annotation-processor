@@ -14,7 +14,6 @@ import java.io.IOException;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 class MessageSerializationTest extends SerializationTest {
 
@@ -57,7 +56,7 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            OtherMessageRecord record = OtherMessageRecord.builder().build();
+            OtherMessageRecord record = OtherMessageRecord.empty();
 
             // when then
             assertProto(serialize(record))
@@ -67,16 +66,14 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void partialObject() throws IOException {
             // given
-            OtherMessageRecord record = new OtherMessageRecord(
-                    "Tomas",
-                    40,
-                    null,
-                    new OtherMessageWork(
-                            null,
-                            "Software House inc.",
-                            0
+            OtherMessageRecord record = OtherMessageRecord.builder()
+                    .name("Tomas")
+                    .age(40)
+                    .work(OtherMessageWork.builder()
+                            .name("Software House inc.")
+                            .build()
                     )
-            );
+                    .build();
 
             // when then
             assertProto(serialize(record))
@@ -98,7 +95,7 @@ class MessageSerializationTest extends SerializationTest {
             OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, new byte[0]);
 
             // then
-            assertThat(record).isEqualTo(new OtherMessageRecord("", 0, null, null));
+            assertThat(record).isEqualTo(OtherMessageRecord.empty());
         }
 
         @Test
@@ -146,16 +143,15 @@ class MessageSerializationTest extends SerializationTest {
             );
 
             // then
-            assertThat(record).isEqualTo(new OtherMessageRecord(
-                    "Tomas",
-                    40,
-                    null,
-                    new OtherMessageWork(
-                            null,
-                            "Software House inc.",
-                            0
+            assertThat(record).isEqualTo(OtherMessageRecord.builder()
+                    .name("Tomas")
+                    .age(40)
+                    .work(OtherMessageWork.builder()
+                            .name("Software House inc.")
+                            .build()
                     )
-            ));
+                    .build()
+            );
         }
 
         @Test
@@ -235,7 +231,7 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            OtherMessageRecord record = OtherMessageRecord.builder().build();
+            OtherMessageRecord record = OtherMessageRecord.empty();
 
             // when
             OtherMessageRecord deserialized = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, serialize(record));
@@ -268,16 +264,14 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void partialObject() throws IOException {
             // given
-            OtherMessageRecord record = new OtherMessageRecord(
-                    "Tomas",
-                    40,
-                    null,
-                    new OtherMessageWork(
-                            null,
-                            "Software House inc.",
-                            0
+            OtherMessageRecord record = OtherMessageRecord.builder()
+                    .name("Tomas")
+                    .age(40)
+                    .work(OtherMessageWork.builder()
+                            .name("Software House inc.")
+                            .build()
                     )
-            );
+                    .build();
 
             // when
             OtherMessageRecord deserialized = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, serialize(record));
@@ -293,7 +287,7 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            OtherMessageRecord our = OtherMessageRecord.builder().build();
+            OtherMessageRecord our = OtherMessageRecord.empty();
             OtherMessageRecordProto proto = OtherMessageRecordProto.newBuilder().build();
             byte[] ourBytes = our.toByteArray();
             byte[] protoBytes = proto.toByteArray();
@@ -343,17 +337,14 @@ class MessageSerializationTest extends SerializationTest {
         @Test
         void partialObject() throws IOException {
             // given
-            OtherMessageRecord our = new OtherMessageRecord(
-                    "Tomas",
-                    40,
-                    null,
-                    new OtherMessageWork(
-                            null,
-                            "Software House inc.",
-                            0
+            OtherMessageRecord our = OtherMessageRecord.builder()
+                    .name("Tomas")
+                    .age(40)
+                    .work(OtherMessageWork.builder()
+                            .name("Software House inc.")
+                            .build()
                     )
-            );
-
+                    .build();
             OtherMessageRecordProto proto = OtherMessageRecordProto.newBuilder()
                     .setName("Tomas")
                     .setAge(40)
@@ -377,26 +368,12 @@ class MessageSerializationTest extends SerializationTest {
         }
 
         private void assertProtoEqual(OtherMessageWork our, OtherMessageWorkProto proto) {
-            if (our == null) {
-                // Google's protobuf returns empty instance instead of null
-                // TODO we should return empty object as well
-                assertThat(proto).isEqualTo(OtherMessageWorkProto.newBuilder().build());
-                return;
-            }
-
             assertThat(our.name()).isEqualTo(proto.getName());
             assertThat(our.year()).isEqualTo(proto.getYear());
             assertProtoEqual(our.address(), proto.getAddress());
         }
 
         private void assertProtoEqual(OtherMessageAddress our, OtherMessageAddressProto proto) {
-            if (our == null) {
-                // Google's protobuf returns empty instance instead of null
-                // TODO we should return empty object as well
-                assertThat(proto).isEqualTo(OtherMessageAddressProto.newBuilder().build());
-                return;
-            }
-
             assertThat(our.street()).isEqualTo(proto.getStreet());
             assertThat(our.number()).isEqualTo(proto.getNumber());
         }

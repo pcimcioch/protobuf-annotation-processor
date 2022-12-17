@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import java.util.Objects;
+import static java.util.Objects.*;
 
 /**
  * Utils for Protobuf Data Transfer Objects
@@ -67,7 +67,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static String copy(String value) {
-        return Objects.requireNonNull(value);
+        return requireNonNull(value);
     }
 
     /**
@@ -77,7 +77,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static ByteArray copy(ByteArray value) {
-        return Objects.requireNonNull(value);
+        return requireNonNull(value);
     }
 
     /**
@@ -88,7 +88,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static <T extends ProtobufMessage> T copy(T value) {
-        return value;
+        return requireNonNull(value);
     }
 
     /**
@@ -168,6 +168,6 @@ public final class ProtoDto {
      * @return whether value is default
      */
     public static boolean isDefault(ProtobufMessage value) {
-        return value == null;
+        return value.isEmpty();
     }
 }

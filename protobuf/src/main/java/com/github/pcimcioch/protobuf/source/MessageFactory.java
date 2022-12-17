@@ -31,6 +31,7 @@ final class MessageFactory {
         addConstructor(source, message);
         addEncodingMethods(source, message);
         addDecodingMethods(source, message);
+        addEmptyMethods(source, message);
         addBuilderMethod(source, message);
         addBuilderClass(source, message);
 
@@ -89,6 +90,25 @@ final class MessageFactory {
 
     private void addDecodingMethods(JavaRecordSource source, MessageDefinition message) {
         decodingFactory.addDecodingMethods(source, message);
+    }
+
+    private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
+        // TODO [issue] there should be static final EMPTY field, but rooster doesn't support it yet
+        MethodBody emptyBody = body("return builder().build();");
+        source.addMethod()
+                .setPublic()
+                .setStatic(true)
+                .setReturnType(message.name().canonicalName())
+                .setName("empty")
+                .setBody(emptyBody.toString());
+
+        MethodBody isEmptyBody = body("return empty().equals(this);");
+        MethodSource<JavaRecordSource> isMEmptyMethod = source.addMethod()
+                .setPublic()
+                .setReturnType(boolean.class)
+                .setName("isEmpty")
+                .setBody(isEmptyBody.toString());
+        isMEmptyMethod.addAnnotation(Override.class);
     }
 
     private void addBuilderMethod(JavaRecordSource source, MessageDefinition message) {

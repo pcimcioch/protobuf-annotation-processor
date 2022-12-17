@@ -36,7 +36,7 @@ class ScalarTest {
     @Test
     void simpleRecordDefault() {
         // when
-        SimpleRecord record = SimpleRecord.builder().build();
+        SimpleRecord record = SimpleRecord.empty();
 
         // then
         assertThat(record.amount()).isEqualTo(0);
@@ -113,7 +113,7 @@ class ScalarTest {
     @Test
     void fullRecordDefault() {
         // when
-        FullRecord record = FullRecord.builder().build();
+        FullRecord record = FullRecord.empty();
 
         // then
         assertThat(record._double()).isEqualTo(0d);

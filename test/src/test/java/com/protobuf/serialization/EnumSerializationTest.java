@@ -31,7 +31,7 @@ class EnumSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            SimpleEnumMessage record = SimpleEnumMessage.builder().build();
+            SimpleEnumMessage record = SimpleEnumMessage.empty();
 
             // when then
             assertProto(serialize(record))
@@ -86,7 +86,7 @@ class EnumSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            SimpleEnumMessage record = SimpleEnumMessage.builder().build();
+            SimpleEnumMessage record = SimpleEnumMessage.empty();
 
             // when
             SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
@@ -126,7 +126,7 @@ class EnumSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            SimpleEnumMessage our = SimpleEnumMessage.builder().build();
+            SimpleEnumMessage our = SimpleEnumMessage.empty();
             SimpleEnumMessageProto proto = SimpleEnumMessageProto.newBuilder().build();
             byte[] ourBytes = our.toByteArray();
             byte[] protoBytes = proto.toByteArray();

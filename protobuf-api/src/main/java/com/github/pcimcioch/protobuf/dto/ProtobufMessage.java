@@ -23,4 +23,11 @@ public interface ProtobufMessage {
      * @throws IOException in case of any write error
      */
     byte[] toByteArray() throws IOException;
+
+    /**
+     * Returns whether this message is empty. Meaning all the fields have default values
+     *
+     * @return whether this message is empty
+     */
+    boolean isEmpty();
 }

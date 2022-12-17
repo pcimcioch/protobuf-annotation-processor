@@ -65,12 +65,16 @@ class OtherMessageTest {
     @Test
     void otherMessageDefault() {
         // when
-        OtherMessageRecord record = OtherMessageRecord.builder().build();
+        OtherMessageRecord record = OtherMessageRecord.empty();
 
         // then
         assertThat(record.name()).isEqualTo("");
         assertThat(record.age()).isEqualTo(0);
-        assertThat(record.address()).isNull();
-        assertThat(record.work()).isNull();
+        assertThat(record.address().street()).isEqualTo("");
+        assertThat(record.address().number()).isEqualTo(0);
+        assertThat(record.work().address().street()).isEqualTo("");
+        assertThat(record.work().address().number()).isEqualTo(0);
+        assertThat(record.work().name()).isEqualTo("");
+        assertThat(record.work().year()).isEqualTo(0);
     }
 }

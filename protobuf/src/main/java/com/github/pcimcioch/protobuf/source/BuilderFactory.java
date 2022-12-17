@@ -15,6 +15,7 @@ import java.util.Map;
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 
@@ -59,8 +60,15 @@ class BuilderFactory {
                 .setPrivate()
                 .setType(field.javaFieldType().canonicalName())
                 .setName(field.javaFieldName())
-                .setLiteralInitializer(DEFAULTS.getOrDefault(field.javaFieldType(), "null"));
+                .setLiteralInitializer(defaultOf(field));
         field.handleDeprecated(fieldSource);
+    }
+
+    private static String defaultOf(FieldDefinition field) {
+        if (field.protoKind() == MESSAGE) {
+            return field.javaFieldType().canonicalName() + ".empty()";
+        }
+        return DEFAULTS.get(field.javaFieldType());
     }
 
     private void addSetter(JavaClassSource builderClass, FieldDefinition field) {

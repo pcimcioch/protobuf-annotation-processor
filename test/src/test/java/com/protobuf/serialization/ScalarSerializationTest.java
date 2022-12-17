@@ -51,7 +51,7 @@ class ScalarSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            FullRecord record = FullRecord.builder().build();
+            FullRecord record = FullRecord.empty();
 
             // when then
             assertProto(serialize(record))
@@ -291,7 +291,7 @@ class ScalarSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            FullRecord record = FullRecord.builder().build();
+            FullRecord record = FullRecord.empty();
 
             // when
             FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
@@ -342,7 +342,7 @@ class ScalarSerializationTest extends SerializationTest {
         @Test
         void emptyObject() throws IOException {
             // given
-            FullRecord our = FullRecord.builder().build();
+            FullRecord our = FullRecord.empty();
             FullRecordProto proto = FullRecordProto.newBuilder().build();
             byte[] ourBytes = our.toByteArray();
             byte[] protoBytes = proto.toByteArray();
