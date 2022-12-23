@@ -3,6 +3,8 @@ package com.protobuf;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.google.protobuf.ByteString;
 
+import java.util.Arrays;
+
 public final class ByteUtils {
     private ByteUtils() {
     }
@@ -22,5 +24,11 @@ public final class ByteUtils {
 
     public static ByteString bs(int... bytes) {
         return ByteString.copyFrom(b(bytes));
+    }
+
+    public static byte[] concatenate(byte[] first, byte[] second) {
+        byte[] concatenated = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, concatenated, first.length, second.length);
+        return concatenated;
     }
 }

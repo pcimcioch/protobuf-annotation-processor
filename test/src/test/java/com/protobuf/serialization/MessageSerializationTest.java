@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static com.protobuf.ByteUtils.ba;
+import static com.protobuf.ByteUtils.concatenate;
 import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -223,6 +224,48 @@ class MessageSerializationTest extends SerializationTest {
                     )
             ));
         }
+
+        @Test
+        void merge() throws IOException {
+            // given when
+            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
+                    // first message
+                    .string(1, "test")
+                    .int32(2, 10)
+                    .bytes(4, deserialize(work -> work
+                            .bytes(1, deserialize(address -> address
+                                    .string(1, "Test")
+                                    .int32(2, 20)
+                            ))
+                            .string(2, "Work")
+                            .fixed32(3, 1999)
+                    ))
+                    // second message
+                    .string(1, "test2")
+                    .bytes(3, deserialize(address -> address
+                            .string(1, "Sun Street")
+                            .int32(2, 100)
+                    ))
+                    .bytes(4, deserialize(work -> work
+                            .bytes(1, deserialize(address -> address
+                                    .int32(2, 200)
+                            ))
+                            .fixed32(3, 2022)
+                    ))
+            );
+
+            // then
+            assertThat(record).isEqualTo(new OtherMessageRecord(
+                    "test2",
+                    10,
+                    new OtherMessageAddress("Sun Street", 100),
+                    new OtherMessageWork(
+                            new OtherMessageAddress("Test", 200),
+                            "Work",
+                            2022
+                    )
+            ));
+        }
     }
 
     @Nested
@@ -342,8 +385,7 @@ class MessageSerializationTest extends SerializationTest {
                     .age(40)
                     .work(OtherMessageWork.builder()
                             .name("Software House inc.")
-                            .build()
-                    )
+                            .build())
                     .build();
             OtherMessageRecordProto proto = OtherMessageRecordProto.newBuilder()
                     .setName("Tomas")
@@ -358,6 +400,100 @@ class MessageSerializationTest extends SerializationTest {
             // when then
             assertProtoEqual(our, OtherMessageRecordProto.parseFrom(ourBytes));
             assertProtoEqual(OtherMessageRecord.parse(protoBytes), proto);
+        }
+
+        @Test
+        void merge() throws IOException {
+            // given
+            OtherMessageRecord ourBase = OtherMessageRecord.builder()
+                    .name("test")
+                    .age(10)
+                    .work(OtherMessageWork.builder()
+                            .address(OtherMessageAddress.builder()
+                                    .street("Test")
+                                    .number(20)
+                                    .build())
+                            .name("Work")
+                            .year(1999)
+                            .build())
+                    .build();
+            OtherMessageRecord ourToMerge = OtherMessageRecord.builder()
+                    .name("test2")
+                    .address(OtherMessageAddress.builder()
+                            .street("Sun Street")
+                            .number(100)
+                            .build())
+                    .work(OtherMessageWork.builder()
+                            .address(OtherMessageAddress.builder()
+                                    .number(200)
+                                    .build())
+                            .year(2022)
+                            .build())
+                    .build();
+            OtherMessageRecordProto protoBase = OtherMessageRecordProto.newBuilder()
+                    .setName("test")
+                    .setAge(10)
+                    .setWork(OtherMessageWorkProto.newBuilder()
+                            .setAddress(OtherMessageAddressProto.newBuilder()
+                                    .setStreet("Test")
+                                    .setNumber(20)
+                                    .build())
+                            .setName("Work")
+                            .setYear(1999)
+                            .build())
+                    .build();
+            OtherMessageRecordProto protoToMerge = OtherMessageRecordProto.newBuilder()
+                    .setName("test2")
+                    .setAddress(OtherMessageAddressProto.newBuilder()
+                            .setStreet("Sun Street")
+                            .setNumber(100)
+                            .build())
+                    .setWork(OtherMessageWorkProto.newBuilder()
+                            .setAddress(OtherMessageAddressProto.newBuilder()
+                                    .setNumber(200)
+                                    .build())
+                            .setYear(2022)
+                            .build())
+                    .build();
+            byte[] ourBytes = concatenate(ourBase.toByteArray(), ourToMerge.toByteArray());
+            byte[] protoBytes = concatenate(protoBase.toByteArray(), protoToMerge.toByteArray());
+
+            // when then
+            OtherMessageRecord ourExpected = OtherMessageRecord.builder()
+                    .name("test2")
+                    .age(10)
+                    .address(OtherMessageAddress.builder()
+                            .street("Sun Street")
+                            .number(100)
+                            .build())
+                    .work(OtherMessageWork.builder()
+                            .address(OtherMessageAddress.builder()
+                                    .street("Test")
+                                    .number(200)
+                                    .build())
+                            .name("Work")
+                            .year(2022)
+                            .build())
+                    .build();
+            OtherMessageRecordProto protoExpected = OtherMessageRecordProto.newBuilder()
+                    .setName("test2")
+                    .setAge(10)
+                    .setAddress(OtherMessageAddressProto.newBuilder()
+                            .setStreet("Sun Street")
+                            .setNumber(100)
+                            .build())
+                    .setWork(OtherMessageWorkProto.newBuilder()
+                            .setAddress(OtherMessageAddressProto.newBuilder()
+                                    .setStreet("Test")
+                                    .setNumber(200)
+                                    .build())
+                            .setName("Work")
+                            .setYear(2022)
+                            .build())
+                    .build();
+
+            assertProtoEqual(ourExpected, OtherMessageRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(OtherMessageRecord.parse(protoBytes), protoExpected);
         }
 
         private void assertProtoEqual(OtherMessageRecord our, OtherMessageRecordProto proto) {

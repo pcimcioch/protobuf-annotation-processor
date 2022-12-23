@@ -19,7 +19,6 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
-import static java.util.Locale.ENGLISH;
 
 class BuilderFactory {
 
@@ -48,6 +47,7 @@ class BuilderFactory {
         }
         addBuildMethod(builderClass, message);
         addMergeMethod(builderClass, message);
+        addEmptyRecord(builderClass, message);
 
         return builderClass;
     }
@@ -159,5 +159,15 @@ class BuilderFactory {
                 .setName("merge")
                 .setBody(body.toString());
         method.addParameter(message.name().canonicalName(), "toMerge");
+    }
+
+    private void addEmptyRecord(JavaClassSource builderClass, MessageDefinition message) {
+        builderClass.addField()
+                .setPrivate()
+                .setStatic(true)
+                .setFinal(true)
+                .setType(message.name().canonicalName())
+                .setName("EMPTY")
+                .setLiteralInitializer("new Builder().build()");
     }
 }

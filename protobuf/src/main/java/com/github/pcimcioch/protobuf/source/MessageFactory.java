@@ -94,8 +94,9 @@ final class MessageFactory {
     }
 
     private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
-        // TODO [improvement] there should be static final EMPTY field, but rooster doesn't support it yet
-        MethodBody emptyBody = body("return builder().build();");
+        // TODO [improvement] EMPTY should be in this record, not the builder
+        // TODO raise an issue to add support for static fields in records
+        MethodBody emptyBody = body("return Builder.EMPTY;");
         source.addMethod()
                 .setPublic()
                 .setStatic(true)
@@ -104,16 +105,14 @@ final class MessageFactory {
                 .setBody(emptyBody.toString());
 
         MethodBody isEmptyBody = body("return empty().equals(this);");
-        MethodSource<JavaRecordSource> isMEmptyMethod = source.addMethod()
+        MethodSource<JavaRecordSource> isEmptyMethod = source.addMethod()
                 .setPublic()
                 .setReturnType(boolean.class)
                 .setName("isEmpty")
                 .setBody(isEmptyBody.toString());
-        isMEmptyMethod.addAnnotation(Override.class);
+        isEmptyMethod.addAnnotation(Override.class);
     }
 
-    // TODO add tests for merge method in builder
-    // TODO add tests for OtherMessage using merge
     private void addMergeMethod(JavaRecordSource source, MessageDefinition message) {
         MethodBody body = body("return toBuilder().merge(toMerge).build();");
 

@@ -81,6 +81,7 @@ final class EnumerationFactory {
         method.addAnnotation(Override.class);
     }
 
+    // TODO raise issue about wrong switch support
     private void addFactoryMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
         MethodBody body = body();
 
