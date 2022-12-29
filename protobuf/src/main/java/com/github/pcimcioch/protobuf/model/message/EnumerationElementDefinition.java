@@ -1,7 +1,13 @@
 package com.github.pcimcioch.protobuf.model.message;
 
+import com.github.pcimcioch.protobuf.model.validation.Assertions;
+
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertFalse;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
 
 /**
  * Enumeration element definition
@@ -49,15 +55,9 @@ public class EnumerationElementDefinition {
         private static final Set<String> reserved = Set.of(UNRECOGNIZED_ELEMENT_NAME);
 
         private static String name(String name) {
-            if (name == null) {
-                throw new IllegalArgumentException("Incorrect enum name: <null>");
-            }
-            if (!namePattern.matcher(name).matches()) {
-                throw new IllegalArgumentException("Incorrect enum name: " + name);
-            }
-            if (reserved.contains(name)) {
-                throw new IllegalArgumentException("Used restricted enum name: " + name);
-            }
+            assertNonNull(name, "Incorrect enum name: <null>");
+            assertTrue(namePattern.matcher(name).matches(), "Incorrect enum name: " + name);
+            assertFalse(reserved.contains(name), "Used restricted enum name: " + name);
 
             return name;
         }

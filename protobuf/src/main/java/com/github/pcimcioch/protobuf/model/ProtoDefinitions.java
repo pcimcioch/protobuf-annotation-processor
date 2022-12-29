@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
+
 /**
  * Full protobuf model definitions
  */
@@ -48,27 +51,15 @@ public class ProtoDefinitions {
     private static final class Valid {
 
         private static List<MessageDefinition> messages(List<MessageDefinition> messages) {
-            if (messages == null) {
-                throw new IllegalArgumentException("Messages can be empty, but not null");
-            }
-            for (MessageDefinition message : messages) {
-                if (message == null) {
-                    throw new IllegalArgumentException("Null message");
-                }
-            }
+            assertNonNull(messages, "Messages can be empty, but not null");
+            assertContainsNoNulls(messages, "Null message");
 
             return messages;
         }
 
         private static List<EnumerationDefinition> enumerations(List<EnumerationDefinition> enumerations) {
-            if (enumerations == null) {
-                throw new IllegalArgumentException("Enumerations can be empty, but not null");
-            }
-            for (EnumerationDefinition enumeration : enumerations) {
-                if (enumeration == null) {
-                    throw new IllegalArgumentException("Null enumeration");
-                }
-            }
+            assertNonNull(enumerations, "Enumerations can be empty, but not null");
+            assertContainsNoNulls(enumerations, "Null enumeration");
 
             return enumerations;
         }

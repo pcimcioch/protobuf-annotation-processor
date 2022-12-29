@@ -3,7 +3,7 @@ package com.github.pcimcioch.protobuf.model.field;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 
-import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
@@ -25,6 +25,8 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
 import static java.util.Locale.ENGLISH;
 
 /**
@@ -33,6 +35,7 @@ import static java.util.Locale.ENGLISH;
 public class FieldDefinition {
 
     private static final TypeName ENUM_VALUE_TYPE = simpleName("int");
+    private static final Set<String> SCALAR_TYPES = Set.of("double", "float", "int32", "int64", "uint32", "uint64", "sint32", "sint64", "fixed32", "fixed64", "sfixed32", "sfixed64", "bool", "string", "bytes");
 
     private final String name;
     private final int number;
@@ -140,26 +143,36 @@ public class FieldDefinition {
      * @param deprecated deprecated
      * @return scalar field
      */
-    public static Optional<FieldDefinition> scalar(String name, int number, String protoType, boolean deprecated) {
+    public static FieldDefinition scalar(String name, int number, String protoType, boolean deprecated) {
         return switch (protoType) {
-            case "double" -> Optional.of(new FieldDefinition(name, number, simpleName("double"), DOUBLE, deprecated));
-            case "float" -> Optional.of(new FieldDefinition(name, number, simpleName("float"), FLOAT, deprecated));
-            case "int32" -> Optional.of(new FieldDefinition(name, number, simpleName("int"), INT32, deprecated));
-            case "int64" -> Optional.of(new FieldDefinition(name, number, simpleName("long"), INT64, deprecated));
-            case "uint32" -> Optional.of(new FieldDefinition(name, number, simpleName("int"), UINT32, deprecated));
-            case "uint64" -> Optional.of(new FieldDefinition(name, number, simpleName("long"), UINT64, deprecated));
-            case "sint32" -> Optional.of(new FieldDefinition(name, number, simpleName("int"), SINT32, deprecated));
-            case "sint64" -> Optional.of(new FieldDefinition(name, number, simpleName("long"), SINT64, deprecated));
-            case "fixed32" -> Optional.of(new FieldDefinition(name, number, simpleName("int"), FIXED32, deprecated));
-            case "fixed64" -> Optional.of(new FieldDefinition(name, number, simpleName("long"), FIXED64, deprecated));
-            case "sfixed32" -> Optional.of(new FieldDefinition(name, number, simpleName("int"), SFIXED32, deprecated));
-            case "sfixed64" -> Optional.of(new FieldDefinition(name, number, simpleName("long"), SFIXED64, deprecated));
-            case "bool" -> Optional.of(new FieldDefinition(name, number, simpleName("boolean"), BOOL, deprecated));
-            case "string" -> Optional.of(new FieldDefinition(name, number, simpleName("String"), STRING, deprecated));
+            case "double" -> new FieldDefinition(name, number, simpleName("double"), DOUBLE, deprecated);
+            case "float" -> new FieldDefinition(name, number, simpleName("float"), FLOAT, deprecated);
+            case "int32" -> new FieldDefinition(name, number, simpleName("int"), INT32, deprecated);
+            case "int64" -> new FieldDefinition(name, number, simpleName("long"), INT64, deprecated);
+            case "uint32" -> new FieldDefinition(name, number, simpleName("int"), UINT32, deprecated);
+            case "uint64" -> new FieldDefinition(name, number, simpleName("long"), UINT64, deprecated);
+            case "sint32" -> new FieldDefinition(name, number, simpleName("int"), SINT32, deprecated);
+            case "sint64" -> new FieldDefinition(name, number, simpleName("long"), SINT64, deprecated);
+            case "fixed32" -> new FieldDefinition(name, number, simpleName("int"), FIXED32, deprecated);
+            case "fixed64" -> new FieldDefinition(name, number, simpleName("long"), FIXED64, deprecated);
+            case "sfixed32" -> new FieldDefinition(name, number, simpleName("int"), SFIXED32, deprecated);
+            case "sfixed64" -> new FieldDefinition(name, number, simpleName("long"), SFIXED64, deprecated);
+            case "bool" -> new FieldDefinition(name, number, simpleName("boolean"), BOOL, deprecated);
+            case "string" -> new FieldDefinition(name, number, simpleName("String"), STRING, deprecated);
             case "bytes" ->
-                    Optional.of(new FieldDefinition(name, number, canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES, deprecated));
-            default -> Optional.empty();
+                    new FieldDefinition(name, number, canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES, deprecated);
+            default -> throw new IllegalArgumentException("Incorrect protobuf scalar type: " + protoType);
         };
+    }
+
+    /**
+     * Returns whether given protobuf type is scalar
+     *
+     * @param protoType protobuf type
+     * @return whether type is scalar
+     */
+    public static boolean isScalar(String protoType) {
+        return SCALAR_TYPES.contains(protoType);
     }
 
     /**
@@ -282,37 +295,23 @@ public class FieldDefinition {
         private static final Pattern namePattern = Pattern.compile("^[a-zA-z_][a-zA-Z0-9_]*$");
 
         private static int number(int number) {
-            if (number <= 0) {
-                throw new IllegalArgumentException("Number must be positive, but was: " + number);
-            }
-
+            assertTrue(number > 0, "Number must be positive, but was: " + number);
             return number;
         }
 
         private static String name(String name) {
-            if (name == null) {
-                throw new IllegalArgumentException("Incorrect field name: <null>");
-            }
-            if (!namePattern.matcher(name).matches()) {
-                throw new IllegalArgumentException("Incorrect field name: " + name);
-            }
-
+            assertNonNull(name, "Incorrect field name: <null>");
+            assertTrue(namePattern.matcher(name).matches(), "Incorrect field name: " + name);
             return name;
         }
 
         private static TypeName type(TypeName type) {
-            if (type == null) {
-                throw new IllegalArgumentException("Must provide field type");
-            }
-
+            assertNonNull(type, "Must provide field type");
             return type;
         }
 
         private static ProtoKind protoType(ProtoKind type) {
-            if (type == null) {
-                throw new IllegalArgumentException("Must provide proto type");
-            }
-
+            assertNonNull(type, "Must provide proto type");
             return type;
         }
     }

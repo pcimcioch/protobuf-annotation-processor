@@ -6,6 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContains;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNoDuplicates;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonEmpty;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
+
 /**
  * Enumeration Definition
  */
@@ -47,38 +54,17 @@ public class EnumerationDefinition {
     private static final class Valid {
 
         private static TypeName name(TypeName name) {
-            if (name == null) {
-                throw new IllegalArgumentException("Enum name cannot be null");
-            }
-
+            assertNonNull(name, "Enum name cannot be null");
             return name;
         }
 
         private static List<EnumerationElementDefinition> elements(List<EnumerationElementDefinition> elements, boolean allowAlias, ReservedDefinition reserved) {
-            if (elements == null || elements.isEmpty()) {
-                throw new IllegalArgumentException("Enum must have at least one element");
-            }
-
-            Set<String> names = new HashSet<>();
-            Set<Integer> numbers = new HashSet<>();
-
-            for (EnumerationElementDefinition element : elements) {
-                if (element == null) {
-                    throw new IllegalArgumentException("Null element in enumeration");
-                }
-
-                if (!names.add(element.name())) {
-                    throw new IllegalArgumentException("Duplicated element name: " + element.name());
-                }
-                if (!numbers.add(element.number())) {
-                    if (!allowAlias) {
-                        throw new IllegalArgumentException("Duplicated element number: " + element.number());
-                    }
-                }
-            }
-
-            if (!numbers.contains(0)) {
-                throw new IllegalArgumentException("Enum must contain element with number 0");
+            assertNonEmpty(elements, "Enum must have at least one element");
+            assertContainsNoNulls(elements, "Null element in enumeration");
+            assertContains(elements, EnumerationElementDefinition::number, 0, "Enum must contain element with number 0");
+            assertNoDuplicates(elements, EnumerationElementDefinition::name, "Duplicated element name: %s");
+            if (!allowAlias) {
+                assertNoDuplicates(elements, EnumerationElementDefinition::number, "Duplicated element number: %s");
             }
 
             return reserved.validElements(elements);

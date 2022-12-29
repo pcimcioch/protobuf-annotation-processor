@@ -2,12 +2,17 @@ package com.github.pcimcioch.protobuf.model.message;
 
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.model.validation.Assertions;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNoDuplicates;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonEmpty;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
 
 /**
  * Message definition
@@ -58,33 +63,15 @@ public class MessageDefinition {
     private static final class Valid {
 
         private static TypeName name(TypeName name) {
-            if (name == null) {
-                throw new IllegalArgumentException("Message name cannot be null");
-            }
-
+            assertNonNull(name, "Message name cannot be null");
             return name;
         }
 
         private static List<FieldDefinition> fields(List<FieldDefinition> fields, ReservedDefinition reserved) {
-            if (fields == null || fields.isEmpty()) {
-                throw new IllegalArgumentException("Message must have at least one field");
-            }
-
-            Set<String> names = new HashSet<>();
-            Set<Integer> numbers = new HashSet<>();
-
-            for (FieldDefinition field : fields) {
-                if (field == null) {
-                    throw new IllegalArgumentException("Null field");
-                }
-
-                if (!names.add(field.name())) {
-                    throw new IllegalArgumentException("Duplicated field name: " + field.name());
-                }
-                if (!numbers.add(field.number())) {
-                    throw new IllegalArgumentException("Duplicated field number: " + field.number());
-                }
-            }
+            assertNonEmpty(fields, "Message must have at least one field");
+            assertContainsNoNulls(fields, "Null field");
+            assertNoDuplicates(fields, FieldDefinition::name, "Duplicated field name: %s");
+            assertNoDuplicates(fields, FieldDefinition::number, "Duplicated field number: %s");
 
             return reserved.validFields(fields);
         }

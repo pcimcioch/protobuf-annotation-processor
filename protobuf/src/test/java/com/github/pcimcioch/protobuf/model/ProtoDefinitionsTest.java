@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -151,7 +152,7 @@ class ProtoDefinitionsTest {
     private static MessageDefinition message(String typeCanonical) {
         TypeName type = canonicalName(typeCanonical);
         List<FieldDefinition> fields = singletonList(
-                FieldDefinition.scalar("name1", 1, "bool", false).orElseThrow()
+                scalar("name1", 1, "bool", false)
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 

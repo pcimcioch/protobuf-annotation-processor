@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.annotation;
 
+import com.github.pcimcioch.protobuf.annotation.TypeResolver.FieldKind;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
@@ -11,7 +12,6 @@ import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -29,52 +29,48 @@ public class ModelFactory {
      * @return model
      */
     public ProtoDefinitions buildProtoDefinitions(ProtoFiles protoFiles) {
+        TypeResolver typeResolver = new TypeResolver(protoFiles);
         List<MessageDefinition> messages = protoFiles.files().stream()
-                .flatMap(protoFile -> buildMessages(protoFiles, protoFile))
+                .flatMap(protoFile -> buildMessages(typeResolver, protoFile))
                 .toList();
         List<EnumerationDefinition> enumerations = protoFiles.files().stream()
-                .flatMap(this::buildEnumerations)
+                .flatMap(protoFile -> buildEnumerations(typeResolver, protoFile))
                 .toList();
 
         return new ProtoDefinitions(messages, enumerations);
     }
 
-    private Stream<MessageDefinition> buildMessages(ProtoFiles protoFiles, ProtoFile protoFile) {
+    private Stream<MessageDefinition> buildMessages(TypeResolver typeResolver, ProtoFile protoFile) {
         return protoFile.messages().stream()
                 .map(message -> new MessageDefinition(
-                        protoFile.nameOf(message.name()),
-                        buildFields(protoFiles, protoFile, message),
+                        typeResolver.typeOf(message),
+                        buildFields(typeResolver, message),
                         buildReserved(message.reserved())
                 ));
     }
 
-    private List<FieldDefinition> buildFields(ProtoFiles protoFiles, ProtoFile protoFile, Message message) {
+    private List<FieldDefinition> buildFields(TypeResolver typeResolver, Message message) {
         return Arrays.stream(message.fields())
-                .map(field -> this.buildField(protoFiles, protoFile, field))
+                .map(field -> this.buildField(typeResolver, field))
                 .toList();
     }
 
-    private FieldDefinition buildField(ProtoFiles protoFiles, ProtoFile protoFile, Field field) {
-        Optional<FieldDefinition> scalar = FieldDefinition.scalar(field.name(), field.number(), field.type(), field.deprecated());
-        if (scalar.isPresent()) {
-            return scalar.get();
-        }
+    private FieldDefinition buildField(TypeResolver typeResolver, Field field) {
+        FieldKind fieldKind = typeResolver.kindOf(field);
+        TypeName fieldType = typeResolver.typeOf(field);
 
-        TypeName fieldType = protoFile.nameOf(field.type());
-        if (protoFiles.containsEnumeration(fieldType)) {
-            return FieldDefinition.enumeration(field.name(), field.number(), fieldType, field.deprecated());
-        }
-        if (protoFiles.containsMessage(fieldType)) {
-            return FieldDefinition.message(field.name(), field.number(), fieldType, field.deprecated());
-        }
-
-        throw new IllegalArgumentException("Cannot find field type for " + field.type());
+        return switch (fieldKind) {
+            case SCALAR -> FieldDefinition.scalar(field.name(), field.number(), field.type(), field.deprecated());
+            case MESSAGE -> FieldDefinition.message(field.name(), field.number(), fieldType, field.deprecated());
+            case ENUM -> FieldDefinition.enumeration(field.name(), field.number(), fieldType, field.deprecated());
+            case UNKNOWN -> throw new IllegalArgumentException("Cannot find field type for " + fieldType);
+        };
     }
 
-    private Stream<EnumerationDefinition> buildEnumerations(ProtoFile protoFile) {
+    private Stream<EnumerationDefinition> buildEnumerations(TypeResolver typeResolver, ProtoFile protoFile) {
         return protoFile.enumerations().stream()
                 .map(enumeration -> new EnumerationDefinition(
-                        protoFile.nameOf(enumeration.name()),
+                        typeResolver.typeOf(enumeration),
                         buildEnumerationElements(enumeration), enumeration.allowAlias(),
                         buildReserved(enumeration.reserved())
                 ));

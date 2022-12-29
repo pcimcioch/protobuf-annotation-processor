@@ -94,8 +94,7 @@ final class MessageFactory {
     }
 
     private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
-        // TODO [improvement] EMPTY should be in this record, not the builder
-        // TODO raise an issue to add support for static fields in records
+        // TODO [improvement] EMPTY should be in this record, not the builder https://github.com/forge/roaster/issues/279
         MethodBody emptyBody = body("return Builder.EMPTY;");
         source.addMethod()
                 .setPublic()

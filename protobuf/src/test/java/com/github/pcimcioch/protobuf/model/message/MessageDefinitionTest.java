@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
@@ -28,9 +29,9 @@ class MessageDefinitionTest {
     void correctMessage() {
         // given
         List<FieldDefinition> fields = asList(
-                scalarField("test1", 1, "bool"),
-                scalarField("test2", 2, "int32"),
-                scalarField("test3", 3, "string")
+                scalar("test1", 1, "bool", false),
+                scalar("test2", 2, "int32", false),
+                scalar("test3", 3, "string", false)
         );
 
         // when
@@ -45,7 +46,7 @@ class MessageDefinitionTest {
         void nullName() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalarField("test", 1, "bool")
+                    scalar("test", 1, "bool", false)
             );
 
             // when then
@@ -78,9 +79,9 @@ class MessageDefinitionTest {
         void duplicatedFieldName() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalarField("test", 1, "bool"),
-                    scalarField("test2", 2, "int32"),
-                    scalarField("test", 3, "string")
+                    scalar("test", 1, "bool", false),
+                    scalar("test2", 2, "int32", false),
+                    scalar("test", 3, "string", false)
             );
 
             // when then
@@ -93,9 +94,9 @@ class MessageDefinitionTest {
         void duplicatedFieldNumbers() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalarField("test1", 1, "bool"),
-                    scalarField("test2", 2, "int32"),
-                    scalarField("test3", 1, "string")
+                    scalar("test1", 1, "bool", false),
+                    scalar("test2", 2, "int32", false),
+                    scalar("test3", 1, "string", false)
             );
 
             // when then
@@ -108,8 +109,8 @@ class MessageDefinitionTest {
         void nullField() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalarField("test1", 1, "bool"),
-                    scalarField("test2", 2, "int32"),
+                    scalar("test1", 1, "bool", false),
+                    scalar("test2", 2, "int32", false),
                     null
             );
 
@@ -134,7 +135,7 @@ class MessageDefinitionTest {
         void correctFieldNames(String fieldName) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalarField(fieldName, 1, "bool")
+                    scalar(fieldName, 1, "bool", false)
             );
 
             // when
@@ -147,7 +148,7 @@ class MessageDefinitionTest {
         void correctFieldNumbers(int fieldNumber) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalarField("test", fieldNumber, "bool")
+                    scalar("test", fieldNumber, "bool", false)
             );
 
             // when
@@ -160,7 +161,7 @@ class MessageDefinitionTest {
         void incorrectFieldNames(String fieldName) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalarField(fieldName, 1, "bool")
+                    scalar(fieldName, 1, "bool", false)
             );
 
             // when
@@ -174,7 +175,7 @@ class MessageDefinitionTest {
         void incorrectFieldNumbers(int fieldNumber) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalarField("test", fieldNumber, "bool")
+                    scalar("test", fieldNumber, "bool", false)
             );
 
             // when
@@ -184,7 +185,4 @@ class MessageDefinitionTest {
         }
     }
 
-    private static FieldDefinition scalarField(String name, int number, String protoType) {
-        return FieldDefinition.scalar(name, number, protoType, false).orElseThrow();
-    }
 }
