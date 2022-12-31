@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.annotation;
 
+import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.annotation.TypeResolver.FieldKind;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -45,7 +46,9 @@ public class ModelFactory {
                 .map(message -> new MessageDefinition(
                         typeResolver.typeOf(message),
                         buildFields(typeResolver, message),
-                        buildReserved(message.reserved())
+                        buildReserved(message.reserved()),
+                        List.of(),
+                        List.of()
                 ));
     }
 

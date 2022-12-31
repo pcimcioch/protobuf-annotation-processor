@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.annotation;
 
+import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 

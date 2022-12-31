@@ -71,6 +71,16 @@ public class TypeName {
         return canonicalName + simpleName;
     }
 
+    /**
+     * Checks whether this name is direct child of given name
+     *
+     * @param other parent name
+     * @return whether this name is direct child of given name
+     */
+    public boolean isDirectChildOf(TypeName other) {
+        return equals(canonicalName(other.canonicalName() + "." + simpleName()));
+    }
+
     @Override
     public String toString() {
         return canonicalName();

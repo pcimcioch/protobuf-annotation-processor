@@ -2,13 +2,11 @@ package com.github.pcimcioch.protobuf.model.message;
 
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
-import com.github.pcimcioch.protobuf.model.validation.Assertions;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertAllMatches;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNoDuplicates;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonEmpty;
@@ -20,17 +18,24 @@ import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNo
 public class MessageDefinition {
     private final TypeName name;
     private final List<FieldDefinition> fields;
+    private final List<MessageDefinition> messages;
+    private final List<EnumerationDefinition> enumerations;
 
     /**
      * Constructor
      *
-     * @param name     name of the message
-     * @param fields   fields of the message
-     * @param reserved reserved fields
+     * @param name         name of the message
+     * @param fields       fields of the message
+     * @param reserved     reserved fields
+     * @param messages     nested messages
+     * @param enumerations nested enumerations
      */
-    public MessageDefinition(TypeName name, List<FieldDefinition> fields, ReservedDefinition reserved) {
+    public MessageDefinition(TypeName name, List<FieldDefinition> fields, ReservedDefinition reserved,
+                             List<MessageDefinition> messages, List<EnumerationDefinition> enumerations) {
         this.name = Valid.name(name);
         this.fields = Valid.fields(fields, reserved);
+        this.messages = Valid.messages(name, messages);
+        this.enumerations = Valid.enumerations(name, enumerations);
     }
 
     /**
@@ -60,6 +65,24 @@ public class MessageDefinition {
         return fields;
     }
 
+    /**
+     * Returns all nested messages
+     *
+     * @return nested messages
+     */
+    public List<MessageDefinition> messages() {
+        return messages;
+    }
+
+    /**
+     * Returns all nested enumerations
+     *
+     * @return nested enumerations
+     */
+    public List<EnumerationDefinition> enumerations() {
+        return enumerations;
+    }
+
     private static final class Valid {
 
         private static TypeName name(TypeName name) {
@@ -74,6 +97,22 @@ public class MessageDefinition {
             assertNoDuplicates(fields, FieldDefinition::number, "Duplicated field number: %s");
 
             return reserved.validFields(fields);
+        }
+
+        private static List<MessageDefinition> messages(TypeName name, List<MessageDefinition> messages) {
+            assertNonNull(messages, "Nested messages cannot be null");
+            assertContainsNoNulls(messages, "Null nested message");
+            assertAllMatches(messages, message -> message.name().isDirectChildOf(name), "Nested message has non-nested type");
+
+            return messages;
+        }
+
+        private static List<EnumerationDefinition> enumerations(TypeName name, List<EnumerationDefinition> enumerations) {
+            assertNonNull(enumerations, "Nested enumerations cannot be null");
+            assertContainsNoNulls(enumerations, "Null nested enumeration");
+            assertAllMatches(enumerations, enumeration -> enumeration.name().isDirectChildOf(name), "Nested enumeration has non-nested type");
+
+            return enumerations;
         }
     }
 }

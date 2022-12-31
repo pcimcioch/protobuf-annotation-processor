@@ -156,7 +156,7 @@ class ProtoDefinitionsTest {
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
-        return new MessageDefinition(type, fields, nothingReserved);
+        return new MessageDefinition(type, fields, nothingReserved, emptyList(), emptyList());
     }
 
     private static EnumerationDefinition enumeration(String typeCanonical) {

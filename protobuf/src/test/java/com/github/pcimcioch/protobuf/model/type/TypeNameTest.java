@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.model.type;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -88,6 +89,36 @@ class TypeNameTest {
                 "com.example.MyClass.test",
                 "example!.MyClass",
                 "example.MyClass!"
+        );
+    }
+
+    @Test
+    void isDirectChildOf() {
+        // given
+        TypeName parent = TypeName.canonicalName("com.test.Parent.Test");
+        TypeName child = TypeName.canonicalName("com.test.Parent.Test.Child");
+
+        // when then
+        assertThat(child.isDirectChildOf(parent)).isTrue();
+    }
+
+    @ParameterizedTest
+    @MethodSource("notChildCanonicalNames")
+    void isNotDirectChildOf(TypeName type) {
+        // given
+        TypeName parent = TypeName.canonicalName("com.test.Parent.Test");
+
+        // when then
+        assertThat(type.isDirectChildOf(parent)).isFalse();
+    }
+
+    static Stream<TypeName> notChildCanonicalNames() {
+        return Stream.of(
+                TypeName.canonicalName("com.test.Parent.Test.Child1.Child2"),
+                TypeName.canonicalName("com.test.Parent.Test2"),
+                TypeName.canonicalName("com.test2.Parent.Test.Child"),
+                TypeName.canonicalName("com.test.Parent2.Test.Child"),
+                TypeName.canonicalName("com.test.Parent")
         );
     }
 }

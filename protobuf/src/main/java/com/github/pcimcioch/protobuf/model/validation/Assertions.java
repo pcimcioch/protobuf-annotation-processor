@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Model data assertions
@@ -113,5 +114,21 @@ public final class Assertions {
         }
 
         throw new IllegalArgumentException(message);
+    }
+
+    /**
+     * Assert that all elements in given collection match given predicate
+     *
+     * @param collection collection to test
+     * @param predicate  predicate to check
+     * @param message    exception message
+     * @param <T>        element type
+     */
+    public static <T> void assertAllMatches(Collection<T> collection, Predicate<T> predicate, String message) {
+        for (T element : collection) {
+            if (!predicate.test(element)) {
+                throw new IllegalArgumentException(message);
+            }
+        }
     }
 }

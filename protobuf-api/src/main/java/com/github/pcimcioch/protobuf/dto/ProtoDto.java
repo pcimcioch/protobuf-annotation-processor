@@ -167,7 +167,8 @@ public final class ProtoDto {
      * @param value value to check
      * @return whether value is default
      */
-    public static boolean isDefault(ProtobufMessage value) {
+    // TODO does protobuf support cyclic dependencies?
+    public static boolean isDefault(ProtobufMessage<?> value) {
         return value.isEmpty();
     }
 

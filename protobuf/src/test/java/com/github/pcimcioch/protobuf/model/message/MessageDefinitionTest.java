@@ -23,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MessageDefinitionTest {
 
     private static final TypeName NAME = canonicalName("com.example.MyType");
+    private static final TypeName CHILD_MESSAGE_NAME = canonicalName("com.example.MyType.ChildMessage");
+    private static final TypeName CHILD_ENUM_NAME = canonicalName("com.example.MyType.ChildEnum");
     private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
     @Test
@@ -35,7 +37,7 @@ class MessageDefinitionTest {
         );
 
         // when
-        assertThatCode(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
+        assertThatCode(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), emptyList()))
                 .doesNotThrowAnyException();
     }
 
@@ -50,7 +52,7 @@ class MessageDefinitionTest {
             );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(null, fields, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(null, fields, NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message name cannot be null");
         }
@@ -62,7 +64,7 @@ class MessageDefinitionTest {
         @Test
         void nullFields() {
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(NAME, null, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, null, NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message must have at least one field");
         }
@@ -70,7 +72,7 @@ class MessageDefinitionTest {
         @Test
         void emptyFields() {
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(NAME, emptyList(), NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, emptyList(), NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Message must have at least one field");
         }
@@ -85,7 +87,7 @@ class MessageDefinitionTest {
             );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field name: test");
         }
@@ -100,7 +102,7 @@ class MessageDefinitionTest {
             );
 
             // when then
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Duplicated field number: 1");
         }
@@ -115,7 +117,7 @@ class MessageDefinitionTest {
             );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Null field");
         }
@@ -139,7 +141,7 @@ class MessageDefinitionTest {
             );
 
             // when
-            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED))
+            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED, emptyList(), emptyList()))
                     .doesNotThrowAnyException();
         }
 
@@ -152,7 +154,7 @@ class MessageDefinitionTest {
             );
 
             // when
-            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED))
+            assertThatCode(() -> new MessageDefinition(NAME, fields, RESERVED, emptyList(), emptyList()))
                     .doesNotThrowAnyException();
         }
 
@@ -165,7 +167,7 @@ class MessageDefinitionTest {
             );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("is reserved");
         }
@@ -179,9 +181,111 @@ class MessageDefinitionTest {
             );
 
             // when
-            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED))
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, RESERVED, emptyList(), emptyList()))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("is reserved");
+        }
+
+        @Test
+        void correctNested() {
+            // given
+            List<FieldDefinition> fields = asList(
+                    scalar("test1", 1, "bool", false),
+                    scalar("test2", 2, "int32", false),
+                    scalar("test3", 3, "string", false)
+            );
+            MessageDefinition nestedMessage = new MessageDefinition(CHILD_MESSAGE_NAME, fields, NO_RESERVED, emptyList(), emptyList());
+            List<EnumerationElementDefinition> elements = singletonList(
+                    new EnumerationElementDefinition("TEST", 0)
+            );
+            EnumerationDefinition nestedEnumeration = new EnumerationDefinition(CHILD_ENUM_NAME, elements, false, NO_RESERVED);
+
+            // when
+            assertThatCode(() -> new MessageDefinition(NAME, fields, NO_RESERVED, singletonList(nestedMessage), singletonList(nestedEnumeration)))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void nullMessages() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, null, emptyList()))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Nested messages cannot be null");
+        }
+
+        @Test
+        void messagesWithNullValue() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, singletonList(null), emptyList()))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Null nested message");
+        }
+
+        @Test
+        void incorrectNestedMessage() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+            MessageDefinition nestedMessage = new MessageDefinition(canonicalName("com.test.Incorrect"), fields, NO_RESERVED, emptyList(), emptyList());
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, singletonList(nestedMessage), emptyList()))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Nested message has non-nested type");
+        }
+
+        @Test
+        void nullEnumerations() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Nested enumerations cannot be null");
+        }
+
+        @Test
+        void enumerationsWithNullValue() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), singletonList(null)))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Null nested enumeration");
+        }
+
+        @Test
+        void incorrectNestedEnumeration() {
+            // given
+            List<FieldDefinition> fields = singletonList(
+                    scalar("test1", 1, "bool", false)
+            );
+            List<EnumerationElementDefinition> elements = singletonList(
+                    new EnumerationElementDefinition("TEST", 0)
+            );
+            EnumerationDefinition nestedEnumeration = new EnumerationDefinition(canonicalName("com.test.Incorrect"), elements, false, NO_RESERVED);
+
+            // when
+            assertThatThrownBy(() -> new MessageDefinition(NAME, fields, NO_RESERVED, emptyList(), singletonList(nestedEnumeration)))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Nested enumeration has non-nested type");
         }
     }
 
