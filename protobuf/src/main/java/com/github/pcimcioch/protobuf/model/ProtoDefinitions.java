@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
@@ -46,6 +47,19 @@ public class ProtoDefinitions {
      */
     public List<EnumerationDefinition> enumerations() {
         return enumerations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProtoDefinitions that = (ProtoDefinitions) o;
+        return messages.equals(that.messages) && enumerations.equals(that.enumerations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messages, enumerations);
     }
 
     private static final class Valid {

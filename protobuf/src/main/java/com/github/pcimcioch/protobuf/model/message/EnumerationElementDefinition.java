@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.model.message;
 
-import com.github.pcimcioch.protobuf.model.validation.Assertions;
-
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -48,6 +47,19 @@ public class EnumerationElementDefinition {
      */
     public int number() {
         return number;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnumerationElementDefinition that = (EnumerationElementDefinition) o;
+        return number == that.number && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, number);
     }
 
     private static final class Valid {

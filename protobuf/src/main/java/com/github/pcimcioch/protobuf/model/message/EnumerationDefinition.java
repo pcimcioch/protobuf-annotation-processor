@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContains;
@@ -49,6 +50,19 @@ public class EnumerationDefinition {
      */
     public List<EnumerationElementDefinition> elements() {
         return elements;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnumerationDefinition that = (EnumerationDefinition) o;
+        return name.equals(that.name) && elements.equals(that.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, elements);
     }
 
     private static final class Valid {

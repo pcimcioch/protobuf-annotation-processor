@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertAllMatches;
@@ -81,6 +82,19 @@ public class MessageDefinition {
      */
     public List<EnumerationDefinition> enumerations() {
         return enumerations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageDefinition that = (MessageDefinition) o;
+        return name.equals(that.name) && fields.equals(that.fields) && messages.equals(that.messages) && enumerations.equals(that.enumerations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, fields, messages, enumerations);
     }
 
     private static final class Valid {

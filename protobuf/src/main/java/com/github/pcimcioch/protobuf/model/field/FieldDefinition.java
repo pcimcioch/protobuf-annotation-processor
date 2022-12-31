@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.model.field;
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -132,6 +133,19 @@ public class FieldDefinition {
      */
     public String javaFieldNamePrefixed(String prefix) {
         return prefix + javaFieldName().substring(0, 1).toUpperCase(ENGLISH) + javaFieldName().substring(1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FieldDefinition that = (FieldDefinition) o;
+        return number == that.number && deprecated == that.deprecated && name.equals(that.name) && type.equals(that.type) && protoKind == that.protoKind;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, number, type, deprecated, protoKind);
     }
 
     /**

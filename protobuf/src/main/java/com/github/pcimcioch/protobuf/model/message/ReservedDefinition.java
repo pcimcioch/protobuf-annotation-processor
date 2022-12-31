@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.model.message;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -20,6 +21,7 @@ public class ReservedDefinition {
      * @param numbers reserved numbers
      * @param ranges  reserved number ranges
      */
+    // TODO validate non null
     public ReservedDefinition(Set<String> names, Set<Integer> numbers, Set<Range> ranges) {
         this.names = names;
         this.numbers = numbers;
@@ -70,6 +72,19 @@ public class ReservedDefinition {
 
     private boolean numberReserved(int number) {
         return numbers.contains(number) || ranges.stream().anyMatch(range -> range.matches(number));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReservedDefinition that = (ReservedDefinition) o;
+        return names.equals(that.names) && numbers.equals(that.numbers) && ranges.equals(that.ranges);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(names, numbers, ranges);
     }
 
     /**

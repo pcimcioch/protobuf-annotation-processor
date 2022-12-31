@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.model.type;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,22 +12,20 @@ import java.util.regex.Pattern;
  */
 public class TypeName {
     private static final Pattern simpleTypePattern = Pattern.compile("^[a-zA-Z]+$");
-    private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<parent>(\\.[A-Z][A-Za-z0-9_]*)*)(?<simple>\\.[A-Z][A-Za-z0-9_]*)$");
+    private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<classes>(\\.[A-Z][A-Za-z0-9_]*)+)$");
 
     private final String packageName;
-    private final String parentClassesName;
-    private final String simpleName;
+    private final LinkedList<String> classNames;
 
-    private TypeName(String packageName, String parentClassesName, String simpleName) {
+    private TypeName(String packageName, String classNames) {
         this.packageName = packageName == null ? "" : packageName;
-        this.parentClassesName = parentClassesName == null ? "" : parentClassesName;
-        this.simpleName = simpleName == null ? "" : simpleName;
+        this.classNames = new LinkedList<>(Arrays.asList(classNames.split("\\.")));
     }
 
     /**
      * Returns package name.
      * <p>
-     * For {@code com.example.MyClass} it will be {@code com.example}
+     * For {@code com.example.ClassA.ClassB.ClassC} it will be {@code com.example}
      *
      * @return package name
      */
@@ -33,42 +34,65 @@ public class TypeName {
     }
 
     /**
-     * Returns parent classes names
-     * <p>
-     * For {@code com.example.MyClass.Nested.DoubleNested} it will be {@code MyClass.Nested}
-     *
-     * @return parent classes names
-     */
-    public String parentClassesName() {
-        return parentClassesName;
-    }
-
-    /**
      * Returns simple name
      * <p>
-     * For {@code com.example.MyClass} it will be {@code MyClass}
+     * For {@code com.example.ClassA.ClassB.ClassC} it will be {@code ClassC}
      *
      * @return simple name
      */
     public String simpleName() {
-        return simpleName;
+        return classNames.getLast();
+    }
+
+    /**
+     * Returns base name
+     * <p>
+     * For {@code com.example.ClassA.ClassB.ClassC} it will be {@code com.example.ClassA}
+     *
+     * @return base name
+     */
+    public String baseName() {
+        String prefix = "".equals(packageName)
+                ? ""
+                : (packageName + ".");
+        return prefix + classNames.getFirst();
+    }
+
+    /**
+     * Returns nested class name
+     * <p>
+     * For {@code com.example.ClassA.ClassB.ClassC} it will be {@code [ClassB, ClassC]}
+     *
+     * @return nested class name
+     */
+    public List<String> nestedClassNames() {
+        LinkedList<String> nested = new LinkedList<>(classNames);
+        nested.removeFirst();
+        return nested;
     }
 
     /**
      * Returns fully qualified canonical name
+     * <p>
+     * For {@code com.example.ClassA.ClassB.ClassC} it will be {@code com.example.ClassA.ClassB.ClassC}
      *
      * @return canonical name
      */
     public String canonicalName() {
-        String canonicalName = "";
-        if (!"".equals(packageName)) {
-            canonicalName += packageName + ".";
-        }
-        if (!"".equals(parentClassesName)) {
-            canonicalName += parentClassesName + ".";
-        }
+        String prefix = "".equals(packageName)
+                ? ""
+                : (packageName + ".");
+        return prefix + String.join(".", classNames);
+    }
 
-        return canonicalName + simpleName;
+    /**
+     * Returns new type with given class name appended to the end
+     *
+     * @param className class name to append
+     * @return new type name
+     */
+    public TypeName with(String className) {
+        return canonicalName(canonicalName() + "." + className);
     }
 
     /**
@@ -78,7 +102,7 @@ public class TypeName {
      * @return whether this name is direct child of given name
      */
     public boolean isDirectChildOf(TypeName other) {
-        return equals(canonicalName(other.canonicalName() + "." + simpleName()));
+        return equals(other.with(simpleName()));
     }
 
     @Override
@@ -91,12 +115,12 @@ public class TypeName {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TypeName typeName = (TypeName) o;
-        return packageName.equals(typeName.packageName) && parentClassesName.equals(typeName.parentClassesName) && simpleName.equals(typeName.simpleName);
+        return packageName.equals(typeName.packageName) && classNames.equals(typeName.classNames);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(packageName, parentClassesName, simpleName);
+        return Objects.hash(packageName, classNames);
     }
 
     /**
@@ -107,7 +131,7 @@ public class TypeName {
      */
     public static TypeName simpleName(String name) {
         mustMatch(simpleTypePattern, name, "Incorrect simple type name");
-        return new TypeName(null, null, name);
+        return new TypeName(null, name);
     }
 
     /**
@@ -120,8 +144,7 @@ public class TypeName {
         Matcher matcher = mustMatch(canonicalNamePattern, name, "Incorrect canonical name");
         return new TypeName(
                 trim(matcher.group("package")),
-                trim(matcher.group("parent")),
-                trim(matcher.group("simple"))
+                trim(matcher.group("classes"))
         );
     }
 
