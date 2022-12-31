@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toSet;
 /**
  * Create model from annotations
  */
-// TODO add tests
 public class ModelFactory {
 
     /**

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Represents java type name
  */
-public class TypeName {
+public final class TypeName {
     private static final Pattern simpleTypePattern = Pattern.compile("^[a-zA-Z]+$");
     private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<classes>(\\.[A-Z][A-Za-z0-9_]*)+)$");
 

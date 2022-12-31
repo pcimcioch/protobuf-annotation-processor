@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toMap;
  * Method body builder
  */
 @SuppressWarnings("unchecked")
-public class MethodBody {
+public final class MethodBody {
 
     private static final Formatters formatters = new Formatters();
 

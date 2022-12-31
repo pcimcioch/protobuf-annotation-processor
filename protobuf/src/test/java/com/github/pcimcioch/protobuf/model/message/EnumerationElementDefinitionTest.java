@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.model.message;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -37,13 +38,10 @@ class EnumerationElementDefinitionTest {
                 .hasMessageContaining("Incorrect enum name");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "UNRECOGNIZED"
-    })
-    void reservedNames(String name) {
+    @Test
+    void reservedName() {
         // when then
-        assertThatThrownBy(() -> new EnumerationElementDefinition(name, 0))
+        assertThatThrownBy(() -> new EnumerationElementDefinition("UNRECOGNIZED", 0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Used restricted enum name");
     }

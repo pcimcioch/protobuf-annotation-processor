@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.dto;
 /**
  * Protobuf enumeration type
  */
+@FunctionalInterface
 public interface ProtobufEnumeration {
 
     /**

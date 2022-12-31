@@ -33,7 +33,7 @@ import static java.util.Locale.ENGLISH;
 /**
  * Message field
  */
-public class FieldDefinition {
+public final class FieldDefinition {
 
     private static final TypeName ENUM_VALUE_TYPE = simpleName("int");
     private static final Set<String> SCALAR_TYPES = Set.of("double", "float", "int32", "int64", "uint32", "uint64", "sint32", "sint64", "fixed32", "fixed64", "sfixed32", "sfixed64", "bool", "string", "bytes");

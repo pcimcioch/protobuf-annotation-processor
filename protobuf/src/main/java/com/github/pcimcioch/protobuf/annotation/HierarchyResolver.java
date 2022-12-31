@@ -184,7 +184,7 @@ class HierarchyResolver {
 
         private void setAnnotation(Annotation annotation) {
             if (!isEmpty()) {
-                throw new IllegalArgumentException("Duplicated type name" + type);
+                throw new IllegalArgumentException("Duplicated type name " + type);
             }
             this.annotation = annotation;
         }

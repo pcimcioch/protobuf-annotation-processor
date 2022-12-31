@@ -2,17 +2,14 @@ package com.github.pcimcioch.protobuf.model.message;
 
 import com.github.pcimcioch.protobuf.model.type.TypeName;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContains;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNoDuplicates;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonEmpty;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
-import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
 
 /**
  * Enumeration Definition
