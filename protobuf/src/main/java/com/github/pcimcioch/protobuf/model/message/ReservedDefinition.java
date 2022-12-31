@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
+
 /**
  * Reserved elements definition
  */
@@ -21,11 +25,10 @@ public class ReservedDefinition {
      * @param numbers reserved numbers
      * @param ranges  reserved number ranges
      */
-    // TODO validate non null
     public ReservedDefinition(Set<String> names, Set<Integer> numbers, Set<Range> ranges) {
-        this.names = names;
-        this.numbers = numbers;
-        this.ranges = ranges;
+        this.names = Valid.names(names);
+        this.numbers = Valid.numbers(numbers);
+        this.ranges = Valid.ranges(ranges);
     }
 
     /**
@@ -101,9 +104,7 @@ public class ReservedDefinition {
          * @param to   upper bound, inclusive
          */
         public Range {
-            if (to < from) {
-                throw new IllegalArgumentException("Incorrect range [" + from + ", " + to + "]");
-            }
+            Valid.range(from, to);
         }
 
         /**
@@ -114,6 +115,34 @@ public class ReservedDefinition {
          */
         public boolean matches(int value) {
             return value >= from && value <= to;
+        }
+    }
+
+    private static final class Valid {
+
+        private static Set<String> names(Set<String> names) {
+            assertNonNull(names, "Reserved names cannot be null");
+            assertContainsNoNulls(names, "Reserved names cannot contain null");
+
+            return names;
+        }
+
+        private static Set<Integer> numbers(Set<Integer> numbers) {
+            assertNonNull(numbers, "Reserved numbers cannot be null");
+            assertContainsNoNulls(numbers, "Reserved numbers cannot contain null");
+
+            return numbers;
+        }
+
+        private static Set<Range> ranges(Set<Range> ranges) {
+            assertNonNull(ranges, "Reserved ranges cannot be null");
+            assertContainsNoNulls(ranges, "Reserved ranges cannot contain null");
+
+            return ranges;
+        }
+
+        private static void range(int from, int to) {
+            assertTrue(to >= from, "Incorrect range [" + from + ", " + to + "]");
         }
     }
 }

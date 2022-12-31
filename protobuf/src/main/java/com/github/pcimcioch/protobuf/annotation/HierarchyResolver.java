@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.model.type.TypeName;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -14,7 +15,7 @@ import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 
 class HierarchyResolver {
 
-    private final Map<String, Clazz> classes = new HashMap<>();
+    private final Map<String, Clazz> classes = new LinkedHashMap<>();
     private final Map<Field, FieldState> fieldStates = new HashMap<>();
 
     enum FieldKind {SCALAR, ENUM, MESSAGE, UNKNOWN}
@@ -134,7 +135,7 @@ class HierarchyResolver {
     static final class Clazz {
         private Annotation annotation;
         private final TypeName type;
-        private final Map<String, Clazz> nested = new HashMap<>();
+        private final Map<String, Clazz> nested = new LinkedHashMap<>();
 
         private Clazz(TypeName type) {
             this.type = type;

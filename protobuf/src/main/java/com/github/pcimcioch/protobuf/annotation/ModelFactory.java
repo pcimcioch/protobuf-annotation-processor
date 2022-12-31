@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.annotation;
 
+import com.github.pcimcioch.protobuf.annotation.Enumeration.Element;
 import com.github.pcimcioch.protobuf.annotation.HierarchyResolver.Clazz;
 import com.github.pcimcioch.protobuf.annotation.HierarchyResolver.FieldState;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
@@ -96,7 +97,7 @@ public class ModelFactory {
                 .toList();
     }
 
-    private EnumerationElementDefinition buildEnumerationElement(EnumerationElement element) {
+    private EnumerationElementDefinition buildEnumerationElement(Element element) {
         return new EnumerationElementDefinition(element.name(), element.number());
     }
 

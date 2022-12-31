@@ -33,7 +33,7 @@ public @interface Enumeration {
      *
      * @return elements
      */
-    EnumerationElement[] elements();
+    Element[] elements();
 
     /**
      * Reserved elements and numbers
@@ -41,4 +41,25 @@ public @interface Enumeration {
      * @return reserved
      */
     Reserved reserved() default @Reserved;
+
+    /**
+     * Enumeration element
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Element {
+
+        /**
+         * Element name
+         *
+         * @return name
+         */
+        String name();
+
+        /**
+         * Enumeration number
+         *
+         * @return number
+         */
+        int number();
+    }
 }
