@@ -1,39 +1,59 @@
 package com.protobuf.model;
 
+import com.github.pcimcioch.protobuf.dto.ByteArray;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 class NullabilityTest {
 
     @Test
     void scalarTypeString() {
-        // when
-        Throwable thrown = catchThrowable(() -> FullRecord.builder().string(null).build());
+        // given
+        FullRecord recordNull = FullRecord.builder().string(null).build();
+        FullRecord recordEmpty = FullRecord.builder().string("").build();
 
-        // then
-        assertThat(thrown)
-                .isInstanceOf(NullPointerException.class);
+        // when then
+        assertThat(recordNull).isEqualTo(recordEmpty);
+        assertThat(recordNull.string()).isEqualTo("");
+        assertThat(recordEmpty.string()).isEqualTo("");
     }
 
     @Test
     void scalarTypeByteArray() {
-        // when
-        Throwable thrown = catchThrowable(() -> FullRecord.builder().bytes(null).build());
+        // given
+        FullRecord recordNull = FullRecord.builder().bytes(null).build();
+        FullRecord recordEmpty = FullRecord.builder().bytes(ByteArray.empty()).build();
 
-        // then
-        assertThat(thrown)
-                .isInstanceOf(NullPointerException.class);
+        // when then
+        assertThat(recordNull).isEqualTo(recordEmpty);
+        assertThat(recordNull.bytes()).isEqualTo(ByteArray.empty());
+        assertThat(recordEmpty.bytes()).isEqualTo(ByteArray.empty());
     }
 
     @Test
     void messageType() {
-        // when
-        Throwable thrown = catchThrowable(() -> OtherMessageRecord.builder().address(null).build());
+        // given
+        OtherMessageRecord recordNull = OtherMessageRecord.builder().address(null).build();
+        OtherMessageRecord recordEmpty = OtherMessageRecord.builder().address(OtherMessageAddress.empty()).build();
 
-        // then
-        assertThat(thrown)
-                .isInstanceOf(NullPointerException.class);
+        // when then
+        assertThat(recordNull).isEqualTo(recordEmpty);
+        assertThat(recordNull.address()).isEqualTo(OtherMessageAddress.empty());
+        assertThat(recordEmpty.address()).isEqualTo(OtherMessageAddress.empty());
+    }
+
+    @Test
+    void enumType() {
+        // given
+        SimpleEnumMessage recordNull = SimpleEnumMessage.builder().order(null).build();
+        SimpleEnumMessage recordEmpty = SimpleEnumMessage.builder().order(SimpleEnum.defaultValue()).build();
+
+        // when then
+        assertThat(recordNull).isEqualTo(recordEmpty);
+        assertThat(recordNull.order()).isEqualTo(SimpleEnum.FIRST);
+        assertThat(recordNull.orderValue()).isEqualTo(0);
+        assertThat(recordEmpty.order()).isEqualTo(SimpleEnum.FIRST);
+        assertThat(recordEmpty.orderValue()).isEqualTo(0);
     }
 }

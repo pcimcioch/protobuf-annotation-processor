@@ -13,6 +13,7 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import static com.github.pcimcioch.protobuf.code.MethodBody.body;
 import static com.github.pcimcioch.protobuf.code.MethodBody.param;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 final class MessageFactory {
     private final EncodingFactory encodingFactory = new EncodingFactory();
@@ -26,6 +27,9 @@ final class MessageFactory {
             addField(source, field);
             if (field.protoKind() == ENUM) {
                 addEnumGetter(source, field);
+            }
+            if (field.protoKind() == MESSAGE) {
+                addMessageGetter(source, field);
             }
         }
         addConstructor(source, message);
@@ -52,8 +56,8 @@ final class MessageFactory {
     }
 
     private void addEnumGetter(JavaRecordSource source, FieldDefinition field) {
-        MethodBody body = body("return $enumType.forNumber($valueName);",
-                param("enumType", field.type()),
+        MethodBody body = body("return $EnumType.forNumber($valueName);",
+                param("EnumType", field.type()),
                 param("valueName", field.javaFieldName())
         );
 
@@ -62,6 +66,21 @@ final class MessageFactory {
                 .setReturnType(field.type().canonicalName())
                 .setName(field.name())
                 .setBody(body.toString());
+        field.handleDeprecated(method);
+    }
+
+    private void addMessageGetter(JavaRecordSource source, FieldDefinition field) {
+        MethodBody body = body("return $field == null ? $FieldType.empty() : $field;",
+                param("field", field.javaFieldName()),
+                param("FieldType", field.javaFieldType())
+        );
+
+        MethodSource<JavaRecordSource> method = source.addMethod()
+                .setPublic()
+                .setReturnType(field.javaFieldType().canonicalName())
+                .setName(field.javaFieldName())
+                .setBody(body.toString());
+        method.addAnnotation(Override.class);
         field.handleDeprecated(method);
     }
 
@@ -125,12 +144,7 @@ final class MessageFactory {
     }
 
     private void addBuilderMethods(JavaRecordSource source, MessageDefinition message) {
-        MethodBody toBuilderBody = body("return builder()");
-        for (FieldDefinition field : message.fields()) {
-            toBuilderBody.append(".$field($field)",
-                    param("field", field.javaFieldName()));
-        }
-        toBuilderBody.append(";");
+        MethodBody toBuilderBody = body("return builder().merge(this);");
 
         source.addMethod()
                 .setPublic()

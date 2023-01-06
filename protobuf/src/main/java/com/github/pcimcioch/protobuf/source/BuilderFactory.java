@@ -72,7 +72,7 @@ class BuilderFactory {
 
     private static String defaultOf(FieldDefinition field) {
         if (field.protoKind() == MESSAGE) {
-            return field.javaFieldType().canonicalName() + ".empty()";
+            return "null";
         }
         return DEFAULTS.get(field.javaFieldType());
     }
@@ -95,7 +95,7 @@ class BuilderFactory {
     }
 
     private void addEnumSetter(JavaClassSource builderClass, FieldDefinition field) {
-        MethodBody enumBody = body("return this.$valueName($enumName.number());",
+        MethodBody enumBody = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
         );
@@ -144,7 +144,11 @@ class BuilderFactory {
     }
 
     private void addMergeMethod(JavaClassSource builderClass, MessageDefinition message) {
-        MethodBody body = body();
+        MethodBody body = body("""
+                if (toMerge == null) {
+                    return this;
+                }
+                """);
         for (FieldDefinition field : message.fields()) {
             body.append("this.$field = $ProtoDto.merge(this.$field, toMerge.$field());",
                     param("field", field.javaFieldName()),

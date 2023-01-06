@@ -49,6 +49,18 @@ public class EnumerationDefinition {
         return elements;
     }
 
+    /**
+     * Returns default element - the element with number zero
+     *
+     * @return default element
+     */
+    public EnumerationElementDefinition defaultElement() {
+        return elements.stream()
+                .filter(e -> e.number() == 0)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Missing default enum element with number 0"));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

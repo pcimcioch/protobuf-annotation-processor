@@ -1,8 +1,8 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import java.util.List;
 /**
  * Creates java source code for the protobuf transfer objects
  */
+// TODO support nested types
+// TODO tests for nested types
 public class SourceFactory {
 
     private final MessageFactory messageFactory = new MessageFactory();

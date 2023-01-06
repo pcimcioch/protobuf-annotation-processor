@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Utils for Protobuf Data Transfer Objects
  */
@@ -67,7 +65,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static String copy(String value) {
-        return requireNonNull(value);
+        return value == null ? "" : value;
     }
 
     /**
@@ -77,7 +75,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static ByteArray copy(ByteArray value) {
-        return requireNonNull(value);
+        return value == null ? ByteArray.empty() : value;
     }
 
     /**
@@ -88,7 +86,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static <T extends ProtobufMessage<T>> T copy(T value) {
-        return requireNonNull(value);
+        return isDefault(value) ? null : value;
     }
 
     /**
@@ -148,7 +146,7 @@ public final class ProtoDto {
      * @return whether value is default
      */
     public static boolean isDefault(String value) {
-        return "".equals(value);
+        return value == null || "".equals(value);
     }
 
     /**
@@ -158,7 +156,7 @@ public final class ProtoDto {
      * @return whether value is default
      */
     public static boolean isDefault(ByteArray value) {
-        return value.isEmpty();
+        return value == null || value.isEmpty();
     }
 
     /**
@@ -167,9 +165,8 @@ public final class ProtoDto {
      * @param value value to check
      * @return whether value is default
      */
-    // TODO does protobuf support cyclic dependencies?
     public static boolean isDefault(ProtobufMessage<?> value) {
-        return value.isEmpty();
+        return value == null || value.isEmpty();
     }
 
     /**
@@ -258,6 +255,6 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static <T extends ProtobufMessage<T>> T merge(T current, T toMerge) {
-        return current.merge(toMerge);
+        return current == null ? toMerge : current.merge(toMerge);
     }
 }

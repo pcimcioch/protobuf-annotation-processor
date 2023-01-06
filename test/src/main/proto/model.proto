@@ -4,7 +4,7 @@ option java_package = "com.protobuf.model";
 option java_multiple_files = true;
 option optimize_for = LITE_RUNTIME;
 
-// Scalar
+// ******************** Scalar ********************
 message FullRecordProto {
   double _double = 1;
   float _float = 2;
@@ -23,7 +23,7 @@ message FullRecordProto {
   bytes bytes = 15;
 }
 
-// Enum
+// ******************** Enum ********************
 enum SimpleEnumProto {
   FIRST = 0;
   SECOND = 1;
@@ -34,7 +34,7 @@ message SimpleEnumMessageProto {
   SimpleEnumProto order = 1;
 }
 
-// Other Message
+// ******************** Other Message ********************
 message OtherMessageAddressProto {
   string street = 1;
   int32 number = 2;
@@ -51,4 +51,10 @@ message OtherMessageRecordProto{
   int32 age = 2;
   OtherMessageAddressProto address = 3;
   OtherMessageWorkProto work = 4;
+}
+
+// ******************** Self Reference ********************
+message SelfReferenceProto {
+  int32 value = 1;
+  SelfReferenceProto next = 2;
 }

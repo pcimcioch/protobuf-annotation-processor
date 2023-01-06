@@ -24,6 +24,7 @@ final class EnumerationFactory {
         addConstructor(source);
         addNumberMethod(source);
         addFactoryMethod(source, enumeration);
+        addDefaultValueMethod(source, enumeration);
 
         return source;
     }
@@ -107,5 +108,17 @@ final class EnumerationFactory {
                 .setName("forNumber")
                 .setBody(body.toString());
         method.addParameter(int.class, "number");
+    }
+
+    private void addDefaultValueMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
+        MethodBody body = body("return $ELEMENT;",
+                param("ELEMENT", enumeration.defaultElement().name()));
+
+        source.addMethod()
+                .setPublic()
+                .setStatic(true)
+                .setReturnType(enumeration.name().canonicalName())
+                .setName("defaultValue")
+                .setBody(body.toString());
     }
 }
