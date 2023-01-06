@@ -3,6 +3,9 @@ package com.github.pcimcioch.protobuf.source;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
+import org.jboss.forge.roaster.model.source.Import;
+import org.jboss.forge.roaster.model.source.JavaEnumSource;
+import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.JavaSource;
 
 import java.util.ArrayList;
@@ -11,41 +14,10 @@ import java.util.List;
 /**
  * Creates java source code for the protobuf transfer objects
  */
-// TODO support nested types
-// TODO tests for nested types
 public class SourceFactory {
 
     private final MessageFactory messageFactory = new MessageFactory();
     private final EnumerationFactory enumerationFactory = new EnumerationFactory();
-
-    /**
-     * Represents java source file
-     */
-    public static final class SourceFile {
-        private final JavaSource<?> source;
-
-        private SourceFile(JavaSource<?> source) {
-            this.source = source;
-        }
-
-        /**
-         * Returns canonical java file name
-         *
-         * @return canonical name
-         */
-        public String canonicalName() {
-            return source.getCanonicalName();
-        }
-
-        /**
-         * Returns java source code of the file
-         *
-         * @return source code
-         */
-        public String source() {
-            return source.toString();
-        }
-    }
 
     /**
      * Builds java source files from the protobuf model
@@ -53,17 +25,41 @@ public class SourceFactory {
      * @param model model
      * @return java source files
      */
-    public List<SourceFile> buildSource(ProtoDefinitions model) {
-        List<SourceFile> sources = new ArrayList<>();
-
-        for (MessageDefinition message : model.messages()) {
-            sources.add(new SourceFile(messageFactory.buildMessageRecord(message)));
-        }
-        for (EnumerationDefinition enumeration : model.enumerations()) {
-            sources.add(new SourceFile(enumerationFactory.buildEnumerationEnum(enumeration)));
-        }
+    public List<JavaSource<?>> buildSource(ProtoDefinitions model) {
+        List<JavaSource<?>> sources = new ArrayList<>();
+        model.messages().stream()
+                .map(this::buildMessage)
+                .forEach(sources::add);
+        model.enumerations().stream()
+                .map(this::buildEnum)
+                .forEach(sources::add);
 
         return sources;
+    }
+
+    private JavaRecordSource buildMessage(MessageDefinition message) {
+        JavaRecordSource source = messageFactory.buildMessageRecord(message);
+        message.messages().stream()
+                .map(this::buildMessage)
+                .forEach(r -> addNested(source, r));
+        message.enumerations().stream()
+                .map(this::buildEnum)
+                .forEach(e -> addNested(source, e));
+
+        return source;
+    }
+
+    private JavaEnumSource buildEnum(EnumerationDefinition enumeration) {
+        return enumerationFactory.buildEnumerationEnum(enumeration);
+    }
+
+    private void addNested(JavaRecordSource source, JavaSource<?> nested) {
+        source.addNestedType(nested);
+        for (Import anImport : nested.getImports()) {
+            if (!source.hasImport(anImport) && !anImport.getQualifiedName().startsWith(source.getCanonicalName())) {
+                source.addImport(anImport);
+            }
+        }
     }
 }
 

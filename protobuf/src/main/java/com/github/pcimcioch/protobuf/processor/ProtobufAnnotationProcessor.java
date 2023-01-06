@@ -10,7 +10,7 @@ import com.github.pcimcioch.protobuf.annotation.ProtoFiles;
 import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.source.SourceFactory;
-import com.github.pcimcioch.protobuf.source.SourceFactory.SourceFile;
+import org.jboss.forge.roaster.model.source.JavaSource;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -80,9 +80,9 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
     }
 
     private void generateSources(ProtoDefinitions model) throws IOException {
-        for (SourceFile sourceFile : sourceFactory.buildSource(model)) {
-            try (Writer writer = processingEnv.getFiler().createSourceFile(sourceFile.canonicalName()).openWriter()) {
-                writer.write(sourceFile.source());
+        for (JavaSource<?> sourceFile : sourceFactory.buildSource(model)) {
+            try (Writer writer = processingEnv.getFiler().createSourceFile(sourceFile.getCanonicalName()).openWriter()) {
+                writer.write(sourceFile.toString());
             }
         }
     }

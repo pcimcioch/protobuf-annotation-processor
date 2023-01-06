@@ -141,7 +141,7 @@ Current feature support:
 | Enumerations                | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | ✔️ Supported                         |
 | Reserved Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | ✔️ Supported                         |
 | Using Other Message Types   | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | ✔️ Supported                         |
-| Nested Types                | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | ⏳ Not yet supported                  |
+| Nested Types                | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | ✔️ Supported                         |
 | Unknown Fields              | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | ⏳ Not yet supported                  |
 | Maps                        | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | ⏳ Not yet supported                  |
 | Option java_package         | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported                         |
