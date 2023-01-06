@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static java.lang.Character.isLowerCase;
 
 class HierarchyResolver {
 
@@ -126,7 +127,7 @@ class HierarchyResolver {
         if (name.startsWith(".")) {
             return canonicalName(file.javaPackage() + name);
         }
-        if (name.contains(".")) {
+        if (name.contains(".") && isLowerCase(name.charAt(0))) {
             return canonicalName(name);
         }
         return canonicalName(file.javaPackage() + "." + name);
@@ -165,7 +166,7 @@ class HierarchyResolver {
 
         private void validate() {
             if (isEmpty()) {
-                throw new IllegalArgumentException("Type is not a message: " + type);
+                throw new IllegalArgumentException("Type is not defined: " + type);
             }
             if (isEnumeration() && !nested.isEmpty()) {
                 throw new IllegalArgumentException("Enumeration type can not contain any nested types");

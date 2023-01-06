@@ -20,6 +20,7 @@ import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ModelFactoryTest {
 
@@ -361,7 +362,7 @@ class ModelFactoryTest {
                             message("com.test.MessageThree",
                                     field("int32", "field", 1)),
                             message("com.example.Main",
-                                    field("MessageOne", "one" ,1),
+                                    field("MessageOne", "one", 1),
                                     field(".test.MessageTwo", "two", 2),
                                     field("com.test.MessageThree", "three", 3))));
 
@@ -397,7 +398,7 @@ class ModelFactoryTest {
                             enumeration("com.test.MessageThree",
                                     element("FIRST", 0)),
                             message("com.example.Main",
-                                    field("MessageOne", "one" ,1),
+                                    field("MessageOne", "one", 1),
                                     field(".test.MessageTwo", "two", 2),
                                     field("com.test.MessageThree", "three", 3))));
 
@@ -423,12 +424,116 @@ class ModelFactoryTest {
 
     @Nested
     class Nesting {
-        // TODO implement
+
+        @Test
+        void nestedClasses() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            message("NestedUser",
+                                    field("string", "name", 1),
+                                    field("int32", "age", 2),
+                                    field("NestedUser.NestedAddress", "address", 3),
+                                    field("NestedUser.NestedWork", "work", 4)),
+                            message("NestedUser.NestedAddress",
+                                    field("string", "street", 1),
+                                    field("int32", "number", 2)),
+                            message("NestedUser.NestedWork",
+                                    field("string", "name", 1),
+                                    field("int32", "year", 2),
+                                    field("NestedUser.NestedAddress", "address", 3),
+                                    field("NestedUser.NestedWork.NestedWorkType", "type", 4)),
+                            enumeration("NestedUser.NestedWork.NestedWorkType",
+                                    element("OFFICE", 0),
+                                    element("PHYSICAL", 1))));
+
+            // when
+            ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
+            ProtoDefinitions expected = definitions(
+                    messageDef("com.example.NestedUser",
+                            scalarField("string", "name", 1),
+                            scalarField("int32", "age", 2),
+                            messageField("com.example.NestedUser.NestedAddress", "address", 3),
+                            messageField("com.example.NestedUser.NestedWork", "work", 4),
+                            messageDef("com.example.NestedUser.NestedAddress",
+                                    scalarField("string", "street", 1),
+                                    scalarField("int32", "number", 2)),
+                            messageDef("com.example.NestedUser.NestedWork",
+                                    scalarField("string", "name", 1),
+                                    scalarField("int32", "year", 2),
+                                    messageField("com.example.NestedUser.NestedAddress", "address", 3),
+                                    enumField("com.example.NestedUser.NestedWork.NestedWorkType", "type", 4),
+                                    enumerationDef("com.example.NestedUser.NestedWork.NestedWorkType",
+                                            elementDef("OFFICE", 0),
+                                            elementDef("PHYSICAL", 1)))));
+
+            // then
+            assertThat(definitions).isEqualTo(expected);
+        }
     }
 
     @Nested
     class IncorrectModel {
-        // TODO implement
+
+        @Test
+        void unknownFieldType() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            message("Test",
+                                    field("Incorrect", "name", 1))));
+
+            // when then
+            assertThatThrownBy(() -> testee.buildProtoDefinitions(files))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Cannot find field type for com.example.Incorrect");
+        }
+
+        @Test
+        void duplicatedName() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            message("Test",
+                                    field("string", "name", 1)),
+                            enumeration("Test",
+                                    element("LEFT", 0))));
+
+            // when then
+            assertThatThrownBy(() -> testee.buildProtoDefinitions(files))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Duplicated type name com.example.Test");
+        }
+
+        @Test
+        void enumerationWithNestedType() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            enumeration("Test",
+                                    element("LEFT", 0)),
+                            message("Test.Nested",
+                                    field("string", "name", 1))));
+
+            // when then
+            assertThatThrownBy(() -> testee.buildProtoDefinitions(files))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Enumeration type can not contain any nested types");
+        }
+
+        @Test
+        void emptyNestedType() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            message("Parent.Child",
+                                    field("string", "name", 1))));
+
+            // when then
+            assertThatThrownBy(() -> testee.buildProtoDefinitions(files))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Type is not defined: com.example.Parent");
+        }
     }
 
     private static ProtoFiles files(ProtoFile... files) {
