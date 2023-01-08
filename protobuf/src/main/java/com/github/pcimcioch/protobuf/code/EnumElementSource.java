@@ -6,6 +6,9 @@ import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static java.util.Arrays.stream;
 
+/**
+ * Enum element source
+ */
 public final class EnumElementSource {
     private final String name;
     private final List<String> constructorParameters;
@@ -17,6 +20,13 @@ public final class EnumElementSource {
                 .toList();
     }
 
+    /**
+     * Create enum element source
+     *
+     * @param name                  name
+     * @param constructorParameters parameters
+     * @return enum element source
+     */
     public static EnumElementSource element(String name, Object... constructorParameters) {
         return new EnumElementSource(name, constructorParameters);
     }

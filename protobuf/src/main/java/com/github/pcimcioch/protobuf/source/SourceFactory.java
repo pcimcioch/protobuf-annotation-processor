@@ -1,12 +1,11 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.code.EnumSource;
+import com.github.pcimcioch.protobuf.code.RecordSource;
+import com.github.pcimcioch.protobuf.code.Source;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import org.jboss.forge.roaster.model.source.Import;
-import org.jboss.forge.roaster.model.source.JavaEnumSource;
-import org.jboss.forge.roaster.model.source.JavaRecordSource;
-import org.jboss.forge.roaster.model.source.JavaSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,8 @@ import java.util.List;
 /**
  * Creates java source code for the protobuf transfer objects
  */
-// TODO add tests where there are multiple classes with the same simple name. In different files and nested
+// TODO add tests where there are multiple classes with the same simple name "Builder". In different files and nested
 public class SourceFactory {
-
     private final MessageFactory messageFactory = new MessageFactory();
     private final EnumerationFactory enumerationFactory = new EnumerationFactory();
 
@@ -26,8 +24,8 @@ public class SourceFactory {
      * @param model model
      * @return java source files
      */
-    public List<JavaSource<?>> buildSource(ProtoDefinitions model) {
-        List<JavaSource<?>> sources = new ArrayList<>();
+    public List<Source> buildSource(ProtoDefinitions model) {
+        List<Source> sources = new ArrayList<>();
         model.messages().stream()
                 .map(this::buildMessage)
                 .forEach(sources::add);
@@ -38,29 +36,19 @@ public class SourceFactory {
         return sources;
     }
 
-    private JavaRecordSource buildMessage(MessageDefinition message) {
-        JavaRecordSource source = messageFactory.buildMessageRecord(message);
+    private RecordSource buildMessage(MessageDefinition message) {
+        RecordSource source = messageFactory.buildMessageRecord(message);
         message.messages().stream()
                 .map(this::buildMessage)
-                .forEach(r -> addNested(source, r));
+                .forEach(source::add);
         message.enumerations().stream()
                 .map(this::buildEnum)
-                .forEach(e -> addNested(source, e));
+                .forEach(source::add);
 
         return source;
     }
 
-    private JavaEnumSource buildEnum(EnumerationDefinition enumeration) {
+    private EnumSource buildEnum(EnumerationDefinition enumeration) {
         return enumerationFactory.buildEnumerationEnum(enumeration);
     }
-
-    private void addNested(JavaRecordSource source, JavaSource<?> nested) {
-        source.addNestedType(nested);
-        for (Import anImport : nested.getImports()) {
-            if (!source.hasImport(anImport) && !anImport.getQualifiedName().startsWith(source.getCanonicalName())) {
-                source.addImport(anImport);
-            }
-        }
-    }
 }
-

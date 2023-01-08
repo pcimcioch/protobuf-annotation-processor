@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.TypeName;
-import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 
 import java.util.Objects;
 import java.util.Set;
@@ -111,17 +110,6 @@ public final class FieldDefinition {
             return name + "Value";
         } else {
             return name;
-        }
-    }
-
-    /**
-     * Apply any deprecated annotations if this field is deprecated
-     *
-     * @param source source code
-     */
-    public void handleDeprecated(AnnotationTargetSource<?, ?> source) {
-        if (deprecated) {
-            source.addAnnotation(Deprecated.class);
         }
     }
 

@@ -1,27 +1,34 @@
 package com.github.pcimcioch.protobuf.source;
 
+import com.github.pcimcioch.protobuf.code.ClassSource;
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.InitializerSource;
+import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import com.github.pcimcioch.protobuf.code.TypeName;
-import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.source.FieldSource;
-import org.jboss.forge.roaster.model.source.JavaClassSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
+import static com.github.pcimcioch.protobuf.code.FieldSource.field;
+import static com.github.pcimcioch.protobuf.code.FinalSource.finalModifier;
+import static com.github.pcimcioch.protobuf.code.InitializerSource.initializer;
+import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
+import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
+import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class BuilderFactory {
-
     private static final Map<TypeName, String> DEFAULTS = Map.of(
             simpleName("double"), "0d",
             simpleName("float"), "0f",
@@ -32,84 +39,71 @@ class BuilderFactory {
             canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), "com.github.pcimcioch.protobuf.dto.ByteArray.empty()"
     );
 
-    JavaClassSource buildBuilder(MessageDefinition message) {
-        JavaClassSource builderClass = buildSourceFile(message);
+    ClassSource buildBuilderClass(MessageDefinition message) {
+        ClassSource builderClass = buildSourceFile(message);
 
         for (FieldDefinition field : message.fields()) {
             addField(builderClass, field);
-            addSetter(builderClass, field);
+            addSetter(builderClass, field, message);
             if (field.protoKind() == ENUM) {
-                addEnumSetter(builderClass, field);
+                addEnumSetter(builderClass, field, message);
             }
             if (field.protoKind() == MESSAGE) {
-                addFieldMerge(builderClass, field);
+                addFieldMerge(builderClass, field, message);
             }
         }
         addBuildMethod(builderClass, message);
         addMergeMethod(builderClass, message);
-        addEmptyRecord(builderClass, message);
 
         return builderClass;
     }
 
-    private JavaClassSource buildSourceFile(MessageDefinition message) {
-        return Roaster.create(JavaClassSource.class)
-                .setPublic()
-                .setStatic(true)
-                .setFinal(true)
-                .setPackage(message.builderName().packageName())
-                .setName(message.builderName().simpleName());
+    private ClassSource buildSourceFile(MessageDefinition message) {
+        return ClassSource.clazz(message.builderName())
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(finalModifier());
     }
 
-    private void addField(JavaClassSource builderClass, FieldDefinition field) {
-        FieldSource<JavaClassSource> fieldSource = builderClass.addField()
-                .setPrivate()
-                .setType(field.javaFieldType().canonicalName())
-                .setName(field.javaFieldName())
-                .setLiteralInitializer(defaultOf(field));
-        field.handleDeprecated(fieldSource);
+    private void addField(ClassSource builderClass, FieldDefinition field) {
+        builderClass.add(field(field.javaFieldType(), field.javaFieldName())
+                .set(privateVisibility())
+                .set(initializerOf(field))
+        );
     }
 
-    private static String defaultOf(FieldDefinition field) {
-        if (field.protoKind() == MESSAGE) {
-            return "null";
-        }
-        return DEFAULTS.get(field.javaFieldType());
-    }
-
-    private void addSetter(JavaClassSource builderClass, FieldDefinition field) {
+    private void addSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field = $field;
-                        return this;
-                        """,
+                        return this;""",
                 param("field", field.javaFieldName())
         );
 
-        MethodSource<JavaClassSource> method = builderClass.addMethod()
-                .setPublic()
-                .setReturnType(builderClass)
-                .setName(field.javaFieldName())
-                .setBody(body.toString());
-        method.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
-        field.handleDeprecated(method);
+        builderClass.add(method(field.javaFieldName())
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    private void addEnumSetter(JavaClassSource builderClass, FieldDefinition field) {
-        CodeBody enumBody = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
+    private void addEnumSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
         );
 
-        MethodSource<JavaClassSource> enumMethod = builderClass.addMethod()
-                .setPublic()
-                .setReturnType(builderClass)
-                .setName(field.name())
-                .setBody(enumBody.toString());
-        enumMethod.addParameter(field.type().canonicalName(), field.name());
-        field.handleDeprecated(enumMethod);
+        builderClass.add(method(field.name())
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.type(), field.name()))
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    private void addFieldMerge(JavaClassSource builderClass, FieldDefinition field) {
+    private void addFieldMerge(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field = $ProtoDto.merge(this.$field, $field);
                         return this;
@@ -118,16 +112,16 @@ class BuilderFactory {
                 param("ProtoDto", ProtoDto.class)
         );
 
-        MethodSource<JavaClassSource> method = builderClass.addMethod()
-                .setPublic()
-                .setReturnType(builderClass)
-                .setName(field.javaFieldNamePrefixed("merge"))
-                .setBody(body.toString());
-        method.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
-        field.handleDeprecated(method);
+        builderClass.add(method(field.javaFieldNamePrefixed("merge"))
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    private void addBuildMethod(JavaClassSource builderClass, MessageDefinition message) {
+    private void addBuildMethod(ClassSource builderClass, MessageDefinition message) {
         List<String> constructorParameters = message.fields().stream()
                 .map(FieldDefinition::javaFieldName)
                 .toList();
@@ -136,42 +130,39 @@ class BuilderFactory {
                 param("MessageType", message.name()),
                 param("constructorParameters", constructorParameters));
 
-        builderClass.addMethod()
-                .setPublic()
-                .setReturnType(message.name().canonicalName())
-                .setName("build")
-                .setBody(body.toString());
+        builderClass.add(method("build")
+                .set(publicVisibility())
+                .set(returns(message.name()))
+                .set(body)
+        );
     }
 
-    private void addMergeMethod(JavaClassSource builderClass, MessageDefinition message) {
+    private void addMergeMethod(ClassSource builderClass, MessageDefinition message) {
         CodeBody body = body("""
                 if (toMerge == null) {
                     return this;
                 }
                 """);
         for (FieldDefinition field : message.fields()) {
-            body.append("this.$field = $ProtoDto.merge(this.$field, toMerge.$field());",
+            body.appendln("this.$field = $ProtoDto.merge(this.$field, toMerge.$field());",
                     param("field", field.javaFieldName()),
                     param("ProtoDto", ProtoDto.class)
             );
         }
         body.append("return this;");
 
-        MethodSource<JavaClassSource> method = builderClass.addMethod()
-                .setPublic()
-                .setReturnType(builderClass)
-                .setName("merge")
-                .setBody(body.toString());
-        method.addParameter(message.name().canonicalName(), "toMerge");
+        builderClass.add(method("merge")
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(message.name(), "toMerge"))
+        );
     }
 
-    private void addEmptyRecord(JavaClassSource builderClass, MessageDefinition message) {
-        builderClass.addField()
-                .setPrivate()
-                .setStatic(true)
-                .setFinal(true)
-                .setType(message.name().canonicalName())
-                .setName("EMPTY")
-                .setLiteralInitializer("new Builder().build()");
+    private static InitializerSource initializerOf(FieldDefinition field) {
+        if (field.protoKind() == MESSAGE) {
+            return initializer("null");
+        }
+        return initializer(DEFAULTS.get(field.javaFieldType()));
     }
 }

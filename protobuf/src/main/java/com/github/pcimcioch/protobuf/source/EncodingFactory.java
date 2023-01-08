@@ -1,79 +1,86 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import org.jboss.forge.roaster.model.source.JavaRecordSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
+import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
+import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
+import static com.github.pcimcioch.protobuf.code.ThrowsSource.throwsEx;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 
 class EncodingFactory {
 
-    void addEncodingMethods(JavaRecordSource messageRecord, MessageDefinition message) {
+    void addEncodingMethods(RecordSource messageRecord, MessageDefinition message) {
         addMethodWriteToOutputStream(messageRecord);
         addMethodToByteArray(messageRecord);
         addMethodWriteToProtobufWriter(messageRecord, message);
     }
 
-    private void addMethodWriteToOutputStream(JavaRecordSource record) {
+    private void addMethodWriteToOutputStream(RecordSource record) {
         CodeBody body = body("writeTo(new $ProtobufWriter(output));",
-                param("ProtobufWriter", ProtobufWriter.class));
+                param("ProtobufWriter", ProtobufWriter.class)
+        );
 
-        MethodSource<JavaRecordSource> method = record.addMethod()
-                .setPublic()
-                .setReturnTypeVoid()
-                .setName("writeTo")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addParameter(OutputStream.class, "output");
-        method.addAnnotation(Override.class);
+        record.add(method("writeTo")
+                .set(publicVisibility())
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(parameter(OutputStream.class, "output"))
+                .add(annotation(Override.class))
+        );
     }
 
-    private void addMethodToByteArray(JavaRecordSource record) {
+    private void addMethodToByteArray(RecordSource record) {
         CodeBody body = body("""
                         $ByteArrayOutputStream output = new $ByteArrayOutputStream();
                         writeTo(new $ProtobufWriter(output));
                         return output.toByteArray();""",
                 param("ByteArrayOutputStream", ByteArrayOutputStream.class),
-                param("ProtobufWriter", ProtobufWriter.class));
+                param("ProtobufWriter", ProtobufWriter.class)
+        );
 
-        MethodSource<JavaRecordSource> method = record.addMethod()
-                .setPublic()
-                .setReturnType(byte[].class)
-                .setName("toByteArray")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addAnnotation(Override.class);
+        record.add(method("toByteArray")
+                .set(publicVisibility())
+                .set(returns(byte[].class))
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(annotation(Override.class))
+        );
     }
 
-    private void addMethodWriteToProtobufWriter(JavaRecordSource record, MessageDefinition message) {
+    private void addMethodWriteToProtobufWriter(RecordSource record, MessageDefinition message) {
         CodeBody body = body();
 
         for (FieldDefinition field : message.fields()) {
+            body.appendExceptFirst("\n");
             body.append(encodingCode(field),
                     param("number", field.number()),
                     param("name", field.javaFieldName())
             );
         }
 
-        MethodSource<JavaRecordSource> method = record.addMethod()
-                .setPrivate()
-                .setReturnTypeVoid()
-                .setName("writeTo")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addParameter(ProtobufWriter.class, "writer");
+        record.add(method("writeTo")
+                .set(privateVisibility())
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(parameter(ProtobufWriter.class, "writer"))
+        );
     }
 
     private String encodingCode(FieldDefinition field) {
-        return switch(field.protoKind()) {
+        return switch (field.protoKind()) {
             case DOUBLE -> "writer._double($number, $name);";
             case FLOAT -> "writer._float($number, $name);";
             case INT32, ENUM -> "writer.int32($number, $name);";

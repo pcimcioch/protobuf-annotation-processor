@@ -30,10 +30,24 @@ public final class CodeBody {
         return new Parameter(key, value.toString());
     }
 
+    /**
+     * Creates parameter used in body template substitution
+     *
+     * @param key   substitution key
+     * @param value substitution value
+     * @return parameter
+     */
     public static Parameter param(String key, Class<?> value) {
         return new Parameter(key, value.getCanonicalName());
     }
 
+    /**
+     * Creates parameter used in body template substitution. Values will be delimited with ", "
+     *
+     * @param key    substitution key
+     * @param values substitution values
+     * @return parameter
+     */
     public static Parameter param(String key, List<?> values) {
         String value = values.stream()
                 .map(Object::toString)
@@ -41,6 +55,14 @@ public final class CodeBody {
         return new Parameter(key, value);
     }
 
+    /**
+     * Creates parameter used in body template substitution. Values will be delimited with given delimiter
+     *
+     * @param key       substitution key
+     * @param values    substitution values
+     * @param delimiter delimiter
+     * @return parameter
+     */
     public static Parameter param(String key, List<?> values, String delimiter) {
         String value = values.stream()
                 .map(Object::toString)
@@ -48,6 +70,17 @@ public final class CodeBody {
         return new Parameter(key, value);
     }
 
+    /**
+     * Creates parameter used in body template substitution. Values will be delimited with given delimiter and
+     * prefixed and suffixed with given values
+     *
+     * @param key       substitution key
+     * @param values    substitution values
+     * @param delimiter delimiter
+     * @param prefix    prefix
+     * @param suffix    suffix
+     * @return parameter
+     */
     public static Parameter param(String key, List<?> values, String delimiter, String prefix, String suffix) {
         String value = values.stream()
                 .map(Object::toString)
@@ -55,6 +88,19 @@ public final class CodeBody {
         return new Parameter(key, value);
     }
 
+    /**
+     * Creates parameter used in body template substitution. Values will be delimited with given delimiter and
+     * prefixed and suffixed with given values.
+     * If values are empty then empty will be used
+     *
+     * @param key       substitution key
+     * @param values    substitution values
+     * @param delimiter delimiter
+     * @param prefix    prefix
+     * @param suffix    suffix
+     * @param empty     empty
+     * @return parameter
+     */
     public static Parameter param(String key, List<?> values, String delimiter, String prefix, String suffix, String empty) {
         StringJoiner joiner = new StringJoiner(delimiter, prefix, suffix);
         joiner.setEmptyValue(empty);
@@ -100,6 +146,13 @@ public final class CodeBody {
         return this;
     }
 
+    /**
+     * Appends source code body template to the body and the new line at the end
+     *
+     * @param sourceTemplate source code template
+     * @param parameters     parameters to fill in source code template
+     * @return method body with new code appended
+     */
     public CodeBody appendln(String sourceTemplate, Parameter... parameters) {
         append(sourceTemplate, parameters);
         builder.append("\n");
@@ -119,6 +172,12 @@ public final class CodeBody {
         return this;
     }
 
+    /**
+     * Appends source code body and the new line at the end
+     *
+     * @param body source code to append
+     * @return method body with new code appended
+     */
     public CodeBody appendln(CodeBody body) {
         append(body);
         builder.append("\n");

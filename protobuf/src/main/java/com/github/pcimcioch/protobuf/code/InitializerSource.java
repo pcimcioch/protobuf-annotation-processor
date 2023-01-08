@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.code;
 
+/**
+ * Initializer source
+ */
 public final class InitializerSource {
     private final String value;
 
@@ -7,6 +10,12 @@ public final class InitializerSource {
         this.value = value;
     }
 
+    /**
+     * Create new initializer source
+     *
+     * @param value initializer
+     * @return initializer source
+     */
     public static InitializerSource initializer(String value) {
         return new InitializerSource(value);
     }

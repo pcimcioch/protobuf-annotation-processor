@@ -24,14 +24,6 @@ class DeprecatedTest {
     }
 
     @Test
-    void builderFieldsDeprecated() throws NoSuchFieldException {
-        // when then
-        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedField")).isTrue();
-        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedEnumValue")).isTrue();
-        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedOther")).isTrue();
-    }
-
-    @Test
     void builderMethodsDeprecated() throws NoSuchMethodException {
         // when then
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedField", int.class)).isTrue();

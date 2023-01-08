@@ -2,23 +2,43 @@ package com.github.pcimcioch.protobuf.code;
 
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 
-public final class CanonicalConstructorSource {
+/**
+ * Compact constructor source
+ */
+public final class CompactConstructorSource {
     private String visibility = "";
     private String body = "";
 
-    private CanonicalConstructorSource() {
+    private CompactConstructorSource() {
     }
 
-    public static CanonicalConstructorSource canonicalConstructor() {
-        return new CanonicalConstructorSource();
+    /**
+     * Create new compact constructor
+     *
+     * @return compact constructor
+     */
+    public static CompactConstructorSource compactConstructor() {
+        return new CompactConstructorSource();
     }
 
-    public CanonicalConstructorSource set(CodeBody body) {
+    /**
+     * Set body
+     *
+     * @param body body
+     * @return source
+     */
+    public CompactConstructorSource set(CodeBody body) {
         this.body = body.toString();
         return this;
     }
 
-    public CanonicalConstructorSource set(VisibilitySource visibilitySource) {
+    /**
+     * Set visibility
+     *
+     * @param visibilitySource visibility
+     * @return source
+     */
+    public CompactConstructorSource set(VisibilitySource visibilitySource) {
         this.visibility = visibilitySource.toString();
         return this;
     }
@@ -28,6 +48,12 @@ public final class CanonicalConstructorSource {
         throw new IllegalStateException("Call toString(String)");
     }
 
+    /**
+     * To source code
+     *
+     * @param className class name
+     * @return code
+     */
     public String toString(String className) {
         return CodeBody.body("""
                         $visibility $ClassName {

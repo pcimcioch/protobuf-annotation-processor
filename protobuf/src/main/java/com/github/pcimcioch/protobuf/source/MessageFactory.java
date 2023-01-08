@@ -1,27 +1,37 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
-import org.jboss.forge.roaster.model.source.JavaRecordSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
+import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
+import static com.github.pcimcioch.protobuf.code.CompactConstructorSource.compactConstructor;
+import static com.github.pcimcioch.protobuf.code.FieldSource.field;
+import static com.github.pcimcioch.protobuf.code.FinalSource.finalModifier;
+import static com.github.pcimcioch.protobuf.code.ImplementsSource.implementz;
+import static com.github.pcimcioch.protobuf.code.InitializerSource.initializer;
+import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
+import static com.github.pcimcioch.protobuf.code.RecordSource.record;
+import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
+import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
-final class MessageFactory {
+class MessageFactory {
     private final EncodingFactory encodingFactory = new EncodingFactory();
     private final DecodingFactory decodingFactory = new DecodingFactory();
     private final BuilderFactory builderFactory = new BuilderFactory();
 
-    JavaRecordSource buildMessageRecord(MessageDefinition message) {
-        JavaRecordSource source = buildSourceFile(message);
+    RecordSource buildMessageRecord(MessageDefinition message) {
+        RecordSource source = buildSourceFile(message);
 
         for (FieldDefinition field : message.fields()) {
             addField(source, field);
@@ -43,127 +53,127 @@ final class MessageFactory {
         return source;
     }
 
-    private JavaRecordSource buildSourceFile(MessageDefinition message) {
-        return Roaster.create(JavaRecordSource.class)
-                .setPackage(message.name().packageName())
-                .setName(message.name().simpleName())
-                .addInterface(ProtobufMessage.class.getCanonicalName() + "<" + message.name().simpleName() + ">");
+    private RecordSource buildSourceFile(MessageDefinition message) {
+        return record(message.name())
+                .set(publicVisibility())
+                .add(implementz(ProtobufMessage.class.getCanonicalName() + "<" + message.name().canonicalName() + ">"));
     }
 
-    private void addField(JavaRecordSource source, FieldDefinition field) {
-        JavaRecordComponentSource component = source.addRecordComponent(field.javaFieldType().canonicalName(), field.javaFieldName());
-        field.handleDeprecated(component);
+    private void addField(RecordSource source, FieldDefinition field) {
+        source.add(parameter(field.javaFieldType(), field.javaFieldName())
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    private void addEnumGetter(JavaRecordSource source, FieldDefinition field) {
+    private void addEnumGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $EnumType.forNumber($valueName);",
                 param("EnumType", field.type()),
                 param("valueName", field.javaFieldName())
         );
 
-        MethodSource<JavaRecordSource> method = source.addMethod()
-                .setPublic()
-                .setReturnType(field.type().canonicalName())
-                .setName(field.name())
-                .setBody(body.toString());
-        field.handleDeprecated(method);
+        source.add(method(field.name())
+                .set(publicVisibility())
+                .set(returns(field.type()))
+                .set(body)
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    private void addMessageGetter(JavaRecordSource source, FieldDefinition field) {
+    private void addMessageGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $field == null ? $FieldType.empty() : $field;",
                 param("field", field.javaFieldName()),
                 param("FieldType", field.javaFieldType())
         );
 
-        MethodSource<JavaRecordSource> method = source.addMethod()
-                .setPublic()
-                .setReturnType(field.javaFieldType().canonicalName())
-                .setName(field.javaFieldName())
-                .setBody(body.toString());
-        method.addAnnotation(Override.class);
-        field.handleDeprecated(method);
+        source.add(method(field.javaFieldName())
+                .set(publicVisibility())
+                .set(returns(field.javaFieldType()))
+                .set(body)
+                .add(annotation(Override.class))
+                .addIf(annotation(Deprecated.class), field.deprecated())
+        );
     }
 
-    // TODO [improvement] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
-    private void addConstructor(JavaRecordSource source, MessageDefinition message) {
+    private void addConstructor(RecordSource source, MessageDefinition message) {
         CodeBody body = body();
-
         for (FieldDefinition field : message.fields()) {
-            body.append("this.$fieldName = $ProtoDto.copy($fieldName);",
+            body.append("$fieldName = $ProtoDto.copy($fieldName);",
                     param("fieldName", field.javaFieldName()),
-                    param("ProtoDto", ProtoDto.class));
+                    param("ProtoDto", ProtoDto.class)
+            );
         }
 
-        MethodSource<JavaRecordSource> constructor = source.addMethod()
-                .setPublic()
-                .setConstructor(true)
-                .setBody(body.toString());
-
-        for (FieldDefinition field : message.fields()) {
-            constructor.addParameter(field.javaFieldType().canonicalName(), field.javaFieldName());
-        }
+        source.add(compactConstructor()
+                .set(publicVisibility())
+                .set(body)
+        );
     }
 
-    private void addEncodingMethods(JavaRecordSource source, MessageDefinition message) {
+    private void addEncodingMethods(RecordSource source, MessageDefinition message) {
         encodingFactory.addEncodingMethods(source, message);
     }
 
-    private void addDecodingMethods(JavaRecordSource source, MessageDefinition message) {
+    private void addDecodingMethods(RecordSource source, MessageDefinition message) {
         decodingFactory.addDecodingMethods(source, message);
     }
 
-    private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
-        // TODO [improvement] EMPTY should be in this record, not the builder https://github.com/forge/roaster/issues/279
-        CodeBody emptyBody = body("return Builder.EMPTY;");
-        source.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(message.name().canonicalName())
-                .setName("empty")
-                .setBody(emptyBody.toString());
+    private void addEmptyMethods(RecordSource source, MessageDefinition message) {
+        source.add(field(message.name(), "EMPTY")
+                .set(privateVisibility())
+                .set(staticModifier())
+                .set(finalModifier())
+                .set(initializer("new Builder().build()"))
+        );
 
-        CodeBody isEmptyBody = body("return empty().equals(this);");
-        MethodSource<JavaRecordSource> isEmptyMethod = source.addMethod()
-                .setPublic()
-                .setReturnType(boolean.class)
-                .setName("isEmpty")
-                .setBody(isEmptyBody.toString());
-        isEmptyMethod.addAnnotation(Override.class);
+        CodeBody emptyBody = body("return EMPTY;");
+        source.add(method("empty")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(message.name()))
+                .set(emptyBody)
+        );
+
+        CodeBody isEmptyBody = body("return EMPTY.equals(this);");
+        source.add(method("isEmpty")
+                .set(publicVisibility())
+                .set(returns(boolean.class))
+                .set(isEmptyBody)
+                .add(annotation(Override.class))
+        );
     }
 
-    private void addMergeMethod(JavaRecordSource source, MessageDefinition message) {
+    private void addMergeMethod(RecordSource source, MessageDefinition message) {
         CodeBody body = body("return toBuilder().merge(toMerge).build();");
 
-        MethodSource<JavaRecordSource> method = source.addMethod()
-                .setPublic()
-                .setReturnType(message.name().simpleName())
-                .setName("merge")
-                .setBody(body.toString());
-        method.addAnnotation(Override.class);
-        method.addParameter(message.name().simpleName(), "toMerge");
+        source.add(method("merge")
+                .set(publicVisibility())
+                .set(returns(message.name()))
+                .set(body)
+                .add(annotation(Override.class))
+                .add(parameter(message.name(), "toMerge"))
+        );
     }
 
-    private void addBuilderMethods(JavaRecordSource source, MessageDefinition message) {
+    private void addBuilderMethods(RecordSource source, MessageDefinition message) {
         CodeBody toBuilderBody = body("return builder().merge(this);");
+        source.add(method("toBuilder")
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(toBuilderBody)
+        );
 
-        source.addMethod()
-                .setPublic()
-                .setReturnType(message.builderName().canonicalName())
-                .setName("toBuilder")
-                .setBody(toBuilderBody.toString());
-
-        CodeBody builderBody = body(
-                "return new $BuilderType();",
-                param("BuilderType", message.builderName()));
-        source.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(message.builderName().canonicalName())
-                .setName("builder")
-                .setBody(builderBody.toString());
+        CodeBody builderBody = body("return new $BuilderType();",
+                param("BuilderType", message.builderName())
+        );
+        source.add(method("builder")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(message.builderName()))
+                .set(builderBody)
+        );
     }
 
-    private void addBuilderClass(JavaRecordSource source, MessageDefinition message) {
-        source.addNestedType(builderFactory.buildBuilder(message));
+    private void addBuilderClass(RecordSource source, MessageDefinition message) {
+        source.add(builderFactory.buildBuilderClass(message));
     }
 }

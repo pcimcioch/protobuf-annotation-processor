@@ -6,9 +6,6 @@ plugins {
 
 dependencies {
     api(project(":protobuf-api"))
-
-    implementation("org.jboss.forge.roaster:roaster-api:2.28.0.Final")
-    runtimeOnly("org.jboss.forge.roaster:roaster-jdt:2.28.0.Final")
 }
 
 java {

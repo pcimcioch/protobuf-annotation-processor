@@ -1,24 +1,38 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.EnumElementSource;
+import com.github.pcimcioch.protobuf.code.EnumSource;
 import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
-import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.source.JavaEnumSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
+import static com.github.pcimcioch.protobuf.code.ConstructorSource.constructor;
+import static com.github.pcimcioch.protobuf.code.EnumElementSource.element;
+import static com.github.pcimcioch.protobuf.code.EnumSource.enumeration;
+import static com.github.pcimcioch.protobuf.code.FieldSource.field;
+import static com.github.pcimcioch.protobuf.code.FinalSource.finalModifier;
+import static com.github.pcimcioch.protobuf.code.ImplementsSource.implementz;
+import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
+import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
+import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 import static com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
 
-final class EnumerationFactory {
+class EnumerationFactory {
 
-    JavaEnumSource buildEnumerationEnum(EnumerationDefinition enumeration) {
-        JavaEnumSource source = buildSourceFile(enumeration);
+    private static final EnumElementSource UNRECOGNIZED_ELEMENT = element(UNRECOGNIZED_ELEMENT_NAME, -1);
+
+    EnumSource buildEnumerationEnum(EnumerationDefinition enumeration) {
+        EnumSource source = buildSourceFile(enumeration);
         addElements(source, enumeration);
         addNumberField(source);
         addConstructor(source);
@@ -29,96 +43,90 @@ final class EnumerationFactory {
         return source;
     }
 
-    private JavaEnumSource buildSourceFile(EnumerationDefinition enumeration) {
-        return Roaster.create(JavaEnumSource.class)
-                .setPackage(enumeration.name().packageName())
-                .setName(enumeration.name().simpleName())
-                .addInterface(ProtobufEnumeration.class);
+    private EnumSource buildSourceFile(EnumerationDefinition enumeration) {
+        return enumeration(enumeration.name())
+                .set(publicVisibility())
+                .add(implementz(ProtobufEnumeration.class));
     }
 
-    private void addElements(JavaEnumSource source, EnumerationDefinition enumeration) {
+    private void addElements(EnumSource source, EnumerationDefinition enumeration) {
         for (EnumerationElementDefinition element : enumeration.elements()) {
-            source.addEnumConstant()
-                    .setName(element.name())
-                    .setConstructorArguments(String.valueOf(element.number()));
+            source.add(element(element.name(), element.number()));
         }
 
-        source.addEnumConstant()
-                .setName(UNRECOGNIZED_ELEMENT_NAME)
-                .setConstructorArguments("-1");
+        source.add(UNRECOGNIZED_ELEMENT);
     }
 
-    private void addNumberField(JavaEnumSource source) {
-        source.addField()
-                .setPrivate()
-                .setFinal(true)
-                .setName("number");
+    private void addNumberField(EnumSource source) {
+        source.add(field(int.class, "number")
+                .set(privateVisibility())
+                .set(finalModifier())
+        );
     }
 
-    private void addConstructor(JavaEnumSource source) {
-        CodeBody body = body("this.number = number;");
-
-        MethodSource<JavaEnumSource> constructor = source.addMethod()
-                .setConstructor(true)
-                .setBody(body.toString());
-        constructor.addParameter(int.class, "number");
+    private void addConstructor(EnumSource source) {
+        source.add(constructor()
+                .set(body("this.number = number;"))
+                .add(parameter(int.class, "number"))
+        );
     }
 
-    private void addNumberMethod(JavaEnumSource source) {
+    private void addNumberMethod(EnumSource source) {
         CodeBody body = body("""
                         if (this == $unrecognized) {
                           throw new IllegalArgumentException("Unrecognized enum does not have a number");
                         }
-                        return number;
-                        """,
+                        return number;""",
                 param("unrecognized", UNRECOGNIZED_ELEMENT_NAME)
         );
 
-        MethodSource<JavaEnumSource> method = source.addMethod()
-                .setPublic()
-                .setReturnType(int.class)
-                .setName("number")
-                .setBody(body.toString());
-        method.addAnnotation(Override.class);
+        source.add(method("number")
+                .set(publicVisibility())
+                .set(returns(int.class))
+                .set(body)
+                .add(annotation(Override.class))
+        );
     }
 
-    private void addFactoryMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
+    private void addFactoryMethod(EnumSource source, EnumerationDefinition enumeration) {
         CodeBody body = body();
 
-        body.append("return switch(number) {");
+        body.appendln("return switch(number) {");
+
         Set<Integer> numbers = new HashSet<>();
         for (EnumerationElementDefinition element : enumeration.elements()) {
             if (numbers.add(element.number())) {
-                body.append("case $number -> $name;",
+                body.appendln("case $number -> $name;",
                         param("number", element.number()),
                         param("name", element.name())
                 );
             }
         }
         body
-                .append("default -> $unrecognized;",
+                .appendln("default -> $unrecognized;",
                         param("unrecognized", UNRECOGNIZED_ELEMENT_NAME)
                 )
                 .append("};");
 
-        MethodSource<JavaEnumSource> method = source.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(enumeration.name().canonicalName())
-                .setName("forNumber")
-                .setBody(body.toString());
-        method.addParameter(int.class, "number");
+        source.add(method("forNumber")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(enumeration.name()))
+                .set(body)
+                .add(parameter(int.class, "number"))
+        );
     }
 
-    private void addDefaultValueMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
+    private void addDefaultValueMethod(EnumSource source, EnumerationDefinition enumeration) {
         CodeBody body = body("return $ELEMENT;",
-                param("ELEMENT", enumeration.defaultElement().name()));
+                param("ELEMENT", enumeration.defaultElement().name())
+        );
 
-        source.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(enumeration.name().canonicalName())
-                .setName("defaultValue")
-                .setBody(body.toString());
+        source.add(method("defaultValue")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(enumeration.name()))
+                .set(body)
+        );
     }
 }

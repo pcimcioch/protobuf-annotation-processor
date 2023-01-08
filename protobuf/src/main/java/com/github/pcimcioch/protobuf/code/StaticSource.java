@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.code;
 
+/**
+ * Static modifier source
+ */
 public final class StaticSource {
     private final String value;
 
@@ -7,6 +10,11 @@ public final class StaticSource {
         this.value = value;
     }
 
+    /**
+     * Create new static modifier source
+     *
+     * @return static modifier source
+     */
     public static StaticSource staticModifier() {
         return new StaticSource("static");
     }

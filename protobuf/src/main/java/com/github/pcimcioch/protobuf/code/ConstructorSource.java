@@ -5,30 +5,44 @@ import java.util.List;
 
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 
+/**
+ * Constructor source
+ */
 public final class ConstructorSource {
-    private String visibility = "";
     private String body = "";
     private final List<String> parameters = new ArrayList<>();
 
     private ConstructorSource() {
     }
 
+    /**
+     * Create constructor source
+     *
+     * @return constructor source
+     */
     public static ConstructorSource constructor() {
         return new ConstructorSource();
     }
 
+    /**
+     * Add parameter
+     *
+     * @param parameterSource parameter
+     * @return source
+     */
     public ConstructorSource add(ParameterSource parameterSource) {
         parameters.add(parameterSource.toString());
         return this;
     }
 
+    /**
+     * Set body
+     *
+     * @param body body
+     * @return source
+     */
     public ConstructorSource set(CodeBody body) {
         this.body = body.toString();
-        return this;
-    }
-
-    public ConstructorSource set(VisibilitySource visibilitySource) {
-        this.visibility = visibilitySource.toString();
         return this;
     }
 
@@ -37,13 +51,18 @@ public final class ConstructorSource {
         throw new IllegalStateException("Call toString(String)");
     }
 
+    /**
+     * To source code
+     *
+     * @param className class name
+     * @return code
+     */
     public String toString(String className) {
         return CodeBody.body("""
-                        $visibility $ClassName($parameters) {
+                        $ClassName($parameters) {
                             $body
                         }
                         """,
-                param("visibility", visibility),
                 param("ClassName", className),
                 param("parameters", parameters),
                 param("body", body)

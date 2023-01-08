@@ -15,6 +15,7 @@ protobuf {
     }
 }
 
+// TODO can it be removed?
 //sourceSets {
 //    named("main") {
 //        java.srcDir("build/generated/source/proto/main/java")

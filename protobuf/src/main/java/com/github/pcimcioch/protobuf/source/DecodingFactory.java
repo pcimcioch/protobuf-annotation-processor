@@ -1,12 +1,11 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.io.ProtobufReader;
 import com.github.pcimcioch.protobuf.io.Tag;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import org.jboss.forge.roaster.model.source.JavaRecordSource;
-import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,45 +13,54 @@ import java.io.InputStream;
 
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
+import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
+import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
+import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
+import static com.github.pcimcioch.protobuf.code.ThrowsSource.throwsEx;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
+import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 
 class DecodingFactory {
 
-    void addDecodingMethods(JavaRecordSource messageRecord, MessageDefinition message) {
+    void addDecodingMethods(RecordSource messageRecord, MessageDefinition message) {
         addParseBytesMethod(messageRecord, message);
         addParseStreamMethod(messageRecord, message);
         addParseProtobufInputMethod(messageRecord, message);
     }
 
-    private void addParseBytesMethod(JavaRecordSource messageRecord, MessageDefinition message) {
+    private void addParseBytesMethod(RecordSource messageRecord, MessageDefinition message) {
         CodeBody body = body("return parse(new $ProtobufReader(new $ByteArrayInputStream(data)));",
                 param("ProtobufReader", ProtobufReader.class),
-                param("ByteArrayInputStream", ByteArrayInputStream.class));
+                param("ByteArrayInputStream", ByteArrayInputStream.class)
+        );
 
-        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(message.name().canonicalName())
-                .setName("parse")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addParameter(byte[].class, "data");
+        messageRecord.add(method("parse")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(message.name()))
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(parameter(byte[].class, "data"))
+        );
     }
 
-    private void addParseStreamMethod(JavaRecordSource messageRecord, MessageDefinition message) {
+    private void addParseStreamMethod(RecordSource messageRecord, MessageDefinition message) {
         CodeBody body = body("return parse(new $ProtobufReader(stream));",
-                param("ProtobufReader", ProtobufReader.class));
+                param("ProtobufReader", ProtobufReader.class)
+        );
 
-        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
-                .setPublic()
-                .setStatic(true)
-                .setReturnType(message.name().canonicalName())
-                .setName("parse")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addParameter(InputStream.class, "stream");
+        messageRecord.add(method("parse")
+                .set(publicVisibility())
+                .set(staticModifier())
+                .set(returns(message.name()))
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(parameter(InputStream.class, "stream"))
+        );
     }
 
-    private void addParseProtobufInputMethod(JavaRecordSource messageRecord, MessageDefinition message) {
+    private void addParseProtobufInputMethod(RecordSource messageRecord, MessageDefinition message) {
         CodeBody body = body("""
                         $BuilderType builder = new $BuilderType();
                                         
@@ -61,20 +69,20 @@ class DecodingFactory {
                             $readFields
                         }
                                         
-                        return builder.build();
-                        """,
+                        return builder.build();""",
                 param("BuilderType", message.builderName()),
                 param("Tag", Tag.class),
-                param("readFields", readFields(message)));
+                param("readFields", readFields(message))
+        );
 
-        MethodSource<JavaRecordSource> method = messageRecord.addMethod()
-                .setPrivate()
-                .setStatic(true)
-                .setReturnType(message.name().canonicalName())
-                .setName("parse")
-                .addThrows(IOException.class)
-                .setBody(body.toString());
-        method.addParameter(ProtobufReader.class, "reader");
+        messageRecord.add(method("parse")
+                .set(privateVisibility())
+                .set(staticModifier())
+                .set(returns(message.name()))
+                .add(throwsEx(IOException.class))
+                .set(body)
+                .add(parameter(ProtobufReader.class, "reader"))
+        );
     }
 
     private CodeBody readFields(MessageDefinition message) {
@@ -83,8 +91,8 @@ class DecodingFactory {
         for (FieldDefinition field : message.fields()) {
             body
                     .appendExceptFirst("else ")
-                    .append("if (tag.number() == $fieldNumber) {", param("fieldNumber", field.number()))
-                    .append(decodingCode(field))
+                    .appendln("if (tag.number() == $fieldNumber) {", param("fieldNumber", field.number()))
+                    .appendln(decodingCode(field))
                     .append("}");
         }
 
