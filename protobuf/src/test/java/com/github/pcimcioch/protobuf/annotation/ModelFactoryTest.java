@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.IntFunction;
 
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,12 +1,14 @@
 package com.github.pcimcioch.protobuf.model.field;
 
-import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 import org.jboss.forge.roaster.model.source.AnnotationTargetSource;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BYTES;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
@@ -24,8 +26,6 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.STRING;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT32;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
 import static java.util.Locale.ENGLISH;
@@ -123,6 +123,15 @@ public final class FieldDefinition {
         if (deprecated) {
             source.addAnnotation(Deprecated.class);
         }
+    }
+
+    /**
+     * Returns whether field is deprecated
+     *
+     * @return whether field is deprecated
+     */
+    public boolean deprecated() {
+        return deprecated;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -10,8 +10,8 @@ import org.jboss.forge.roaster.model.source.JavaRecordComponentSource;
 import org.jboss.forge.roaster.model.source.JavaRecordSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
 
-import static com.github.pcimcioch.protobuf.code.MethodBody.body;
-import static com.github.pcimcioch.protobuf.code.MethodBody.param;
+import static com.github.pcimcioch.protobuf.code.CodeBody.body;
+import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
@@ -56,7 +56,7 @@ final class MessageFactory {
     }
 
     private void addEnumGetter(JavaRecordSource source, FieldDefinition field) {
-        MethodBody body = body("return $EnumType.forNumber($valueName);",
+        CodeBody body = body("return $EnumType.forNumber($valueName);",
                 param("EnumType", field.type()),
                 param("valueName", field.javaFieldName())
         );
@@ -70,7 +70,7 @@ final class MessageFactory {
     }
 
     private void addMessageGetter(JavaRecordSource source, FieldDefinition field) {
-        MethodBody body = body("return $field == null ? $FieldType.empty() : $field;",
+        CodeBody body = body("return $field == null ? $FieldType.empty() : $field;",
                 param("field", field.javaFieldName()),
                 param("FieldType", field.javaFieldType())
         );
@@ -86,7 +86,7 @@ final class MessageFactory {
 
     // TODO [improvement] it would be better to use compact constructor here. Waiting for https://github.com/forge/roaster/issues/275
     private void addConstructor(JavaRecordSource source, MessageDefinition message) {
-        MethodBody body = body();
+        CodeBody body = body();
 
         for (FieldDefinition field : message.fields()) {
             body.append("this.$fieldName = $ProtoDto.copy($fieldName);",
@@ -114,7 +114,7 @@ final class MessageFactory {
 
     private void addEmptyMethods(JavaRecordSource source, MessageDefinition message) {
         // TODO [improvement] EMPTY should be in this record, not the builder https://github.com/forge/roaster/issues/279
-        MethodBody emptyBody = body("return Builder.EMPTY;");
+        CodeBody emptyBody = body("return Builder.EMPTY;");
         source.addMethod()
                 .setPublic()
                 .setStatic(true)
@@ -122,7 +122,7 @@ final class MessageFactory {
                 .setName("empty")
                 .setBody(emptyBody.toString());
 
-        MethodBody isEmptyBody = body("return empty().equals(this);");
+        CodeBody isEmptyBody = body("return empty().equals(this);");
         MethodSource<JavaRecordSource> isEmptyMethod = source.addMethod()
                 .setPublic()
                 .setReturnType(boolean.class)
@@ -132,7 +132,7 @@ final class MessageFactory {
     }
 
     private void addMergeMethod(JavaRecordSource source, MessageDefinition message) {
-        MethodBody body = body("return toBuilder().merge(toMerge).build();");
+        CodeBody body = body("return toBuilder().merge(toMerge).build();");
 
         MethodSource<JavaRecordSource> method = source.addMethod()
                 .setPublic()
@@ -144,7 +144,7 @@ final class MessageFactory {
     }
 
     private void addBuilderMethods(JavaRecordSource source, MessageDefinition message) {
-        MethodBody toBuilderBody = body("return builder().merge(this);");
+        CodeBody toBuilderBody = body("return builder().merge(this);");
 
         source.addMethod()
                 .setPublic()
@@ -152,7 +152,7 @@ final class MessageFactory {
                 .setName("toBuilder")
                 .setBody(toBuilderBody.toString());
 
-        MethodBody builderBody = body(
+        CodeBody builderBody = body(
                 "return new $BuilderType();",
                 param("BuilderType", message.builderName()));
         source.addMethod()

@@ -1,10 +1,10 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
-import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
@@ -13,12 +13,12 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.pcimcioch.protobuf.code.MethodBody.body;
-import static com.github.pcimcioch.protobuf.code.MethodBody.param;
+import static com.github.pcimcioch.protobuf.code.CodeBody.body;
+import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
 
 class BuilderFactory {
 
@@ -78,7 +78,7 @@ class BuilderFactory {
     }
 
     private void addSetter(JavaClassSource builderClass, FieldDefinition field) {
-        MethodBody body = body("""
+        CodeBody body = body("""
                         this.$field = $field;
                         return this;
                         """,
@@ -95,7 +95,7 @@ class BuilderFactory {
     }
 
     private void addEnumSetter(JavaClassSource builderClass, FieldDefinition field) {
-        MethodBody enumBody = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
+        CodeBody enumBody = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
         );
@@ -110,7 +110,7 @@ class BuilderFactory {
     }
 
     private void addFieldMerge(JavaClassSource builderClass, FieldDefinition field) {
-        MethodBody body = body("""
+        CodeBody body = body("""
                         this.$field = $ProtoDto.merge(this.$field, $field);
                         return this;
                         """,
@@ -132,7 +132,7 @@ class BuilderFactory {
                 .map(FieldDefinition::javaFieldName)
                 .toList();
 
-        MethodBody body = body("return new $MessageType($constructorParameters);",
+        CodeBody body = body("return new $MessageType($constructorParameters);",
                 param("MessageType", message.name()),
                 param("constructorParameters", constructorParameters));
 
@@ -144,7 +144,7 @@ class BuilderFactory {
     }
 
     private void addMergeMethod(JavaClassSource builderClass, MessageDefinition message) {
-        MethodBody body = body("""
+        CodeBody body = body("""
                 if (toMerge == null) {
                     return this;
                 }

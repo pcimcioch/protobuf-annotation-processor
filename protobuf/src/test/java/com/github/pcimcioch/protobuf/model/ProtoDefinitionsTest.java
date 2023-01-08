@@ -5,7 +5,7 @@ import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
-import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

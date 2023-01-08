@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.model.type;
+package com.github.pcimcioch.protobuf.code;
 
 import java.util.Arrays;
 import java.util.LinkedList;

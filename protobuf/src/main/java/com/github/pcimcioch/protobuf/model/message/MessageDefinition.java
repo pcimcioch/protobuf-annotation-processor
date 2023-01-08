@@ -1,12 +1,12 @@
 package com.github.pcimcioch.protobuf.model.message;
 
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertAllMatches;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertContainsNoNulls;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNoDuplicates;

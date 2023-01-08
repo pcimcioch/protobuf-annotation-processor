@@ -1,6 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
-import com.github.pcimcioch.protobuf.code.MethodBody;
+import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
@@ -11,8 +11,8 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.code.MethodBody.body;
-import static com.github.pcimcioch.protobuf.code.MethodBody.param;
+import static com.github.pcimcioch.protobuf.code.CodeBody.body;
+import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition.UNRECOGNIZED_ELEMENT_NAME;
 
 final class EnumerationFactory {
@@ -56,7 +56,7 @@ final class EnumerationFactory {
     }
 
     private void addConstructor(JavaEnumSource source) {
-        MethodBody body = body("this.number = number;");
+        CodeBody body = body("this.number = number;");
 
         MethodSource<JavaEnumSource> constructor = source.addMethod()
                 .setConstructor(true)
@@ -65,7 +65,7 @@ final class EnumerationFactory {
     }
 
     private void addNumberMethod(JavaEnumSource source) {
-        MethodBody body = body("""
+        CodeBody body = body("""
                         if (this == $unrecognized) {
                           throw new IllegalArgumentException("Unrecognized enum does not have a number");
                         }
@@ -83,7 +83,7 @@ final class EnumerationFactory {
     }
 
     private void addFactoryMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
-        MethodBody body = body();
+        CodeBody body = body();
 
         body.append("return switch(number) {");
         Set<Integer> numbers = new HashSet<>();
@@ -111,7 +111,7 @@ final class EnumerationFactory {
     }
 
     private void addDefaultValueMethod(JavaEnumSource source, EnumerationDefinition enumeration) {
-        MethodBody body = body("return $ELEMENT;",
+        CodeBody body = body("return $ELEMENT;",
                 param("ELEMENT", enumeration.defaultElement().name()));
 
         source.addMethod()

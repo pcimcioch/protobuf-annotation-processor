@@ -1,5 +1,6 @@
-package com.github.pcimcioch.protobuf.model.type;
+package com.github.pcimcioch.protobuf.code;
 
+import com.github.pcimcioch.protobuf.code.TypeName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -8,8 +9,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
-import static com.github.pcimcioch.protobuf.model.type.TypeName.simpleName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -2,7 +2,7 @@ package com.github.pcimcioch.protobuf.annotation;
 
 import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.type.TypeName;
+import com.github.pcimcioch.protobuf.code.TypeName;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.pcimcioch.protobuf.model.type.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static java.lang.Character.isLowerCase;
 
 class HierarchyResolver {
