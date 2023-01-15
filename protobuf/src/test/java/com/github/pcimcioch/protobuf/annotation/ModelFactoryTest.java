@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.annotation;
 import com.github.pcimcioch.protobuf.annotation.Enumeration.Element;
 import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
+import com.github.pcimcioch.protobuf.model.ProtoDefinitionsWrapper;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
@@ -449,6 +450,8 @@ class ModelFactoryTest {
 
             // when
             ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
+
+            // then
             ProtoDefinitions expected = definitions(
                     messageDef("com.example.NestedUser",
                             scalarField("string", "name", 1),
@@ -467,7 +470,6 @@ class ModelFactoryTest {
                                             elementDef("OFFICE", 0),
                                             elementDef("PHYSICAL", 1)))));
 
-            // then
             assertThat(definitions).isEqualTo(expected);
         }
     }
@@ -529,10 +531,30 @@ class ModelFactoryTest {
                             message("Parent.Child",
                                     field("string", "name", 1))));
 
+            // when
+            ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
+
+            // then
+            ProtoDefinitions expected = definitions(
+                    wrapper("com.example.Parent", definitions(
+                            messageDef("com.example.Parent.Child",
+                                    scalarField("string", "name", 1)))));
+
+            assertThat(definitions).isEqualTo(expected);
+        }
+
+        @Test
+        void emptyDeeperNestedType() {
+            // given
+            ProtoFiles files = files(
+                    file("com.example",
+                            message("Parent.Child.DeepChild",
+                                    field("string", "name", 1))));
+
             // when then
             assertThatThrownBy(() -> testee.buildProtoDefinitions(files))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Type is not defined: com.example.Parent");
+                    .hasMessage("Type is not defined: com.example.Parent.Child");
         }
     }
 
@@ -706,16 +728,15 @@ class ModelFactoryTest {
     }
 
     private static ProtoDefinitions definitions(Object... elements) {
-        List<MessageDefinition> messages = stream(elements)
-                .filter(MessageDefinition.class::isInstance)
-                .map(MessageDefinition.class::cast)
-                .toList();
-        List<EnumerationDefinition> enumerations = stream(elements)
-                .filter(EnumerationDefinition.class::isInstance)
-                .map(EnumerationDefinition.class::cast)
-                .toList();
+        return new ProtoDefinitions(
+                extractList(MessageDefinition.class, elements),
+                extractList(EnumerationDefinition.class, elements),
+                extractList(ProtoDefinitionsWrapper.class, elements)
+        );
+    }
 
-        return new ProtoDefinitions(messages, enumerations);
+    private static ProtoDefinitionsWrapper wrapper(String name, ProtoDefinitions definitions) {
+        return new ProtoDefinitionsWrapper(canonicalName(name), definitions);
     }
 
     private static MessageDefinition messageDef(String name, Object... elements) {

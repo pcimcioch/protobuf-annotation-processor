@@ -37,8 +37,7 @@ import static javax.tools.Diagnostic.Kind.ERROR;
         "com.github.pcimcioch.protobuf.annotation.Message",
         "com.github.pcimcioch.protobuf.annotation.Messages",
         "com.github.pcimcioch.protobuf.annotation.Enumeration",
-        "com.github.pcimcioch.protobuf.annotation.Enumerations",
-        "com.github.pcimcioch.protobuf.annotation.Option"
+        "com.github.pcimcioch.protobuf.annotation.Enumerations"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class ProtobufAnnotationProcessor extends AbstractProcessor {

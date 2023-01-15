@@ -1,8 +1,8 @@
 package com.github.pcimcioch.protobuf.annotation;
 
 import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
-import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -40,6 +40,11 @@ class HierarchyResolver {
                 .filter(Clazz::isEnumeration);
     }
 
+    Stream<Clazz> wrappers() {
+        return classes.values().stream()
+                .filter(Clazz::isEmpty);
+    }
+
     FieldState fieldStateOf(Field field) {
         return fieldStates.get(field);
     }
@@ -56,7 +61,7 @@ class HierarchyResolver {
     }
 
     private void validate() {
-        classes.values().forEach(Clazz::validate);
+        classes.values().forEach(Clazz::validateFirst);
     }
 
     private void initFields(ProtoFiles files) {
@@ -124,13 +129,15 @@ class HierarchyResolver {
         if (name == null) {
             return canonicalName("");
         }
+        String prefix = file.javaOuterClassName() == null ? file.javaPackage() : file.javaPackage() + "." + file.javaOuterClassName();
+
         if (name.startsWith(".")) {
-            return canonicalName(file.javaPackage() + name);
+            return canonicalName(prefix + name);
         }
         if (name.contains(".") && isLowerCase(name.charAt(0))) {
             return canonicalName(name);
         }
-        return canonicalName(file.javaPackage() + "." + name);
+        return canonicalName(prefix + "." + name);
     }
 
     static final class Clazz {
@@ -164,15 +171,23 @@ class HierarchyResolver {
                     .filter(Clazz::isEnumeration);
         }
 
-        private void validate() {
-            if (isEmpty()) {
-                throw new IllegalArgumentException("Type is not defined: " + type);
-            }
+        Stream<Clazz> wrappers() {
+            return nested.values().stream()
+                    .filter(Clazz::isEmpty);
+        }
+
+        private void validateFirst() {
             if (isEnumeration() && !nested.isEmpty()) {
                 throw new IllegalArgumentException("Enumeration type can not contain any nested types");
             }
+            nested.values().forEach(Clazz::validateNotFirst);
+        }
 
-            nested.values().forEach(Clazz::validate);
+        private void validateNotFirst() {
+            if (isEmpty()) {
+                throw new IllegalArgumentException("Type is not defined: " + type);
+            }
+            validateFirst();
         }
 
         private Clazz createNested(String clazz, TypeName type) {

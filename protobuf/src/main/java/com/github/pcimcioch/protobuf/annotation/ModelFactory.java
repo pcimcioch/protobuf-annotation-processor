@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.annotation.Enumeration.Element;
 import com.github.pcimcioch.protobuf.annotation.HierarchyResolver.Clazz;
 import com.github.pcimcioch.protobuf.annotation.HierarchyResolver.FieldState;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
+import com.github.pcimcioch.protobuf.model.ProtoDefinitionsWrapper;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
@@ -34,8 +35,9 @@ public class ModelFactory {
 
         List<MessageDefinition> messages = buildMessages(hierarchyResolver, hierarchyResolver.messages());
         List<EnumerationDefinition> enumerations = buildEnumerations(hierarchyResolver.enumerations());
+        List<ProtoDefinitionsWrapper> wrappers = buildWrappers(hierarchyResolver, hierarchyResolver.wrappers());
 
-        return new ProtoDefinitions(messages, enumerations);
+        return new ProtoDefinitions(messages, enumerations, wrappers);
     }
 
     private List<MessageDefinition> buildMessages(HierarchyResolver hierarchyResolver, Stream<Clazz> messages) {
@@ -67,8 +69,10 @@ public class ModelFactory {
 
         return switch (fieldState.kind()) {
             case SCALAR -> FieldDefinition.scalar(field.name(), field.number(), field.type(), field.deprecated());
-            case MESSAGE -> FieldDefinition.message(field.name(), field.number(), fieldState.type(), field.deprecated());
-            case ENUM -> FieldDefinition.enumeration(field.name(), field.number(), fieldState.type(), field.deprecated());
+            case MESSAGE ->
+                    FieldDefinition.message(field.name(), field.number(), fieldState.type(), field.deprecated());
+            case ENUM ->
+                    FieldDefinition.enumeration(field.name(), field.number(), fieldState.type(), field.deprecated());
             case UNKNOWN -> throw new IllegalArgumentException("Cannot find field type for " + fieldState.type());
         };
     }
@@ -110,5 +114,26 @@ public class ModelFactory {
                 .collect(toSet());
 
         return new ReservedDefinition(names, numbers, ranges);
+    }
+
+    private List<ProtoDefinitionsWrapper> buildWrappers(HierarchyResolver hierarchyResolver, Stream<Clazz> wrappers) {
+        return wrappers
+                .map(clazz -> buildWrapper(hierarchyResolver, clazz))
+                .toList();
+    }
+
+    private ProtoDefinitionsWrapper buildWrapper(HierarchyResolver hierarchyResolver, Clazz wrapper) {
+        return new ProtoDefinitionsWrapper(
+                wrapper.type(),
+                buildProtoDefinitions(hierarchyResolver, wrapper)
+        );
+    }
+
+    private ProtoDefinitions buildProtoDefinitions(HierarchyResolver hierarchyResolver, Clazz wrapper) {
+        return new ProtoDefinitions(
+                buildMessages(hierarchyResolver, wrapper.messages()),
+                buildEnumerations(wrapper.enumerations()),
+                buildWrappers(hierarchyResolver, wrapper.wrappers())
+        );
     }
 }

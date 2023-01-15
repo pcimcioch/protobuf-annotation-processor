@@ -1,19 +1,18 @@
 package com.github.pcimcioch.protobuf.model;
 
+import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
-import com.github.pcimcioch.protobuf.code.TypeName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -37,23 +36,29 @@ class ProtoDefinitionsTest {
                 enumeration("enum.com.example2.MyType"),
                 enumeration("enum.com.example.Parent.MyType")
         );
+        List<ProtoDefinitionsWrapper> wrappers = asList(
+                wrapper("wrapper.com.example.MyType"),
+                wrapper("wrapper.com.example.MyType2"),
+                wrapper("wrapper.com.example2.MyType"),
+                wrapper("wrapper.com.example.Parent.MyType")
+        );
 
         // when then
-        assertThatCode(() -> new ProtoDefinitions(messages, enumerations))
+        assertThatCode(() -> new ProtoDefinitions(messages, enumerations, wrappers))
                 .doesNotThrowAnyException();
     }
 
     @Test
     void empty() {
         // when then
-        assertThatCode(() -> new ProtoDefinitions(emptyList(), emptyList()))
+        assertThatCode(() -> new ProtoDefinitions(emptyList(), emptyList(), emptyList()))
                 .doesNotThrowAnyException();
     }
 
     @Test
     void nullMessages() {
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(null, emptyList()))
+        assertThatThrownBy(() -> new ProtoDefinitions(null, emptyList(), emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Messages can be empty, but not null");
     }
@@ -61,9 +66,17 @@ class ProtoDefinitionsTest {
     @Test
     void nullEnumerations() {
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), null))
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), null, emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Enumerations can be empty, but not null");
+    }
+
+    @Test
+    void nullWrappers() {
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), emptyList(), null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Wrappers can be empty, but not null");
     }
 
     @Test
@@ -76,7 +89,7 @@ class ProtoDefinitionsTest {
         );
 
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(messages, emptyList()))
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, emptyList(), emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated message name: com.example.MyType");
     }
@@ -91,9 +104,24 @@ class ProtoDefinitionsTest {
         );
 
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), enumerations))
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), enumerations, emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated enumeration name: com.example.MyType");
+    }
+
+    @Test
+    void duplicatedWrapperName() {
+        // given
+        List<ProtoDefinitionsWrapper> wrappers = asList(
+                wrapper("com.example.MyType"),
+                wrapper("com.example.OtherType"),
+                wrapper("com.example.MyType")
+        );
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), emptyList(), wrappers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Duplicated wrapper name: com.example.MyType");
     }
 
     @Test
@@ -107,25 +135,53 @@ class ProtoDefinitionsTest {
         );
 
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations, emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Duplicated enumeration name: com.example.MyType");
     }
 
     @Test
-    void nullMessage() {
+    void duplicatedNameAmongMessageAndWrapper() {
         // given
-        List<MessageDefinition> messages = new ArrayList<>();
-        messages.add(message("com.example.MyType"));
-        messages.add(null);
-
-        List<EnumerationDefinition> enumerations = asList(
-                enumeration("enum.com.example.MyType"),
-                enumeration("enum.com.example.MyType2")
+        List<MessageDefinition> messages = singletonList(
+                message("com.example.MyType")
+        );
+        List<ProtoDefinitionsWrapper> wrappers = singletonList(
+                wrapper("com.example.MyType")
         );
 
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, emptyList(), wrappers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Duplicated wrapper name: com.example.MyType");
+    }
+
+    @Test
+    void duplicatedNameAmongEnumerationAndWrapper() {
+        // given
+        List<EnumerationDefinition> enumerations = singletonList(
+                enumeration("com.example.MyType")
+        );
+        List<ProtoDefinitionsWrapper> wrappers = singletonList(
+                wrapper("com.example.MyType")
+        );
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), enumerations, wrappers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Duplicated wrapper name: com.example.MyType");
+    }
+
+    @Test
+    void nullMessage() {
+        // given
+        List<MessageDefinition> messages = asList(
+                message("com.example.MyType"),
+                null
+        );
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(messages, emptyList(), emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null message");
     }
@@ -133,20 +189,29 @@ class ProtoDefinitionsTest {
     @Test
     void nullEnumeration() {
         // given
-        List<MessageDefinition> messages = asList(
-                message("com.example.MyType"),
-                message("com.example.MyType2")
-        );
-
         List<EnumerationDefinition> enumerations = asList(
                 enumeration("enum.com.example.MyType"),
                 null
         );
 
         // when then
-        assertThatThrownBy(() -> new ProtoDefinitions(messages, enumerations))
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), enumerations, emptyList()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Null enumeration");
+    }
+
+    @Test
+    void nullWrapper() {
+        // given
+        List<ProtoDefinitionsWrapper> wrappers = asList(
+                wrapper("enum.com.example.MyType"),
+                null
+        );
+
+        // when then
+        assertThatThrownBy(() -> new ProtoDefinitions(emptyList(), emptyList(), wrappers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Null wrapper");
     }
 
     private static MessageDefinition message(String typeCanonical) {
@@ -167,5 +232,11 @@ class ProtoDefinitionsTest {
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
         return new EnumerationDefinition(type, elements, false, nothingReserved);
+    }
+
+    private static ProtoDefinitionsWrapper wrapper(String typeCanonical) {
+        TypeName type = canonicalName(typeCanonical);
+
+        return new ProtoDefinitionsWrapper(type, new ProtoDefinitions(emptyList(), emptyList(), emptyList()));
     }
 }
