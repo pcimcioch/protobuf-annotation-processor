@@ -543,6 +543,7 @@ class ModelFactoryTest {
     private static ProtoFile file(String javaPackage, Object... annotations) {
         return new ProtoFile(
                 javaPackage,
+                null,
                 extractList(Message.class, annotations),
                 extractList(Enumeration.class, annotations)
         );

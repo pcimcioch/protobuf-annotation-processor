@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.processor;
 
 import com.github.pcimcioch.protobuf.annotation.Enumeration;
 import com.github.pcimcioch.protobuf.annotation.Enumerations;
+import com.github.pcimcioch.protobuf.annotation.JavaMultipleFiles;
 import com.github.pcimcioch.protobuf.annotation.JavaPackage;
 import com.github.pcimcioch.protobuf.annotation.Message;
 import com.github.pcimcioch.protobuf.annotation.Messages;
@@ -71,8 +72,11 @@ public class ProtobufAnnotationProcessor extends AbstractProcessor {
         String javaPackage = Optional.ofNullable(element.getAnnotation(JavaPackage.class))
                 .map(JavaPackage::value)
                 .orElseGet(() -> packageOf(element).getQualifiedName().toString());
+        String javaOuterClassName = Optional.ofNullable(element.getAnnotation(JavaMultipleFiles.class))
+                .map(JavaMultipleFiles::javaOuterClassName)
+                .orElse(null);
 
-        return new ProtoFile(javaPackage, List.of(messages), List.of(enumerations));
+        return new ProtoFile(javaPackage, javaOuterClassName, List.of(messages), List.of(enumerations));
     }
 
     private ProtoDefinitions buildModel(ProtoFiles protoFiles) {

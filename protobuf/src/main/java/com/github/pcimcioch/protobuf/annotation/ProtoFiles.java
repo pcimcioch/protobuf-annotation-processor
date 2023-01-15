@@ -12,10 +12,12 @@ public record ProtoFiles(List<ProtoFile> files) {
     /**
      * Represents protobuf file that contains multiple protobuf structures
      *
-     * @param javaPackage  java_package option
-     * @param messages     message annotations
-     * @param enumerations enumerations
+     * @param javaPackage        java_package option
+     * @param javaOuterClassName java_outer_classname option
+     * @param messages           message annotations
+     * @param enumerations       enumerations
      */
-    public record ProtoFile(String javaPackage, List<Message> messages, List<Enumeration> enumerations) {
+    public record ProtoFile(String javaPackage, String javaOuterClassName, List<Message> messages,
+                            List<Enumeration> enumerations) {
     }
 }

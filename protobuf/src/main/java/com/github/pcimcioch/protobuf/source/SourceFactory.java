@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Creates java source code for the protobuf transfer objects
  */
-// TODO add tests where there are multiple classes with the same simple name "Builder". In different files and nested
 public class SourceFactory {
     private final MessageFactory messageFactory = new MessageFactory();
     private final EnumerationFactory enumerationFactory = new EnumerationFactory();

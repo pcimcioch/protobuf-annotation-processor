@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-java:3.21.7")
+    implementation("com.google.protobuf:protobuf-java:3.21.12")
 
     implementation(project(":protobuf-api"))
     annotationProcessor(project(":protobuf"))
@@ -11,7 +11,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.21.7"
+        artifact = "com.google.protobuf:protoc:3.21.12"
     }
 }
 
