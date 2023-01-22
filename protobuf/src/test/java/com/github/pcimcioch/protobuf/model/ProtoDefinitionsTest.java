@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.model;
 
 import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldRules;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -217,7 +218,7 @@ class ProtoDefinitionsTest {
     private static MessageDefinition message(String typeCanonical) {
         TypeName type = canonicalName(typeCanonical);
         List<FieldDefinition> fields = singletonList(
-                scalar("name1", 1, "bool", false)
+                scalar("name1", 1, "bool", new FieldRules(false, false))
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 

@@ -5,6 +5,7 @@ import com.github.pcimcioch.protobuf.annotation.ProtoFiles.ProtoFile;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitionsWrapper;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldRules;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -27,6 +28,9 @@ class ModelFactoryTest {
 
     private static final Reserved NO_RESERVED = reserved();
     private static final ReservedDefinition NO_RESERVED_DEF = reservedDef();
+    private static final FieldRules NO_RULES = new FieldRules(false, false);
+    private static final FieldRules DEPRECATED = new FieldRules(true, false);
+    private static final FieldRules REPEATED = new FieldRules(false, true);
 
     private final ModelFactory testee = new ModelFactory();
 
@@ -190,7 +194,7 @@ class ModelFactoryTest {
     }
 
     @Nested
-    class Deprecated {
+    class Rules {
 
         @Test
         void deprecatedFields() {
@@ -203,14 +207,14 @@ class ModelFactoryTest {
                                     element("RIGHT", 1)),
                             message("Address",
                                     field("string", "street", 1),
-                                    field("int32", "number", 2, true)),
+                                    field("int32", "number", 2, true, false)),
                             message("Other",
                                     field("double", "value", 1),
-                                    field("float", "deprecatedValue", 2, true),
+                                    field("float", "deprecatedValue", 2, true, false),
                                     field("MyEnum", "en", 3),
-                                    field("MyEnum", "enDeprecated", 4, true),
+                                    field("MyEnum", "enDeprecated", 4, true, false),
                                     field("Address", "add", 5),
-                                    field("Address", "addDeprecated", 6))));
+                                    field("Address", "addDeprecated", 6, true, false))));
 
             // when
             ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
@@ -222,14 +226,56 @@ class ModelFactoryTest {
                             elementDef("RIGHT", 1)),
                     messageDef("com.example.Address",
                             scalarField("string", "street", 1),
-                            scalarField("int32", "number", 2, true)),
+                            scalarField("int32", "number", 2, DEPRECATED)),
                     messageDef("com.example.Other",
                             scalarField("double", "value", 1),
-                            scalarField("float", "deprecatedValue", 2, true),
+                            scalarField("float", "deprecatedValue", 2, DEPRECATED),
                             enumField("com.example.MyEnum", "en", 3),
-                            enumField("com.example.MyEnum", "enDeprecated", 4, true),
+                            enumField("com.example.MyEnum", "enDeprecated", 4, DEPRECATED),
                             messageField("com.example.Address", "add", 5),
-                            messageField("com.example.Address", "addDeprecated", 6)));
+                            messageField("com.example.Address", "addDeprecated", 6, DEPRECATED)));
+
+            assertThat(definitions).isEqualTo(expected);
+        }
+
+        @Test
+        void repeatedFields() {
+            // given
+            ProtoFiles files = files(
+                    file(
+                            "com.example",
+                            enumeration("MyEnum",
+                                    element("LEFT", 0),
+                                    element("RIGHT", 1)),
+                            message("Address",
+                                    field("string", "street", 1),
+                                    field("int32", "number", 2, false, true)),
+                            message("Other",
+                                    field("double", "value", 1),
+                                    field("float", "repeatedValue", 2, false, true),
+                                    field("MyEnum", "en", 3),
+                                    field("MyEnum", "enRepeated", 4, false, true),
+                                    field("Address", "add", 5),
+                                    field("Address", "addRepeated", 6, false, true))));
+
+            // when
+            ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
+
+            // then
+            ProtoDefinitions expected = definitions(
+                    enumerationDef("com.example.MyEnum",
+                            elementDef("LEFT", 0),
+                            elementDef("RIGHT", 1)),
+                    messageDef("com.example.Address",
+                            scalarField("string", "street", 1),
+                            scalarField("int32", "number", 2, REPEATED)),
+                    messageDef("com.example.Other",
+                            scalarField("double", "value", 1),
+                            scalarField("float", "repeatedValue", 2, REPEATED),
+                            enumField("com.example.MyEnum", "en", 3),
+                            enumField("com.example.MyEnum", "enRepeated", 4, REPEATED),
+                            messageField("com.example.Address", "add", 5),
+                            messageField("com.example.Address", "addRepeated", 6, REPEATED)));
 
             assertThat(definitions).isEqualTo(expected);
         }
@@ -600,10 +646,10 @@ class ModelFactoryTest {
     }
 
     private static Field field(String type, String name, int number) {
-        return field(type, name, number, false);
+        return field(type, name, number, false, false);
     }
 
-    private static Field field(String type, String name, int number, boolean deprecated) {
+    private static Field field(String type, String name, int number, boolean deprecated, boolean repeated) {
         return new Field() {
             @Override
             public String type() {
@@ -623,6 +669,11 @@ class ModelFactoryTest {
             @Override
             public boolean deprecated() {
                 return deprecated;
+            }
+
+            @Override
+            public boolean repeated() {
+                return repeated;
             }
 
             @Override
@@ -754,27 +805,27 @@ class ModelFactoryTest {
     }
 
     private static FieldDefinition scalarField(String type, String name, int number) {
-        return scalarField(type, name, number, false);
+        return scalarField(type, name, number, NO_RULES);
     }
 
-    private static FieldDefinition scalarField(String type, String name, int number, boolean deprecated) {
-        return FieldDefinition.scalar(name, number, type, deprecated);
+    private static FieldDefinition scalarField(String type, String name, int number, FieldRules rules) {
+        return FieldDefinition.scalar(name, number, type, rules);
     }
 
     private static FieldDefinition enumField(String type, String name, int number) {
-        return enumField(type, name, number, false);
+        return enumField(type, name, number, NO_RULES);
     }
 
-    private static FieldDefinition enumField(String type, String name, int number, boolean deprecated) {
-        return FieldDefinition.enumeration(name, number, canonicalName(type), deprecated);
+    private static FieldDefinition enumField(String type, String name, int number, FieldRules rules) {
+        return FieldDefinition.enumeration(name, number, canonicalName(type), rules);
     }
 
     private static FieldDefinition messageField(String type, String name, int number) {
-        return messageField(type, name, number, false);
+        return messageField(type, name, number, NO_RULES);
     }
 
-    private static FieldDefinition messageField(String type, String name, int number, boolean deprecated) {
-        return FieldDefinition.message(name, number, canonicalName(type), deprecated);
+    private static FieldDefinition messageField(String type, String name, int number, FieldRules rules) {
+        return FieldDefinition.message(name, number, canonicalName(type), rules);
     }
 
     private static EnumerationDefinition enumerationDef(String name, EnumerationElementDefinition... elements) {

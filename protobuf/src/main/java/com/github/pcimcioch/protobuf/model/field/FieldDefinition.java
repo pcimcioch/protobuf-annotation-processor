@@ -32,6 +32,7 @@ import static java.util.Locale.ENGLISH;
 /**
  * Message field
  */
+// TODO add support for repeated fields
 public final class FieldDefinition {
 
     private static final TypeName ENUM_VALUE_TYPE = simpleName("int");
@@ -40,15 +41,15 @@ public final class FieldDefinition {
     private final String name;
     private final int number;
     private final TypeName type;
-    private final boolean deprecated;
+    private final FieldRules rules;
     private final ProtoKind protoKind;
 
-    private FieldDefinition(String name, int number, TypeName type, ProtoKind protoKind, boolean deprecated) {
+    private FieldDefinition(String name, int number, TypeName type, ProtoKind protoKind, FieldRules rules) {
         this.name = Valid.name(name);
         this.number = Valid.number(number);
         this.type = Valid.type(type);
         this.protoKind = Valid.protoType(protoKind);
-        this.deprecated = deprecated;
+        this.rules = Valid.rules(rules);
     }
 
     /**
@@ -114,12 +115,12 @@ public final class FieldDefinition {
     }
 
     /**
-     * Returns whether field is deprecated
+     * Returns field rules
      *
-     * @return whether field is deprecated
+     * @return field rules
      */
-    public boolean deprecated() {
-        return deprecated;
+    public FieldRules rules() {
+        return rules;
     }
 
     /**
@@ -137,41 +138,41 @@ public final class FieldDefinition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FieldDefinition that = (FieldDefinition) o;
-        return number == that.number && deprecated == that.deprecated && name.equals(that.name) && type.equals(that.type) && protoKind == that.protoKind;
+        return number == that.number && name.equals(that.name) && type.equals(that.type) && rules.equals(that.rules) && protoKind == that.protoKind;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, number, type, deprecated, protoKind);
+        return Objects.hash(name, number, type, rules, protoKind);
     }
 
     /**
      * Creates new scalar field
      *
-     * @param name       name
-     * @param number     number
-     * @param protoType  protobuf type name
-     * @param deprecated deprecated
+     * @param name      name
+     * @param number    number
+     * @param protoType protobuf type name
+     * @param rules     field rules
      * @return scalar field
      */
-    public static FieldDefinition scalar(String name, int number, String protoType, boolean deprecated) {
+    public static FieldDefinition scalar(String name, int number, String protoType, FieldRules rules) {
         return switch (protoType) {
-            case "double" -> new FieldDefinition(name, number, simpleName("double"), DOUBLE, deprecated);
-            case "float" -> new FieldDefinition(name, number, simpleName("float"), FLOAT, deprecated);
-            case "int32" -> new FieldDefinition(name, number, simpleName("int"), INT32, deprecated);
-            case "int64" -> new FieldDefinition(name, number, simpleName("long"), INT64, deprecated);
-            case "uint32" -> new FieldDefinition(name, number, simpleName("int"), UINT32, deprecated);
-            case "uint64" -> new FieldDefinition(name, number, simpleName("long"), UINT64, deprecated);
-            case "sint32" -> new FieldDefinition(name, number, simpleName("int"), SINT32, deprecated);
-            case "sint64" -> new FieldDefinition(name, number, simpleName("long"), SINT64, deprecated);
-            case "fixed32" -> new FieldDefinition(name, number, simpleName("int"), FIXED32, deprecated);
-            case "fixed64" -> new FieldDefinition(name, number, simpleName("long"), FIXED64, deprecated);
-            case "sfixed32" -> new FieldDefinition(name, number, simpleName("int"), SFIXED32, deprecated);
-            case "sfixed64" -> new FieldDefinition(name, number, simpleName("long"), SFIXED64, deprecated);
-            case "bool" -> new FieldDefinition(name, number, simpleName("boolean"), BOOL, deprecated);
-            case "string" -> new FieldDefinition(name, number, simpleName("String"), STRING, deprecated);
+            case "double" -> new FieldDefinition(name, number, simpleName("double"), DOUBLE, rules);
+            case "float" -> new FieldDefinition(name, number, simpleName("float"), FLOAT, rules);
+            case "int32" -> new FieldDefinition(name, number, simpleName("int"), INT32, rules);
+            case "int64" -> new FieldDefinition(name, number, simpleName("long"), INT64, rules);
+            case "uint32" -> new FieldDefinition(name, number, simpleName("int"), UINT32, rules);
+            case "uint64" -> new FieldDefinition(name, number, simpleName("long"), UINT64, rules);
+            case "sint32" -> new FieldDefinition(name, number, simpleName("int"), SINT32, rules);
+            case "sint64" -> new FieldDefinition(name, number, simpleName("long"), SINT64, rules);
+            case "fixed32" -> new FieldDefinition(name, number, simpleName("int"), FIXED32, rules);
+            case "fixed64" -> new FieldDefinition(name, number, simpleName("long"), FIXED64, rules);
+            case "sfixed32" -> new FieldDefinition(name, number, simpleName("int"), SFIXED32, rules);
+            case "sfixed64" -> new FieldDefinition(name, number, simpleName("long"), SFIXED64, rules);
+            case "bool" -> new FieldDefinition(name, number, simpleName("boolean"), BOOL, rules);
+            case "string" -> new FieldDefinition(name, number, simpleName("String"), STRING, rules);
             case "bytes" ->
-                    new FieldDefinition(name, number, canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES, deprecated);
+                    new FieldDefinition(name, number, canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES, rules);
             default -> throw new IllegalArgumentException("Incorrect protobuf scalar type: " + protoType);
         };
     }
@@ -189,27 +190,27 @@ public final class FieldDefinition {
     /**
      * Creates new enumeration field
      *
-     * @param name       name
-     * @param number     number
-     * @param type       type
-     * @param deprecated deprecated
+     * @param name   name
+     * @param number number
+     * @param type   type
+     * @param rules  field rules
      * @return new field
      */
-    public static FieldDefinition enumeration(String name, int number, TypeName type, boolean deprecated) {
-        return new FieldDefinition(name, number, type, ENUM, deprecated);
+    public static FieldDefinition enumeration(String name, int number, TypeName type, FieldRules rules) {
+        return new FieldDefinition(name, number, type, ENUM, rules);
     }
 
     /**
      * Creates new message field
      *
-     * @param name       name
-     * @param number     number
-     * @param type       type
-     * @param deprecated deprecated
+     * @param name   name
+     * @param number number
+     * @param type   type
+     * @param rules  field rules
      * @return new field
      */
-    public static FieldDefinition message(String name, int number, TypeName type, boolean deprecated) {
-        return new FieldDefinition(name, number, type, MESSAGE, deprecated);
+    public static FieldDefinition message(String name, int number, TypeName type, FieldRules rules) {
+        return new FieldDefinition(name, number, type, MESSAGE, rules);
     }
 
     /**
@@ -324,6 +325,12 @@ public final class FieldDefinition {
         private static ProtoKind protoType(ProtoKind type) {
             assertNonNull(type, "Must provide proto type");
             return type;
+        }
+
+        // TODO add tests
+        private static FieldRules rules(FieldRules rules) {
+            assertNonNull(rules, "Must provide rules");
+            return rules;
         }
     }
 }

@@ -10,6 +10,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class FieldDefinitionTest {
 
+    private static final FieldRules NO_RULES = new FieldRules(false, false);
+
     @ParameterizedTest
     @ValueSource(strings = {
             "name",
@@ -20,7 +22,7 @@ class FieldDefinitionTest {
     })
     void correctNames(String name) {
         // when then
-        assertThatCode(() -> FieldDefinition.scalar(name, 1, "bool", false))
+        assertThatCode(() -> FieldDefinition.scalar(name, 1, "bool", NO_RULES))
                 .doesNotThrowAnyException();
     }
 
@@ -33,7 +35,7 @@ class FieldDefinitionTest {
     @NullAndEmptySource
     void incorrectNames(String name) {
         // when then
-        assertThatThrownBy(() -> FieldDefinition.scalar(name, 1, "bool", false))
+        assertThatThrownBy(() -> FieldDefinition.scalar(name, 1, "bool", NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Incorrect field name");
     }
@@ -41,7 +43,7 @@ class FieldDefinitionTest {
     @Test
     void negativeNumber() {
         // when then
-        assertThatThrownBy(() -> FieldDefinition.scalar("name", -1, "bool", false))
+        assertThatThrownBy(() -> FieldDefinition.scalar("name", -1, "bool", NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -49,7 +51,7 @@ class FieldDefinitionTest {
     @Test
     void zeroNumber() {
         // when then
-        assertThatThrownBy(() -> FieldDefinition.scalar("name", 0, "bool", false))
+        assertThatThrownBy(() -> FieldDefinition.scalar("name", 0, "bool", NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Number must be positive");
     }
@@ -57,7 +59,7 @@ class FieldDefinitionTest {
     @Test
     void nullEnumType() {
         // when then
-        assertThatThrownBy(() -> FieldDefinition.enumeration("name", 1, null, false))
+        assertThatThrownBy(() -> FieldDefinition.enumeration("name", 1, null, NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Must provide field type");
     }
@@ -65,7 +67,7 @@ class FieldDefinitionTest {
     @Test
     void nullMessageType() {
         // when then
-        assertThatThrownBy(() -> FieldDefinition.message("name", 1, null, false))
+        assertThatThrownBy(() -> FieldDefinition.message("name", 1, null, NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Must provide field type");
     }

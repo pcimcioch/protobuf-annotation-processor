@@ -37,6 +37,13 @@ public @interface Field {
     boolean deprecated() default false;
 
     /**
+     * Whether field is repeated
+     *
+     * @return whether field is repeated
+     */
+    boolean repeated() default false;
+
+    /**
      * double
      */
     String _double = "double";

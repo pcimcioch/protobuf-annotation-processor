@@ -84,7 +84,7 @@ class BuilderFactory {
                 .set(returns(message.builderName()))
                 .set(body)
                 .add(parameter(field.javaFieldType(), field.javaFieldName()))
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
@@ -99,7 +99,7 @@ class BuilderFactory {
                 .set(returns(message.builderName()))
                 .set(body)
                 .add(parameter(field.type(), field.name()))
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
@@ -117,7 +117,7 @@ class BuilderFactory {
                 .set(returns(message.builderName()))
                 .set(body)
                 .add(parameter(field.javaFieldType(), field.javaFieldName()))
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 

@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.model;
 
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.model.field.FieldRules;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -106,7 +107,7 @@ class ProtoDefinitionsWrapperTest {
     private MessageDefinition message(String name) {
         return new MessageDefinition(
                 canonicalName(name),
-                List.of(scalar("field", 1, "int32", false)),
+                List.of(scalar("field", 1, "int32", new FieldRules(false, false))),
                 new ReservedDefinition(emptySet(), emptySet(), emptySet()),
                 emptyList(),
                 emptyList()

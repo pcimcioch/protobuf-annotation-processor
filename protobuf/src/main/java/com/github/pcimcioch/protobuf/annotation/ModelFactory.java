@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.annotation.HierarchyResolver.FieldState;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitions;
 import com.github.pcimcioch.protobuf.model.ProtoDefinitionsWrapper;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldRules;
 import com.github.pcimcioch.protobuf.model.message.EnumerationDefinition;
 import com.github.pcimcioch.protobuf.model.message.EnumerationElementDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -68,13 +69,17 @@ public class ModelFactory {
         FieldState fieldState = hierarchyResolver.fieldStateOf(field);
 
         return switch (fieldState.kind()) {
-            case SCALAR -> FieldDefinition.scalar(field.name(), field.number(), field.type(), field.deprecated());
+            case SCALAR -> FieldDefinition.scalar(field.name(), field.number(), field.type(), buildFieldRules(field));
             case MESSAGE ->
-                    FieldDefinition.message(field.name(), field.number(), fieldState.type(), field.deprecated());
+                    FieldDefinition.message(field.name(), field.number(), fieldState.type(), buildFieldRules(field));
             case ENUM ->
-                    FieldDefinition.enumeration(field.name(), field.number(), fieldState.type(), field.deprecated());
+                    FieldDefinition.enumeration(field.name(), field.number(), fieldState.type(), buildFieldRules(field));
             case UNKNOWN -> throw new IllegalArgumentException("Cannot find field type for " + fieldState.type());
         };
+    }
+
+    private FieldRules buildFieldRules(Field field) {
+        return new FieldRules(field.deprecated(), field.repeated());
     }
 
     private List<EnumerationDefinition> buildEnumerations(Stream<Clazz> enumerations) {

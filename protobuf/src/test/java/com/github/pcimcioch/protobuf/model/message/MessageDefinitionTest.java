@@ -1,8 +1,9 @@
 package com.github.pcimcioch.protobuf.model.message;
 
-import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
-import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
+import com.github.pcimcioch.protobuf.model.field.FieldRules;
+import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,8 +12,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.scalar;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -26,14 +27,15 @@ class MessageDefinitionTest {
     private static final TypeName CHILD_MESSAGE_NAME = canonicalName("com.example.MyType.ChildMessage");
     private static final TypeName CHILD_ENUM_NAME = canonicalName("com.example.MyType.ChildEnum");
     private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
+    private static final FieldRules NO_RULES = new FieldRules(false, false);
 
     @Test
     void correctMessage() {
         // given
         List<FieldDefinition> fields = asList(
-                scalar("test1", 1, "bool", false),
-                scalar("test2", 2, "int32", false),
-                scalar("test3", 3, "string", false)
+                scalar("test1", 1, "bool", NO_RULES),
+                scalar("test2", 2, "int32", NO_RULES),
+                scalar("test3", 3, "string", NO_RULES)
         );
 
         // when
@@ -48,7 +50,7 @@ class MessageDefinitionTest {
         void nullName() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test", 1, "bool", false)
+                    scalar("test", 1, "bool", NO_RULES)
             );
 
             // when then
@@ -81,9 +83,9 @@ class MessageDefinitionTest {
         void duplicatedFieldName() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalar("test", 1, "bool", false),
-                    scalar("test2", 2, "int32", false),
-                    scalar("test", 3, "string", false)
+                    scalar("test", 1, "bool", NO_RULES),
+                    scalar("test2", 2, "int32", NO_RULES),
+                    scalar("test", 3, "string", NO_RULES)
             );
 
             // when then
@@ -96,9 +98,9 @@ class MessageDefinitionTest {
         void duplicatedFieldNumbers() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalar("test1", 1, "bool", false),
-                    scalar("test2", 2, "int32", false),
-                    scalar("test3", 1, "string", false)
+                    scalar("test1", 1, "bool", NO_RULES),
+                    scalar("test2", 2, "int32", NO_RULES),
+                    scalar("test3", 1, "string", NO_RULES)
             );
 
             // when then
@@ -111,8 +113,8 @@ class MessageDefinitionTest {
         void nullField() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalar("test1", 1, "bool", false),
-                    scalar("test2", 2, "int32", false),
+                    scalar("test1", 1, "bool", NO_RULES),
+                    scalar("test2", 2, "int32", NO_RULES),
                     null
             );
 
@@ -137,7 +139,7 @@ class MessageDefinitionTest {
         void correctFieldNames(String fieldName) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar(fieldName, 1, "bool", false)
+                    scalar(fieldName, 1, "bool", NO_RULES)
             );
 
             // when
@@ -150,7 +152,7 @@ class MessageDefinitionTest {
         void correctFieldNumbers(int fieldNumber) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test", fieldNumber, "bool", false)
+                    scalar("test", fieldNumber, "bool", NO_RULES)
             );
 
             // when
@@ -163,7 +165,7 @@ class MessageDefinitionTest {
         void incorrectFieldNames(String fieldName) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar(fieldName, 1, "bool", false)
+                    scalar(fieldName, 1, "bool", NO_RULES)
             );
 
             // when
@@ -177,7 +179,7 @@ class MessageDefinitionTest {
         void incorrectFieldNumbers(int fieldNumber) {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test", fieldNumber, "bool", false)
+                    scalar("test", fieldNumber, "bool", NO_RULES)
             );
 
             // when
@@ -190,9 +192,9 @@ class MessageDefinitionTest {
         void correctNested() {
             // given
             List<FieldDefinition> fields = asList(
-                    scalar("test1", 1, "bool", false),
-                    scalar("test2", 2, "int32", false),
-                    scalar("test3", 3, "string", false)
+                    scalar("test1", 1, "bool", NO_RULES),
+                    scalar("test2", 2, "int32", NO_RULES),
+                    scalar("test3", 3, "string", NO_RULES)
             );
             MessageDefinition nestedMessage = new MessageDefinition(CHILD_MESSAGE_NAME, fields, NO_RESERVED, emptyList(), emptyList());
             List<EnumerationElementDefinition> elements = singletonList(
@@ -209,7 +211,7 @@ class MessageDefinitionTest {
         void nullMessages() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
 
             // when
@@ -222,7 +224,7 @@ class MessageDefinitionTest {
         void messagesWithNullValue() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
 
             // when
@@ -235,7 +237,7 @@ class MessageDefinitionTest {
         void incorrectNestedMessage() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
             MessageDefinition nestedMessage = new MessageDefinition(canonicalName("com.test.Incorrect"), fields, NO_RESERVED, emptyList(), emptyList());
 
@@ -249,7 +251,7 @@ class MessageDefinitionTest {
         void nullEnumerations() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
 
             // when
@@ -262,7 +264,7 @@ class MessageDefinitionTest {
         void enumerationsWithNullValue() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
 
             // when
@@ -275,7 +277,7 @@ class MessageDefinitionTest {
         void incorrectNestedEnumeration() {
             // given
             List<FieldDefinition> fields = singletonList(
-                    scalar("test1", 1, "bool", false)
+                    scalar("test1", 1, "bool", NO_RULES)
             );
             List<EnumerationElementDefinition> elements = singletonList(
                     new EnumerationElementDefinition("TEST", 0)

@@ -141,6 +141,7 @@ Current feature support:
 | Packages                    | <https://developers.google.com/protocol-buffers/docs/proto3#packages>               | ✔️ Supported                         |
 | Repeated Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
 | Optional Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
+| Required Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
 | Enumerations                | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | ✔️ Supported                         |
 | Reserved Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | ✔️ Supported                         |
 | Using Other Message Types   | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | ✔️ Supported                         |

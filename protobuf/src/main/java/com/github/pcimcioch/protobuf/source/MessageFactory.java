@@ -61,7 +61,7 @@ class MessageFactory {
 
     private void addField(RecordSource source, FieldDefinition field) {
         source.add(parameter(field.javaFieldType(), field.javaFieldName())
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
@@ -75,7 +75,7 @@ class MessageFactory {
                 .set(publicVisibility())
                 .set(returns(field.type()))
                 .set(body)
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
@@ -90,7 +90,7 @@ class MessageFactory {
                 .set(returns(field.javaFieldType()))
                 .set(body)
                 .add(annotation(Override.class))
-                .addIf(annotation(Deprecated.class), field.deprecated())
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
