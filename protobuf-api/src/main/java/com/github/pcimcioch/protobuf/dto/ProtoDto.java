@@ -1,5 +1,9 @@
 package com.github.pcimcioch.protobuf.dto;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Utils for Protobuf Data Transfer Objects
  */
@@ -90,6 +94,17 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of elements. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @param <T>   type of the list element
+     * @return list copy
+     */
+    public static <T> List<T> copy(Collection<? extends T> value) {
+        return value == null ? List.of() : List.copyOf(value);
+    }
+
+    /**
      * Returns whether value is default
      *
      * @param value value to check
@@ -166,6 +181,16 @@ public final class ProtoDto {
      * @return whether value is default
      */
     public static boolean isDefault(ProtobufMessage<?> value) {
+        return value == null || value.isEmpty();
+    }
+
+    /**
+     * Returns whether value is default
+     *
+     * @param value value to check
+     * @return whether value is default
+     */
+    public static boolean isDefault(List<?> value) {
         return value == null || value.isEmpty();
     }
 
@@ -247,14 +272,37 @@ public final class ProtoDto {
     }
 
     /**
-     * Merge two values. Uses toMerge if it is not default, uses current otherwise
+     * Merge two values
      *
      * @param current current value
      * @param toMerge value to merge
      * @param <T>     type of the message
-     * @return current if toMerge is default, toMerge otherwise
+     * @return merged message
      */
     public static <T extends ProtobufMessage<T>> T merge(T current, T toMerge) {
         return current == null ? toMerge : current.merge(toMerge);
+    }
+
+    /**
+     * Merge two lists
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @param <T>     type of the message
+     * @return merged lists
+     */
+    public static <T> List<T> merge(List<T> current, List<T> toMerge) {
+        if (isDefault(toMerge)) {
+            return current;
+        }
+        if (isDefault(current)) {
+            return toMerge;
+        }
+
+        List<T> sum = new ArrayList<>();
+        sum.addAll(current);
+        sum.addAll(toMerge);
+
+        return List.copyOf(sum);
     }
 }

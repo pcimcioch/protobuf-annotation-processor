@@ -5,6 +5,7 @@ import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import static com.github.pcimcioch.protobuf.dto.ProtoDto.isDefault;
 import static com.github.pcimcioch.protobuf.io.WireType.I32;
@@ -47,6 +48,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of double
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter _double(int number, List<Double> values) throws IOException {
+        if (!isDefault(values)) {
+            for (double value : values) {
+                _double(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes float
      *
      * @param number field number
@@ -59,6 +78,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, I32);
             output.writeVarint(tag.value());
             output.writeFloat(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of float
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter _float(int number, List<Float> values) throws IOException {
+        if (!isDefault(values)) {
+            for (float value : values) {
+                _float(number, value);
+            }
         }
 
         return this;
@@ -83,6 +120,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of int32
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter int32(int number, List<Integer> values) throws IOException {
+        if (!isDefault(values)) {
+            for (int value : values) {
+                int32(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes int64
      *
      * @param number field number
@@ -95,6 +150,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of int64
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter int64(int number, List<Long> values) throws IOException {
+        if (!isDefault(values)) {
+            for (long value : values) {
+                int64(number, value);
+            }
         }
 
         return this;
@@ -119,6 +192,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of uint32
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter uint32(int number, List<Integer> values) throws IOException {
+        if (!isDefault(values)) {
+            for (int value : values) {
+                uint32(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes uint64
      *
      * @param number field number
@@ -131,6 +222,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeVarint(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes uint64
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter uint64(int number, List<Long> values) throws IOException {
+        if (!isDefault(values)) {
+            for (long value : values) {
+                uint64(number, value);
+            }
         }
 
         return this;
@@ -155,6 +264,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of sint32
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter sint32(int number, List<Integer> values) throws IOException {
+        if (!isDefault(values)) {
+            for (int value : values) {
+                sint32(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes sint64
      *
      * @param number field number
@@ -167,6 +294,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, VARINT);
             output.writeVarint(tag.value());
             output.writeZigZag(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of sint64
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter sint64(int number, List<Long> values) throws IOException {
+        if (!isDefault(values)) {
+            for (long value : values) {
+                sint64(number, value);
+            }
         }
 
         return this;
@@ -191,6 +336,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of fixed32
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter fixed32(int number, List<Integer> values) throws IOException {
+        if (!isDefault(values)) {
+            for (int value : values) {
+                fixed32(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes fixed64
      *
      * @param number field number
@@ -203,6 +366,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
             output.writeFixedLong(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of fixed64
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter fixed64(int number, List<Long> values) throws IOException {
+        if (!isDefault(values)) {
+            for (long value : values) {
+                fixed64(number, value);
+            }
         }
 
         return this;
@@ -227,6 +408,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of sfixed32
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter sfixed32(int number, List<Integer> values) throws IOException {
+        if (!isDefault(values)) {
+            for (int value : values) {
+                sfixed32(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes sfixed64
      *
      * @param number field number
@@ -239,6 +438,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
             output.writeFixedLong(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of sfixed64
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter sfixed64(int number, List<Long> values) throws IOException {
+        if (!isDefault(values)) {
+            for (long value : values) {
+                sfixed64(number, value);
+            }
         }
 
         return this;
@@ -263,6 +480,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of bool
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter bool(int number, List<Boolean> values) throws IOException {
+        if (!isDefault(values)) {
+            for (boolean value : values) {
+                bool(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Writes string
      *
      * @param number field number
@@ -275,6 +510,24 @@ public class ProtobufWriter {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
             output.writeString(value);
+        }
+
+        return this;
+    }
+
+    /**
+     * Writes list of string
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter string(int number, List<String> values) throws IOException {
+        if (!isDefault(values)) {
+            for (String value : values) {
+                string(number, value);
+            }
         }
 
         return this;
@@ -299,6 +552,24 @@ public class ProtobufWriter {
     }
 
     /**
+     * Writes list of bytes
+     *
+     * @param number field number
+     * @param values values to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter bytes(int number, List<ByteArray> values) throws IOException {
+        if (!isDefault(values)) {
+            for (ByteArray value : values) {
+                bytes(number, value);
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * Write message
      *
      * @param number field number
@@ -306,11 +577,29 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter message(int number, ProtobufMessage value) throws IOException {
+    public ProtobufWriter message(int number, ProtobufMessage<?> value) throws IOException {
         if (!isDefault(value)) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
             output.writeBytes(value.toByteArray()); // TODO this is very inefficient. But it works
+        }
+
+        return this;
+    }
+
+    /**
+     * Write list of messages
+     *
+     * @param number field number
+     * @param values messages to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter message(int number, List<ProtobufMessage<?>> values) throws IOException {
+        if (!isDefault(values)) {
+            for (ProtobufMessage<?> value : values) {
+                message(number, value);
+            }
         }
 
         return this;

@@ -9,6 +9,7 @@ import static com.github.pcimcioch.protobuf.code.CodeBody.param;
  * Constructor source
  */
 public final class ConstructorSource {
+    private String visibility = "";
     private String body = "";
     private final List<String> parameters = new ArrayList<>();
 
@@ -36,6 +37,17 @@ public final class ConstructorSource {
     }
 
     /**
+     * Set visibility
+     *
+     * @param visibilitySource visibility
+     * @return source
+     */
+    public ConstructorSource set(VisibilitySource visibilitySource) {
+        this.visibility = visibilitySource.toString();
+        return this;
+    }
+
+    /**
      * Set body
      *
      * @param body body
@@ -59,11 +71,12 @@ public final class ConstructorSource {
      */
     public String toString(String className) {
         return CodeBody.body("""
-                        $ClassName($parameters) {
+                        $visibility $ClassName($parameters) {
                             $body
                         }
                         """,
                 param("ClassName", className),
+                param("visibility", visibility),
                 param("parameters", parameters),
                 param("body", body)
         ).toString();

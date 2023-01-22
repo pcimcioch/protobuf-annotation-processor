@@ -103,6 +103,9 @@ annotationProcessor("com.github.pcimcioch:protobuf:1.0.0")
 Note that `protobuf-api` is `implementation` dependency, not `compileOnly`. I may change it in the future, but for now it's just easier
 to have it like that
 
+# Examples
+For full documentation see [examples in test module](test/src/main/java/com/protobuf/model)
+
 # Similar Solutions
 
 ## Official Protoc Compiler
@@ -145,9 +148,9 @@ Current feature support:
 | Unknown Fields              | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | ⏳ Not yet supported                  |
 | Maps                        | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | ⏳ Not yet supported                  |
 | Option java_package         | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported                         |
-| Option java_multiple_files  | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ⏳ Always true                        |
-| Option java_outer_classname | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ⏳ Not supported                      |
-| Option optimize_for         | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Always LITE_RUNTIME               |
+| Option java_multiple_files  | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported, `false` by default     |
+| Option java_outer_classname | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported                         |
+| Option optimize_for         | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Always `LITE_RUNTIME`             |
 | Option deprecated           | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported                         |
 | Any                         | <https://developers.google.com/protocol-buffers/docs/proto3#any>                    | ⭕ Not planned to be supported        |
 | Oneof                       | <https://developers.google.com/protocol-buffers/docs/proto3#oneof>                  | ⭕ Not planned to be supported        |

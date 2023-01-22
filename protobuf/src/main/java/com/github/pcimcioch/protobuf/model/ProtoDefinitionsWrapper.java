@@ -56,7 +56,6 @@ public class ProtoDefinitionsWrapper {
         return Objects.hash(name, definitions);
     }
 
-    // TODO add validation tests
     private static final class Valid {
 
         private static TypeName wrapperName(TypeName wrapperName) {
@@ -69,6 +68,7 @@ public class ProtoDefinitionsWrapper {
             assertNonNull(definitions, "Definitions cannot be null");
             assertAllMatches(definitions.messages(), message -> message.name().isDirectChildOf(name), "Message in wrapper has non-nested type");
             assertAllMatches(definitions.enumerations(), enumeration -> enumeration.name().isDirectChildOf(name), "Enumeration in wrapper has non-nested type");
+            assertAllMatches(definitions.wrappers(), wrapper -> wrapper.name().isDirectChildOf(name), "Wrapper in wrapper has non-nested type");
 
             return definitions;
         }

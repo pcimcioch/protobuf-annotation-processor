@@ -14,7 +14,9 @@ public final class ClassSource extends Source {
     private String staticModifier = "";
     private String finalModifier = "";
     private final List<String> fields = new ArrayList<>();
+    private final List<String> constructors = new ArrayList<>();
     private final List<String> methods = new ArrayList<>();
+    private final List<String> nested = new ArrayList<>();
 
     private ClassSource(TypeName type) {
         super(type);
@@ -64,6 +66,17 @@ public final class ClassSource extends Source {
     }
 
     /**
+     * Add constructor
+     *
+     * @param constructorSource constructor
+     * @return source
+     */
+    public ClassSource add(ConstructorSource constructorSource) {
+        constructors.add(constructorSource.toString(simpleName()));
+        return this;
+    }
+
+    /**
      * Adds field
      *
      * @param fieldSource field
@@ -85,13 +98,27 @@ public final class ClassSource extends Source {
         return this;
     }
 
+    /**
+     * Add nested source
+     * @param nestedSource nested source
+     * @return source
+     */
+    public ClassSource add(Source nestedSource) {
+        nested.add(nestedSource.typeOnlyCode());
+        return this;
+    }
+
     @Override
     protected String typeOnlyCode() {
         return body("""             
                         $visibility $static $final class $name {
                             $fields
                             
+                            $constructors
+                            
                             $methods
+                            
+                            $nested
                         }
                         """,
                 param("visibility", visibility),
@@ -99,7 +126,9 @@ public final class ClassSource extends Source {
                 param("final", finalModifier),
                 param("name", simpleName()),
                 param("fields", fields, "\n"),
-                param("methods", methods, "\n")
+                param("constructors", constructors, "\n"),
+                param("methods", methods, "\n"),
+                param("nested", nested, "\n")
         ).toString();
     }
 }

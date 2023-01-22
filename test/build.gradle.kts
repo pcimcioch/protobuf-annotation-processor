@@ -14,10 +14,3 @@ protobuf {
         artifact = "com.google.protobuf:protoc:3.21.12"
     }
 }
-
-// TODO can it be removed?
-//sourceSets {
-//    named("main") {
-//        java.srcDir("build/generated/source/proto/main/java")
-//    }
-//}
