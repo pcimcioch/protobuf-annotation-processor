@@ -1,11 +1,12 @@
 package com.github.pcimcioch.protobuf.code;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.asList;
 
 /**
  * Represents java type name
@@ -16,10 +17,20 @@ public final class TypeName {
 
     private final String packageName;
     private final LinkedList<String> classNames;
+    private final TypeName generic;
 
-    private TypeName(String packageName, String classNames) {
-        this.packageName = packageName == null ? "" : packageName;
-        this.classNames = new LinkedList<>(Arrays.asList(classNames.split("\\.")));
+    private TypeName(String packageName, String classNames, TypeName generic) {
+        this(
+                packageName == null ? "" : packageName,
+                new LinkedList<>(asList(classNames.split("\\."))),
+                generic
+        );
+    }
+
+    private TypeName(String packageName, LinkedList<String> classNames, TypeName generic) {
+        this.packageName = packageName;
+        this.classNames = classNames;
+        this.generic = generic;
     }
 
     /**
@@ -42,6 +53,17 @@ public final class TypeName {
      */
     public String simpleName() {
         return classNames.getLast();
+    }
+
+    /**
+     * Returns generic name
+     * <p>
+     * For {@code com.example.ClassA<com.example.ClassB>} it will be {@code com.example.ClassB}
+     *
+     * @return generic name
+     */
+    public TypeName generic() {
+        return generic;
     }
 
     /**
@@ -82,7 +104,12 @@ public final class TypeName {
         String prefix = "".equals(packageName)
                 ? ""
                 : (packageName + ".");
-        return prefix + String.join(".", classNames);
+        String classes = String.join(".", classNames);
+        String suffix = generic == null
+                ? ""
+                : "<" + generic.canonicalName() + ">";
+
+        return prefix + classes + suffix;
     }
 
     /**
@@ -96,11 +123,23 @@ public final class TypeName {
     }
 
     /**
+     * Returns new type with given generic type appended
+     *
+     * @param typeName generic type
+     * @return new type name
+     */
+    // TODO add tests for generic
+    public TypeName of(TypeName typeName) {
+        return new TypeName(packageName, classNames, typeName);
+    }
+
+    /**
      * Checks whether this name is direct child of given name
      *
      * @param other parent name
      * @return whether this name is direct child of given name
      */
+    // TODO probably won't work with generics
     public boolean isDirectChildOf(TypeName other) {
         return equals(other.with(simpleName()));
     }
@@ -115,12 +154,12 @@ public final class TypeName {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TypeName typeName = (TypeName) o;
-        return packageName.equals(typeName.packageName) && classNames.equals(typeName.classNames);
+        return packageName.equals(typeName.packageName) && classNames.equals(typeName.classNames) && Objects.equals(generic, typeName.generic);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(packageName, classNames);
+        return Objects.hash(packageName, classNames, generic);
     }
 
     /**
@@ -131,7 +170,7 @@ public final class TypeName {
      */
     public static TypeName simpleName(String name) {
         mustMatch(simpleTypePattern, name, "Incorrect simple type name");
-        return new TypeName(null, name);
+        return new TypeName(null, name, null);
     }
 
     /**
@@ -144,7 +183,8 @@ public final class TypeName {
         Matcher matcher = mustMatch(canonicalNamePattern, name, "Incorrect canonical name");
         return new TypeName(
                 trim(matcher.group("package")),
-                trim(matcher.group("classes"))
+                trim(matcher.group("classes")),
+                null
         );
     }
 

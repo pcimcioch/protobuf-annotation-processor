@@ -37,7 +37,7 @@ class FieldDefinitionTest {
         // when then
         assertThatThrownBy(() -> FieldDefinition.scalar(name, 1, "bool", NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Incorrect field name");
+                .hasMessageContaining("Incorrect name");
     }
 
     @Test

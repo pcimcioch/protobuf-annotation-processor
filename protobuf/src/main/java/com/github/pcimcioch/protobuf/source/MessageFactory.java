@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.RecordSource;
+import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -26,6 +27,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class MessageFactory {
+    private static final TypeName list = TypeName.canonicalName("java.util.List"); // TODO those could be part of TypeName
     private final EncodingFactory encodingFactory = new EncodingFactory();
     private final DecodingFactory decodingFactory = new DecodingFactory();
     private final BuilderFactory builderFactory = new BuilderFactory();
@@ -35,12 +37,7 @@ class MessageFactory {
 
         for (FieldDefinition field : message.fields()) {
             addField(source, field);
-            if (field.protoKind() == ENUM) {
-                addEnumGetter(source, field);
-            }
-            if (field.protoKind() == MESSAGE) {
-                addMessageGetter(source, field);
-            }
+            addFieldGetter(source, field);
         }
         addConstructor(source, message);
         addEncodingMethods(source, message);
@@ -65,7 +62,22 @@ class MessageFactory {
         );
     }
 
-    private void addEnumGetter(RecordSource source, FieldDefinition field) {
+    private void addFieldGetter(RecordSource source, FieldDefinition field) {
+        if (field.rules().repeated()) {
+            if (field.protoKind() == ENUM) {
+                addEnumListGetter(source, field);
+            }
+        } else {
+            if (field.protoKind() == ENUM) {
+                addEnumSingleGetter(source, field);
+            }
+            if (field.protoKind() == MESSAGE) {
+                addMessageGetter(source, field);
+            }
+        }
+    }
+
+    private void addEnumSingleGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $EnumType.forNumber($valueName);",
                 param("EnumType", field.type()),
                 param("valueName", field.javaFieldName())
@@ -74,6 +86,20 @@ class MessageFactory {
         source.add(method(field.name())
                 .set(publicVisibility())
                 .set(returns(field.type()))
+                .set(body)
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addEnumListGetter(RecordSource source, FieldDefinition field) {
+        CodeBody body = body("return $valueName.stream().map($EnumType::forNumber).toList();",
+                param("EnumType", field.type()),
+                param("valueName", field.javaFieldName())
+        );
+
+        source.add(method(field.name())
+                .set(publicVisibility())
+                .set(returns(list.of(field.type())))
                 .set(body)
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );

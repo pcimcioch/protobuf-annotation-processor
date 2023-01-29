@@ -29,6 +29,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class BuilderFactory {
+    private static final TypeName collection = canonicalName("java.util.Collection");
     private static final Map<TypeName, String> DEFAULTS = Map.of(
             simpleName("double"), "0d",
             simpleName("float"), "0f",
@@ -44,13 +45,8 @@ class BuilderFactory {
 
         for (FieldDefinition field : message.fields()) {
             addField(builderClass, field);
-            addSetter(builderClass, field, message);
-            if (field.protoKind() == ENUM) {
-                addEnumSetter(builderClass, field, message);
-            }
-            if (field.protoKind() == MESSAGE) {
-                addFieldMerge(builderClass, field, message);
-            }
+            addFieldSetters(builderClass, field, message);
+            addFieldModifiers(builderClass, field, message);
         }
         addBuildMethod(builderClass, message);
         addMergeMethod(builderClass, message);
@@ -72,7 +68,21 @@ class BuilderFactory {
         );
     }
 
-    private void addSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+    private void addFieldSetters(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        if (field.rules().repeated()) {
+            addListSetter(builderClass, field, message);
+            if (field.protoKind() == ENUM) {
+                addEnumListSetter(builderClass, field, message);
+            }
+        } else {
+            addSingleSetter(builderClass, field, message);
+            if (field.protoKind() == ENUM) {
+                addEnumSingleSetter(builderClass, field, message);
+            }
+        }
+    }
+
+    private void addSingleSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field = $field;
                         return this;""",
@@ -88,7 +98,24 @@ class BuilderFactory {
         );
     }
 
-    private void addEnumSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+    private void addListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        this.$field.clear();
+                        this.$field.addAll($field);
+                        return this;""",
+                param("field", field.javaFieldName())
+        );
+
+        builderClass.add(method(field.javaFieldName())
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addEnumSingleSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
@@ -99,6 +126,107 @@ class BuilderFactory {
                 .set(returns(message.builderName()))
                 .set(body)
                 .add(parameter(field.type(), field.name()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addEnumListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        this.$valueName.clear();
+                        $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        return this;""",
+                param("valueName", field.javaFieldName()),
+                param("enumName", field.name())
+        );
+
+        builderClass.add(method(field.name())
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.type(), field.name()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addFieldModifiers(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        if (field.rules().repeated()) {
+            addListAddSingle(builderClass, field, message);
+            addListAddCollection(builderClass, field, message);
+            if (field.protoKind() == ENUM) {
+                addEnumListAddSingle(builderClass, field, message);
+                addEnumListAddCollection(builderClass, field, message);
+            }
+        } else if (field.protoKind() == MESSAGE) {
+            addFieldMerge(builderClass, field, message);
+        }
+    }
+
+    private void addListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        this.$field.add($field);
+                        return this;
+                        """,
+                param("field", field.javaFieldName())
+        );
+
+        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.javaFieldType().generic(), field.javaFieldName()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        this.$field.addAll($field);
+                        return this;
+                        """,
+                param("field", field.javaFieldName())
+        );
+
+        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(collection.of(field.javaFieldType().generic()), field.javaFieldName()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addEnumListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        this.$valueName.add($enumName.number());
+                        return this;
+                        """,
+                param("$valueName", field.javaFieldName()),
+                param("$enumName", field.name())
+        );
+
+        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(field.type().generic(), field.name()))
+                .addIf(annotation(Deprecated.class), field.rules().deprecated())
+        );
+    }
+
+    private void addEnumListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
+        CodeBody body = body("""
+                        $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        return this;
+                        """,
+                param("$valueName", field.javaFieldName()),
+                param("$enumName", field.name())
+        );
+
+        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+                .set(publicVisibility())
+                .set(returns(message.builderName()))
+                .set(body)
+                .add(parameter(collection.of(field.type().generic()), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -160,6 +288,9 @@ class BuilderFactory {
     }
 
     private static InitializerSource initializerOf(FieldDefinition field) {
+        if (field.rules().repeated()) {
+            return initializer("new java.util.ArrayList<>()");
+        }
         if (field.protoKind() == MESSAGE) {
             return initializer("null");
         }
