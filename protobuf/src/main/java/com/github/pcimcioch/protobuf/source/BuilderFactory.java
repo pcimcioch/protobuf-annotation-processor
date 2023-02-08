@@ -29,7 +29,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class BuilderFactory {
-    private static final TypeName collection = canonicalName("java.util.Collection");
+    private static final TypeName collection = canonicalName("java.util.Collection"); // TODO those could be part of TypeName
     private static final Map<TypeName, String> DEFAULTS = Map.of(
             simpleName("double"), "0d",
             simpleName("float"), "0f",
@@ -101,7 +101,9 @@ class BuilderFactory {
     private void addListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field.clear();
-                        this.$field.addAll($field);
+                        if ($field != null) {
+                          this.$field.addAll($field);
+                        }
                         return this;""",
                 param("field", field.javaFieldName())
         );
@@ -133,7 +135,9 @@ class BuilderFactory {
     private void addEnumListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$valueName.clear();
-                        $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        if ($enumName != null) {
+                          $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        }
                         return this;""",
                 param("valueName", field.javaFieldName()),
                 param("enumName", field.name())
@@ -163,7 +167,9 @@ class BuilderFactory {
 
     private void addListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$field.add($field);
+                        if ($field != null) {
+                          this.$field.add($field);
+                        }
                         return this;
                         """,
                 param("field", field.javaFieldName())
@@ -180,13 +186,15 @@ class BuilderFactory {
 
     private void addListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$field.addAll($field);
+                        if ($field != null) {
+                          this.$field.addAll($field);
+                        }
                         return this;
                         """,
                 param("field", field.javaFieldName())
         );
 
-        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+        builderClass.add(method(field.javaFieldNamePrefixed("addAll"))
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
@@ -197,14 +205,16 @@ class BuilderFactory {
 
     private void addEnumListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$valueName.add($enumName.number());
+                        if ($enumName != null) {
+                          this.$valueName.add($enumName.number());
+                        }
                         return this;
                         """,
-                param("$valueName", field.javaFieldName()),
-                param("$enumName", field.name())
+                param("valueName", field.javaFieldName()),
+                param("enumName", field.name())
         );
 
-        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+        builderClass.add(method(field.namePrefixed("add"))
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
@@ -215,14 +225,16 @@ class BuilderFactory {
 
     private void addEnumListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        if ($enumName != null) {
+                          $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        }
                         return this;
                         """,
-                param("$valueName", field.javaFieldName()),
-                param("$enumName", field.name())
+                param("valueName", field.javaFieldName()),
+                param("enumName", field.name())
         );
 
-        builderClass.add(method(field.javaFieldNamePrefixed("add"))
+        builderClass.add(method(field.namePrefixed("addAll"))
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)

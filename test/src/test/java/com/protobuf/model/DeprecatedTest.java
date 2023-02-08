@@ -2,6 +2,9 @@ package com.protobuf.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DeprecatedTest {
@@ -12,6 +15,18 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someField")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someEnumValue")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someOther")).isFalse();
+
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedField")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedOther")).isFalse();
+
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableField")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableOther")).isFalse();
+
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableField")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableOther")).isFalse();
     }
 
     @Test
@@ -21,6 +36,22 @@ class DeprecatedTest {
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someEnum", DeprecatedEnum.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someEnumValue", int.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someOther", DeprecatedSubRecord.class)).isFalse();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableField", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableField", Integer.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableField", Collection.class)).isFalse();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnum", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableEnum", DeprecatedEnum.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableEnum", Collection.class)).isFalse();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnumValue", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableEnumValue", Integer.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableEnumValue", Collection.class)).isFalse();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableOther", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableOther", DeprecatedSubRecord.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableOther", Collection.class)).isFalse();
     }
 
     @Test
@@ -30,6 +61,22 @@ class DeprecatedTest {
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedEnum", DeprecatedEnum.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedEnumValue", int.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedOther", DeprecatedSubRecord.class)).isTrue();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableField", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableField", Integer.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableField", Collection.class)).isTrue();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnum", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableEnum", DeprecatedEnum.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableEnum", Collection.class)).isTrue();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnumValue", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableEnumValue", Integer.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableEnumValue", Collection.class)).isTrue();
+
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableOther", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableOther", DeprecatedSubRecord.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableOther", Collection.class)).isTrue();
     }
 
     @Test
@@ -50,15 +97,24 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someField")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someEnumValue")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someOther")).isFalse();
+
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableField")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableOther")).isFalse();
     }
 
     @Test
-    void messageSetterNonDeprecated() throws NoSuchMethodException {
+    void messageGetterNonDeprecated() throws NoSuchMethodException {
         // when then
         assertThat(methodDeprecated(DeprecatedRecord.class, "someField")).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.class, "someEnumValue")).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.class, "someEnum")).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.class, "someOther")).isFalse();
+
+        assertThat(methodDeprecated(DeprecatedRecord.class, "someRepeatableField")).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "someRepeatableEnumValue")).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "someRepeatableEnum")).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "someRepeatableOther")).isFalse();
     }
 
     @Test
@@ -67,15 +123,24 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedField")).isTrue();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedEnumValue")).isTrue();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedOther")).isTrue();
+
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableField")).isTrue();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableEnumValue")).isTrue();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableOther")).isTrue();
     }
 
     @Test
-    void messageSetterDeprecated() throws NoSuchMethodException {
+    void messageGetterDeprecated() throws NoSuchMethodException {
         // when then
         assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedField")).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedEnumValue")).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedEnum")).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedOther")).isTrue();
+
+        assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedRepeatableField")).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedRepeatableEnumValue")).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedRepeatableEnum")).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.class, "deprecatedRepeatableOther")).isTrue();
     }
 
     private boolean methodDeprecated(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {

@@ -26,7 +26,13 @@ import com.github.pcimcioch.protobuf.annotation.Message;
                 @Field(type = "DeprecatedSubRecord", name = "someOther", number = 3),
                 @Field(type = Field.int32, name = "deprecatedField", number = 4, deprecated = true),
                 @Field(type = "DeprecatedEnum", name = "deprecatedEnum", number = 5, deprecated = true),
-                @Field(type = "DeprecatedSubRecord", name = "deprecatedOther", number = 6, deprecated = true)
+                @Field(type = "DeprecatedSubRecord", name = "deprecatedOther", number = 6, deprecated = true),
+                @Field(type = Field.int32, name = "someRepeatableField", number = 7, repeated = true),
+                @Field(type = "DeprecatedEnum", name = "someRepeatableEnum", number = 8, repeated = true),
+                @Field(type = "DeprecatedSubRecord", name = "someRepeatableOther", number = 9, repeated = true),
+                @Field(type = Field.int32, name = "deprecatedRepeatableField", number = 10, repeated = true, deprecated = true),
+                @Field(type = "DeprecatedEnum", name = "deprecatedRepeatableEnum", number = 11, repeated = true, deprecated = true),
+                @Field(type = "DeprecatedSubRecord", name = "deprecatedRepeatableOther", number = 12, repeated = true, deprecated = true)
         }
 )
 class DeprecatedRecordMarker {

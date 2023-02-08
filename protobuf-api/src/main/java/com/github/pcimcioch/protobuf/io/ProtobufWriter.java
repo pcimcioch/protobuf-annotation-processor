@@ -58,7 +58,9 @@ public class ProtobufWriter {
     public ProtobufWriter _double(int number, List<Double> values) throws IOException {
         if (!isDefault(values)) {
             for (double value : values) {
-                _double(number, value);
+                Tag tag = new Tag(number, I64);
+                output.writeVarint(tag.value());
+                output.writeDouble(value);
             }
         }
 
@@ -94,7 +96,9 @@ public class ProtobufWriter {
     public ProtobufWriter _float(int number, List<Float> values) throws IOException {
         if (!isDefault(values)) {
             for (float value : values) {
-                _float(number, value);
+                Tag tag = new Tag(number, I32);
+                output.writeVarint(tag.value());
+                output.writeFloat(value);
             }
         }
 
@@ -130,7 +134,9 @@ public class ProtobufWriter {
     public ProtobufWriter int32(int number, List<Integer> values) throws IOException {
         if (!isDefault(values)) {
             for (int value : values) {
-                int32(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeVarint(value);
             }
         }
 
@@ -166,7 +172,9 @@ public class ProtobufWriter {
     public ProtobufWriter int64(int number, List<Long> values) throws IOException {
         if (!isDefault(values)) {
             for (long value : values) {
-                int64(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeVarint(value);
             }
         }
 
@@ -202,7 +210,9 @@ public class ProtobufWriter {
     public ProtobufWriter uint32(int number, List<Integer> values) throws IOException {
         if (!isDefault(values)) {
             for (int value : values) {
-                uint32(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeVarint(value);
             }
         }
 
@@ -238,7 +248,9 @@ public class ProtobufWriter {
     public ProtobufWriter uint64(int number, List<Long> values) throws IOException {
         if (!isDefault(values)) {
             for (long value : values) {
-                uint64(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeVarint(value);
             }
         }
 
@@ -274,7 +286,9 @@ public class ProtobufWriter {
     public ProtobufWriter sint32(int number, List<Integer> values) throws IOException {
         if (!isDefault(values)) {
             for (int value : values) {
-                sint32(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeZigZag(value);
             }
         }
 
@@ -310,7 +324,9 @@ public class ProtobufWriter {
     public ProtobufWriter sint64(int number, List<Long> values) throws IOException {
         if (!isDefault(values)) {
             for (long value : values) {
-                sint64(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeZigZag(value);
             }
         }
 
@@ -346,7 +362,9 @@ public class ProtobufWriter {
     public ProtobufWriter fixed32(int number, List<Integer> values) throws IOException {
         if (!isDefault(values)) {
             for (int value : values) {
-                fixed32(number, value);
+                Tag tag = new Tag(number, I32);
+                output.writeVarint(tag.value());
+                output.writeFixedInt(value);
             }
         }
 
@@ -382,7 +400,9 @@ public class ProtobufWriter {
     public ProtobufWriter fixed64(int number, List<Long> values) throws IOException {
         if (!isDefault(values)) {
             for (long value : values) {
-                fixed64(number, value);
+                Tag tag = new Tag(number, I64);
+                output.writeVarint(tag.value());
+                output.writeFixedLong(value);
             }
         }
 
@@ -418,7 +438,9 @@ public class ProtobufWriter {
     public ProtobufWriter sfixed32(int number, List<Integer> values) throws IOException {
         if (!isDefault(values)) {
             for (int value : values) {
-                sfixed32(number, value);
+                Tag tag = new Tag(number, I32);
+                output.writeVarint(tag.value());
+                output.writeFixedInt(value);
             }
         }
 
@@ -454,7 +476,9 @@ public class ProtobufWriter {
     public ProtobufWriter sfixed64(int number, List<Long> values) throws IOException {
         if (!isDefault(values)) {
             for (long value : values) {
-                sfixed64(number, value);
+                Tag tag = new Tag(number, I64);
+                output.writeVarint(tag.value());
+                output.writeFixedLong(value);
             }
         }
 
@@ -490,7 +514,9 @@ public class ProtobufWriter {
     public ProtobufWriter bool(int number, List<Boolean> values) throws IOException {
         if (!isDefault(values)) {
             for (boolean value : values) {
-                bool(number, value);
+                Tag tag = new Tag(number, VARINT);
+                output.writeVarint(tag.value());
+                output.writeBoolean(true);
             }
         }
 
@@ -526,7 +552,9 @@ public class ProtobufWriter {
     public ProtobufWriter string(int number, List<String> values) throws IOException {
         if (!isDefault(values)) {
             for (String value : values) {
-                string(number, value);
+                Tag tag = new Tag(number, LEN);
+                output.writeVarint(tag.value());
+                output.writeString(value);
             }
         }
 
@@ -562,7 +590,9 @@ public class ProtobufWriter {
     public ProtobufWriter bytes(int number, List<ByteArray> values) throws IOException {
         if (!isDefault(values)) {
             for (ByteArray value : values) {
-                bytes(number, value);
+                Tag tag = new Tag(number, LEN);
+                output.writeVarint(tag.value());
+                output.writeByteArray(value);
             }
         }
 
@@ -595,10 +625,12 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter message(int number, List<ProtobufMessage<?>> values) throws IOException {
+    public ProtobufWriter message(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
         if (!isDefault(values)) {
             for (ProtobufMessage<?> value : values) {
-                message(number, value);
+                Tag tag = new Tag(number, LEN);
+                output.writeVarint(tag.value());
+                output.writeBytes(value.toByteArray()); // TODO this is very inefficient. But it works
             }
         }
 

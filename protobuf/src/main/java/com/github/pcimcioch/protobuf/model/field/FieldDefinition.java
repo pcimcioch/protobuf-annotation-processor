@@ -129,6 +129,16 @@ public final class FieldDefinition {
         return prefix + javaFieldName().substring(0, 1).toUpperCase(ENGLISH) + javaFieldName().substring(1);
     }
 
+    /**
+     * Returns field name in java code prefixed in camelCase
+     *
+     * @param prefix prefix to use
+     * @return prefixed field name
+     */
+    public String namePrefixed(String prefix) {
+        return prefix + name().substring(0, 1).toUpperCase(ENGLISH) + name().substring(1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

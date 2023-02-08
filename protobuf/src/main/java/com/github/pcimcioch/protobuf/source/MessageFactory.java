@@ -27,7 +27,6 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class MessageFactory {
-    private static final TypeName list = TypeName.canonicalName("java.util.List"); // TODO those could be part of TypeName
     private final EncodingFactory encodingFactory = new EncodingFactory();
     private final DecodingFactory decodingFactory = new DecodingFactory();
     private final BuilderFactory builderFactory = new BuilderFactory();
@@ -93,13 +92,13 @@ class MessageFactory {
 
     private void addEnumListGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $valueName.stream().map($EnumType::forNumber).toList();",
-                param("EnumType", field.type()),
+                param("EnumType", field.type().generic()),
                 param("valueName", field.javaFieldName())
         );
 
         source.add(method(field.name())
                 .set(publicVisibility())
-                .set(returns(list.of(field.type())))
+                .set(returns(field.type()))
                 .set(body)
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );

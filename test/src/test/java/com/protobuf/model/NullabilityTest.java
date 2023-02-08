@@ -3,6 +3,8 @@ package com.protobuf.model;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NullabilityTest {
@@ -55,5 +57,73 @@ class NullabilityTest {
         assertThat(recordNull.orderValue()).isEqualTo(0);
         assertThat(recordEmpty.order()).isEqualTo(SimpleEnum.FIRST);
         assertThat(recordEmpty.orderValue()).isEqualTo(0);
+    }
+
+    @Test
+    void repeatableScalar() {
+        // given
+        RepeatableScalar repeatableNull = RepeatableScalar.builder()
+                .double_(null)
+                .addAllDouble_(null)
+                .addDouble_(null)
+                .build();
+        RepeatableScalar repeatableEmpty = RepeatableScalar.builder()
+                .double_(List.of())
+                .addAllDouble_(List.of())
+                .addDouble_(null)
+                .build();
+
+        // when then
+        assertThat(repeatableNull).isEqualTo(repeatableEmpty);
+        assertThat(repeatableNull.double_()).isEmpty();
+        assertThat(repeatableEmpty.double_()).isEmpty();
+    }
+
+    @Test
+    void repeatableEnum() {
+        // given
+        RepeatableEnumMessage repeatableNull = RepeatableEnumMessage.builder()
+                .order(null)
+                .addAllOrder(null)
+                .addOrder(null)
+                .orderValue(null)
+                .addAllOrderValue(null)
+                .addOrderValue(null)
+                .build();
+        RepeatableEnumMessage repeatableEmpty = RepeatableEnumMessage.builder()
+                .order(List.of())
+                .addAllOrder(List.of())
+                .addOrder(null)
+                .orderValue(List.of())
+                .addAllOrderValue(List.of())
+                .addOrderValue(null)
+                .build();
+
+        // when then
+        assertThat(repeatableNull).isEqualTo(repeatableEmpty);
+        assertThat(repeatableNull.order()).isEmpty();
+        assertThat(repeatableNull.orderValue()).isEmpty();
+        assertThat(repeatableEmpty.order()).isEmpty();
+        assertThat(repeatableEmpty.orderValue()).isEmpty();
+    }
+
+    @Test
+    void repeatableMessage() {
+        // given
+        RepeatableOtherWork repeatableNull = RepeatableOtherWork.builder()
+                .address(null)
+                .addAllAddress(null)
+                .addAddress(null)
+                .build();
+        RepeatableOtherWork repeatableEmpty = RepeatableOtherWork.builder()
+                .address(List.of())
+                .addAllAddress(List.of())
+                .addAddress(null)
+                .build();
+
+        // when then
+        assertThat(repeatableNull).isEqualTo(repeatableEmpty);
+        assertThat(repeatableNull.address()).isEmpty();
+        assertThat(repeatableEmpty.address()).isEmpty();
     }
 }
