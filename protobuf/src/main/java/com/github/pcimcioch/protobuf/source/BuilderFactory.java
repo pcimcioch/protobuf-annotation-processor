@@ -29,7 +29,6 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class BuilderFactory {
-    private static final TypeName collection = canonicalName("java.util.Collection"); // TODO those could be part of TypeName
     private static final Map<TypeName, String> DEFAULTS = Map.of(
             simpleName("double"), "0d",
             simpleName("float"), "0f",
@@ -198,7 +197,7 @@ class BuilderFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(collection.of(field.javaFieldType().generic()), field.javaFieldName()))
+                .add(parameter(field.javaFieldType().generic().inCollection(), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -238,7 +237,7 @@ class BuilderFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(collection.of(field.type().generic()), field.name()))
+                .add(parameter(field.type().generic().inCollection(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }

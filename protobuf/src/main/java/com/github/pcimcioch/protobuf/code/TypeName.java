@@ -15,6 +15,9 @@ public final class TypeName {
     private static final Pattern simpleTypePattern = Pattern.compile("^[a-zA-Z]+$");
     private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<classes>(\\.[A-Z][A-Za-z0-9_]*)+)$");
 
+    private static final TypeName list = canonicalName("java.util.List");
+    private static final TypeName collection = canonicalName("java.util.Collection");
+
     private final String packageName;
     private final LinkedList<String> classNames;
     private final TypeName generic;
@@ -131,6 +134,26 @@ public final class TypeName {
     // TODO add tests for generic
     public TypeName of(TypeName typeName) {
         return new TypeName(packageName, classNames, typeName);
+    }
+
+    /**
+     * Returns this type wrapped in {@link java.util.List}
+     *
+     * @return this type wrapped in the list
+     */
+    // TODO add tests
+    public TypeName inList() {
+        return list.of(this);
+    }
+
+    /**
+     * Returns this type wrapped in {@link java.util.Collection}
+     *
+     * @return this type wrapped in the collection
+     */
+    // TODO add tests
+    public TypeName inCollection() {
+        return collection.of(this);
     }
 
     /**

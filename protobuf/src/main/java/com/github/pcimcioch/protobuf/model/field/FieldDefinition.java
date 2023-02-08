@@ -32,11 +32,7 @@ import static java.util.Locale.ENGLISH;
 /**
  * Message field
  */
-// TODO add support for repeated fields
-// TODO tests for repeated fields
 public final class FieldDefinition {
-
-    private static final TypeName list = canonicalName("java.util.List");
 
     private final String name;
     private final String fieldName;
@@ -197,31 +193,31 @@ public final class FieldDefinition {
         private static Optional<ScalarDefinition> fromRepeatable(String protoType) {
             return Optional.ofNullable(switch (protoType) {
                 case "double" ->
-                        new ScalarDefinition(list.of(simpleName("Double")), list.of(simpleName("Double")), DOUBLE);
-                case "float" -> new ScalarDefinition(list.of(simpleName("Float")), list.of(simpleName("Float")), FLOAT);
+                        new ScalarDefinition(simpleName("Double").inList(), simpleName("Double").inList(), DOUBLE);
+                case "float" -> new ScalarDefinition(simpleName("Float").inList(), simpleName("Float").inList(), FLOAT);
                 case "int32" ->
-                        new ScalarDefinition(list.of(simpleName("Integer")), list.of(simpleName("Integer")), INT32);
-                case "int64" -> new ScalarDefinition(list.of(simpleName("Long")), list.of(simpleName("Long")), INT64);
+                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), INT32);
+                case "int64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), INT64);
                 case "uint32" ->
-                        new ScalarDefinition(list.of(simpleName("Integer")), list.of(simpleName("Integer")), UINT32);
-                case "uint64" -> new ScalarDefinition(list.of(simpleName("Long")), list.of(simpleName("Long")), UINT64);
+                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), UINT32);
+                case "uint64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), UINT64);
                 case "sint32" ->
-                        new ScalarDefinition(list.of(simpleName("Integer")), list.of(simpleName("Integer")), SINT32);
-                case "sint64" -> new ScalarDefinition(list.of(simpleName("Long")), list.of(simpleName("Long")), SINT64);
+                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), SINT32);
+                case "sint64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), SINT64);
                 case "fixed32" ->
-                        new ScalarDefinition(list.of(simpleName("Integer")), list.of(simpleName("Integer")), FIXED32);
+                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), FIXED32);
                 case "fixed64" ->
-                        new ScalarDefinition(list.of(simpleName("Long")), list.of(simpleName("Long")), FIXED64);
+                        new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), FIXED64);
                 case "sfixed32" ->
-                        new ScalarDefinition(list.of(simpleName("Integer")), list.of(simpleName("Integer")), SFIXED32);
+                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), SFIXED32);
                 case "sfixed64" ->
-                        new ScalarDefinition(list.of(simpleName("Long")), list.of(simpleName("Long")), SFIXED64);
+                        new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), SFIXED64);
                 case "bool" ->
-                        new ScalarDefinition(list.of(simpleName("Boolean")), list.of(simpleName("Boolean")), BOOL);
+                        new ScalarDefinition(simpleName("Boolean").inList(), simpleName("Boolean").inList(), BOOL);
                 case "string" ->
-                        new ScalarDefinition(list.of(simpleName("String")), list.of(simpleName("String")), STRING);
+                        new ScalarDefinition(simpleName("String").inList(), simpleName("String").inList(), STRING);
                 case "bytes" ->
-                        new ScalarDefinition(list.of(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray")), list.of(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray")), BYTES);
+                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), BYTES);
                 default -> null;
             });
         }
@@ -248,7 +244,7 @@ public final class FieldDefinition {
      */
     public static FieldDefinition enumeration(String name, int number, TypeName type, FieldRules rules) {
         return rules.repeated()
-                ? new FieldDefinition(name, name + "Value", number, list.of(type), list.of(simpleName("Integer")), ENUM, rules)
+                ? new FieldDefinition(name, name + "Value", number, type.inList(), simpleName("Integer").inList(), ENUM, rules)
                 : new FieldDefinition(name, name + "Value", number, type, simpleName("int"), ENUM, rules);
     }
 
@@ -263,7 +259,7 @@ public final class FieldDefinition {
      */
     public static FieldDefinition message(String name, int number, TypeName type, FieldRules rules) {
         return rules.repeated()
-                ? new FieldDefinition(name, name, number, list.of(type), list.of(type), MESSAGE, rules)
+                ? new FieldDefinition(name, name, number, type.inList(), type.inList(), MESSAGE, rules)
                 : new FieldDefinition(name, name, number, type, type, MESSAGE, rules);
     }
 
