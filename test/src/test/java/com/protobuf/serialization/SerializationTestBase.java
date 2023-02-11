@@ -13,7 +13,7 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class SerializationTest {
+abstract class SerializationTestBase {
 
     protected <T> T deserialize(ThrowingExtractor<byte[], T, IOException> bytesParser,
                                 ThrowingExtractor<InputStream, T, IOException> inputParser,

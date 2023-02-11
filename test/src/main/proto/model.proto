@@ -58,3 +58,43 @@ message SelfReferenceProto {
   int32 value = 1;
   SelfReferenceProto next = 2;
 }
+
+// ******************** Repeatable Scalar ********************
+message RepeatableScalarProto {
+  repeated double doubles = 1 [packed = false];
+  repeated float floats = 2 [packed = false];
+  repeated int32 int32s = 3 [packed = false];
+  repeated int64 int64s = 4 [packed = false];
+  repeated uint32 uint32s = 5 [packed = false];
+  repeated uint64 uint64s = 6 [packed = false];
+  repeated sint32 sint32s = 7 [packed = false];
+  repeated sint64 sint64s = 8 [packed = false];
+  repeated fixed32 fixed32s = 9 [packed = false];
+  repeated fixed64 fixed64s = 10 [packed = false];
+  repeated sfixed32 sfixed32s = 11 [packed = false];
+  repeated sfixed64 sfixed64s = 12 [packed = false];
+  repeated bool bools = 13 [packed = false];
+  repeated string strings = 14 [packed = false];
+  repeated bytes bytes = 15 [packed = false];
+}
+
+// ******************** Repeatable Enum ********************
+enum RepeatableEnumProto {
+  FIRST_ = 0;
+  SECOND_ = 1;
+  THIRD_ = 2;
+}
+
+message RepeatableEnumMessageProto {
+  repeated RepeatableEnumProto orders = 1 [packed = false];
+}
+
+// ******************** Repeatable Other Message ********************
+message RepeatableOtherAddressProto {
+  string street = 1;
+  int32 number = 2;
+}
+
+message RepeatableOtherWorkProto {
+  repeated RepeatableOtherAddressProto addresses = 1 [packed = false];
+}

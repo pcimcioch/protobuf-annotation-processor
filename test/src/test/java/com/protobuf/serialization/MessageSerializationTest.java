@@ -16,7 +16,7 @@ import static com.protobuf.ByteUtils.concatenate;
 import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MessageSerializationTest extends SerializationTest {
+class MessageSerializationTest extends SerializationTestBase {
 
     @Nested
     class Serialization {

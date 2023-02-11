@@ -516,7 +516,7 @@ public class ProtobufWriter {
             for (boolean value : values) {
                 Tag tag = new Tag(number, VARINT);
                 output.writeVarint(tag.value());
-                output.writeBoolean(true);
+                output.writeBoolean(value);
             }
         }
 

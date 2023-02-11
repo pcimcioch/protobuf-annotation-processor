@@ -10,7 +10,7 @@ import java.io.IOException;
 import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SelfReferenceSerializationTest extends SerializationTest {
+class SelfReferenceSerializationTest extends SerializationTestBase {
 
     @Nested
     class Serialization {

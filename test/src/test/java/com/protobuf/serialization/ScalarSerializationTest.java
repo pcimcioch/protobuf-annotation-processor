@@ -14,7 +14,7 @@ import static com.protobuf.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ScalarSerializationTest extends SerializationTest {
+class ScalarSerializationTest extends SerializationTestBase {
 
     @Nested
     class Serialization {
