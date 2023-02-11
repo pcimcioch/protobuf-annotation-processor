@@ -71,4 +71,12 @@ class FieldDefinitionTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Must provide field type");
     }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void nullRules() {
+        // when then
+        assertThatThrownBy(() -> FieldDefinition.scalar("name", 1, "bool", null))
+                .isInstanceOf(NullPointerException.class);
+    }
 }

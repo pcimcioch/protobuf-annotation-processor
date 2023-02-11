@@ -388,7 +388,6 @@ public final class FieldDefinition {
             return type;
         }
 
-        // TODO add tests
         private static FieldRules rules(FieldRules rules) {
             assertNonNull(rules, "Must provide rules");
             return rules;

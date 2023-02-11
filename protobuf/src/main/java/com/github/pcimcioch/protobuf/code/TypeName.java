@@ -126,12 +126,20 @@ public final class TypeName {
     }
 
     /**
+     * Returns new type which is a copy of this type without generic type
+     *
+     * @return new type name
+     */
+    public TypeName withoutGeneric() {
+        return new TypeName(packageName, classNames, null);
+    }
+
+    /**
      * Returns new type with given generic type appended
      *
      * @param typeName generic type
      * @return new type name
      */
-    // TODO add tests for generic
     public TypeName of(TypeName typeName) {
         return new TypeName(packageName, classNames, typeName);
     }
@@ -141,7 +149,6 @@ public final class TypeName {
      *
      * @return this type wrapped in the list
      */
-    // TODO add tests
     public TypeName inList() {
         return list.of(this);
     }
@@ -151,7 +158,6 @@ public final class TypeName {
      *
      * @return this type wrapped in the collection
      */
-    // TODO add tests
     public TypeName inCollection() {
         return collection.of(this);
     }
@@ -162,9 +168,8 @@ public final class TypeName {
      * @param other parent name
      * @return whether this name is direct child of given name
      */
-    // TODO probably won't work with generics
     public boolean isDirectChildOf(TypeName other) {
-        return equals(other.with(simpleName()));
+        return withoutGeneric().equals(other.withoutGeneric().with(simpleName()));
     }
 
     @Override
