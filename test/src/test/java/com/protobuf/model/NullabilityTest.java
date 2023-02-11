@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class NullabilityTest {
 
@@ -63,67 +65,100 @@ class NullabilityTest {
     void repeatableScalar() {
         // given
         RepeatableScalar repeatableNull = RepeatableScalar.builder()
-                .double_(null)
-                .addAllDouble_(null)
-                .addDouble_(null)
+                .doubles(null)
+                .addAllDoubles(null)
+                .addDoubles(null)
                 .build();
         RepeatableScalar repeatableEmpty = RepeatableScalar.builder()
-                .double_(List.of())
-                .addAllDouble_(List.of())
-                .addDouble_(null)
+                .doubles(List.of())
+                .addAllDoubles(List.of())
+                .addDoubles(null)
                 .build();
 
         // when then
         assertThat(repeatableNull).isEqualTo(repeatableEmpty);
-        assertThat(repeatableNull.double_()).isEmpty();
-        assertThat(repeatableEmpty.double_()).isEmpty();
+        assertThat(repeatableNull.doubles()).isEmpty();
+        assertThat(repeatableEmpty.doubles()).isEmpty();
+    }
+
+    @Test
+    void repeatableScalarNullValues() {
+        // given
+        RepeatableScalar.Builder builder = RepeatableScalar.builder()
+                .doubles(asList(null, 10d));
+
+        // when then
+        assertThatThrownBy(builder::build)
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void repeatableEnum() {
         // given
         RepeatableEnumMessage repeatableNull = RepeatableEnumMessage.builder()
-                .order(null)
-                .addAllOrder(null)
-                .addOrder(null)
-                .orderValue(null)
-                .addAllOrderValue(null)
-                .addOrderValue(null)
+                .orders(null)
+                .addAllOrders(null)
+                .addOrders(null)
+                .ordersValue(null)
+                .addAllOrdersValue(null)
+                .addOrdersValue(null)
                 .build();
         RepeatableEnumMessage repeatableEmpty = RepeatableEnumMessage.builder()
-                .order(List.of())
-                .addAllOrder(List.of())
-                .addOrder(null)
-                .orderValue(List.of())
-                .addAllOrderValue(List.of())
-                .addOrderValue(null)
+                .orders(List.of())
+                .addAllOrders(List.of())
+                .addOrders(null)
+                .ordersValue(List.of())
+                .addAllOrdersValue(List.of())
+                .addOrdersValue(null)
                 .build();
 
         // when then
         assertThat(repeatableNull).isEqualTo(repeatableEmpty);
-        assertThat(repeatableNull.order()).isEmpty();
-        assertThat(repeatableNull.orderValue()).isEmpty();
-        assertThat(repeatableEmpty.order()).isEmpty();
-        assertThat(repeatableEmpty.orderValue()).isEmpty();
+        assertThat(repeatableNull.orders()).isEmpty();
+        assertThat(repeatableNull.ordersValue()).isEmpty();
+        assertThat(repeatableEmpty.orders()).isEmpty();
+        assertThat(repeatableEmpty.ordersValue()).isEmpty();
+    }
+
+    @Test
+    void repeatableEnumNullValues() {
+        // given
+        RepeatableEnumMessage.Builder builder = RepeatableEnumMessage.builder()
+                .ordersValue(asList(null, 1));
+
+        // when then
+        assertThatThrownBy(builder::build)
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void repeatableMessage() {
         // given
         RepeatableOtherWork repeatableNull = RepeatableOtherWork.builder()
-                .address(null)
-                .addAllAddress(null)
-                .addAddress(null)
+                .addresses(null)
+                .addAllAddresses(null)
+                .addAddresses(null)
                 .build();
         RepeatableOtherWork repeatableEmpty = RepeatableOtherWork.builder()
-                .address(List.of())
-                .addAllAddress(List.of())
-                .addAddress(null)
+                .addresses(List.of())
+                .addAllAddresses(List.of())
+                .addAddresses(null)
                 .build();
 
         // when then
         assertThat(repeatableNull).isEqualTo(repeatableEmpty);
-        assertThat(repeatableNull.address()).isEmpty();
-        assertThat(repeatableEmpty.address()).isEmpty();
+        assertThat(repeatableNull.addresses()).isEmpty();
+        assertThat(repeatableEmpty.addresses()).isEmpty();
+    }
+
+    @Test
+    void repeatableMessageNullValues() {
+        // given
+        RepeatableOtherWork.Builder builder = RepeatableOtherWork.builder()
+                .addresses(asList(null, null));
+
+        // when then
+        assertThatThrownBy(builder::build)
+                .isInstanceOf(NullPointerException.class);
     }
 }

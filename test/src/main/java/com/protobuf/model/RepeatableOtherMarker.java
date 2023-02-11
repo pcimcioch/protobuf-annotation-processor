@@ -13,7 +13,7 @@ import com.github.pcimcioch.protobuf.annotation.Message;
 @Message(
         name = "RepeatableOtherWork",
         fields = {
-                @Field(name = "address", type = "RepeatableOtherAddress", number = 1, repeated = true)
+                @Field(name = "addresses", type = "RepeatableOtherAddress", number = 1, repeated = true)
         }
 )
 class RepeatableOtherMarker {

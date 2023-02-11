@@ -18,20 +18,20 @@ class RepeatableScalarTest {
         RepeatableScalar model = RepeatableScalar.empty();
 
         // then
-        assertThat(model.double_()).isEmpty();
-        assertThat(model.float_()).isEmpty();
-        assertThat(model.int32()).isEmpty();
-        assertThat(model.int64()).isEmpty();
-        assertThat(model.uint32()).isEmpty();
-        assertThat(model.uint64()).isEmpty();
-        assertThat(model.sint32()).isEmpty();
-        assertThat(model.sint64()).isEmpty();
-        assertThat(model.fixed32()).isEmpty();
-        assertThat(model.fixed64()).isEmpty();
-        assertThat(model.sfixed32()).isEmpty();
-        assertThat(model.sfixed64()).isEmpty();
-        assertThat(model.bool()).isEmpty();
-        assertThat(model.string()).isEmpty();
+        assertThat(model.doubles()).isEmpty();
+        assertThat(model.floats()).isEmpty();
+        assertThat(model.int32s()).isEmpty();
+        assertThat(model.int64s()).isEmpty();
+        assertThat(model.uint32s()).isEmpty();
+        assertThat(model.uint64s()).isEmpty();
+        assertThat(model.sint32s()).isEmpty();
+        assertThat(model.sint64s()).isEmpty();
+        assertThat(model.fixed32s()).isEmpty();
+        assertThat(model.fixed64s()).isEmpty();
+        assertThat(model.sfixed32s()).isEmpty();
+        assertThat(model.sfixed64s()).isEmpty();
+        assertThat(model.bools()).isEmpty();
+        assertThat(model.strings()).isEmpty();
         assertThat(model.bytes()).isEmpty();
     }
 
@@ -57,20 +57,20 @@ class RepeatableScalarTest {
         );
 
         // then
-        assertThat(model.double_()).containsExactly(10d);
-        assertThat(model.float_()).containsExactly(20f);
-        assertThat(model.int32()).containsExactly(30);
-        assertThat(model.int64()).containsExactly(40L);
-        assertThat(model.uint32()).containsExactly(50);
-        assertThat(model.uint64()).containsExactly(60L);
-        assertThat(model.sint32()).containsExactly(70);
-        assertThat(model.sint64()).containsExactly(80L);
-        assertThat(model.fixed32()).containsExactly(90);
-        assertThat(model.fixed64()).containsExactly(100L);
-        assertThat(model.sfixed32()).containsExactly(110);
-        assertThat(model.sfixed64()).containsExactly(120L);
-        assertThat(model.bool()).containsExactly(true);
-        assertThat(model.string()).containsExactly("test");
+        assertThat(model.doubles()).containsExactly(10d);
+        assertThat(model.floats()).containsExactly(20f);
+        assertThat(model.int32s()).containsExactly(30);
+        assertThat(model.int64s()).containsExactly(40L);
+        assertThat(model.uint32s()).containsExactly(50);
+        assertThat(model.uint64s()).containsExactly(60L);
+        assertThat(model.sint32s()).containsExactly(70);
+        assertThat(model.sint64s()).containsExactly(80L);
+        assertThat(model.fixed32s()).containsExactly(90);
+        assertThat(model.fixed64s()).containsExactly(100L);
+        assertThat(model.sfixed32s()).containsExactly(110);
+        assertThat(model.sfixed64s()).containsExactly(120L);
+        assertThat(model.bools()).containsExactly(true);
+        assertThat(model.strings()).containsExactly("test");
         assertThat(model.bytes()).containsExactly(ba(1));
     }
 
@@ -96,20 +96,20 @@ class RepeatableScalarTest {
         );
 
         // then
-        assertThat(model.double_()).containsExactly(10d, 11d);
-        assertThat(model.float_()).containsExactly(20f, 21f);
-        assertThat(model.int32()).containsExactly(30, 31);
-        assertThat(model.int64()).containsExactly(40L, 41L);
-        assertThat(model.uint32()).containsExactly(50, 51);
-        assertThat(model.uint64()).containsExactly(60L, 61L);
-        assertThat(model.sint32()).containsExactly(70, 71);
-        assertThat(model.sint64()).containsExactly(80L, 81L);
-        assertThat(model.fixed32()).containsExactly(90, 91);
-        assertThat(model.fixed64()).containsExactly(100L, 101L);
-        assertThat(model.sfixed32()).containsExactly(110, 111);
-        assertThat(model.sfixed64()).containsExactly(120L, 121L);
-        assertThat(model.bool()).containsExactly(true, false);
-        assertThat(model.string()).containsExactly("test", "foobar");
+        assertThat(model.doubles()).containsExactly(10d, 11d);
+        assertThat(model.floats()).containsExactly(20f, 21f);
+        assertThat(model.int32s()).containsExactly(30, 31);
+        assertThat(model.int64s()).containsExactly(40L, 41L);
+        assertThat(model.uint32s()).containsExactly(50, 51);
+        assertThat(model.uint64s()).containsExactly(60L, 61L);
+        assertThat(model.sint32s()).containsExactly(70, 71);
+        assertThat(model.sint64s()).containsExactly(80L, 81L);
+        assertThat(model.fixed32s()).containsExactly(90, 91);
+        assertThat(model.fixed64s()).containsExactly(100L, 101L);
+        assertThat(model.sfixed32s()).containsExactly(110, 111);
+        assertThat(model.sfixed64s()).containsExactly(120L, 121L);
+        assertThat(model.bools()).containsExactly(true, false);
+        assertThat(model.strings()).containsExactly("test", "foobar");
         assertThat(model.bytes()).containsExactly(ba(1, 2));
     }
 
@@ -125,7 +125,7 @@ class RepeatableScalarTest {
         input.add(20d);
 
         // then
-        assertThat(model.double_()).containsExactly(10d);
+        assertThat(model.doubles()).containsExactly(10d);
     }
 
     @Test
@@ -137,7 +137,7 @@ class RepeatableScalarTest {
                 List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
 
         // when then
-        assertThatThrownBy(() -> model.double_().add(20d))
+        assertThatThrownBy(() -> model.doubles().add(20d))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 
@@ -151,9 +151,9 @@ class RepeatableScalarTest {
         input2.add(20d);
         input2.add(21d);
         RepeatableScalar.Builder modelBuilder = RepeatableScalar.builder()
-                .double_(input1)
-                .addAllDouble_(input2)
-                .addDouble_(30d);
+                .doubles(input1)
+                .addAllDoubles(input2)
+                .addDoubles(30d);
 
         // when
         input1.add(12d);
@@ -161,18 +161,18 @@ class RepeatableScalarTest {
         RepeatableScalar model = modelBuilder.build();
 
         // then
-        assertThat(model.double_()).containsExactly(10d, 11d, 20d, 21d, 30d);
+        assertThat(model.doubles()).containsExactly(10d, 11d, 20d, 21d, 30d);
     }
 
     @Test
-    void builderSetter() {
+    void builderSetterOverrides() {
         // when
         RepeatableScalar model = RepeatableScalar.builder()
-                .addAllDouble_(Set.of(10d, 20d))
-                .double_(List.of(100d, 200d))
+                .addAllDoubles(Set.of(10d, 20d))
+                .doubles(List.of(100d, 200d))
                 .build();
 
         // then
-        assertThat(model.double_()).containsExactly(100d, 200d);
+        assertThat(model.doubles()).containsExactly(100d, 200d);
     }
 }
