@@ -139,7 +139,7 @@ Current feature support:
 | Scalar Fields               | <https://developers.google.com/protocol-buffers/docs/proto3#scalar>                 | ✔️ Supported                         |
 | Default Values              | <https://developers.google.com/protocol-buffers/docs/proto3#default>                | ✔️ Supported                         |
 | Packages                    | <https://developers.google.com/protocol-buffers/docs/proto3#packages>               | ✔️ Supported                         |
-| Repeated Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
+| Repeated Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ✔️ Only unpacked                     |
 | Optional Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
 | Required Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#specifying_field_rules> | ⏳ Not yet supported                  |
 | Enumerations                | <https://developers.google.com/protocol-buffers/docs/proto3#enum>                   | ✔️ Supported                         |
