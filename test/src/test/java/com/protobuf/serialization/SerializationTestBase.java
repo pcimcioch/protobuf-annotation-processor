@@ -18,16 +18,7 @@ abstract class SerializationTestBase {
     protected <T> T deserialize(ThrowingExtractor<byte[], T, IOException> bytesParser,
                                 ThrowingExtractor<InputStream, T, IOException> inputParser,
                                 ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
-        return deserialize(bytesParser, inputParser, deserialize(writerAction).toByteArray());
-    }
-
-    protected ByteArray deserialize(ThrowingConsumer<ProtobufWriter> writerAction) {
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-        ProtobufWriter proto = new ProtobufWriter(data);
-
-        writerAction.accept(proto);
-
-        return ByteArray.fromByteArray(data.toByteArray());
+        return deserialize(bytesParser, inputParser, serialize(writerAction).toByteArray());
     }
 
     protected <T> T deserialize(ThrowingExtractor<byte[], T, IOException> bytesParser,
@@ -45,7 +36,16 @@ abstract class SerializationTestBase {
         return recordRaw;
     }
 
-    protected <T extends ProtobufMessage<T>> byte[] serialize(T record) throws IOException {
+    protected ByteArray serialize(ThrowingConsumer<ProtobufWriter> writerAction) {
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        ProtobufWriter proto = new ProtobufWriter(data);
+
+        writerAction.accept(proto);
+
+        return ByteArray.fromByteArray(data.toByteArray());
+    }
+
+    protected byte[] serialize(ProtobufMessage<?> record) throws IOException {
         byte[] rawData = record.toByteArray();
         byte[] streamData;
 

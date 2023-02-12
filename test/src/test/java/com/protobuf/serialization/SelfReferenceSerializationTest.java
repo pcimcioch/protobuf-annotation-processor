@@ -1,7 +1,10 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.protobuf.model.FullRecord;
 import com.protobuf.model.SelfReference;
 import com.protobuf.model.SelfReferenceProto;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +52,7 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
         @Test
         void emptyObject() throws IOException {
             // given when
-            SelfReference record = deserialize(SelfReference::parse, SelfReference::parse, new byte[0]);
+            SelfReference record = deserialize(new byte[0]);
 
             // then
             assertThat(record).isEqualTo(SelfReference.empty());
@@ -58,11 +61,11 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given when
-            SelfReference record = deserialize(SelfReference::parse, SelfReference::parse, writer -> writer
+            SelfReference record = deserialize(writer -> writer
                     .int32(1, 10)
-                    .bytes(2, deserialize(second -> second
+                    .bytes(2, serialize(second -> second
                             .int32(1, 20)
-                            .bytes(2, deserialize(third -> third
+                            .bytes(2, serialize(third -> third
                                     .int32(1, 30)
                             ))
                     ))
@@ -86,7 +89,7 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
             SelfReference record = SelfReference.empty();
 
             // when
-            SelfReference deserialized = deserialize(SelfReference::parse, SelfReference::parse, serialize(record));
+            SelfReference deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -98,7 +101,7 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
             SelfReference record = new SelfReference(10, new SelfReference(20, new SelfReference(30, null)));
 
             // when
-            SelfReference deserialized = deserialize(SelfReference::parse, SelfReference::parse, serialize(record));
+            SelfReference deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -151,5 +154,13 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
             assertThat(our.value()).isEqualTo(proto.getValue());
             assertProtoEqual(our.next(), proto.getNext());
         }
+    }
+
+    private SelfReference deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+        return deserialize(SelfReference::parse, SelfReference::parse, writerAction);
+    }
+
+    private SelfReference deserialize(byte[] data) throws IOException {
+        return deserialize(SelfReference::parse, SelfReference::parse, data);
     }
 }

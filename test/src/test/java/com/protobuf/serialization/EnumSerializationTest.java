@@ -1,9 +1,12 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.protobuf.model.RepeatableEnumMessage;
 import com.protobuf.model.SimpleEnum;
 import com.protobuf.model.SimpleEnumMessage;
 import com.protobuf.model.SimpleEnumMessageProto;
 import com.protobuf.model.SimpleEnumProto;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +48,7 @@ class EnumSerializationTest extends SerializationTestBase {
         @Test
         void emptyObject() throws IOException {
             // given when
-            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, new byte[0]);
+            SimpleEnumMessage record = deserialize(new byte[0]);
 
             // then
             assertThat(record).isEqualTo(SimpleEnumMessage.builder()
@@ -56,7 +59,7 @@ class EnumSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given when
-            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writer -> writer
+            SimpleEnumMessage record = deserialize(writer -> writer
                     .int32(1, 2)
             );
 
@@ -69,7 +72,7 @@ class EnumSerializationTest extends SerializationTestBase {
         @Test
         void unknownEnum() throws IOException {
             // given when
-            SimpleEnumMessage record = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writer -> writer
+            SimpleEnumMessage record = deserialize(writer -> writer
                     .int32(1, 10)
             );
 
@@ -89,7 +92,7 @@ class EnumSerializationTest extends SerializationTestBase {
             SimpleEnumMessage record = SimpleEnumMessage.empty();
 
             // when
-            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
+            SimpleEnumMessage deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -101,7 +104,7 @@ class EnumSerializationTest extends SerializationTestBase {
             SimpleEnumMessage record = new SimpleEnumMessage(2);
 
             // when
-            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
+            SimpleEnumMessage deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -113,7 +116,7 @@ class EnumSerializationTest extends SerializationTestBase {
             SimpleEnumMessage record = new SimpleEnumMessage(10);
 
             // when
-            SimpleEnumMessage deserialized = deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, serialize(record));
+            SimpleEnumMessage deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -172,18 +175,24 @@ class EnumSerializationTest extends SerializationTestBase {
 
         private void assertProtoEqual(SimpleEnumMessage our, SimpleEnumMessageProto proto) {
             assertThat(our.orderValue()).isEqualTo(proto.getOrderValue());
-            assertProtoEquals(our.order(), proto.getOrder());
+            assertThat(our.order()).isEqualTo(convert(proto.getOrder()));
         }
 
-        private void assertProtoEquals(SimpleEnum our, SimpleEnumProto proto) {
-            SimpleEnumProto transformed = switch (our) {
-                case FIRST -> SimpleEnumProto.FIRST;
-                case SECOND -> SimpleEnumProto.SECOND;
-                case THIRD -> SimpleEnumProto.THIRD;
-                case UNRECOGNIZED -> SimpleEnumProto.UNRECOGNIZED;
+        private SimpleEnum convert(SimpleEnumProto order) {
+            return switch (order) {
+                case FIRST -> SimpleEnum.FIRST;
+                case SECOND -> SimpleEnum.SECOND;
+                case THIRD -> SimpleEnum.THIRD;
+                case UNRECOGNIZED -> SimpleEnum.UNRECOGNIZED;
             };
-
-            assertThat(proto).isEqualTo(transformed);
         }
+    }
+
+    private SimpleEnumMessage deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+        return deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writerAction);
+    }
+
+    private SimpleEnumMessage deserialize(byte[] data) throws IOException {
+        return deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, data);
     }
 }

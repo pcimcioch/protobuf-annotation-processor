@@ -1,9 +1,12 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
+import com.protobuf.model.RepeatableEnumMessage;
 import com.protobuf.model.RepeatableScalar;
 import com.protobuf.model.RepeatableScalarProto;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -116,6 +119,48 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .string(14, "test")
                     .end();
         }
+
+        // TODO same for message
+        @Test
+        void defaultValues() throws IOException {
+            // given
+            RepeatableScalar record = new RepeatableScalar(
+                    List.of(0d),
+                    List.of(0f),
+                    List.of(0),
+                    List.of(0L),
+                    List.of(0),
+                    List.of(0L),
+                    List.of(0),
+                    List.of(0L),
+                    List.of(0),
+                    List.of(0L),
+                    List.of(0),
+                    List.of(0L),
+                    List.of(false),
+                    List.of(""),
+                    List.of(ba())
+            );
+
+            // when then
+            assertProto(serialize(record))
+                    ._double(1, 0d)
+                    ._float(2, 0f)
+                    .int32(3, 0)
+                    .int64(4, 0L)
+                    .uint32(5, 0)
+                    .uint64(6, 0L)
+                    .sint32(7, 0)
+                    .sint64(8, 0L)
+                    .fixed32(9, 0)
+                    .fixed64(10, 0L)
+                    .sfixed32(11, 0)
+                    .sfixed64(12, 0L)
+                    .bool(13, false)
+                    .string(14, "")
+                    .bytes(15, b())
+                    .end();
+        }
     }
 
     @Nested
@@ -124,7 +169,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         @Test
         void emptyObject() throws IOException {
             // when
-            RepeatableScalar record = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, new byte[0]);
+            RepeatableScalar record = deserialize(new byte[0]);
 
             // then
             assertThat(record).isEqualTo(RepeatableScalar.empty());
@@ -133,7 +178,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given when
-            RepeatableScalar record = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writer -> writer
+            RepeatableScalar record = deserialize(writer -> writer
                     ._double(1, 10d)
                     ._double(1, 11d)
                     ._float(2, 20f)
@@ -188,7 +233,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         @Test
         void partialObject() throws IOException {
             // given when
-            RepeatableScalar record = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writer -> writer
+            RepeatableScalar record = deserialize(writer -> writer
                     ._double(1, 10d)
                     .int64(4, 40L)
                     .int64(4, 41L)
@@ -215,7 +260,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         @Test
         void fullObjectReverseOrder() throws IOException {
             // given when
-            RepeatableScalar record = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writer -> writer
+            RepeatableScalar record = deserialize(writer -> writer
                     ._double(1, 10d)
                     .sint32(7, 70)
                     .int32(3, 30)
@@ -271,7 +316,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         @Test
         void unknownFields() throws IOException {
             // given when
-            RepeatableScalar record = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writer -> writer
+            RepeatableScalar record = deserialize(writer -> writer
                     // unknown
                     ._double(21, 110d)
                     ._double(21, 111d)
@@ -350,7 +395,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             RepeatableScalar record = RepeatableScalar.empty();
 
             // when
-            RepeatableScalar deserialized = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, serialize(record));
+            RepeatableScalar deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -378,7 +423,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             );
 
             // when
-            RepeatableScalar deserialized = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, serialize(record));
+            RepeatableScalar deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -397,7 +442,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .build();
 
             // when
-            RepeatableScalar deserialized = deserialize(RepeatableScalar::parse, RepeatableScalar::parse, serialize(record));
+            RepeatableScalar deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -514,5 +559,13 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .usingElementComparator(Arrays::compare)
                     .isEqualTo(protoBytes);
         }
+    }
+
+    private RepeatableScalar deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+        return deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writerAction);
+    }
+
+    private RepeatableScalar deserialize(byte[] data) throws IOException {
+        return deserialize(RepeatableScalar::parse, RepeatableScalar::parse, data);
     }
 }

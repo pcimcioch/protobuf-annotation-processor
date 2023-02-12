@@ -1,7 +1,10 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.FullRecord;
 import com.protobuf.model.FullRecordProto;
+import com.protobuf.model.RepeatableScalar;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -88,7 +91,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         @Test
         void emptyObject() throws IOException {
             // when
-            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, new byte[0]);
+            FullRecord record = deserialize(new byte[0]);
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
@@ -113,7 +116,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given when
-            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+            FullRecord record = deserialize(writer -> writer
                     ._double(1, 10d)
                     ._float(2, 20f)
                     .int32(3, 30)
@@ -156,7 +159,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         @Test
         void partialObject() throws IOException {
             // given when
-            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+            FullRecord record = deserialize(writer -> writer
                     ._double(1, 10d)
                     .int64(4, 40L)
                     .sint32(7, 70)
@@ -188,7 +191,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         @Test
         void fullObjectReverseOrder() throws IOException {
             // given when
-            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+            FullRecord record = deserialize(writer -> writer
                     .bytes(15, ba(1, 20, 3))
                     .string(14, "test")
                     .bool(13, true)
@@ -229,7 +232,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         @Test
         void unknownFields() throws IOException {
             // given when
-            FullRecord record = deserialize(FullRecord::parse, FullRecord::parse, writer -> writer
+            FullRecord record = deserialize(writer -> writer
                     // unknown
                     ._double(21, 100d)
                     ._float(22, 200f)
@@ -294,7 +297,7 @@ class ScalarSerializationTest extends SerializationTestBase {
             FullRecord record = FullRecord.empty();
 
             // when
-            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
+            FullRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -310,7 +313,7 @@ class ScalarSerializationTest extends SerializationTestBase {
             );
 
             // when
-            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
+            FullRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -329,7 +332,7 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .build();
 
             // when
-            FullRecord deserialized = deserialize(FullRecord::parse, FullRecord::parse, serialize(record));
+            FullRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -458,5 +461,13 @@ class ScalarSerializationTest extends SerializationTestBase {
             assertThat(our.string()).isEqualTo(proto.getString());
             assertThat(our.bytes().toByteArray()).containsExactly(proto.getBytes().toByteArray());
         }
+    }
+
+    private FullRecord deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+        return deserialize(FullRecord::parse, FullRecord::parse, writerAction);
+    }
+
+    private FullRecord deserialize(byte[] data) throws IOException {
+        return deserialize(FullRecord::parse, FullRecord::parse, data);
     }
 }

@@ -1,11 +1,14 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.OtherMessageAddress;
 import com.protobuf.model.OtherMessageAddressProto;
 import com.protobuf.model.OtherMessageRecord;
 import com.protobuf.model.OtherMessageRecordProto;
 import com.protobuf.model.OtherMessageWork;
 import com.protobuf.model.OtherMessageWorkProto;
+import com.protobuf.model.SimpleEnumMessage;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -93,7 +96,7 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void emptyObject() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, new byte[0]);
+            OtherMessageRecord record = deserialize(new byte[0]);
 
             // then
             assertThat(record).isEqualTo(OtherMessageRecord.empty());
@@ -102,15 +105,15 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
+            OtherMessageRecord record = deserialize(writer -> writer
                     .string(1, "Tomas")
                     .int32(2, 40)
-                    .bytes(3, deserialize(address -> address
+                    .bytes(3, serialize(address -> address
                             .string(1, "Java St.")
                             .int32(2, 12)
                     ))
-                    .bytes(4, deserialize(work -> work
-                            .bytes(1, deserialize(address -> address
+                    .bytes(4, serialize(work -> work
+                            .bytes(1, serialize(address -> address
                                     .string(1, "Test Al.")
                                     .int32(2, 34000)
                             ))
@@ -135,10 +138,10 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void partialObject() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
+            OtherMessageRecord record = deserialize(writer -> writer
                     .string(1, "Tomas")
                     .int32(2, 40)
-                    .bytes(4, deserialize(work -> work
+                    .bytes(4, serialize(work -> work
                             .string(2, "Software House inc.")
                     ))
             );
@@ -158,16 +161,16 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void fullObjectReverseOrder() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
-                    .bytes(4, deserialize(work -> work
+            OtherMessageRecord record = deserialize(writer -> writer
+                    .bytes(4, serialize(work -> work
                             .fixed32(3, 2001)
                             .string(2, "Software House inc.")
-                            .bytes(1, deserialize(address -> address
+                            .bytes(1, serialize(address -> address
                                     .string(1, "Test Al.")
                                     .int32(2, 34000)
                             ))
                     ))
-                    .bytes(3, deserialize(address -> address
+                    .bytes(3, serialize(address -> address
                             .int32(2, 12)
                             .string(1, "Java St.")
                     ))
@@ -191,17 +194,17 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void unknownFields() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
+            OtherMessageRecord record = deserialize(writer -> writer
                     .bytes(10, ba(10, 20, 30, 40))
                     .string(1, "Tomas")
                     .int32(2, 40)
-                    .bytes(3, deserialize(address -> address
+                    .bytes(3, serialize(address -> address
                             .string(1, "Java St.")
                             .fixed32(11, 500)
                             .int32(2, 12)
                     ))
-                    .bytes(4, deserialize(work -> work
-                            .bytes(1, deserialize(address -> address
+                    .bytes(4, serialize(work -> work
+                            .bytes(1, serialize(address -> address
                                     .fixed64(12, 123456L)
                                     .string(1, "Test Al.")
                                     .int32(2, 34000)
@@ -228,12 +231,12 @@ class MessageSerializationTest extends SerializationTestBase {
         @Test
         void merge() throws IOException {
             // given when
-            OtherMessageRecord record = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writer -> writer
+            OtherMessageRecord record = deserialize(writer -> writer
                     // first message
                     .string(1, "test")
                     .int32(2, 10)
-                    .bytes(4, deserialize(work -> work
-                            .bytes(1, deserialize(address -> address
+                    .bytes(4, serialize(work -> work
+                            .bytes(1, serialize(address -> address
                                     .string(1, "Test")
                                     .int32(2, 20)
                             ))
@@ -242,12 +245,12 @@ class MessageSerializationTest extends SerializationTestBase {
                     ))
                     // second message
                     .string(1, "test2")
-                    .bytes(3, deserialize(address -> address
+                    .bytes(3, serialize(address -> address
                             .string(1, "Sun Street")
                             .int32(2, 100)
                     ))
-                    .bytes(4, deserialize(work -> work
-                            .bytes(1, deserialize(address -> address
+                    .bytes(4, serialize(work -> work
+                            .bytes(1, serialize(address -> address
                                     .int32(2, 200)
                             ))
                             .fixed32(3, 2022)
@@ -277,7 +280,7 @@ class MessageSerializationTest extends SerializationTestBase {
             OtherMessageRecord record = OtherMessageRecord.empty();
 
             // when
-            OtherMessageRecord deserialized = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, serialize(record));
+            OtherMessageRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -298,7 +301,7 @@ class MessageSerializationTest extends SerializationTestBase {
             );
 
             // when
-            OtherMessageRecord deserialized = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, serialize(record));
+            OtherMessageRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -317,7 +320,7 @@ class MessageSerializationTest extends SerializationTestBase {
                     .build();
 
             // when
-            OtherMessageRecord deserialized = deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, serialize(record));
+            OtherMessageRecord deserialized = deserialize(serialize(record));
 
             // then
             assertThat(deserialized).isEqualTo(record);
@@ -513,5 +516,13 @@ class MessageSerializationTest extends SerializationTestBase {
             assertThat(our.street()).isEqualTo(proto.getStreet());
             assertThat(our.number()).isEqualTo(proto.getNumber());
         }
+    }
+
+    private OtherMessageRecord deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+        return deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writerAction);
+    }
+
+    private OtherMessageRecord deserialize(byte[] data) throws IOException {
+        return deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, data);
     }
 }
