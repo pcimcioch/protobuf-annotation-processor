@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option java_package = "com.protobuf.performance";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME;
+
+message DataProto {
+  string version = 1;
+  string description = 2;
+  int64 timestamp = 3;
+  repeated ChunkProto chunks = 4 [packed = false];
+}
+
+message ChunkProto {
+  string id = 1;
+  repeated PointProto points = 2 [packed = false];
+}
+
+message PointProto {
+  string id = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+message ScalarProto {
+  double double_ = 1;
+  float float_ = 2;
+  int32 int32 = 3;
+  int64 int64 = 4;
+  uint32 uint32 = 5;
+  uint64 uint64 = 6;
+  sint32 sint32 = 7;
+  sint64 sint64 = 8;
+  fixed32 fixed32 = 9;
+  fixed64 fixed64 = 10;
+  sfixed32 sfixed32 = 11;
+  sfixed64 sfixed64 = 12;
+}
+
+message RepeatedScalarProto {
+  repeated double double_ = 1 [packed = false];
+  repeated float float_ = 2 [packed = false];
+  repeated int32 int32 = 3 [packed = false];
+  repeated int64 int64 = 4 [packed = false];
+  repeated uint32 uint32 = 5 [packed = false];
+  repeated uint64 uint64 = 6 [packed = false];
+  repeated sint32 sint32 = 7 [packed = false];
+  repeated sint64 sint64 = 8 [packed = false];
+  repeated fixed32 fixed32 = 9 [packed = false];
+  repeated fixed64 fixed64 = 10 [packed = false];
+  repeated sfixed32 sfixed32 = 11 [packed = false];
+  repeated sfixed64 sfixed64 = 12 [packed = false];
+}

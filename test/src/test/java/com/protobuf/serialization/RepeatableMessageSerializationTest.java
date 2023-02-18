@@ -1,12 +1,6 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.protobuf.model.OtherMessageAddress;
-import com.protobuf.model.OtherMessageAddressProto;
-import com.protobuf.model.OtherMessageRecord;
-import com.protobuf.model.OtherMessageRecordProto;
-import com.protobuf.model.OtherMessageWork;
-import com.protobuf.model.OtherMessageWorkProto;
 import com.protobuf.model.RepeatableOtherAddress;
 import com.protobuf.model.RepeatableOtherAddressProto;
 import com.protobuf.model.RepeatableOtherWork;
