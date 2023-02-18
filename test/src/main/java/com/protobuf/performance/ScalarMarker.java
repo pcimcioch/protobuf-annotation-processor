@@ -6,8 +6,8 @@ import com.github.pcimcioch.protobuf.annotation.Message;
 @Message(
         name = "Scalar",
         fields = {
-                @Field(type = "double", name = "_double", number = 1),
-                @Field(type = "float", name = "_float", number = 2),
+                @Field(type = "double", name = "double_", number = 1),
+                @Field(type = "float", name = "float_", number = 2),
                 @Field(type = "int32", name = "int32", number = 3),
                 @Field(type = "int64", name = "int64", number = 4),
                 @Field(type = "uint32", name = "uint32", number = 5),

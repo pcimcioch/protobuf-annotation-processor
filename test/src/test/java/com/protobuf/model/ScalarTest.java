@@ -54,8 +54,8 @@ class ScalarTest {
         );
 
         // then
-        assertThat(record._double()).isEqualTo(10d);
-        assertThat(record._float()).isEqualTo(20f);
+        assertThat(record.double_()).isEqualTo(10d);
+        assertThat(record.float_()).isEqualTo(20f);
         assertThat(record.int32()).isEqualTo(30);
         assertThat(record.int64()).isEqualTo(40L);
         assertThat(record.uint32()).isEqualTo(50);
@@ -75,8 +75,8 @@ class ScalarTest {
     void fullRecordBuilder() {
         // when
         FullRecord record = FullRecord.builder()
-                ._double(10d)
-                ._float(20f)
+                .double_(10d)
+                .float_(20f)
                 .int32(30)
                 .int64(40L)
                 .uint32(50)
@@ -93,8 +93,8 @@ class ScalarTest {
                 .build();
 
         // then
-        assertThat(record._double()).isEqualTo(10d);
-        assertThat(record._float()).isEqualTo(20f);
+        assertThat(record.double_()).isEqualTo(10d);
+        assertThat(record.float_()).isEqualTo(20f);
         assertThat(record.int32()).isEqualTo(30);
         assertThat(record.int64()).isEqualTo(40L);
         assertThat(record.uint32()).isEqualTo(50);
@@ -116,8 +116,8 @@ class ScalarTest {
         FullRecord record = FullRecord.empty();
 
         // then
-        assertThat(record._double()).isEqualTo(0d);
-        assertThat(record._float()).isEqualTo(0f);
+        assertThat(record.double_()).isEqualTo(0d);
+        assertThat(record.float_()).isEqualTo(0f);
         assertThat(record.int32()).isEqualTo(0);
         assertThat(record.int64()).isEqualTo(0L);
         assertThat(record.uint32()).isEqualTo(0);

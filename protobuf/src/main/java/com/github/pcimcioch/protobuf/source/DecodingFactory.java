@@ -106,10 +106,10 @@ class DecodingFactory {
 
     private CodeBody decodingCode(FieldDefinition field) {
         return switch (field.protoKind()) {
-            case DOUBLE -> body("builder.$field(reader._double(tag, \"$field\"));",
+            case DOUBLE -> body("builder.$field(reader.double_(tag, \"$field\"));",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FLOAT -> body("builder.$field(reader._float(tag, \"$field\"));",
+            case FLOAT -> body("builder.$field(reader.float_(tag, \"$field\"));",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
             case INT32, ENUM -> body("builder.$field(reader.int32(tag, \"$field\"));",

@@ -46,12 +46,12 @@ public @interface Field {
     /**
      * double
      */
-    String _double = "double";
+    String double_ = "double";
 
     /**
      * float
      */
-    String _float = "float";
+    String float_ = "float";
 
     /**
      * int32

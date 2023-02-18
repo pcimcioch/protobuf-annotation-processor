@@ -37,7 +37,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter _double(int number, double value) throws IOException {
+    public ProtobufWriter double_(int number, double value) throws IOException {
         if (!isDefault(value)) {
             Tag tag = new Tag(number, I64);
             output.writeVarint(tag.value());
@@ -55,7 +55,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter _double(int number, List<Double> values) throws IOException {
+    public ProtobufWriter double_(int number, List<Double> values) throws IOException {
         if (!isDefault(values)) {
             for (double value : values) {
                 Tag tag = new Tag(number, I64);
@@ -75,7 +75,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter _float(int number, float value) throws IOException {
+    public ProtobufWriter float_(int number, float value) throws IOException {
         if (!isDefault(value)) {
             Tag tag = new Tag(number, I32);
             output.writeVarint(tag.value());
@@ -93,7 +93,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter _float(int number, List<Float> values) throws IOException {
+    public ProtobufWriter float_(int number, List<Float> values) throws IOException {
         if (!isDefault(values)) {
             for (float value : values) {
                 Tag tag = new Tag(number, I32);

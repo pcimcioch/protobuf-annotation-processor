@@ -12,7 +12,13 @@ some use cases. But well, if there is a demand for such feature, it can always b
 forbid adding such functionality.
 
 Generated data classes are java records, which I think fits perfectly in this case. Those are basically data transfer objects with
-only serialization logic. By definition, they are immutable and provide good equals / hashcode and toString implementations.
+only serialization logic. By definition, they are immutable and provide good equals, hashcode and toString implementations.
+
+The biggest disadvantage of this library compared to the others is the performance. Official protoc generates code that is very efficient.
+It doesn't mean that this implementation is slow. If you don't use Protobuf for lightning fast serialization, this implementation might be a viable
+pick for you. If you do care about each microsecond though, just check its performance for your case.
+There are few [JMH performance tests](test/src/jmh/java/com/protobuf/performance/PerformanceTest.java) that compare this solution with
+protoc.
 
 # Quick Start
 You can define your protobuf schema using only java annotations
@@ -55,7 +61,7 @@ class Main {
 }
 ```
 
-There is also a plan to support `*.proto` files as a source of protobuf schema, but it is not implemented yet
+There is also a plan to support `*.proto` files as a source of protobuf schema, but **it is not implemented yet**
 ```java
 // model schema defined in file model.proto
 @Protobuf("model.proto")
@@ -104,7 +110,7 @@ Note that `protobuf-api` is `implementation` dependency, not `compileOnly`. I ma
 to have it like that
 
 # Examples
-For full documentation see [examples in test module](test/src/main/java/com/protobuf/model)
+For full documentation just see [examples in the test module](test/src/main/java/com/protobuf/model)
 
 # Similar Solutions
 

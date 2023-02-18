@@ -3,7 +3,6 @@ package com.protobuf.serialization;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.FullRecord;
 import com.protobuf.model.FullRecordProto;
-import com.protobuf.model.RepeatableScalar;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,8 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
-                    ._double(1, 10d)
-                    ._float(2, 20f)
+                    .double_(1, 10d)
+                    .float_(2, 20f)
                     .int32(3, 30)
                     .int64(4, 40L)
                     .uint32(5, 50)
@@ -65,7 +64,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given
             FullRecord record = FullRecord.builder()
-                    ._double(10d)
+                    .double_(10d)
                     .int64(40L)
                     .sint32(70)
                     .sfixed32(110)
@@ -75,7 +74,7 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
-                    ._double(1, 10d)
+                    .double_(1, 10d)
                     .int64(4, 40L)
                     .sint32(7, 70)
                     .sfixed32(11, 110)
@@ -95,8 +94,8 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
-                    ._double(0d)
-                    ._float(0f)
+                    .double_(0d)
+                    .float_(0f)
                     .int32(0)
                     .int64(0L)
                     .uint32(0)
@@ -117,8 +116,8 @@ class ScalarSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             FullRecord record = deserialize(writer -> writer
-                    ._double(1, 10d)
-                    ._float(2, 20f)
+                    .double_(1, 10d)
+                    .float_(2, 20f)
                     .int32(3, 30)
                     .int64(4, 40L)
                     .uint32(5, 50)
@@ -138,8 +137,8 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
-                    ._double(10d)
-                    ._float(20f)
+                    .double_(10d)
+                    .float_(20f)
                     .int32(30)
                     .int64(40L)
                     .uint32(50)
@@ -160,7 +159,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given when
             FullRecord record = deserialize(writer -> writer
-                    ._double(1, 10d)
+                    .double_(1, 10d)
                     .int64(4, 40L)
                     .sint32(7, 70)
                     .sfixed32(11, 110)
@@ -170,8 +169,8 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
-                    ._double(10d)
-                    ._float(0f)
+                    .double_(10d)
+                    .float_(0f)
                     .int32(0)
                     .int64(40L)
                     .uint32(0)
@@ -205,14 +204,14 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .uint32(5, 50)
                     .int64(4, 40L)
                     .int32(3, 30)
-                    ._float(2, 20f)
-                    ._double(1, 10d)
+                    .float_(2, 20f)
+                    .double_(1, 10d)
             );
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
-                    ._double(10d)
-                    ._float(20f)
+                    .double_(10d)
+                    .float_(20f)
                     .int32(30)
                     .int64(40L)
                     .uint32(50)
@@ -234,8 +233,8 @@ class ScalarSerializationTest extends SerializationTestBase {
             // given when
             FullRecord record = deserialize(writer -> writer
                     // unknown
-                    ._double(21, 100d)
-                    ._float(22, 200f)
+                    .double_(21, 100d)
+                    .float_(22, 200f)
                     .int32(23, 300)
                     .int64(24, 400L)
                     .uint32(25, 500)
@@ -250,8 +249,8 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .string(34, "foobar")
                     .bytes(35, ba(10, 20, 30, 40, 50))
                     // record
-                    ._double(1, 10d)
-                    ._float(2, 20f)
+                    .double_(1, 10d)
+                    .float_(2, 20f)
                     .int32(3, 30)
                     .int64(4, 40L)
                     .uint32(5, 50)
@@ -269,8 +268,8 @@ class ScalarSerializationTest extends SerializationTestBase {
 
             // then
             assertThat(record).isEqualTo(FullRecord.builder()
-                    ._double(10d)
-                    ._float(20f)
+                    .double_(10d)
+                    .float_(20f)
                     .int32(30)
                     .int64(40L)
                     .uint32(50)
@@ -323,7 +322,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given
             FullRecord record = FullRecord.builder()
-                    ._double(10d)
+                    .double_(10d)
                     .int64(40L)
                     .sint32(70)
                     .sfixed32(110)
@@ -359,7 +358,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given
             FullRecord our = FullRecord.builder()
-                    ._double(10d)
+                    .double_(10d)
                     .int64(40L)
                     .sint32(70)
                     .sfixed32(110)
@@ -386,8 +385,8 @@ class ScalarSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given
             FullRecord our = FullRecord.builder()
-                    ._double(10d)
-                    ._float(20f)
+                    .double_(10d)
+                    .float_(20f)
                     .int32(30)
                     .int64(40L)
                     .uint32(50)
@@ -445,8 +444,8 @@ class ScalarSerializationTest extends SerializationTestBase {
         }
 
         private void assertProtoEqual(FullRecord our, FullRecordProto proto) {
-            assertThat(our._double()).isEqualTo(proto.getDouble());
-            assertThat(our._float()).isEqualTo(proto.getFloat());
+            assertThat(our.double_()).isEqualTo(proto.getDouble());
+            assertThat(our.float_()).isEqualTo(proto.getFloat());
             assertThat(our.int32()).isEqualTo(proto.getInt32());
             assertThat(our.int64()).isEqualTo(proto.getInt64());
             assertThat(our.uint32()).isEqualTo(proto.getUint32());

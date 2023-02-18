@@ -49,7 +49,7 @@ public class ProtobufReader {
      * @return double
      * @throws IOException in case of any data read error
      */
-    public double _double(Tag tag, String fieldName) throws IOException {
+    public double double_(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, I64);
         return input.readDouble();
     }
@@ -62,7 +62,7 @@ public class ProtobufReader {
      * @return float
      * @throws IOException in case of any data read error
      */
-    public float _float(Tag tag, String fieldName) throws IOException {
+    public float float_(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, I32);
         return input.readFloat();
     }

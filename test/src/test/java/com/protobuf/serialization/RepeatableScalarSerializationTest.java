@@ -3,7 +3,6 @@ package com.protobuf.serialization;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
-import com.protobuf.model.RepeatableEnumMessage;
 import com.protobuf.model.RepeatableScalar;
 import com.protobuf.model.RepeatableScalarProto;
 import org.assertj.core.api.ThrowingConsumer;
@@ -48,10 +47,10 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
-                    ._double(1, 10d)
-                    ._double(1, 11d)
-                    ._float(2, 20f)
-                    ._float(2, 21f)
+                    .double_(1, 10d)
+                    .double_(1, 11d)
+                    .float_(2, 20f)
+                    .float_(2, 21f)
                     .int32(3, 30)
                     .int32(3, 31)
                     .int64(4, 40L)
@@ -105,7 +104,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
-                    ._double(1, 10d)
+                    .double_(1, 10d)
                     .int64(4, 40L)
                     .int64(4, 41L)
                     .int64(4, 42L)
@@ -144,8 +143,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
-                    ._double(1, 0d)
-                    ._float(2, 0f)
+                    .double_(1, 0d)
+                    .float_(2, 0f)
                     .int32(3, 0)
                     .int64(4, 0L)
                     .uint32(5, 0)
@@ -179,10 +178,10 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             RepeatableScalar record = deserialize(writer -> writer
-                    ._double(1, 10d)
-                    ._double(1, 11d)
-                    ._float(2, 20f)
-                    ._float(2, 21f)
+                    .double_(1, 10d)
+                    .double_(1, 11d)
+                    .float_(2, 20f)
+                    .float_(2, 21f)
                     .int32(3, 30)
                     .int32(3, 31)
                     .int64(4, 40L)
@@ -234,7 +233,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given when
             RepeatableScalar record = deserialize(writer -> writer
-                    ._double(1, 10d)
+                    .double_(1, 10d)
                     .int64(4, 40L)
                     .int64(4, 41L)
                     .int64(4, 42L)
@@ -261,10 +260,10 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void fullObjectReverseOrder() throws IOException {
             // given when
             RepeatableScalar record = deserialize(writer -> writer
-                    ._double(1, 10d)
+                    .double_(1, 10d)
                     .sint32(7, 70)
                     .int32(3, 30)
-                    ._float(2, 20f)
+                    .float_(2, 20f)
                     .sfixed32(11, 110)
                     .int32(3, 31)
                     .fixed64(10, 100L)
@@ -275,8 +274,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .string(14, "test1")
                     .uint32(5, 51)
                     .uint64(6, 60L)
-                    ._double(1, 11d)
-                    ._float(2, 21f)
+                    .double_(1, 11d)
+                    .float_(2, 21f)
                     .uint64(6, 61L)
                     .int64(4, 41L)
                     .bool(13, List.of(true))
@@ -318,10 +317,10 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given when
             RepeatableScalar record = deserialize(writer -> writer
                     // unknown
-                    ._double(21, 110d)
-                    ._double(21, 111d)
-                    ._float(22, 120f)
-                    ._float(22, 121f)
+                    .double_(21, 110d)
+                    .double_(21, 111d)
+                    .float_(22, 120f)
+                    .float_(22, 121f)
                     .int32(23, 130)
                     .int32(23, 131)
                     .int64(24, 140L)
@@ -348,8 +347,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bytes(35, ba(5, 6, 7))
                     .bytes(35, ba(25, 35, 45))
                     // record
-                    ._double(1, 10d)
-                    ._float(2, 20f)
+                    .double_(1, 10d)
+                    .float_(2, 20f)
                     .int32(3, 30)
                     .int64(4, 40L)
                     .uint32(5, 50)

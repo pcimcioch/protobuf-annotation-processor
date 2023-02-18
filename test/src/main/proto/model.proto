@@ -6,8 +6,8 @@ option optimize_for = LITE_RUNTIME;
 
 // ******************** Scalar ********************
 message FullRecordProto {
-  double _double = 1;
-  float _float = 2;
+  double double_ = 1;
+  float float_ = 2;
   int32 int32 = 3;
   int64 int64 = 4;
   uint32 uint32 = 5;

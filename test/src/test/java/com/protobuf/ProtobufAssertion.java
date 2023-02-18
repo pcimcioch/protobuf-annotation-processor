@@ -24,7 +24,7 @@ public final class ProtobufAssertion {
         return new ProtobufAssertion(new ByteArrayInputStream(data));
     }
 
-    public ProtobufAssertion _double(long number, double expectedValue) {
+    public ProtobufAssertion double_(long number, double expectedValue) {
         long expectedTag = number << 3 | 1;
 
         try {
@@ -40,7 +40,7 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion _float(long number, float expectedValue) {
+    public ProtobufAssertion float_(long number, float expectedValue) {
         long expectedTag = number << 3 | 5;
 
         try {

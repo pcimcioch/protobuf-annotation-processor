@@ -105,8 +105,8 @@ public class PerformanceTest {
 
         private OurRepeatedScalarAlgorithm() throws IOException {
             this.data = RepeatedScalar.builder()
-                    ._double(doubleList(10d))
-                    ._float(floatList(20f))
+                    .double_(doubleList(10d))
+                    .float_(floatList(20f))
                     .int32(intList(30))
                     .int64(longList(40L))
                     .uint32(intList(50))
