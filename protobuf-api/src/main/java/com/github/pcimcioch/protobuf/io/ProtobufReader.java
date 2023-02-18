@@ -248,7 +248,7 @@ public class ProtobufReader {
      */
     public <T> T message(Tag tag, String fieldName, MessageFactory<T> factory) throws IOException {
         assertWireType(tag, fieldName, LEN);
-        return factory.parse(input.readBytes()); // TODO this is very inefficient. But it works
+        return factory.parse(input.readBytes());
     }
 
     /**

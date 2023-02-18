@@ -1,6 +1,7 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.protobuf.ProtobufAssertion;
 import com.protobuf.model.RepeatableOtherAddress;
 import com.protobuf.model.RepeatableOtherAddressProto;
 import com.protobuf.model.RepeatableOtherWork;
@@ -50,6 +51,23 @@ class RepeatableMessageSerializationTest extends SerializationTestBase {
 
             // when then
             assertProto(serialize(record))
+                    .end();
+        }
+
+        @Test
+        void defaultValues() throws IOException {
+            // given
+            RepeatableOtherWork record = new RepeatableOtherWork(
+                    List.of(
+                            RepeatableOtherAddress.empty(),
+                            RepeatableOtherAddress.empty()
+                    )
+            );
+
+            // when then
+            assertProto(serialize(record))
+                    .message(1, ProtobufAssertion::end)
+                    .message(1, ProtobufAssertion::end)
                     .end();
         }
     }

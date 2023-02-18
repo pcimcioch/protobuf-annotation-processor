@@ -119,7 +119,6 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .end();
         }
 
-        // TODO same for message
         @Test
         void defaultValues() throws IOException {
             // given

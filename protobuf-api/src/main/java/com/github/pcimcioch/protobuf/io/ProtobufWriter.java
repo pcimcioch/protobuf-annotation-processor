@@ -611,7 +611,7 @@ public class ProtobufWriter {
         if (!isDefault(value)) {
             Tag tag = new Tag(number, LEN);
             output.writeVarint(tag.value());
-            output.writeBytes(value.toByteArray()); // TODO this is very inefficient. But it works
+            output.writeBytes(value.toByteArray());
         }
 
         return this;
@@ -630,7 +630,7 @@ public class ProtobufWriter {
             for (ProtobufMessage<?> value : values) {
                 Tag tag = new Tag(number, LEN);
                 output.writeVarint(tag.value());
-                output.writeBytes(value.toByteArray()); // TODO this is very inefficient. But it works
+                output.writeBytes(value.toByteArray());
             }
         }
 
