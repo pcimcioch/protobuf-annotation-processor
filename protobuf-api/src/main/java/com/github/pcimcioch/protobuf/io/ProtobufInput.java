@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.io;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,23 +102,6 @@ public class ProtobufInput {
         }
 
         return bytes;
-    }
-
-    /**
-     * Reads undefined number of bytes as a {@link ByteArray}
-     *
-     * @return byte array
-     * @throws IOException in case of any data read error
-     */
-    public ByteArray readByteArray() throws IOException {
-        int length = readVarint32();
-        ByteArray.Builder builder = ByteArray.builder(length);
-
-        for (int i = 0; i < length; i++) {
-            builder.set(i, readByte());
-        }
-
-        return builder.build();
     }
 
     /**

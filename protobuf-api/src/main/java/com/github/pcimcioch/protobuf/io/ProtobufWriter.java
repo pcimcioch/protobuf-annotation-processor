@@ -1,6 +1,5 @@
 package com.github.pcimcioch.protobuf.io;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.io.IOException;
@@ -544,7 +543,7 @@ public class ProtobufWriter {
     public ProtobufWriter bytes(int number, ByteArray value) throws IOException {
         if (!isDefault(value)) {
             output.writeVarint32(LEN.tagFrom(number));
-            output.writeByteArray(value);
+            output.writeBytes(value.internalData());
         }
 
         return this;
@@ -562,7 +561,7 @@ public class ProtobufWriter {
         if (!isDefault(values)) {
             for (ByteArray value : values) {
                 output.writeVarint32(LEN.tagFrom(number));
-                output.writeByteArray(value);
+                output.writeBytes(value.internalData());
             }
         }
 

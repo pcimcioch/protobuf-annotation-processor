@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.io.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import org.assertj.core.api.ThrowingConsumer;

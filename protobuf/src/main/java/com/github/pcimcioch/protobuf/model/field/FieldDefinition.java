@@ -201,7 +201,7 @@ public final class FieldDefinition {
                 case "bool" -> new ScalarDefinition(simpleName("boolean"), simpleName("boolean"), BOOL, VARINT);
                 case "string" -> new ScalarDefinition(simpleName("String"), simpleName("String"), STRING, LEN);
                 case "bytes" ->
-                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES, LEN);
+                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.io.ByteArray"), canonicalName("com.github.pcimcioch.protobuf.io.ByteArray"), BYTES, LEN);
                 default -> null;
             });
         }
@@ -233,7 +233,7 @@ public final class FieldDefinition {
                 case "string" ->
                         new ScalarDefinition(simpleName("String").inList(), simpleName("String").inList(), STRING, LEN);
                 case "bytes" ->
-                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), BYTES, LEN);
+                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.io.ByteArray").inList(), canonicalName("com.github.pcimcioch.protobuf.io.ByteArray").inList(), BYTES, LEN);
                 default -> null;
             });
         }

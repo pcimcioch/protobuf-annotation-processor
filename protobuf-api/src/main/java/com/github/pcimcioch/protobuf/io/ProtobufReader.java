@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.io;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -183,7 +181,7 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public ByteArray bytes() throws IOException {
-        return input.readByteArray();
+        return new ByteArray(input.readBytes());
     }
 
     /**

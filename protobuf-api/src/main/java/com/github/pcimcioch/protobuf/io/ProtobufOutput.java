@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.io;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -96,20 +94,6 @@ public class ProtobufOutput {
 
         for (byte b : value) {
             out.write(b);
-        }
-    }
-
-    /**
-     * Writes undefined number of bytes to the stream
-     *
-     * @param value bytes array
-     * @throws IOException in case of any data write error
-     */
-    public void writeByteArray(ByteArray value) throws IOException {
-        writeVarint32(value.length());
-
-        for (int i = 0; i < value.length(); i++) {
-            out.write(value.get(i));
         }
     }
 

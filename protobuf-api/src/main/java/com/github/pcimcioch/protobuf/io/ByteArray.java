@@ -1,4 +1,4 @@
-package com.github.pcimcioch.protobuf.dto;
+package com.github.pcimcioch.protobuf.io;
 
 import java.util.Arrays;
 
@@ -17,9 +17,12 @@ public final class ByteArray {
      */
     private final byte[] data;
 
-    private ByteArray(byte[] data) {
-        requireNonNull(data, "Data cannot be null");
+    ByteArray(byte[] data) {
         this.data = data;
+    }
+
+    byte[] internalData() {
+        return data;
     }
 
     /**

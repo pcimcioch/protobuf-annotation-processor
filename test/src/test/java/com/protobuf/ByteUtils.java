@@ -1,6 +1,6 @@
 package com.protobuf;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.io.ByteArray;
 import com.google.protobuf.ByteString;
 
 import java.util.Arrays;

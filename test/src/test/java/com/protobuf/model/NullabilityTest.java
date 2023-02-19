@@ -1,6 +1,6 @@
 package com.protobuf.model;
 
-import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.io.ByteArray;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
