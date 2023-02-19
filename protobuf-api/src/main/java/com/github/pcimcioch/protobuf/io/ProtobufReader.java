@@ -6,6 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.github.pcimcioch.protobuf.io.WireType.*;
 import static com.github.pcimcioch.protobuf.io.WireType.I32;
 import static com.github.pcimcioch.protobuf.io.WireType.I64;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
@@ -35,7 +36,7 @@ public class ProtobufReader {
      */
     public Tag tag() throws IOException {
         try {
-            return new Tag(input.readVarint());
+            return new Tag(input.readVarint32());
         } catch (EOFException ex) {
             return null;
         }
@@ -77,7 +78,7 @@ public class ProtobufReader {
      */
     public int int32(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return (int) input.readVarint();
+        return input.readVarint32();
     }
 
     /**
@@ -90,7 +91,7 @@ public class ProtobufReader {
      */
     public long int64(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return input.readVarint();
+        return input.readVarint64();
     }
 
     /**
@@ -103,7 +104,7 @@ public class ProtobufReader {
      */
     public int uint32(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return (int) input.readVarint();
+        return input.readVarint32();
     }
 
     /**
@@ -116,7 +117,7 @@ public class ProtobufReader {
      */
     public long uint64(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return input.readVarint();
+        return input.readVarint64();
     }
 
     /**
@@ -129,7 +130,7 @@ public class ProtobufReader {
      */
     public int sint32(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return (int) input.readZigZag();
+        return input.readZigZag32();
     }
 
     /**
@@ -142,7 +143,7 @@ public class ProtobufReader {
      */
     public long sint64(Tag tag, String fieldName) throws IOException {
         assertWireType(tag, fieldName, VARINT);
-        return input.readZigZag();
+        return input.readZigZag64();
     }
 
     /**
@@ -277,12 +278,12 @@ public class ProtobufReader {
      */
     public void skip(Tag tag) throws IOException {
         switch (tag.wireType()) {
-            case VARINT -> input.readVarint();
+            case VARINT -> input.readVarint64();
             case I64 -> input.skip(8);
-            case LEN -> input.skip(input.readVarint());
-            case WireType.SGROUP -> throw new ProtobufParseException("Wire Type SGROUP is not supported");
-            case WireType.EGROUP -> throw new ProtobufParseException("Wire Type EGROUP is not supported");
-            case WireType.I32 -> input.skip(4);
+            case LEN -> input.skip(input.readVarint64());
+            case SGROUP -> throw new ProtobufParseException("Wire Type SGROUP is not supported");
+            case EGROUP -> throw new ProtobufParseException("Wire Type EGROUP is not supported");
+            case I32 -> input.skip(4);
             default -> throw new ProtobufParseException("Unknown wire type %d", tag.wireType());
         }
     }

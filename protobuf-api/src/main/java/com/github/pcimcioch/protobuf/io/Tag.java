@@ -16,8 +16,8 @@ public record Tag(
      *
      * @param value value
      */
-    public Tag(long value) {
-        this((int) (value >>> WireType.WIRE_BITS), (int) (value & WireType.WIRE_MASK));
+    public Tag(int value) {
+        this(value >>> WireType.WIRE_BITS, value & WireType.WIRE_MASK);
     }
 
     /**
@@ -25,7 +25,7 @@ public record Tag(
      *
      * @return integer representation
      */
-    public long value() {
-        return (long) number << WireType.WIRE_BITS | wireType;
+    public int value() {
+        return number << WireType.WIRE_BITS | wireType;
     }
 }

@@ -129,7 +129,7 @@ public class ProtobufInput {
      * @return long
      * @throws IOException in case of any data read error
      */
-    public long readZigZag() throws IOException {
+    public long readZigZag64() throws IOException {
         long encoded = readVarint64();
         if ((encoded & 1) > 0) {
             return -(encoded >>> 1) - 1;
@@ -139,25 +139,13 @@ public class ProtobufInput {
     }
 
     /**
-     * Reads undefined number of bytes as a variant length integer
+     * Reads undefined number of bytes as a signed integer from zig-zag format
      *
-     * @return long
+     * @return int
      * @throws IOException in case of any data read error
      */
-    public long readVarint() throws IOException {
-        long result = 0L;
-        byte read;
-        long significantBytes;
-        int shift = 0;
-
-        do {
-            read = readByte();
-            significantBytes = read & PAYLOAD_MASK;
-            result |= significantBytes << shift;
-            shift += 7;
-        } while (read < 0);
-
-        return result;
+    public int readZigZag32() throws IOException {
+        return (int) readZigZag64();
     }
 
     /**

@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 @SuppressWarnings("PointlessBitwiseExpression")
 public class ProtobufOutput {
     private static final long LONG_PAYLOAD_MASK = 0b01111111;
-    private static final int INT_PAYLOAD_MASK = 0b01111111;
     private static final int CONTINUATION_MASK = 0b10000000;
 
     private final OutputStream out;
@@ -120,7 +119,7 @@ public class ProtobufOutput {
      * @param value long value
      * @throws IOException in case of any data write error
      */
-    public void writeZigZag(long value) throws IOException {
+    public void writeZigZag64(long value) throws IOException {
         if (value < 0) {
             writeVarint64(((-value - 1) << 1) + 1);
         } else {
@@ -129,22 +128,13 @@ public class ProtobufOutput {
     }
 
     /**
-     * Writes undefined number of bytes to encode given integer in a variant integer format
+     * Writes undefined number of bytes to encode given signed integer in a zig-zag format
      *
-     * @param value long value
+     * @param value int value
      * @throws IOException in case of any data write error
      */
-    public void writeVarint(long value) throws IOException {
-        int toWrite;
-
-        do {
-            toWrite = (int) (value & LONG_PAYLOAD_MASK);
-            value >>>= 7;
-            if (value != 0) {
-                toWrite |= CONTINUATION_MASK;
-            }
-            out.write(toWrite);
-        } while (value != 0);
+    public void writeZigZag32(int value) throws IOException {
+        writeZigZag64(value);
     }
 
     /**

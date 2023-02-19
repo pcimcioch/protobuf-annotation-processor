@@ -360,7 +360,7 @@ class ProtobufIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000011);
 
             // when
-            assertThatCode(() -> input(bytes).readVarint())
+            assertThatCode(() -> input(bytes).readVarint64())
                     .doesNotThrowAnyException();
         }
     }
@@ -569,13 +569,13 @@ class ProtobufIOTest {
     }
 
     @Nested
-    class ZigZag {
+    class ZigZag64 {
 
         @ParameterizedTest
         @MethodSource("arguments")
         void write(long value, byte[] bytes) throws IOException {
             // when
-            output().writeZigZag(value);
+            output().writeZigZag64(value);
 
             // then
             assertBinary(bytes);
@@ -585,7 +585,7 @@ class ProtobufIOTest {
         @MethodSource("arguments")
         void read(long value, byte[] bytes) throws IOException {
             // when then
-            assertThat(input(bytes).readZigZag()).isEqualTo(value);
+            assertThat(input(bytes).readZigZag64()).isEqualTo(value);
         }
 
         static Stream<Arguments> arguments() {
@@ -606,7 +606,55 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readZigZag())
+            assertThatThrownBy(() -> input(bytes).readZigZag64())
+                    .isInstanceOf(EOFException.class);
+        }
+
+        static Stream<byte[]> unfinishedArguments() {
+            return Stream.of(
+                    b(),
+                    b(0b10000001)
+            );
+        }
+    }
+
+    @Nested
+    class ZigZag32 {
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void write(int value, byte[] bytes) throws IOException {
+            // when
+            output().writeZigZag32(value);
+
+            // then
+            assertBinary(bytes);
+        }
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void read(int value, byte[] bytes) throws IOException {
+            // when then
+            assertThat(input(bytes).readZigZag32()).isEqualTo(value);
+        }
+
+        static Stream<Arguments> arguments() {
+            return Stream.of(
+                    Arguments.of(0, b(0b0)),
+                    Arguments.of(-1, b(0b1)),
+                    Arguments.of(1, b(0b10)),
+                    Arguments.of(-2, b(0b11)),
+                    Arguments.of(2, b(0b100)),
+                    Arguments.of(2147483647, b(0b11111110, 0b11111111, 0b11111111, 0b11111111, 0b00001111)),
+                    Arguments.of(-2147483648, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00001111))
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unfinishedArguments")
+        void readUnfinished(byte[] bytes) {
+            // when then
+            assertThatThrownBy(() -> input(bytes).readZigZag32())
                     .isInstanceOf(EOFException.class);
         }
 
@@ -626,9 +674,9 @@ class ProtobufIOTest {
             // when
             output().writeFixedInt(1000);
             output().writeFixedLong(123456789123L);
-            output().writeVarint(123456);
+            output().writeVarint32(123456);
             output().writeString("abc");
-            output().writeZigZag(2);
+            output().writeZigZag32(2);
 
             // then
             assertBinary(b(
@@ -654,9 +702,9 @@ class ProtobufIOTest {
             // when then
             assertThat(input.readFixedInt()).isEqualTo(1000);
             assertThat(input.readFixedLong()).isEqualTo(123456789123L);
-            assertThat(input.readVarint()).isEqualTo(123456);
+            assertThat(input.readVarint32()).isEqualTo(123456);
             assertThat(input.readString()).isEqualTo("abc");
-            assertThat(input.readZigZag()).isEqualTo(2);
+            assertThat(input.readZigZag32()).isEqualTo(2);
         }
     }
 

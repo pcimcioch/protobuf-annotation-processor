@@ -24,11 +24,11 @@ public final class ProtobufAssertion {
         return new ProtobufAssertion(new ByteArrayInputStream(data));
     }
 
-    public ProtobufAssertion double_(long number, double expectedValue) {
-        long expectedTag = number << 3 | 1;
+    public ProtobufAssertion double_(int number, double expectedValue) {
+        int expectedTag = number << 3 | 1;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             double value = input.readDouble();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -40,11 +40,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion float_(long number, float expectedValue) {
-        long expectedTag = number << 3 | 5;
+    public ProtobufAssertion float_(int number, float expectedValue) {
+        int expectedTag = number << 3 | 5;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             float value = input.readFloat();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -56,12 +56,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion int32(long number, int expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion int32(int number, int expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            int value = (int) input.readVarint();
+            int tag = input.readVarint32();
+            int value = input.readVarint32();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -72,12 +72,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion int64(long number, long expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion int64(int number, long expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            long value = input.readVarint();
+            int tag = input.readVarint32();
+            long value = input.readVarint64();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -88,12 +88,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion uint32(long number, int expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion uint32(int number, int expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            int value = (int) input.readVarint();
+            int tag = input.readVarint32();
+            int value = input.readVarint32();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -104,12 +104,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion uint64(long number, long expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion uint64(int number, long expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            long value = input.readVarint();
+            int tag = input.readVarint32();
+            long value = input.readVarint64();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -120,12 +120,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sint32(long number, int expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion sint32(int number, int expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            int value = (int) input.readZigZag();
+            int tag = input.readVarint32();
+            int value = input.readZigZag32();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -136,12 +136,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sint64(long number, long expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion sint64(int number, long expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
-            long value = input.readZigZag();
+            int tag = input.readVarint32();
+            long value = input.readZigZag64();
 
             assertThat(tag).isEqualTo(expectedTag);
             assertThat(value).isEqualTo(expectedValue);
@@ -152,11 +152,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion fixed32(long number, int expectedValue) {
-        long expectedTag = number << 3 | 5;
+    public ProtobufAssertion fixed32(int number, int expectedValue) {
+        int expectedTag = number << 3 | 5;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             int value = input.readFixedInt();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -168,11 +168,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion fixed64(long number, long expectedValue) {
-        long expectedTag = number << 3 | 1;
+    public ProtobufAssertion fixed64(int number, long expectedValue) {
+        int expectedTag = number << 3 | 1;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             long value = input.readFixedLong();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -184,11 +184,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sfixed32(long number, int expectedValue) {
-        long expectedTag = number << 3 | 5;
+    public ProtobufAssertion sfixed32(int number, int expectedValue) {
+        int expectedTag = number << 3 | 5;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             int value = input.readFixedInt();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -200,11 +200,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sfixed64(long number, long expectedValue) {
-        long expectedTag = number << 3 | 1;
+    public ProtobufAssertion sfixed64(int number, long expectedValue) {
+        int expectedTag = number << 3 | 1;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             long value = input.readFixedLong();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -216,11 +216,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion bool(long number, boolean expectedValue) {
-        long expectedTag = number << 3;
+    public ProtobufAssertion bool(int number, boolean expectedValue) {
+        int expectedTag = number << 3;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             boolean value = input.readBoolean();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -232,11 +232,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion string(long number, String expectedValue) {
-        long expectedTag = number << 3 | 2;
+    public ProtobufAssertion string(int number, String expectedValue) {
+        int expectedTag = number << 3 | 2;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             String value = input.readString();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -248,11 +248,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion bytes(long number, byte[] expectedValue) {
-        long expectedTag = number << 3 | 2;
+    public ProtobufAssertion bytes(int number, byte[] expectedValue) {
+        int expectedTag = number << 3 | 2;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             byte[] value = input.readBytes();
 
             assertThat(tag).isEqualTo(expectedTag);
@@ -264,11 +264,11 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion message(long number, Consumer<ProtobufAssertion> messageAssertions) {
-        long expectedTag = number << 3 | 2;
+    public ProtobufAssertion message(int number, Consumer<ProtobufAssertion> messageAssertions) {
+        int expectedTag = number << 3 | 2;
 
         try {
-            long tag = input.readVarint();
+            int tag = input.readVarint32();
             byte[] value = input.readBytes();
 
             assertThat(tag).isEqualTo(expectedTag);
