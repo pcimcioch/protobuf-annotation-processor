@@ -3,7 +3,6 @@ package com.github.pcimcioch.protobuf.source;
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.io.ProtobufReader;
-import com.github.pcimcioch.protobuf.io.Tag;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 
@@ -64,14 +63,13 @@ class DecodingFactory {
         CodeBody body = body("""
                         $BuilderType builder = new $BuilderType();
                                         
-                        $Tag tag = null;
-                        while ((tag = reader.tag()) != null) {
+                        int tag;
+                        while ((tag = reader.tag()) != -1) {
                             $readFields
                         }
                                         
                         return builder.build();""",
                 param("BuilderType", message.builderName()),
-                param("Tag", Tag.class),
                 param("readFields", readFields(message))
         );
 
@@ -86,11 +84,11 @@ class DecodingFactory {
     }
 
     private CodeBody readFields(MessageDefinition message) {
-        CodeBody body = body("switch(tag.number()) {");
+        CodeBody body = body("switch(tag) {");
 
         for (FieldDefinition field : message.fields()) {
             body
-                    .append("case $fieldNumber -> ", param("fieldNumber", field.number()))
+                    .append("case $fieldTag -> ", param("fieldTag", field.tag()))
                     .appendln(decodingCode(field));
         }
 
@@ -103,52 +101,52 @@ class DecodingFactory {
 
     private CodeBody decodingCode(FieldDefinition field) {
         return switch (field.protoKind()) {
-            case DOUBLE -> body("builder.$field(reader.double_(tag, \"$field\"));",
+            case DOUBLE -> body("builder.$field(reader.double_());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FLOAT -> body("builder.$field(reader.float_(tag, \"$field\"));",
+            case FLOAT -> body("builder.$field(reader.float_());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case INT32, ENUM -> body("builder.$field(reader.int32(tag, \"$field\"));",
+            case INT32, ENUM -> body("builder.$field(reader.int32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case INT64 -> body("builder.$field(reader.int64(tag, \"$field\"));",
+            case INT64 -> body("builder.$field(reader.int64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case UINT32 -> body("builder.$field(reader.uint32(tag, \"$field\"));",
+            case UINT32 -> body("builder.$field(reader.uint32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case UINT64 -> body("builder.$field(reader.uint64(tag, \"$field\"));",
+            case UINT64 -> body("builder.$field(reader.uint64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SINT32 -> body("builder.$field(reader.sint32(tag, \"$field\"));",
+            case SINT32 -> body("builder.$field(reader.sint32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SINT64 -> body("builder.$field(reader.sint64(tag, \"$field\"));",
+            case SINT64 -> body("builder.$field(reader.sint64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FIXED32 -> body("builder.$field(reader.fixed32(tag, \"$field\"));",
+            case FIXED32 -> body("builder.$field(reader.fixed32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FIXED64 -> body("builder.$field(reader.fixed64(tag, \"$field\"));",
+            case FIXED64 -> body("builder.$field(reader.fixed64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SFIXED32 -> body("builder.$field(reader.sfixed32(tag, \"$field\"));",
+            case SFIXED32 -> body("builder.$field(reader.sfixed32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SFIXED64 -> body("builder.$field(reader.sfixed64(tag, \"$field\"));",
+            case SFIXED64 -> body("builder.$field(reader.sfixed64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case BOOL -> body("builder.$field(reader.bool(tag, \"$field\"));",
+            case BOOL -> body("builder.$field(reader.bool());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case STRING -> body("builder.$field(reader.string(tag, \"$field\"));",
+            case STRING -> body("builder.$field(reader.string());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case BYTES -> body("builder.$field(reader.bytes(tag, \"$field\"));",
+            case BYTES -> body("builder.$field(reader.bytes());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case MESSAGE -> body("builder.$merge(reader.message(tag, \"$field\", $Type::parse));",
+            case MESSAGE -> body("builder.$merge(reader.message($Type::parse));",
                     param("merge", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldNamePrefixed("merge")),
                     param("field", field.javaFieldName()),
                     param("Type", field.rules().repeated() ? field.javaFieldType().generic() : field.javaFieldType())

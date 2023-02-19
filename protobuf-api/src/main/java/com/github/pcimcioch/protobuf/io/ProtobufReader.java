@@ -6,11 +6,13 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.github.pcimcioch.protobuf.io.WireType.*;
 import static com.github.pcimcioch.protobuf.io.WireType.I32;
 import static com.github.pcimcioch.protobuf.io.WireType.I64;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
 import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
+import static com.github.pcimcioch.protobuf.io.WireType.SGROUP;
+import static com.github.pcimcioch.protobuf.io.WireType.EGROUP;
+import static com.github.pcimcioch.protobuf.io.WireType.wireTypeFrom;
 
 /**
  * Reads protobuf data
@@ -34,221 +36,173 @@ public class ProtobufReader {
      * @return tag or null if end of input reached
      * @throws IOException in case of any data read error
      */
-    public Tag tag() throws IOException {
+    public int tag() throws IOException {
         try {
-            return new Tag(input.readVarint32());
+            return input.readVarint32();
         } catch (EOFException ex) {
-            return null;
+            return -1;
         }
     }
 
     /**
      * Reads double
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return double
      * @throws IOException in case of any data read error
      */
-    public double double_(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I64);
+    public double double_() throws IOException {
         return input.readDouble();
     }
 
     /**
      * Reads float
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return float
      * @throws IOException in case of any data read error
      */
-    public float float_(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I32);
+    public float float_() throws IOException {
         return input.readFloat();
     }
 
     /**
      * Reads int32
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return int32
      * @throws IOException in case of any data read error
      */
-    public int int32(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public int int32() throws IOException {
         return input.readVarint32();
     }
 
     /**
      * Reads int64
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return int64
      * @throws IOException in case of any data read error
      */
-    public long int64(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public long int64() throws IOException {
         return input.readVarint64();
     }
 
     /**
      * Reads uint32
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return uint32
      * @throws IOException in case of any data read error
      */
-    public int uint32(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public int uint32() throws IOException {
         return input.readVarint32();
     }
 
     /**
      * Reads uint64
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return uint64
      * @throws IOException in case of any data read error
      */
-    public long uint64(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public long uint64() throws IOException {
         return input.readVarint64();
     }
 
     /**
      * Reads sint32
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return sint32
      * @throws IOException in case of any data read error
      */
-    public int sint32(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public int sint32() throws IOException {
         return input.readZigZag32();
     }
 
     /**
      * Reads sint64
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return sint64
      * @throws IOException in case of any data read error
      */
-    public long sint64(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public long sint64() throws IOException {
         return input.readZigZag64();
     }
 
     /**
      * Reads fixed32
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return fixed32
      * @throws IOException in case of any data read error
      */
-    public int fixed32(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I32);
+    public int fixed32() throws IOException {
         return input.readFixedInt();
     }
 
     /**
      * Reads fixed64
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return fixed64
      * @throws IOException in case of any data read error
      */
-    public long fixed64(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I64);
+    public long fixed64() throws IOException {
         return input.readFixedLong();
     }
 
     /**
      * Reads sfixed32
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return sfixed32
      * @throws IOException in case of any data read error
      */
-    public int sfixed32(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I32);
+    public int sfixed32() throws IOException {
         return input.readFixedInt();
     }
 
     /**
      * Reads sfixed64
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return sfixed64
      * @throws IOException in case of any data read error
      */
-    public long sfixed64(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, I64);
+    public long sfixed64() throws IOException {
         return input.readFixedLong();
     }
 
     /**
      * Reads bool
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return bool
      * @throws IOException in case of any data read error
      */
-    public boolean bool(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, VARINT);
+    public boolean bool() throws IOException {
         return input.readBoolean();
     }
 
     /**
      * Reads string
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return string
      * @throws IOException in case of any data read error
      */
-    public String string(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, LEN);
+    public String string() throws IOException {
         return input.readString();
     }
 
     /**
      * Reads bytes
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @return bytes
      * @throws IOException in case of any data read error
      */
-    public ByteArray bytes(Tag tag, String fieldName) throws IOException {
-        assertWireType(tag, fieldName, LEN);
+    public ByteArray bytes() throws IOException {
         return input.readByteArray();
     }
 
     /**
      * Reads message
      *
-     * @param tag       tag
-     * @param fieldName field name
      * @param factory   message from bytes factory
      * @param <T>       type of message
      * @return message
      * @throws IOException in case of any data read error
      */
-    public <T> T message(Tag tag, String fieldName, MessageFactory<T> factory) throws IOException {
-        assertWireType(tag, fieldName, LEN);
+    public <T> T message(MessageFactory<T> factory) throws IOException {
         return factory.parse(input.readBytes());
     }
 
@@ -276,22 +230,15 @@ public class ProtobufReader {
      * @param tag tag
      * @throws IOException in case of any data read error
      */
-    public void skip(Tag tag) throws IOException {
-        switch (tag.wireType()) {
+    public void skip(int tag) throws IOException {
+        switch (wireTypeFrom(tag)) {
             case VARINT -> input.readVarint64();
             case I64 -> input.skip(8);
             case LEN -> input.skip(input.readVarint64());
             case SGROUP -> throw new ProtobufParseException("Wire Type SGROUP is not supported");
             case EGROUP -> throw new ProtobufParseException("Wire Type EGROUP is not supported");
             case I32 -> input.skip(4);
-            default -> throw new ProtobufParseException("Unknown wire type %d", tag.wireType());
-        }
-    }
-
-    private static void assertWireType(Tag tag, String fieldName, int expectedWireType) {
-        if (tag.wireType() != expectedWireType) {
-            throw new ProtobufParseException("Field [name=%s, number=%d] incorrect wire type. Expected %d, got %d",
-                    fieldName, tag.number(), expectedWireType, tag.wireType());
+            default -> throw new ProtobufParseException("Unknown wire type %d", wireTypeFrom(tag));
         }
     }
 }

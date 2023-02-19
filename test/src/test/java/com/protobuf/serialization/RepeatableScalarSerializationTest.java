@@ -417,6 +417,22 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bool(13, true)
                     .string(14, "test1")
                     .bytes(15, ba(1, 2, 3))
+                    // different wire type
+                    .float_(1, 11f)
+                    .double_(2, 21d)
+                    .string(3, "30")
+                    .string(4, "40L")
+                    .string(5, "50")
+                    .string(6, "60L")
+                    .string(7, "70")
+                    .string(8, "80L")
+                    .string(9, "90")
+                    .string(10, "100L")
+                    .string(11, "110")
+                    .string(12, "120L")
+                    .string(13, "true")
+                    .int32(14, 1001)
+                    .int32(15, 1002)
             );
 
             // then

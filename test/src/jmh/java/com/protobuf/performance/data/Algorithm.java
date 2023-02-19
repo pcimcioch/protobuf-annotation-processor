@@ -9,8 +9,6 @@ import java.io.OutputStream;
 // TODO when writing nested object (message, string, bytearray), do not copy any arrays
 // TODO move ByteArray to io Package and make its "data" field package private so io classes can access it directly
 // TODO currently we have one ProtobufInput and ProtobufOutput that operate on the Streams. Maybe we should have separate implementations for streams and separate for raw byte[]
-// TODO do not assert tag wire type on reading. If wire type is incorrect just treat this entry as unknown
-// TODO get rid of Tag class. It costs to compute tags it runtime
 // TODO ProtobufInput and ProtobufOutput improvements
 public final class Algorithm<T> {
     static final String OUR = "OUR";
