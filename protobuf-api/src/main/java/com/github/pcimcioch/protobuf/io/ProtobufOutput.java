@@ -11,7 +11,8 @@ import java.nio.charset.StandardCharsets;
  */
 @SuppressWarnings("PointlessBitwiseExpression")
 public class ProtobufOutput {
-    private static final long PAYLOAD_MASK = 0b01111111;
+    private static final long LONG_PAYLOAD_MASK = 0b01111111;
+    private static final int INT_PAYLOAD_MASK = 0b01111111;
     private static final int CONTINUATION_MASK = 0b10000000;
 
     private final OutputStream out;
@@ -92,7 +93,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeBytes(byte[] value) throws IOException {
-        writeVarint(value.length);
+        writeVarint32(value.length);
 
         for (byte b : value) {
             out.write(b);
@@ -106,7 +107,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeByteArray(ByteArray value) throws IOException {
-        writeVarint(value.length());
+        writeVarint32(value.length());
 
         for (int i = 0; i < value.length(); i++) {
             out.write(value.get(i));
@@ -121,9 +122,9 @@ public class ProtobufOutput {
      */
     public void writeZigZag(long value) throws IOException {
         if (value < 0) {
-            writeVarint(((-value - 1) << 1) + 1);
+            writeVarint64(((-value - 1) << 1) + 1);
         } else {
-            writeVarint(value << 1);
+            writeVarint64(value << 1);
         }
     }
 
@@ -137,13 +138,42 @@ public class ProtobufOutput {
         int toWrite;
 
         do {
-            toWrite = (int) (value & PAYLOAD_MASK);
+            toWrite = (int) (value & LONG_PAYLOAD_MASK);
             value >>>= 7;
             if (value != 0) {
                 toWrite |= CONTINUATION_MASK;
             }
             out.write(toWrite);
         } while (value != 0);
+    }
+
+    /**
+     * Writes undefined number of bytes to encode given integer in a variant integer format
+     *
+     * @param value long value
+     * @throws IOException in case of any data write error
+     */
+    public void writeVarint64(long value) throws IOException {
+        int toWrite;
+
+        do {
+            toWrite = (int) (value & LONG_PAYLOAD_MASK);
+            value >>>= 7;
+            if (value != 0) {
+                toWrite |= CONTINUATION_MASK;
+            }
+            out.write(toWrite);
+        } while (value != 0);
+    }
+
+    /**
+     * Writes undefined number of bytes to encode given integer in a variant integer format
+     *
+     * @param value int value
+     * @throws IOException in case of any data write error
+     */
+    public void writeVarint32(int value) throws IOException {
+        writeVarint64(value);
     }
 
     private void writeInt(int value) throws IOException {

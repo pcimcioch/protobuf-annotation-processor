@@ -102,13 +102,13 @@ class ProtobufIOTest {
                     Arguments.of(15, b(0b00001111, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
                     Arguments.of(255, b(0b11111111, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
                     Arguments.of(1000, b(0b11101000, 0b11, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0)),
-                    Arguments.of(123456789123L, b(0b10000011,0b00011010,0b10011001,0b10111110,0b11100,0b0,0b0,0b0)),
+                    Arguments.of(123456789123L, b(0b10000011, 0b00011010, 0b10011001, 0b10111110, 0b11100, 0b0, 0b0, 0b0)),
                     Arguments.of(Long.MAX_VALUE, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b01111111)),
                     Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
                     Arguments.of(-15, b(0b11110001, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
                     Arguments.of(-255, b(0b1, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-1000, b(0b00011000, 0b11111100,0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
-                    Arguments.of(-123456789123L, b(0b01111101,0b11100101,0b01100110,0b01000001,0b11100011,0b11111111,0b11111111,0b11111111)),
+                    Arguments.of(-1000, b(0b00011000, 0b11111100, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111)),
+                    Arguments.of(-123456789123L, b(0b01111101, 0b11100101, 0b01100110, 0b01000001, 0b11100011, 0b11111111, 0b11111111, 0b11111111)),
                     Arguments.of(Long.MIN_VALUE, b(0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b10000000))
             );
         }
@@ -294,13 +294,13 @@ class ProtobufIOTest {
     }
 
     @Nested
-    class VarInts {
+    class VarInts64 {
 
         @ParameterizedTest
         @MethodSource("arguments")
         void write(long value, byte[] bytes) throws IOException {
             // when
-            output().writeVarint(value);
+            output().writeVarint64(value);
 
             // then
             assertBinary(bytes);
@@ -310,7 +310,7 @@ class ProtobufIOTest {
         @MethodSource("arguments")
         void read(long value, byte[] bytes) throws IOException {
             // when then
-            assertThat(input(bytes).readVarint()).isEqualTo(value);
+            assertThat(input(bytes).readVarint64()).isEqualTo(value);
         }
 
         static Stream<Arguments> arguments() {
@@ -333,7 +333,7 @@ class ProtobufIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThatThrownBy(() -> input(bytes).readVarint())
+            assertThatThrownBy(() -> input(bytes).readVarint64())
                     .isInstanceOf(EOFException.class);
         }
 
@@ -350,7 +350,7 @@ class ProtobufIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001);
 
             // when
-            assertThatCode(() -> input(bytes).readVarint())
+            assertThatCode(() -> input(bytes).readVarint64())
                     .doesNotThrowAnyException();
         }
 
@@ -361,6 +361,76 @@ class ProtobufIOTest {
 
             // when
             assertThatCode(() -> input(bytes).readVarint())
+                    .doesNotThrowAnyException();
+        }
+    }
+
+    @Nested
+    class VarInts32 {
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void write(int value, byte[] bytes) throws IOException {
+            // when
+            output().writeVarint32(value);
+
+            // then
+            assertBinary(bytes);
+        }
+
+        @ParameterizedTest
+        @MethodSource("arguments")
+        void read(int value, byte[] bytes) throws IOException {
+            // when then
+            assertThat(input(bytes).readVarint32()).isEqualTo(value);
+        }
+
+        static Stream<Arguments> arguments() {
+            return Stream.of(
+                    Arguments.of(0, b(0b0)),
+                    Arguments.of(1, b(0b1)),
+                    Arguments.of(127, b(0b01111111)),
+                    Arguments.of(150, b(0b10010110, 0b00000001)),
+                    Arguments.of(123456, b(0b11000000, 0b11000100, 0b00000111)),
+                    Arguments.of(Integer.MAX_VALUE, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000111)),
+                    Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001)),
+                    Arguments.of(-123456, b(0b11000000, 0b10111011, 0b11111000, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001)),
+                    Arguments.of(Integer.MIN_VALUE, b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b11111000, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001))
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unfinishedArguments")
+        void readUnfinished(byte[] bytes) {
+            // when then
+            assertThatThrownBy(() -> input(bytes).readVarint32())
+                    .isInstanceOf(EOFException.class);
+        }
+
+        static Stream<byte[]> unfinishedArguments() {
+            return Stream.of(
+                    b(),
+                    b(0b10000001)
+            );
+        }
+
+        @Test
+        void readOverTenBytes() {
+            // given
+            byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001);
+
+            // when
+            assertThatCode(() -> input(bytes).readVarint32())
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void readOver64Bits() {
+            // given
+            byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000011);
+
+            // when
+            assertThatCode(() -> input(bytes).readVarint32())
                     .doesNotThrowAnyException();
         }
     }

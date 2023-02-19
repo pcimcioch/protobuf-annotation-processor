@@ -159,6 +159,62 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bytes(15, b())
                     .end();
         }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            RepeatableScalar record = new RepeatableScalar(
+                    List.of(-10d, -11d),
+                    List.of(-20f, -21f),
+                    List.of(-30, -31),
+                    List.of(-40L, -41L),
+                    List.of(50, 51),
+                    List.of(60L, 61L),
+                    List.of(-70, -71),
+                    List.of(-80L, -81L),
+                    List.of(-90, -91),
+                    List.of(-100L, -101L),
+                    List.of(-110, -111),
+                    List.of(-120L, -121L),
+                    List.of(true, false),
+                    List.of("test1", "test2"),
+                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+            );
+
+            // when then
+            assertProto(serialize(record))
+                    .double_(1, -10d)
+                    .double_(1, -11d)
+                    .float_(2, -20f)
+                    .float_(2, -21f)
+                    .int32(3, -30)
+                    .int32(3, -31)
+                    .int64(4, -40L)
+                    .int64(4, -41L)
+                    .uint32(5, 50)
+                    .uint32(5, 51)
+                    .uint64(6, 60L)
+                    .uint64(6, 61L)
+                    .sint32(7, -70)
+                    .sint32(7, -71)
+                    .sint64(8, -80L)
+                    .sint64(8, -81L)
+                    .fixed32(9, -90)
+                    .fixed32(9, -91)
+                    .fixed64(10, -100L)
+                    .fixed64(10, -101L)
+                    .sfixed32(11, -110)
+                    .sfixed32(11, -111)
+                    .sfixed64(12, -120L)
+                    .sfixed64(12, -121L)
+                    .bool(13, true)
+                    .bool(13, false)
+                    .string(14, "test1")
+                    .string(14, "test2")
+                    .bytes(15, b(1, 2, 3))
+                    .bytes(15, b(20, 30, 40))
+                    .end();
+        }
     }
 
     @Nested
@@ -382,6 +438,61 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bytes(List.of(ba(1, 2, 3)))
                     .build());
         }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given when
+            RepeatableScalar record = deserialize(writer -> writer
+                    .double_(1, -10d)
+                    .double_(1, -11d)
+                    .float_(2, -20f)
+                    .float_(2, -21f)
+                    .int32(3, -30)
+                    .int32(3, -31)
+                    .int64(4, -40L)
+                    .int64(4, -41L)
+                    .uint32(5, 50)
+                    .uint32(5, 51)
+                    .uint64(6, 60L)
+                    .uint64(6, 61L)
+                    .sint32(7, -70)
+                    .sint32(7, -71)
+                    .sint64(8, -80L)
+                    .sint64(8, -81L)
+                    .fixed32(9, -90)
+                    .fixed32(9, -91)
+                    .fixed64(10, -100L)
+                    .fixed64(10, -101L)
+                    .sfixed32(11, -110)
+                    .sfixed32(11, -111)
+                    .sfixed64(12, -120L)
+                    .sfixed64(12, -121L)
+                    .bool(13, List.of(true, false))
+                    .string(14, "test1")
+                    .string(14, "test2")
+                    .bytes(15, ba(1, 2, 3))
+                    .bytes(15, ba(20, 30, 40))
+            );
+
+            // then
+            assertThat(record).isEqualTo(RepeatableScalar.builder()
+                    .doubles(List.of(-10d, -11d))
+                    .floats(List.of(-20f, -21f))
+                    .int32s(List.of(-30, -31))
+                    .int64s(List.of(-40L, -41L))
+                    .uint32s(List.of(50, 51))
+                    .uint64s(List.of(60L, 61L))
+                    .sint32s(List.of(-70, -71))
+                    .sint64s(List.of(-80L, -81L))
+                    .fixed32s(List.of(-90, -91))
+                    .fixed64s(List.of(-100L, -101L))
+                    .sfixed32s(List.of(-110, -111))
+                    .sfixed64s(List.of(-120L, -121L))
+                    .bools(List.of(true, false))
+                    .strings(List.of("test1", "test2"))
+                    .bytes(List.of(ba(1, 2, 3), ba(20, 30, 40)))
+                    .build());
+        }
     }
 
     @Nested
@@ -438,6 +549,34 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bools(List.of(false, true, true))
                     .strings(List.of("test", "test"))
                     .build();
+
+            // when
+            RepeatableScalar deserialized = deserialize(serialize(record));
+
+            // then
+            assertThat(deserialized).isEqualTo(record);
+        }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            RepeatableScalar record = new RepeatableScalar(
+                    List.of(-10d, -11d),
+                    List.of(-20f, -21f),
+                    List.of(-30, -31),
+                    List.of(-40L, -41L),
+                    List.of(50, 51),
+                    List.of(60L, 61L),
+                    List.of(-70, -71),
+                    List.of(-80L, -81L),
+                    List.of(-90, -91),
+                    List.of(-100L, -101L),
+                    List.of(-110, -111),
+                    List.of(-120L, -121L),
+                    List.of(true, false),
+                    List.of("test1", "test2"),
+                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+            );
 
             // when
             RepeatableScalar deserialized = deserialize(serialize(record));
@@ -523,6 +662,51 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .addAllFixed64S(List.of(100L, 101L))
                     .addAllSfixed32S(List.of(110, 111))
                     .addAllSfixed64S(List.of(120L, 121L))
+                    .addAllBools(List.of(true, false))
+                    .addAllStrings(List.of("test1", "test2"))
+                    .addAllBytes(List.of(bs(1, 2, 3), bs(20, 30, 40)))
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, RepeatableScalarProto.parseFrom(ourBytes));
+            assertProtoEqual(RepeatableScalar.parse(protoBytes), proto);
+        }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            RepeatableScalar our = RepeatableScalar.builder()
+                    .doubles(List.of(-10d, -11d))
+                    .floats(List.of(-20f, -21f))
+                    .int32s(List.of(-30, -31))
+                    .int64s(List.of(-40L, -41L))
+                    .uint32s(List.of(50, 51))
+                    .uint64s(List.of(60L, 61L))
+                    .sint32s(List.of(-70, -71))
+                    .sint64s(List.of(-80L, -81L))
+                    .fixed32s(List.of(-90, -91))
+                    .fixed64s(List.of(-100L, -101L))
+                    .sfixed32s(List.of(-110, -111))
+                    .sfixed64s(List.of(-120L, -121L))
+                    .bools(List.of(true, false))
+                    .strings(List.of("test1", "test2"))
+                    .bytes(List.of(ba(1, 2, 3), ba(20, 30, 40)))
+                    .build();
+            RepeatableScalarProto proto = RepeatableScalarProto.newBuilder()
+                    .addAllDoubles(List.of(-10d, -11d))
+                    .addAllFloats(List.of(-20f, -21f))
+                    .addAllInt32S(List.of(-30, -31))
+                    .addAllInt64S(List.of(-40L, -41L))
+                    .addAllUint32S(List.of(50, 51))
+                    .addAllUint64S(List.of(60L, 61L))
+                    .addAllSint32S(List.of(-70, -71))
+                    .addAllSint64S(List.of(-80L, -81L))
+                    .addAllFixed32S(List.of(-90, -91))
+                    .addAllFixed64S(List.of(-100L, -101L))
+                    .addAllSfixed32S(List.of(-110, -111))
+                    .addAllSfixed64S(List.of(-120L, -121L))
                     .addAllBools(List.of(true, false))
                     .addAllStrings(List.of("test1", "test2"))
                     .addAllBytes(List.of(bs(1, 2, 3), bs(20, 30, 40)))

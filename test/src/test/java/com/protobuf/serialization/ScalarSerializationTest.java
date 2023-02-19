@@ -82,6 +82,35 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .string(14, "test")
                     .end();
         }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            FullRecord record = new FullRecord(
+                    -10d, -20f,
+                    -30, -40L, 50, 60L, -70, -80L, -90, -100L, -110, -120L,
+                    true, "test", ba(1, 20, 3)
+            );
+
+            // when then
+            assertProto(serialize(record))
+                    .double_(1, -10d)
+                    .float_(2, -20f)
+                    .int32(3, -30)
+                    .int64(4, -40L)
+                    .uint32(5, 50)
+                    .uint64(6, 60L)
+                    .sint32(7, -70)
+                    .sint64(8, -80L)
+                    .fixed32(9, -90)
+                    .fixed64(10, -100L)
+                    .sfixed32(11, -110)
+                    .sfixed64(12, -120L)
+                    .bool(13, true)
+                    .string(14, "test")
+                    .bytes(15, b(1, 20, 3))
+                    .end();
+        }
     }
 
     @Nested
@@ -285,6 +314,49 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .bytes(ba(1, 20, 3))
                     .build());
         }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given when
+            FullRecord record = deserialize(writer -> writer
+                    .double_(1, -10d)
+                    .float_(2, -20f)
+                    .int32(3, -30)
+                    .int64(4, -40L)
+                    .uint32(5, 50)
+                    .uint64(6, 60L)
+                    .sint32(7, -70)
+                    .sint64(8, -80L)
+                    .fixed32(9, -90)
+                    .fixed64(10, -100L)
+                    .fixed32(9, -90)
+                    .fixed64(10, -100L)
+                    .sfixed32(11, -110)
+                    .sfixed64(12, -120L)
+                    .bool(13, true)
+                    .string(14, "test")
+                    .bytes(15, ba(1, 20, 3))
+            );
+
+            // then
+            assertThat(record).isEqualTo(FullRecord.builder()
+                    .double_(-10d)
+                    .float_(-20f)
+                    .int32(-30)
+                    .int64(-40L)
+                    .uint32(50)
+                    .uint64(60L)
+                    .sint32(-70)
+                    .sint64(-80L)
+                    .fixed32(-90)
+                    .fixed64(-100L)
+                    .sfixed32(-110)
+                    .sfixed64(-120L)
+                    .bool(true)
+                    .string("test")
+                    .bytes(ba(1, 20, 3))
+                    .build());
+        }
     }
 
     @Nested
@@ -329,6 +401,22 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .bool(true)
                     .string("test")
                     .build();
+
+            // when
+            FullRecord deserialized = deserialize(serialize(record));
+
+            // then
+            assertThat(deserialized).isEqualTo(record);
+        }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            FullRecord record = new FullRecord(
+                    -10d, -20f,
+                    -30, -40L, 50, 60L, -70, -80L, -90, -100L, -110, -120L,
+                    true, "test", ba(1, 20, 3)
+            );
 
             // when
             FullRecord deserialized = deserialize(serialize(record));
@@ -434,6 +522,51 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .build();
             FullRecordProto proto = FullRecordProto.newBuilder()
                     .setString("test ąęść \t\n\r")
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        @Test
+        void negativeValues() throws IOException {
+            // given
+            FullRecord our = FullRecord.builder()
+                    .double_(-10d)
+                    .float_(-20f)
+                    .int32(-30)
+                    .int64(-40L)
+                    .uint32(50)
+                    .uint64(60L)
+                    .sint32(-70)
+                    .sint64(-80L)
+                    .fixed32(-90)
+                    .fixed64(-100L)
+                    .sfixed32(-110)
+                    .sfixed64(-120L)
+                    .bool(true)
+                    .string("test")
+                    .bytes(ba(1, 20, 3))
+                    .build();
+            FullRecordProto proto = FullRecordProto.newBuilder()
+                    .setDouble(-10d)
+                    .setFloat(-20f)
+                    .setInt32(-30)
+                    .setInt64(-40L)
+                    .setUint32(50)
+                    .setUint64(60L)
+                    .setSint32(-70)
+                    .setSint64(-80L)
+                    .setFixed32(-90)
+                    .setFixed64(-100L)
+                    .setSfixed32(-110)
+                    .setSfixed64(-120L)
+                    .setBool(true)
+                    .setString("test")
+                    .setBytes(bs(1, 20, 3))
                     .build();
             byte[] ourBytes = our.toByteArray();
             byte[] protoBytes = proto.toByteArray();

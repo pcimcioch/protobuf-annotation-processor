@@ -96,7 +96,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public byte[] readBytes() throws IOException {
-        int length = (int) readVarint();
+        int length = readVarint32();
         byte[] bytes = new byte[length];
 
         for (int i = 0; i < length; i++) {
@@ -113,7 +113,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public ByteArray readByteArray() throws IOException {
-        int length = (int) readVarint();
+        int length = readVarint32();
         ByteArray.Builder builder = ByteArray.builder(length);
 
         for (int i = 0; i < length; i++) {
@@ -130,7 +130,7 @@ public class ProtobufInput {
      * @throws IOException in case of any data read error
      */
     public long readZigZag() throws IOException {
-        long encoded = readVarint();
+        long encoded = readVarint64();
         if ((encoded & 1) > 0) {
             return -(encoded >>> 1) - 1;
         } else {
@@ -158,6 +158,38 @@ public class ProtobufInput {
         } while (read < 0);
 
         return result;
+    }
+
+    /**
+     * Reads undefined number of bytes as a variant length integer
+     *
+     * @return long
+     * @throws IOException in case of any data read error
+     */
+    public long readVarint64() throws IOException {
+        long result = 0L;
+        byte read;
+        long significantBytes;
+        int shift = 0;
+
+        do {
+            read = readByte();
+            significantBytes = read & PAYLOAD_MASK;
+            result |= significantBytes << shift;
+            shift += 7;
+        } while (read < 0);
+
+        return result;
+    }
+
+    /**
+     * Reads undefined number of bytes as a variant length integer
+     *
+     * @return int
+     * @throws IOException in case of any data read error
+     */
+    public int readVarint32() throws IOException {
+        return (int) readVarint64();
     }
 
     /**
