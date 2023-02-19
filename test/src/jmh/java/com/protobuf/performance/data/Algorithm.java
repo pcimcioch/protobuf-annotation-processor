@@ -1,0 +1,71 @@
+package com.protobuf.performance.data;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+// TODO when reading nested object (message, string, bytearray), do not copy any arrays
+// TODO when writing nested object (message, string, bytearray), do not copy any arrays
+// TODO move ByteArray to io Package and make its "data" field package private so io classes can access it directly
+// TODO currently we have one ProtobufInput and ProtobufOutput that operate on the Streams. Maybe we should have separate implementations for streams and separate for raw byte[]
+// TODO do not assert tag wire type on reading. If wire type is incorrect just treat this entry as unknown
+// TODO get rid of Tag class. It costs to compute tags it runtime
+// TODO ProtobufInput and ProtobufOutput improvements
+public final class Algorithm<T> {
+    static final String OUR = "OUR";
+    static final String PROTO = "PROTO";
+
+    private final T data;
+    private final byte[] bytes;
+    private final ThrowingFunction<T, byte[]> bytesSerializer;
+    private final ThrowingBiConsumer<T, OutputStream> streamSerializer;
+    private final ThrowingFunction<byte[], T> bytesParser;
+    private final ThrowingFunction<InputStream, T> streamParser;
+
+    @FunctionalInterface
+    interface ThrowingFunction<IN, OUT> {
+        OUT call(IN in) throws Exception;
+    }
+
+    @FunctionalInterface
+    interface ThrowingBiConsumer<IN1, IN2> {
+        void call(IN1 in1, IN2 in2) throws Exception;
+    }
+
+    Algorithm(T data,
+              ThrowingFunction<T, byte[]> bytesSerializer,
+              ThrowingBiConsumer<T, OutputStream> streamSerializer,
+              ThrowingFunction<byte[], T> bytesParser,
+              ThrowingFunction<InputStream, T> streamParser
+    ) {
+        try {
+            this.data = data;
+            this.bytes = bytesSerializer.call(data);
+            this.bytesSerializer = bytesSerializer;
+            this.streamSerializer = streamSerializer;
+            this.bytesParser = bytesParser;
+            this.streamParser = streamParser;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public byte[] serializeBytes() throws Exception {
+        return bytesSerializer.call(data);
+    }
+
+    public OutputStream serializeStream() throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream(bytes.length);
+        streamSerializer.call(data, out);
+        return out;
+    }
+
+    public T parseBytes() throws Exception {
+        return bytesParser.call(bytes);
+    }
+
+    public T parseStream() throws Exception {
+        return streamParser.call(new ByteArrayInputStream(bytes));
+    }
+}

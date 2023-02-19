@@ -8,10 +8,16 @@ dependencies {
 
     implementation(project(":protobuf-api"))
     annotationProcessor(project(":protobuf"))
+
+    jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:1.36")
 }
 
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.22.0"
     }
+}
+
+jmh {
+    resultFormat.set("json")
 }
