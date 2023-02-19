@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.io.WireType;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -8,11 +9,9 @@ import java.util.regex.Pattern;
 
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
-import static com.github.pcimcioch.protobuf.io.WireType.I32;
-import static com.github.pcimcioch.protobuf.io.WireType.I64;
+import static com.github.pcimcioch.protobuf.io.WireType.*;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
 import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
-import static com.github.pcimcioch.protobuf.io.WireType.tagFrom;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BYTES;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
@@ -179,11 +178,11 @@ public final class FieldDefinition {
                 ? ScalarDefinition.fromRepeatable(protoType)
                 : ScalarDefinition.from(protoType);
         return definition
-                .map(def -> new FieldDefinition(name, name, number, tagFrom(number, def.wireType), def.type, def.javaType, def.protoKind, rules))
+                .map(def -> new FieldDefinition(name, name, number, def.wireType.tagFrom(number), def.type, def.javaType, def.protoKind, rules))
                 .orElseThrow(() -> new IllegalArgumentException("Incorrect protobuf scalar type: " + protoType));
     }
 
-    private record ScalarDefinition(TypeName type, TypeName javaType, ProtoKind protoKind, int wireType) {
+    private record ScalarDefinition(TypeName type, TypeName javaType, ProtoKind protoKind, WireType wireType) {
         private static Optional<ScalarDefinition> from(String protoType) {
             return Optional.ofNullable(switch (protoType) {
                 case "double" -> new ScalarDefinition(simpleName("double"), simpleName("double"), DOUBLE, I64);
@@ -260,8 +259,8 @@ public final class FieldDefinition {
      */
     public static FieldDefinition enumeration(String name, int number, TypeName type, FieldRules rules) {
         return rules.repeated()
-                ? new FieldDefinition(name, name + "Value", number, tagFrom(number, VARINT), type.inList(), simpleName("Integer").inList(), ENUM, rules)
-                : new FieldDefinition(name, name + "Value", number, tagFrom(number, VARINT), type, simpleName("int"), ENUM, rules);
+                ? new FieldDefinition(name, name + "Value", number, VARINT.tagFrom(number), type.inList(), simpleName("Integer").inList(), ENUM, rules)
+                : new FieldDefinition(name, name + "Value", number, VARINT.tagFrom(number), type, simpleName("int"), ENUM, rules);
     }
 
     /**
@@ -275,8 +274,8 @@ public final class FieldDefinition {
      */
     public static FieldDefinition message(String name, int number, TypeName type, FieldRules rules) {
         return rules.repeated()
-                ? new FieldDefinition(name, name, number, tagFrom(number, LEN), type.inList(), type.inList(), MESSAGE, rules)
-                : new FieldDefinition(name, name, number, tagFrom(number, LEN), type, type, MESSAGE, rules);
+                ? new FieldDefinition(name, name, number, LEN.tagFrom(number), type.inList(), type.inList(), MESSAGE, rules)
+                : new FieldDefinition(name, name, number, LEN.tagFrom(number), type, type, MESSAGE, rules);
     }
 
     /**

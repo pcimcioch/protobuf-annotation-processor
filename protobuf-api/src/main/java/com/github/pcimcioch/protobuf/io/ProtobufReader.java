@@ -6,13 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.github.pcimcioch.protobuf.io.WireType.I32;
-import static com.github.pcimcioch.protobuf.io.WireType.I64;
-import static com.github.pcimcioch.protobuf.io.WireType.LEN;
-import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
-import static com.github.pcimcioch.protobuf.io.WireType.SGROUP;
-import static com.github.pcimcioch.protobuf.io.WireType.EGROUP;
-import static com.github.pcimcioch.protobuf.io.WireType.wireTypeFrom;
+import static com.github.pcimcioch.protobuf.io.WireType.fromTag;
 
 /**
  * Reads protobuf data
@@ -231,14 +225,13 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public void skip(int tag) throws IOException {
-        switch (wireTypeFrom(tag)) {
+        switch (fromTag(tag)) {
             case VARINT -> input.readVarint64();
             case I64 -> input.skip(8);
             case LEN -> input.skip(input.readVarint64());
             case SGROUP -> throw new ProtobufParseException("Wire Type SGROUP is not supported");
             case EGROUP -> throw new ProtobufParseException("Wire Type EGROUP is not supported");
             case I32 -> input.skip(4);
-            default -> throw new ProtobufParseException("Unknown wire type %d", wireTypeFrom(tag));
         }
     }
 }
