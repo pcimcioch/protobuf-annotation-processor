@@ -86,19 +86,16 @@ class DecodingFactory {
     }
 
     private CodeBody readFields(MessageDefinition message) {
-        CodeBody body = body();
+        CodeBody body = body("switch(tag.number()) {");
 
         for (FieldDefinition field : message.fields()) {
             body
-                    .appendExceptFirst("else ")
-                    .appendln("if (tag.number() == $fieldNumber) {", param("fieldNumber", field.number()))
-                    .appendln(decodingCode(field))
-                    .append("}");
+                    .append("case $fieldNumber -> ", param("fieldNumber", field.number()))
+                    .appendln(decodingCode(field));
         }
 
         return body.append("""
-                else {
-                    reader.skip(tag);
+                    default -> reader.skip(tag);
                 }
                 """
         );
