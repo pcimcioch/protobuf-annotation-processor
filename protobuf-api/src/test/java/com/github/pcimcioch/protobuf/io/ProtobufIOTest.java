@@ -400,6 +400,21 @@ class ProtobufIOTest {
         }
 
         @ParameterizedTest
+        @MethodSource("argumentsOver32")
+        void readMoreThen32(int value, byte[] bytes) throws IOException {
+            // when then
+            assertThat(input(bytes).readVarint32()).isEqualTo(value);
+        }
+
+        // TODO is this correct?
+        static Stream<Arguments> argumentsOver32() {
+            return Stream.of(
+                    Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b01111111)),
+                    Arguments.of(0, b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001))
+            );
+        }
+
+        @ParameterizedTest
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
@@ -647,6 +662,21 @@ class ProtobufIOTest {
                     Arguments.of(2, b(0b100)),
                     Arguments.of(2147483647, b(0b11111110, 0b11111111, 0b11111111, 0b11111111, 0b00001111)),
                     Arguments.of(-2147483648, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00001111))
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("argumentsOver32")
+        void readOver32(int value, byte[] bytes) throws IOException {
+            // when then
+            assertThat(input(bytes).readZigZag32()).isEqualTo(value);
+        }
+
+        // TODO is this correct?
+        static Stream<Arguments> argumentsOver32() {
+            return Stream.of(
+                    Arguments.of(-1, b(0b11111110, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001)),
+                    Arguments.of(0, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001))
             );
         }
 

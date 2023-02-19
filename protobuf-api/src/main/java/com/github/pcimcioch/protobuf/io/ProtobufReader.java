@@ -6,8 +6,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.github.pcimcioch.protobuf.io.WireType.fromTag;
-
 /**
  * Reads protobuf data
  */
@@ -225,7 +223,7 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public void skip(int tag) throws IOException {
-        switch (fromTag(tag)) {
+        switch (WireType.fromTag(tag)) {
             case VARINT -> input.readVarint64();
             case I64 -> input.skip(8);
             case LEN -> input.skip(input.readVarint64());

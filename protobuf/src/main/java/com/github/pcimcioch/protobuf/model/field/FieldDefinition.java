@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
-import static com.github.pcimcioch.protobuf.io.WireType.*;
+import static com.github.pcimcioch.protobuf.io.WireType.I32;
+import static com.github.pcimcioch.protobuf.io.WireType.I64;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
 import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
@@ -377,7 +378,7 @@ public final class FieldDefinition {
         }
 
         private static int tag(int tag, int number) {
-            // TODO implement this and tests
+            assertTrue(WireType.fromTag(tag).tagFrom(number) == tag, "Incorrect tag: " + tag);
             return tag;
         }
 
