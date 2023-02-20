@@ -1,7 +1,5 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import com.github.pcimcioch.protobuf.io.ByteArray;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

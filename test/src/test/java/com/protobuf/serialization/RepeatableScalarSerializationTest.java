@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ByteArray;
+import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;

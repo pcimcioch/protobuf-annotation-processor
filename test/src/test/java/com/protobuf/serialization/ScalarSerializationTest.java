@@ -6,13 +6,19 @@ import com.protobuf.model.FullRecordProto;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.stream.Stream;
 
 import static com.protobuf.ByteUtils.b;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.bs;
 import static com.protobuf.ProtobufAssertion.assertProto;
+import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -590,6 +596,65 @@ class ScalarSerializationTest extends SerializationTestBase {
             // when then
             assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
             assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        @ParameterizedTest
+        @MethodSource("randomArguments")
+        void randomValues(double double_, float float_, int int32, long int64, int uint32, long uint64,
+                          int sint32, long sint64, int fixed32, long fixed64, int sfixed32, long sfixed64) throws IOException {
+            // given
+            FullRecord our = FullRecord.builder()
+                    .double_(double_)
+                    .float_(float_)
+                    .int32(int32)
+                    .int64(int64)
+                    .uint32(uint32)
+                    .uint64(uint64)
+                    .sint32(sint32)
+                    .sint64(sint64)
+                    .fixed32(fixed32)
+                    .fixed64(fixed64)
+                    .sfixed32(sfixed32)
+                    .sfixed64(sfixed64)
+                    .build();
+            FullRecordProto proto = FullRecordProto.newBuilder()
+                    .setDouble(double_)
+                    .setFloat(float_)
+                    .setInt32(int32)
+                    .setInt64(int64)
+                    .setUint32(uint32)
+                    .setUint64(uint64)
+                    .setSint32(sint32)
+                    .setSint64(sint64)
+                    .setFixed32(fixed32)
+                    .setFixed64(fixed64)
+                    .setSfixed32(sfixed32)
+                    .setSfixed64(sfixed64)
+                    .build();
+            byte[] ourBytes = our.toByteArray();
+            byte[] protoBytes = proto.toByteArray();
+
+            // when then
+            assertProtoEqual(our, FullRecordProto.parseFrom(ourBytes));
+            assertProtoEqual(FullRecord.parse(protoBytes), proto);
+        }
+
+        static Stream<Arguments> randomArguments() {
+            Random random = new Random(56270356588186L); // random, but deterministic
+            return range(0, 1000).mapToObj(i -> Arguments.of(
+                    random.nextDouble(),                    // double
+                    random.nextFloat(),                     // float
+                    random.nextInt(),                       // int32
+                    random.nextLong(),                      // int64
+                    random.nextInt(Integer.MAX_VALUE),      // uint32
+                    random.nextLong(Long.MAX_VALUE),        // uint64
+                    random.nextInt(),                       // sint32
+                    random.nextLong(),                      // sint64
+                    random.nextInt(),                       // fixed32
+                    random.nextLong(),                      // fixed64
+                    random.nextInt(),                       // sfixed32
+                    random.nextLong()                       // sfixed64
+            ));
         }
 
         private void assertProtoEqual(FullRecord our, FullRecordProto proto) {

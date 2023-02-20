@@ -36,7 +36,7 @@ class BuilderFactory {
             simpleName("long"), "0L",
             simpleName("boolean"), "false",
             simpleName("String"), "\"\"",
-            canonicalName("com.github.pcimcioch.protobuf.io.ByteArray"), "com.github.pcimcioch.protobuf.io.ByteArray.empty()"
+            canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), "com.github.pcimcioch.protobuf.dto.ByteArray.empty()"
     );
 
     ClassSource buildBuilderClass(MessageDefinition message) {

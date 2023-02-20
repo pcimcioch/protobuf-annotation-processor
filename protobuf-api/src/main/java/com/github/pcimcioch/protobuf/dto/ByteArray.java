@@ -1,8 +1,6 @@
-package com.github.pcimcioch.protobuf.io;
+package com.github.pcimcioch.protobuf.dto;
 
 import java.util.Arrays;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Wrapper for {@code byte[]} that provides equals and hashcode comparing by array content, not array identity.
@@ -17,11 +15,32 @@ public final class ByteArray {
      */
     private final byte[] data;
 
-    ByteArray(byte[] data) {
+    /**
+     * Constructs ByteArray out of provided byte array. Provided array is used as is, without copying or checking. It's
+     * more efficient than constructing this ByteArray in an immutable fashion, but it is more unsafe.
+     *
+     * @param data data
+     *
+     * @deprecated This constructor is unsafe as it allows you to mutate internal state of the ByteArray by modifying provided
+     * array. Use {@link #fromByteArray(byte[])} or {@link Builder} instead. This constructor is made public only for
+     * performance reasons. You can use it if you promise you will not modify the byte array
+     */
+    @Deprecated
+    public ByteArray(byte[] data) {
         this.data = data;
     }
 
-    byte[] internalData() {
+    /**
+     * Returns internal byte array with data. Returned array is an internal state of this ByteArray. If modified, it will
+     * mutate this object's state. It's more efficient to access internal state directly, but it is unsafe.
+     *
+     * @return internal state of this byte array
+     * @deprecated This method is unsafe as it allows you to mutate internal state of the ByteArray by modifying returned
+     * array. Use {@link #toByteArray()} or {@link #get(int)} instead. This method is made public only for performance reasons.
+     * You can use it if you promise you will not modify the byte array
+     */
+    @Deprecated
+    public byte[] internalData() {
         return data;
     }
 
