@@ -15,18 +15,7 @@ public final class ByteArray {
      */
     private final byte[] data;
 
-    /**
-     * Constructs ByteArray out of provided byte array. Provided array is used as is, without copying or checking. It's
-     * more efficient than constructing this ByteArray in an immutable fashion, but it is more unsafe.
-     *
-     * @param data data
-     *
-     * @deprecated This constructor is unsafe as it allows you to mutate internal state of the ByteArray by modifying provided
-     * array. Use {@link #fromByteArray(byte[])} or {@link Builder} instead. This constructor is made public only for
-     * performance reasons. You can use it if you promise you will not modify the byte array
-     */
-    @Deprecated
-    public ByteArray(byte[] data) {
+    private ByteArray(byte[] data) {
         this.data = data;
     }
 
@@ -114,7 +103,20 @@ public final class ByteArray {
     }
 
     /**
-     * Returns builder that can be used to initialize ByteArray in efficient way without data copying
+     * @param data byte array
+     * @return ByteArray
+     * @deprecated This method is unsafe as it allows you to mutate internal state of the ByteArray by modifying provided
+     * array. Use {@link #fromByteArray(byte[])} or {@link Builder} instead. This method is made public only for
+     * performance reasons. You can use it if you promise you will not modify the byte array
+     */
+    @Deprecated
+    public static ByteArray unsafeFromByteArray(byte[] data) {
+        return new ByteArray(data);
+    }
+
+    /**
+     * Constructs ByteArray out of provided byte array. Provided array is used as is, without copying or checking. It's
+     * more efficient than constructing this ByteArray in an immutable fashion, but it is more unsafe.
      *
      * @param length data length
      * @return ByteArray builder

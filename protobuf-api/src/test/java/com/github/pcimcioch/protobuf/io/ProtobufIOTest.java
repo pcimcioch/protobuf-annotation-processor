@@ -407,7 +407,6 @@ class ProtobufIOTest {
             assertThat(input(bytes).readVarint32()).isEqualTo(value);
         }
 
-        // TODO is this correct?
         static Stream<Arguments> argumentsOver32() {
             return Stream.of(
                     Arguments.of(-1, b(0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b01111111)),
@@ -633,7 +632,6 @@ class ProtobufIOTest {
             assertThat(input(bytes).readZigZag32()).isEqualTo(value);
         }
 
-        // TODO is this correct?
         static Stream<Arguments> argumentsOver32() {
             return Stream.of(
                     Arguments.of(-1, b(0b11111110, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000001)),

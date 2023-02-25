@@ -183,14 +183,14 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public ByteArray bytes() throws IOException {
-        return new ByteArray(input.readBytes());
+        return ByteArray.unsafeFromByteArray(input.readBytes());
     }
 
     /**
      * Reads message
      *
-     * @param factory   message from bytes factory
-     * @param <T>       type of message
+     * @param factory message from bytes factory
+     * @param <T>     type of message
      * @return message
      * @throws IOException in case of any data read error
      */
