@@ -63,7 +63,7 @@ public enum WireType {
             case 3 -> SGROUP;
             case 4 -> EGROUP;
             case 5 -> I32;
-            default -> throw new ProtobufParseException("Unknown wire type %d", wireType);
+            default -> throw new IllegalArgumentException("Unknown wire type " + wireType);
         };
     }
 }

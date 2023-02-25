@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
  * Writes protobuf types to the raw data stream
  */
 @SuppressWarnings("PointlessBitwiseExpression")
+// TODO [performance] Replace with ProtoOutput similar to ProtoInput + ReadBuffer
 public class ProtobufOutput {
     private static final long LONG_PAYLOAD_MASK = 0b01111111;
     private static final int CONTINUATION_MASK = 0b10000000;

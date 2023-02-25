@@ -7,8 +7,6 @@ import java.io.OutputStream;
 
 // TODO when reading nested object (message, string, bytearray), do not copy any arrays
 // TODO when writing nested object (message, string, bytearray), do not copy any arrays
-// TODO currently we have one ProtobufInput and ProtobufOutput that operate on the Streams. Maybe we should have separate implementations for streams and separate for raw byte[]
-// TODO ProtobufInput and ProtobufOutput improvements
 public final class Algorithm<T> {
     static final String OUR = "OUR";
     static final String PROTO = "PROTO";

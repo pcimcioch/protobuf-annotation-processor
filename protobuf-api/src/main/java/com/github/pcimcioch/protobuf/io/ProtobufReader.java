@@ -223,13 +223,17 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public void skip(int tag) throws IOException {
-        switch (WireType.fromTag(tag)) {
-            case VARINT -> input.readVarint64();
-            case I64 -> input.skip(8);
-            case LEN -> input.skip(input.readVarint64());
-            case SGROUP -> throw new ProtobufParseException("Wire Type SGROUP is not supported");
-            case EGROUP -> throw new ProtobufParseException("Wire Type EGROUP is not supported");
-            case I32 -> input.skip(4);
+        try {
+            switch (WireType.fromTag(tag)) {
+                case VARINT -> input.readVarint64();
+                case I64 -> input.skip(8);
+                case LEN -> input.skip(input.readVarint64());
+                case SGROUP -> throw ProtobufProtocolException.sgroupNotSupported();
+                case EGROUP -> throw ProtobufProtocolException.egroupNotSupported();
+                case I32 -> input.skip(4);
+            }
+        } catch (IllegalArgumentException ex) {
+            throw ProtobufProtocolException.unknownWireType();
         }
     }
 }
