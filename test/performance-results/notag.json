@@ -1,0 +1,1612 @@
+[
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadNestedTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 1577.9791308475587,
+            "scoreError" : 29.62871911901475,
+            "scoreConfidence" : [
+                1548.350411728544,
+                1607.6078499665734
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1560.5870811905875,
+                "50.0" : 1568.4186687548943,
+                "90.0" : 1605.5684801797465,
+                "95.0" : 1605.5684801797465,
+                "99.0" : 1605.5684801797465,
+                "99.9" : 1605.5684801797465,
+                "99.99" : 1605.5684801797465,
+                "99.999" : 1605.5684801797465,
+                "99.9999" : 1605.5684801797465,
+                "100.0" : 1605.5684801797465
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    1566.305165127563,
+                    1570.7943650918223,
+                    1567.5653093187157
+                ],
+                [
+                    1598.027860220201,
+                    1605.5684801797465,
+                    1599.5461858308013
+                ],
+                [
+                    1560.5870811905875,
+                    1564.999061913696,
+                    1568.4186687548943
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadNestedTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 39.31562992165837,
+            "scoreError" : 0.8224859531356764,
+            "scoreConfidence" : [
+                38.493143968522695,
+                40.138115874794046
+            ],
+            "scorePercentiles" : {
+                "0.0" : 38.540379286823615,
+                "50.0" : 39.492134556671424,
+                "90.0" : 39.79327900295262,
+                "95.0" : 39.79327900295262,
+                "99.0" : 39.79327900295262,
+                "99.9" : 39.79327900295262,
+                "99.99" : 39.79327900295262,
+                "99.999" : 39.79327900295262,
+                "99.9999" : 39.79327900295262,
+                "100.0" : 39.79327900295262
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    39.492134556671424,
+                    39.504347156641344,
+                    39.461188703648205
+                ],
+                [
+                    38.540379286823615,
+                    38.54253237753515,
+                    39.057332500390444
+                ],
+                [
+                    39.73529017041755,
+                    39.71418553984499,
+                    39.79327900295262
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadNestedTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 1580.5242886562296,
+            "scoreError" : 4.46419804101624,
+            "scoreConfidence" : [
+                1576.0600906152133,
+                1584.988486697246
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1576.9080447103274,
+                "50.0" : 1580.6356352718078,
+                "90.0" : 1584.174319620253,
+                "95.0" : 1584.174319620253,
+                "99.0" : 1584.174319620253,
+                "99.9" : 1584.174319620253,
+                "99.99" : 1584.174319620253,
+                "99.999" : 1584.174319620253,
+                "99.9999" : 1584.174319620253,
+                "100.0" : 1584.174319620253
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    1580.6356352718078,
+                    1577.2430124468253,
+                    1582.509093784596
+                ],
+                [
+                    1578.5077917981073,
+                    1576.9080447103274,
+                    1579.298942550505
+                ],
+                [
+                    1584.174319620253,
+                    1582.4731826801517,
+                    1582.968575043492
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadNestedTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 40.50493501819014,
+            "scoreError" : 0.6747314820955834,
+            "scoreConfidence" : [
+                39.83020353609456,
+                41.17966650028572
+            ],
+            "scorePercentiles" : {
+                "0.0" : 40.06828582978775,
+                "50.0" : 40.35934706129168,
+                "90.0" : 40.98101498138081,
+                "95.0" : 40.98101498138081,
+                "99.0" : 40.98101498138081,
+                "99.9" : 40.98101498138081,
+                "99.99" : 40.98101498138081,
+                "99.999" : 40.98101498138081,
+                "99.9999" : 40.98101498138081,
+                "100.0" : 40.98101498138081
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    40.35934706129168,
+                    40.72010239005075,
+                    40.32057431506297
+                ],
+                [
+                    40.06828582978775,
+                    40.07339276207555,
+                    40.097353899874264
+                ],
+                [
+                    40.94668200746021,
+                    40.97766191672737,
+                    40.98101498138081
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadRepeatableTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 35.839151988641866,
+            "scoreError" : 0.3122976919100749,
+            "scoreConfidence" : [
+                35.52685429673179,
+                36.15144968055194
+            ],
+            "scorePercentiles" : {
+                "0.0" : 35.63495089646433,
+                "50.0" : 35.808868848585526,
+                "90.0" : 36.24713402330745,
+                "95.0" : 36.24713402330745,
+                "99.0" : 36.24713402330745,
+                "99.9" : 36.24713402330745,
+                "99.99" : 36.24713402330745,
+                "99.999" : 36.24713402330745,
+                "99.9999" : 36.24713402330745,
+                "100.0" : 36.24713402330745
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    35.81874490131814,
+                    35.808868848585526,
+                    35.808620338292236
+                ],
+                [
+                    35.63495089646433,
+                    35.691452890834306,
+                    35.67652877762002
+                ],
+                [
+                    35.93313644312147,
+                    36.24713402330745,
+                    35.932930778233306
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadRepeatableTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 7.632980162172422,
+            "scoreError" : 0.28917897129483544,
+            "scoreConfidence" : [
+                7.343801190877587,
+                7.922159133467257
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7.460079752279169,
+                "50.0" : 7.567417864247218,
+                "90.0" : 7.8579985954835525,
+                "95.0" : 7.8579985954835525,
+                "99.0" : 7.8579985954835525,
+                "99.9" : 7.8579985954835525,
+                "99.99" : 7.8579985954835525,
+                "99.999" : 7.8579985954835525,
+                "99.9999" : 7.8579985954835525,
+                "100.0" : 7.8579985954835525
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    7.8579985954835525,
+                    7.853813420236365,
+                    7.855230822227925
+                ],
+                [
+                    7.574744104832591,
+                    7.567417864247218,
+                    7.5631855594183
+                ],
+                [
+                    7.460079752279169,
+                    7.472890456336784,
+                    7.491460884489891
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadRepeatableTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 35.14039137664833,
+            "scoreError" : 1.882810109042106,
+            "scoreConfidence" : [
+                33.25758126760623,
+                37.023201485690436
+            ],
+            "scorePercentiles" : {
+                "0.0" : 33.66534746990544,
+                "50.0" : 35.58860848578771,
+                "90.0" : 36.283620333529015,
+                "95.0" : 36.283620333529015,
+                "99.0" : 36.283620333529015,
+                "99.9" : 36.283620333529015,
+                "99.99" : 36.283620333529015,
+                "99.999" : 36.283620333529015,
+                "99.9999" : 36.283620333529015,
+                "100.0" : 36.283620333529015
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    35.61406600209192,
+                    35.586525122893384,
+                    35.58860848578771
+                ],
+                [
+                    36.283620333529015,
+                    36.099825802821776,
+                    36.0430533295396
+                ],
+                [
+                    33.6758143369055,
+                    33.70666150636064,
+                    33.66534746990544
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadRepeatableTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 9.182442685831269,
+            "scoreError" : 0.13798537559540688,
+            "scoreConfidence" : [
+                9.044457310235861,
+                9.320428061426677
+            ],
+            "scorePercentiles" : {
+                "0.0" : 9.073560855710355,
+                "50.0" : 9.200079399066693,
+                "90.0" : 9.294323302265626,
+                "95.0" : 9.294323302265626,
+                "99.0" : 9.294323302265626,
+                "99.9" : 9.294323302265626,
+                "99.99" : 9.294323302265626,
+                "99.999" : 9.294323302265626,
+                "99.9999" : 9.294323302265626,
+                "100.0" : 9.294323302265626
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    9.247308381684467,
+                    9.294323302265626,
+                    9.25721242368895
+                ],
+                [
+                    9.083637068525638,
+                    9.087211164742383,
+                    9.073560855710355
+                ],
+                [
+                    9.193992715828246,
+                    9.200079399066693,
+                    9.20465886096906
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadScalarTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 1.2083867780946305,
+            "scoreError" : 0.012602196324977609,
+            "scoreConfidence" : [
+                1.1957845817696529,
+                1.220988974419608
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.2000527623930768,
+                "50.0" : 1.2058111349228826,
+                "90.0" : 1.221398168356421,
+                "95.0" : 1.221398168356421,
+                "99.0" : 1.221398168356421,
+                "99.9" : 1.221398168356421,
+                "99.99" : 1.221398168356421,
+                "99.999" : 1.221398168356421,
+                "99.9999" : 1.221398168356421,
+                "100.0" : 1.221398168356421
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    1.2103060964278847,
+                    1.2024503692319923,
+                    1.2000527623930768
+                ],
+                [
+                    1.2024258271083037,
+                    1.2024839995478636,
+                    1.2058111349228826
+                ],
+                [
+                    1.2148853930335182,
+                    1.2156672518297338,
+                    1.221398168356421
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadScalarTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 0.07657560973045058,
+            "scoreError" : 0.0027929441285955547,
+            "scoreConfidence" : [
+                0.07378266560185502,
+                0.07936855385904613
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.0752180387199636,
+                "50.0" : 0.07566760615120427,
+                "90.0" : 0.0789090658058259,
+                "95.0" : 0.0789090658058259,
+                "99.0" : 0.0789090658058259,
+                "99.9" : 0.0789090658058259,
+                "99.99" : 0.0789090658058259,
+                "99.999" : 0.0789090658058259,
+                "99.9999" : 0.0789090658058259,
+                "100.0" : 0.0789090658058259
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.07564728179745772,
+                    0.07566760615120427,
+                    0.07574110290970398
+                ],
+                [
+                    0.07866977714807315,
+                    0.07874945196265597,
+                    0.0789090658058259
+                ],
+                [
+                    0.07534738260831908,
+                    0.07523078047085147,
+                    0.0752180387199636
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadScalarTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 1.214167572404246,
+            "scoreError" : 0.02573498016584484,
+            "scoreConfidence" : [
+                1.1884325922384011,
+                1.2399025525700909
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.1950412269763404,
+                "50.0" : 1.216392177518262,
+                "90.0" : 1.231446300991933,
+                "95.0" : 1.231446300991933,
+                "99.0" : 1.231446300991933,
+                "99.9" : 1.231446300991933,
+                "99.99" : 1.231446300991933,
+                "99.999" : 1.231446300991933,
+                "99.9999" : 1.231446300991933,
+                "100.0" : 1.231446300991933
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    1.1953375922284721,
+                    1.1950412269763404,
+                    1.1958047118260897
+                ],
+                [
+                    1.215873876723073,
+                    1.216392177518262,
+                    1.2176679306958442
+                ],
+                [
+                    1.229499281639451,
+                    1.2304450530387474,
+                    1.231446300991933
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.ReadScalarTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 0.3440973498883381,
+            "scoreError" : 0.0036975147637259235,
+            "scoreConfidence" : [
+                0.3403998351246122,
+                0.34779486465206405
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.34188339654508765,
+                "50.0" : 0.34338576452460884,
+                "90.0" : 0.3471545157397054,
+                "95.0" : 0.3471545157397054,
+                "99.0" : 0.3471545157397054,
+                "99.9" : 0.3471545157397054,
+                "99.99" : 0.3471545157397054,
+                "99.999" : 0.3471545157397054,
+                "99.9999" : 0.3471545157397054,
+                "100.0" : 0.3471545157397054
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.3435934549534788,
+                    0.3431162040209612,
+                    0.34338576452460884
+                ],
+                [
+                    0.3421095165600594,
+                    0.3420484325128139,
+                    0.34188339654508765
+                ],
+                [
+                    0.3471545157397054,
+                    0.34658696369883973,
+                    0.34699790043948786
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteNestedTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 460.29455177715147,
+            "scoreError" : 1.8874152501010475,
+            "scoreConfidence" : [
+                458.4071365270504,
+                462.18196702725254
+            ],
+            "scorePercentiles" : {
+                "0.0" : 458.7754674610449,
+                "50.0" : 459.85559944878275,
+                "90.0" : 462.06192544001476,
+                "95.0" : 462.06192544001476,
+                "99.0" : 462.06192544001476,
+                "99.9" : 462.06192544001476,
+                "99.99" : 462.06192544001476,
+                "99.999" : 462.06192544001476,
+                "99.9999" : 462.06192544001476,
+                "100.0" : 462.06192544001476
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    459.7446602387511,
+                    459.9971909337502,
+                    459.6546334970395
+                ],
+                [
+                    462.06192544001476,
+                    461.68521269724096,
+                    461.3581161492689
+                ],
+                [
+                    458.7754674610449,
+                    459.51816012846984,
+                    459.85559944878275
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteNestedTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 24.56448213032162,
+            "scoreError" : 0.2880820931204439,
+            "scoreConfidence" : [
+                24.276400037201174,
+                24.852564223442062
+            ],
+            "scorePercentiles" : {
+                "0.0" : 24.414536444101007,
+                "50.0" : 24.464824395959774,
+                "90.0" : 24.803692820425077,
+                "95.0" : 24.803692820425077,
+                "99.0" : 24.803692820425077,
+                "99.9" : 24.803692820425077,
+                "99.99" : 24.803692820425077,
+                "99.999" : 24.803692820425077,
+                "99.9999" : 24.803692820425077,
+                "100.0" : 24.803692820425077
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    24.789986752999145,
+                    24.803692820425077,
+                    24.780613830998465
+                ],
+                [
+                    24.464824395959774,
+                    24.482798554776043,
+                    24.452945729241947
+                ],
+                [
+                    24.414536444101007,
+                    24.46082785261974,
+                    24.430112791773354
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteNestedTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 455.69978485150176,
+            "scoreError" : 1.7463024221397652,
+            "scoreConfidence" : [
+                453.953482429362,
+                457.4460872736415
+            ],
+            "scorePercentiles" : {
+                "0.0" : 454.51227138643065,
+                "50.0" : 455.3509344731936,
+                "90.0" : 457.1132124588966,
+                "95.0" : 457.1132124588966,
+                "99.0" : 457.1132124588966,
+                "99.9" : 457.1132124588966,
+                "99.99" : 457.1132124588966,
+                "99.999" : 457.1132124588966,
+                "99.9999" : 457.1132124588966,
+                "100.0" : 457.1132124588966
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    454.6780881017257,
+                    454.9810871048442,
+                    454.831535420548
+                ],
+                [
+                    454.51227138643065,
+                    456.1579899726527,
+                    455.3509344731936
+                ],
+                [
+                    456.8634609243122,
+                    457.1132124588966,
+                    456.80948382091185
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteNestedTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 29.92589430709505,
+            "scoreError" : 0.14132100333119033,
+            "scoreConfidence" : [
+                29.78457330376386,
+                30.06721531042624
+            ],
+            "scorePercentiles" : {
+                "0.0" : 29.80316966690375,
+                "50.0" : 29.954921095972452,
+                "90.0" : 30.018363837698175,
+                "95.0" : 30.018363837698175,
+                "99.0" : 30.018363837698175,
+                "99.9" : 30.018363837698175,
+                "99.99" : 30.018363837698175,
+                "99.999" : 30.018363837698175,
+                "99.9999" : 30.018363837698175,
+                "100.0" : 30.018363837698175
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    29.954921095972452,
+                    29.95082558490769,
+                    29.95636183944535
+                ],
+                [
+                    29.831738257392942,
+                    29.821835867420834,
+                    29.80316966690375
+                ],
+                [
+                    30.018363837698175,
+                    30.013844285157305,
+                    29.98198832895694
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteRepeatableTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 30.460570854713744,
+            "scoreError" : 0.07445332741736736,
+            "scoreConfidence" : [
+                30.386117527296378,
+                30.53502418213111
+            ],
+            "scorePercentiles" : {
+                "0.0" : 30.387105017177124,
+                "50.0" : 30.481976997221285,
+                "90.0" : 30.502743465003,
+                "95.0" : 30.502743465003,
+                "99.0" : 30.502743465003,
+                "99.9" : 30.502743465003,
+                "99.99" : 30.502743465003,
+                "99.999" : 30.502743465003,
+                "99.9999" : 30.502743465003,
+                "100.0" : 30.502743465003
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    30.49508512199652,
+                    30.492968171724648,
+                    30.502743465003
+                ],
+                [
+                    30.42372943138428,
+                    30.401695455995625,
+                    30.387105017177124
+                ],
+                [
+                    30.481976997221285,
+                    30.49125735361356,
+                    30.468576678307638
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteRepeatableTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 3.7365933061275975,
+            "scoreError" : 0.009376064448043593,
+            "scoreConfidence" : [
+                3.727217241679554,
+                3.745969370575641
+            ],
+            "scorePercentiles" : {
+                "0.0" : 3.7281604653474227,
+                "50.0" : 3.735962656128608,
+                "90.0" : 3.746476652902617,
+                "95.0" : 3.746476652902617,
+                "99.0" : 3.746476652902617,
+                "99.9" : 3.746476652902617,
+                "99.99" : 3.746476652902617,
+                "99.999" : 3.746476652902617,
+                "99.9999" : 3.746476652902617,
+                "100.0" : 3.746476652902617
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    3.739169985385936,
+                    3.7414003676614973,
+                    3.737974004611326
+                ],
+                [
+                    3.7348247520258786,
+                    3.746476652902617,
+                    3.7353813054529184
+                ],
+                [
+                    3.7299895656321738,
+                    3.735962656128608,
+                    3.7281604653474227
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteRepeatableTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 29.14920905564083,
+            "scoreError" : 0.11150619213620556,
+            "scoreConfidence" : [
+                29.037702863504627,
+                29.260715247777036
+            ],
+            "scorePercentiles" : {
+                "0.0" : 29.072606949192416,
+                "50.0" : 29.13810890004777,
+                "90.0" : 29.25196321653678,
+                "95.0" : 29.25196321653678,
+                "99.0" : 29.25196321653678,
+                "99.9" : 29.25196321653678,
+                "99.99" : 29.25196321653678,
+                "99.999" : 29.25196321653678,
+                "99.9999" : 29.25196321653678,
+                "100.0" : 29.25196321653678
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    29.13810890004777,
+                    29.15570937078501,
+                    29.115187685503113
+                ],
+                [
+                    29.213837109221142,
+                    29.25196321653678,
+                    29.22270036948185
+                ],
+                [
+                    29.072606949192416,
+                    29.0877069155317,
+                    29.0850609844677
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteRepeatableTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 5.697152116939281,
+            "scoreError" : 0.2737861374384044,
+            "scoreConfidence" : [
+                5.423365979500877,
+                5.970938254377685
+            ],
+            "scorePercentiles" : {
+                "0.0" : 5.484466025806961,
+                "50.0" : 5.74145959309469,
+                "90.0" : 5.858233752678805,
+                "95.0" : 5.858233752678805,
+                "99.0" : 5.858233752678805,
+                "99.9" : 5.858233752678805,
+                "99.99" : 5.858233752678805,
+                "99.999" : 5.858233752678805,
+                "99.9999" : 5.858233752678805,
+                "100.0" : 5.858233752678805
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    5.737343578107811,
+                    5.74145959309469,
+                    5.751874316899091
+                ],
+                [
+                    5.484466025806961,
+                    5.4907584379825085,
+                    5.495496606152289
+                ],
+                [
+                    5.85670231613251,
+                    5.858034425598865,
+                    5.858233752678805
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteScalarTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 0.3106517643194719,
+            "scoreError" : 0.001840570408581615,
+            "scoreConfidence" : [
+                0.3088111939108903,
+                0.3124923347280535
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.30960298140080544,
+                "50.0" : 0.3100247098085451,
+                "90.0" : 0.312229271521513,
+                "95.0" : 0.312229271521513,
+                "99.0" : 0.312229271521513,
+                "99.9" : 0.312229271521513,
+                "99.99" : 0.312229271521513,
+                "99.999" : 0.312229271521513,
+                "99.9999" : 0.312229271521513,
+                "100.0" : 0.312229271521513
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.3120381333972024,
+                    0.31180843254848517,
+                    0.312229271521513
+                ],
+                [
+                    0.3097379376117466,
+                    0.3097191568011903,
+                    0.3100247098085451
+                ],
+                [
+                    0.30960298140080544,
+                    0.3108384141117847,
+                    0.3098668416739741
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteScalarTest.bytes",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 0.027982223129715735,
+            "scoreError" : 1.744917628064925E-4,
+            "scoreConfidence" : [
+                0.02780773136690924,
+                0.02815671489252223
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.027874834430662777,
+                "50.0" : 0.027974777167808076,
+                "90.0" : 0.028211739850515057,
+                "95.0" : 0.028211739850515057,
+                "99.0" : 0.028211739850515057,
+                "99.9" : 0.028211739850515057,
+                "99.99" : 0.028211739850515057,
+                "99.999" : 0.028211739850515057,
+                "99.9999" : 0.028211739850515057,
+                "100.0" : 0.028211739850515057
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.028026265361268288,
+                    0.028014846584178035,
+                    0.028211739850515057
+                ],
+                [
+                    0.027887474778358394,
+                    0.027883298025513276,
+                    0.027874834430662777
+                ],
+                [
+                    0.02797286088055321,
+                    0.027974777167808076,
+                    0.0279939110885845
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteScalarTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "OUR"
+        },
+        "primaryMetric" : {
+            "score" : 0.26840935781865316,
+            "scoreError" : 0.002506618665003782,
+            "scoreConfidence" : [
+                0.26590273915364937,
+                0.27091597648365695
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.2663999223380237,
+                "50.0" : 0.2685894076349396,
+                "90.0" : 0.2699432331195885,
+                "95.0" : 0.2699432331195885,
+                "99.0" : 0.2699432331195885,
+                "99.9" : 0.2699432331195885,
+                "99.99" : 0.2699432331195885,
+                "99.999" : 0.2699432331195885,
+                "99.9999" : 0.2699432331195885,
+                "100.0" : 0.2699432331195885
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.2663999223380237,
+                    0.2667096688176531,
+                    0.2665174353747853
+                ],
+                [
+                    0.2696718753573965,
+                    0.26971241233131743,
+                    0.2696799028984199
+                ],
+                [
+                    0.2684603624957541,
+                    0.2685894076349396,
+                    0.2699432331195885
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.35",
+        "benchmark" : "com.protobuf.performance.WriteScalarTest.stream",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 3,
+        "jvm" : "C:\\Users\\cimci\\.jdks\\corretto-17.0.6\\bin\\java.exe",
+        "jvmArgs" : [
+            "-Dfile.encoding=windows-1252",
+            "-Djava.io.tmpdir=C:\\Users\\cimci\\Data\\Projekty\\protobuf-annotation-processor\\test\\build\\tmp\\jmh",
+            "-Duser.country=US",
+            "-Duser.language=en",
+            "-Duser.variant"
+        ],
+        "jdkVersion" : "17.0.6",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.6+10-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 3,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "type" : "PROTO"
+        },
+        "primaryMetric" : {
+            "score" : 0.07218506210600774,
+            "scoreError" : 0.0015102421544897213,
+            "scoreConfidence" : [
+                0.07067481995151802,
+                0.07369530426049746
+            ],
+            "scorePercentiles" : {
+                "0.0" : 0.07152445544924628,
+                "50.0" : 0.07160107098884795,
+                "90.0" : 0.07340618675774584,
+                "95.0" : 0.07340618675774584,
+                "99.0" : 0.07340618675774584,
+                "99.9" : 0.07340618675774584,
+                "99.99" : 0.07340618675774584,
+                "99.999" : 0.07340618675774584,
+                "99.9999" : 0.07340618675774584,
+                "100.0" : 0.07340618675774584
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    0.0715842769236223,
+                    0.07162354282412148,
+                    0.07160107098884795
+                ],
+                [
+                    0.07158805981597921,
+                    0.07159587882170437,
+                    0.07152445544924628
+                ],
+                [
+                    0.07337816951904994,
+                    0.07340618675774584,
+                    0.07336391785375228
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+
