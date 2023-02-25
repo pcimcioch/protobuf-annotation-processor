@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
-import org.assertj.core.api.ThrowableAssert;
+import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
+import com.github.pcimcioch.protobuf.io.exception.LimitExceededException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -110,7 +111,8 @@ class ReadBufferTest {
             byte read9 = testee.read();
             byte read10 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.ensureAvailable(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.ensureAvailable(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -140,7 +142,8 @@ class ReadBufferTest {
             byte read7 = testee.read();
             byte read8 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.ensureAvailable(3), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.ensureAvailable(3))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -181,7 +184,8 @@ class ReadBufferTest {
             byte read2 = testee.read();
             byte read3 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.ensureAvailable(1), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.ensureAvailable(1))
+                    .isInstanceOf(LimitExceededException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -195,7 +199,8 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            assertThrowsProtobufException(() -> testee.ensureAvailable(4), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.ensureAvailable(4))
+                    .isInstanceOf(LimitExceededException.class);
         }
     }
 
@@ -212,7 +217,8 @@ class ReadBufferTest {
 
             byte[] readArray = testee.read(3);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.read(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.read(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(readArray).containsExactly(0, 1, 2);
@@ -228,7 +234,8 @@ class ReadBufferTest {
             byte[] readArray = testee.read(3);
             testee.ensureAvailable(1);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.read(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.read(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(readArray).containsExactly(0, 1, 2);
@@ -247,7 +254,8 @@ class ReadBufferTest {
             testee.ensureAvailable(1);
             byte read2 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.read(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.read(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -261,7 +269,8 @@ class ReadBufferTest {
             ReadBuffer testee = testee(b(0, 1, 2), 4);
 
             // when
-            assertThrowsProtobufException(() -> testee.read(4), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.read(4))
+                    .isInstanceOf(InputEndedException.class);
         }
 
         @Test
@@ -271,7 +280,8 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            assertThrowsProtobufException(() -> testee.read(4), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.read(4))
+                    .isInstanceOf(LimitExceededException.class);
         }
 
         @Test
@@ -282,7 +292,8 @@ class ReadBufferTest {
 
             // when
             byte[] readArray = testee.read(6);
-            assertThrowsProtobufException(() -> testee.read(1), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.read(1))
+                    .isInstanceOf(LimitExceededException.class);
 
             // then
             assertThat(readArray).containsExactly(0, 1, 2, 3, 4, 5);
@@ -302,7 +313,8 @@ class ReadBufferTest {
 
             String readString = testee.readString(3);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.readString(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.readString(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(readString).isEqualTo("bar");
@@ -318,7 +330,8 @@ class ReadBufferTest {
             String readString = testee.readString(3);
             testee.ensureAvailable(1);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.readString(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.readString(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(readString).isEqualTo("bar");
@@ -337,7 +350,8 @@ class ReadBufferTest {
             testee.ensureAvailable(1);
             byte read2 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.readString(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.readString(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -351,7 +365,8 @@ class ReadBufferTest {
             ReadBuffer testee = testee(b('b', 'a', 'r'), 4);
 
             // when
-            assertThrowsProtobufException(() -> testee.readString(4), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.readString(4))
+                    .isInstanceOf(InputEndedException.class);
         }
 
         @Test
@@ -361,7 +376,8 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            assertThrowsProtobufException(() -> testee.readString(4), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.readString(4))
+                    .isInstanceOf(LimitExceededException.class);
         }
 
         @Test
@@ -372,7 +388,8 @@ class ReadBufferTest {
 
             // when
             String readString = testee.readString(6);
-            assertThrowsProtobufException(() -> testee.readString(1), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.readString(1))
+                    .isInstanceOf(LimitExceededException.class);
 
             // then
             assertThat(readString).isEqualTo("abcdef");
@@ -392,7 +409,8 @@ class ReadBufferTest {
 
             testee.skip(3);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.skip(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.skip(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 3);
@@ -407,7 +425,8 @@ class ReadBufferTest {
             testee.skip(3);
             testee.ensureAvailable(1);
             byte read1 = testee.read();
-            assertThrowsProtobufException(() -> testee.skip(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.skip(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 3);
@@ -425,7 +444,8 @@ class ReadBufferTest {
             testee.ensureAvailable(1);
             byte read2 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.skip(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.skip(1))
+                    .isInstanceOf(InputEndedException.class);
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -438,7 +458,8 @@ class ReadBufferTest {
             ReadBuffer testee = testee(b(0, 1, 2), 4);
 
             // when
-            assertThrowsProtobufException(() -> testee.skip(4), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> testee.skip(4))
+                    .isInstanceOf(InputEndedException.class);
         }
 
         @Test
@@ -448,7 +469,8 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            assertThrowsProtobufException(() -> testee.skip(4), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.skip(4))
+                    .isInstanceOf(LimitExceededException.class);
         }
 
         @Test
@@ -459,7 +481,8 @@ class ReadBufferTest {
 
             // when
             testee.skip(6);
-            assertThrowsProtobufException(() -> testee.skip(1), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.skip(1))
+                    .isInstanceOf(LimitExceededException.class);
         }
     }
 
@@ -499,7 +522,8 @@ class ReadBufferTest {
             testee.ensureAvailable(1);
             byte read3 = testee.read();
 
-            assertThrowsProtobufException(() -> testee.ensureAvailable(1), ProtobufProtocolException.limitExceeded());
+            assertThatThrownBy(() -> testee.ensureAvailable(1))
+                    .isInstanceOf(LimitExceededException.class);
             testee.setLimit(10);
             testee.ensureAvailable(2);
             byte read4 = testee.read();
@@ -528,11 +552,5 @@ class ReadBufferTest {
             bytes[i] = (byte) values[i];
         }
         return bytes;
-    }
-
-    private void assertThrowsProtobufException(ThrowableAssert.ThrowingCallable shouldRaiseThrowable, ProtobufProtocolException exception) {
-        assertThatThrownBy(shouldRaiseThrowable)
-                .isInstanceOf(ProtobufProtocolException.class)
-                .hasMessage(exception.getMessage());
     }
 }

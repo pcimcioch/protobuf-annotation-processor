@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
+import com.github.pcimcioch.protobuf.io.exception.MalformedVarintException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,7 +61,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readFixedInt(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readFixedInt())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -115,7 +117,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readFixedLong(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readFixedLong())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -169,7 +172,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readFloat(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readFloat())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -219,7 +223,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readDouble(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readDouble())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -283,7 +288,8 @@ class ProtoIOTest {
         @Test
         void readUnfinished() {
             // when then
-            assertThrowsProtobufException(() -> input(new byte[0]).readBoolean(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(new byte[0]).readBoolean())
+                    .isInstanceOf(InputEndedException.class);
         }
     }
 
@@ -329,7 +335,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readVarint64(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readVarint64())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -345,7 +352,8 @@ class ProtoIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001);
 
             // when
-            assertThrowsProtobufException(() -> input(bytes).readVarint64(), ProtobufProtocolException.malformedVarint());
+            assertThatThrownBy(() -> input(bytes).readVarint64())
+                    .isInstanceOf(MalformedVarintException.class);
         }
 
         @Test
@@ -413,7 +421,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readVarint32(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readVarint32())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -429,7 +438,8 @@ class ProtoIOTest {
             byte[] bytes = b(0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b00000001);
 
             // when
-            assertThrowsProtobufException(() -> input(bytes).readVarint32(), ProtobufProtocolException.malformedVarint());
+            assertThatThrownBy(() -> input(bytes).readVarint32())
+                    .isInstanceOf(MalformedVarintException.class);
         }
 
         @Test
@@ -475,7 +485,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readString(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readString())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -518,7 +529,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readBytes(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readBytes())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -570,7 +582,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readZigZag64(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readZigZag64())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -633,7 +646,8 @@ class ProtoIOTest {
         @MethodSource("unfinishedArguments")
         void readUnfinished(byte[] bytes) {
             // when then
-            assertThrowsProtobufException(() -> input(bytes).readZigZag32(), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input(bytes).readZigZag32())
+                    .isInstanceOf(InputEndedException.class);
         }
 
         static Stream<byte[]> unfinishedArguments() {
@@ -721,7 +735,8 @@ class ProtoIOTest {
             input.skip(3);
 
             // then
-            assertThrowsProtobufException(() -> input.skip(1), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input.skip(1))
+                    .isInstanceOf(InputEndedException.class);
         }
 
         @Test
@@ -730,7 +745,8 @@ class ProtoIOTest {
             ProtoInput input = input(b(10, 20, 30));
 
             // when then
-            assertThrowsProtobufException(() -> input.skip(4), ProtobufProtocolException.inputEnded());
+            assertThatThrownBy(() -> input.skip(4))
+                    .isInstanceOf(InputEndedException.class);
         }
     }
 
@@ -744,12 +760,6 @@ class ProtoIOTest {
 
     private void assertBinary(byte[] bytes) {
         assertThat(output.toByteArray()).isEqualTo(bytes);
-    }
-
-    private void assertThrowsProtobufException(ThrowingCallable shouldRaiseThrowable, ProtobufProtocolException exception) {
-        assertThatThrownBy(shouldRaiseThrowable)
-                .isInstanceOf(ProtobufProtocolException.class)
-                .hasMessage(exception.getMessage());
     }
 
     private static byte[] b(int... values) {

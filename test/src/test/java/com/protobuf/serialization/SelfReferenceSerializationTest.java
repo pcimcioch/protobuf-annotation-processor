@@ -1,7 +1,6 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.protobuf.model.FullRecord;
 import com.protobuf.model.SelfReference;
 import com.protobuf.model.SelfReferenceProto;
 import org.assertj.core.api.ThrowingConsumer;
@@ -10,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SelfReferenceSerializationTest extends SerializationTestBase {

@@ -1,9 +1,8 @@
-package com.protobuf;
+package com.github.pcimcioch.protobuf.io;
 
-import com.github.pcimcioch.protobuf.io.ProtobufInput;
+import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
 import java.io.ByteArrayInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -14,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public final class ProtobufAssertion {
 
-    private final ProtobufInput input;
+    private final ProtoInput input;
 
     private ProtobufAssertion(InputStream inputStream) {
-        this.input = new ProtobufInput(inputStream);
+        this.input = new ProtoInput(ReadBuffer.from(inputStream, 4096));
     }
 
     public static ProtobufAssertion assertProto(byte[] data) throws IOException {
@@ -281,6 +280,7 @@ public final class ProtobufAssertion {
     }
 
     public void end() {
-        assertThatThrownBy(input::readBoolean).isInstanceOf(EOFException.class);
+        assertThatThrownBy(input::readBoolean)
+                .isInstanceOf(InputEndedException.class);
     }
 }

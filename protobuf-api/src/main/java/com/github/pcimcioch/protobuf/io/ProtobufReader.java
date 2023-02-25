@@ -1,8 +1,10 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.io.exception.ProtobufException;
+import com.github.pcimcioch.protobuf.io.exception.UnknownWireTypeException;
+import com.github.pcimcioch.protobuf.io.exception.UnsupportedWireTypeException;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -10,8 +12,9 @@ import java.io.InputStream;
  * Reads protobuf data
  */
 public class ProtobufReader {
+    private static final int DEFAULT_BUFFER_SIZE = 4096;
 
-    private final ProtobufInput input;
+    private final ProtoInput input;
 
     /**
      * Constructor. Given input stream will not be closed by this class in any way
@@ -19,7 +22,16 @@ public class ProtobufReader {
      * @param inputStream input stream to read data from
      */
     public ProtobufReader(InputStream inputStream) {
-        this.input = new ProtobufInput(inputStream);
+        this.input = new ProtoInput(ReadBuffer.from(inputStream, DEFAULT_BUFFER_SIZE));
+    }
+
+    /**
+     * Constructor
+     *
+     * @param bytes array to read data from
+     */
+    public ProtobufReader(byte[] bytes) {
+        this.input = new ProtoInput(ReadBuffer.from(bytes, DEFAULT_BUFFER_SIZE));
     }
 
     /**
@@ -31,7 +43,7 @@ public class ProtobufReader {
     public int tag() throws IOException {
         try {
             return input.readVarint32();
-        } catch (EOFException ex) {
+        } catch (ProtobufException ex) { // TODO maybe ProtoInput should have some method isEnded?
             return -1;
         }
     }
@@ -182,6 +194,7 @@ public class ProtobufReader {
      * @return bytes
      * @throws IOException in case of any data read error
      */
+    @SuppressWarnings("deprecation")
     public ByteArray bytes() throws IOException {
         return ByteArray.unsafeFromByteArray(input.readBytes());
     }
@@ -227,13 +240,13 @@ public class ProtobufReader {
             switch (WireType.fromTag(tag)) {
                 case VARINT -> input.readVarint64();
                 case I64 -> input.skip(8);
-                case LEN -> input.skip(input.readVarint64());
-                case SGROUP -> throw ProtobufProtocolException.sgroupNotSupported();
-                case EGROUP -> throw ProtobufProtocolException.egroupNotSupported();
+                case LEN -> input.skip(input.readVarint32());
+                case SGROUP -> throw new UnsupportedWireTypeException("SGROUP");
+                case EGROUP -> throw new UnsupportedWireTypeException("EGROUP");
                 case I32 -> input.skip(4);
             }
         } catch (IllegalArgumentException ex) {
-            throw ProtobufProtocolException.unknownWireType();
+            throw new UnknownWireTypeException();
         }
     }
 }

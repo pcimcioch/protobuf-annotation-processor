@@ -1,5 +1,8 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
+import com.github.pcimcioch.protobuf.io.exception.LimitExceededException;
+
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -7,7 +10,6 @@ import java.io.InputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-// TODO [quality] add tests
 final class ReadBuffer {
     private final InputStream input;
     private int limit;
@@ -49,7 +51,7 @@ final class ReadBuffer {
 
         fillBuffer();
         if (!areAvailable(size)) {
-            throw ProtobufProtocolException.inputEnded();
+            throw new InputEndedException();
         }
     }
 
@@ -74,7 +76,7 @@ final class ReadBuffer {
             }
 
             if (inputEnded) {
-                throw ProtobufProtocolException.inputEnded();
+                throw new InputEndedException();
             }
 
             System.arraycopy(buffer, currentPosition, result, resultPosition, available);
@@ -114,7 +116,7 @@ final class ReadBuffer {
         try {
             input.skipNBytes(size - available);
         } catch (EOFException ex) {
-            throw ProtobufProtocolException.inputEnded();
+            throw new InputEndedException();
         }
 
         currentPosition = 0;
@@ -129,9 +131,9 @@ final class ReadBuffer {
         return currentPosition + size <= endPosition;
     }
 
-    private void assertLimit(int size) throws ProtobufProtocolException {
+    private void assertLimit(int size) throws LimitExceededException {
         if (size > limit) {
-            throw ProtobufProtocolException.limitExceeded();
+            throw new LimitExceededException();
         }
     }
 

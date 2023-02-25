@@ -1,7 +1,7 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.protobuf.ProtobufAssertion;
+import com.github.pcimcioch.protobuf.io.ProtobufAssertion;
 import com.protobuf.model.RepeatableOtherAddress;
 import com.protobuf.model.RepeatableOtherAddressProto;
 import com.protobuf.model.RepeatableOtherWork;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RepeatableMessageSerializationTest extends SerializationTestBase {

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static com.protobuf.ByteUtils.b;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.bs;
-import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
 

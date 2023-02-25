@@ -1,5 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.io.exception.MalformedVarintException;
+
 import java.io.IOException;
 
 import static java.lang.Double.longBitsToDouble;
@@ -81,7 +83,7 @@ class ProtoInput {
             }
         }
 
-        throw ProtobufProtocolException.malformedVarint();
+        throw new MalformedVarintException();
     }
 
     int readZigZag32() throws IOException {

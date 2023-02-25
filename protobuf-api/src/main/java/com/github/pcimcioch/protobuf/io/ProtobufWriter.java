@@ -541,6 +541,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
+    @SuppressWarnings("deprecation")
     public ProtobufWriter bytes(int number, ByteArray value) throws IOException {
         if (!isDefault(value)) {
             output.writeVarint32(LEN.tagFrom(number));
@@ -558,6 +559,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
+    @SuppressWarnings("deprecation")
     public ProtobufWriter bytes(int number, List<ByteArray> values) throws IOException {
         if (!isDefault(values)) {
             for (ByteArray value : values) {

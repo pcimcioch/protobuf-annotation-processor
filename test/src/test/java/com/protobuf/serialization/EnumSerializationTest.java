@@ -1,7 +1,6 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.protobuf.model.RepeatableEnumMessage;
 import com.protobuf.model.SimpleEnum;
 import com.protobuf.model.SimpleEnumMessage;
 import com.protobuf.model.SimpleEnumMessageProto;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EnumSerializationTest extends SerializationTestBase {

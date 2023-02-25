@@ -7,7 +7,6 @@ import com.protobuf.model.OtherMessageRecord;
 import com.protobuf.model.OtherMessageRecordProto;
 import com.protobuf.model.OtherMessageWork;
 import com.protobuf.model.OtherMessageWorkProto;
-import com.protobuf.model.SimpleEnumMessage;
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import java.io.IOException;
 
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.concatenate;
-import static com.protobuf.ProtobufAssertion.assertProto;
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageSerializationTest extends SerializationTestBase {

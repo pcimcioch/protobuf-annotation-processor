@@ -6,7 +6,6 @@ import com.github.pcimcioch.protobuf.io.ProtobufReader;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,9 +28,8 @@ class DecodingFactory {
     }
 
     private void addParseBytesMethod(RecordSource messageRecord, MessageDefinition message) {
-        CodeBody body = body("return parse(new $ProtobufReader(new $ByteArrayInputStream(data)));",
-                param("ProtobufReader", ProtobufReader.class),
-                param("ByteArrayInputStream", ByteArrayInputStream.class)
+        CodeBody body = body("return parse(new $ProtobufReader(data));",
+                param("ProtobufReader", ProtobufReader.class)
         );
 
         messageRecord.add(method("parse")
