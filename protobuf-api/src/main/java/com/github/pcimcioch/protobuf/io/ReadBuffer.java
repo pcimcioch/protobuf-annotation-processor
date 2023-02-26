@@ -38,8 +38,10 @@ final class ReadBuffer {
         return new ReadBuffer(new ByteArrayInputStream(bytes), bufferSize, Long.MAX_VALUE);
     }
 
-    void setLimit(long limit) {
+    long setLimit(long limit) {
+        long oldLimit = this.limit;
         this.limit = limit;
+        return oldLimit;
     }
 
     void ensureAvailable(int size) throws IOException {

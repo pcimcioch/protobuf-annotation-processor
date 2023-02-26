@@ -208,7 +208,13 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public <T> T message(MessageFactory<T> factory) throws IOException {
-        return factory.parse(input.readBytes());
+        long size = input.readVarint64();
+        long oldLimit = input.setLimit(size);
+
+        T message = factory.parse(this);
+        input.setLimit(oldLimit - size);
+
+        return message;
     }
 
     /**
@@ -220,13 +226,13 @@ public class ProtobufReader {
     public interface MessageFactory<T> {
 
         /**
-         * Creates message from byte array
+         * Creates message from reader
          *
-         * @param data bytes
+         * @param reader reader
          * @return new message
          * @throws IOException in case of any data read error
          */
-        T parse(byte[] data) throws IOException;
+        T parse(ProtobufReader reader) throws IOException;
     }
 
     /**

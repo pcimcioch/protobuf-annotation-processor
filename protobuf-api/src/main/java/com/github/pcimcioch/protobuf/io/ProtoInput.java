@@ -109,4 +109,8 @@ class ProtoInput {
     void skip(long size) throws IOException {
         in.skip(size);
     }
+
+    long setLimit(long limit) {
+        return in.setLimit(limit);
+    }
 }

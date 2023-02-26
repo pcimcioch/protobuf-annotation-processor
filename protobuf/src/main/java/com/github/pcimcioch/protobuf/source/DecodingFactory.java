@@ -16,7 +16,6 @@ import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
 import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
 import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
 import static com.github.pcimcioch.protobuf.code.ThrowsSource.throwsEx;
-import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 
 class DecodingFactory {
@@ -24,7 +23,7 @@ class DecodingFactory {
     void addDecodingMethods(RecordSource messageRecord, MessageDefinition message) {
         addParseBytesMethod(messageRecord, message);
         addParseStreamMethod(messageRecord, message);
-        addParseProtobufInputMethod(messageRecord, message);
+        addParseProtobufReaderMethod(messageRecord, message);
     }
 
     private void addParseBytesMethod(RecordSource messageRecord, MessageDefinition message) {
@@ -57,7 +56,7 @@ class DecodingFactory {
         );
     }
 
-    private void addParseProtobufInputMethod(RecordSource messageRecord, MessageDefinition message) {
+    private void addParseProtobufReaderMethod(RecordSource messageRecord, MessageDefinition message) {
         CodeBody body = body("""
                         $BuilderType builder = new $BuilderType();
                                         
@@ -72,7 +71,7 @@ class DecodingFactory {
         );
 
         messageRecord.add(method("parse")
-                .set(privateVisibility())
+                .set(publicVisibility())
                 .set(staticModifier())
                 .set(returns(message.name()))
                 .add(throwsEx(IOException.class))
