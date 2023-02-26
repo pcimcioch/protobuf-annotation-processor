@@ -11,6 +11,8 @@ public class UnsupportedWireTypeException extends ProtobufException {
 
     /**
      * Constructor
+     *
+     * @param wireTypeName name of unsupported wire type
      */
     public UnsupportedWireTypeException(String wireTypeName) {
         super("Unsupported wire type " + wireTypeName);
