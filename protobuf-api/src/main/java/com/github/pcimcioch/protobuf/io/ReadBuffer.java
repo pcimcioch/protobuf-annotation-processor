@@ -12,14 +12,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 final class ReadBuffer {
     private final InputStream input;
-    private int limit;
+    private long limit;
     private boolean inputEnded;
 
     private final byte[] buffer;
     private int currentPosition;
     private int endPosition;
 
-    private ReadBuffer(InputStream input, int bufferSize, int limit) {
+    private ReadBuffer(InputStream input, int bufferSize, long limit) {
         this.input = input;
         this.limit = limit;
         this.inputEnded = false;
@@ -30,45 +30,43 @@ final class ReadBuffer {
     }
 
     static ReadBuffer from(InputStream input, int bufferSize) {
-        return new ReadBuffer(input, bufferSize, Integer.MAX_VALUE);
+        return new ReadBuffer(input, bufferSize, Long.MAX_VALUE);
     }
 
     static ReadBuffer from(byte[] bytes, int bufferSize) {
         // TODO [performance] We could have dedicated implementation of ReadBuffer that operates on bytes directly
-        return new ReadBuffer(new ByteArrayInputStream(bytes), bufferSize, Integer.MAX_VALUE);
+        return new ReadBuffer(new ByteArrayInputStream(bytes), bufferSize, Long.MAX_VALUE);
     }
 
-    void setLimit(int limit) {
+    void setLimit(long limit) {
         this.limit = limit;
     }
 
-    // TODO [readability] does it really improve performance that much? What if those checks were done in read()?
     void ensureAvailable(int size) throws IOException {
         assertLimit(size);
+        limit -= size;
         if (areAvailable(size)) {
             return;
         }
 
-        fillBuffer();
-        if (!areAvailable(size)) {
+        if (fillBuffer() < size) {
             throw new InputEndedException();
         }
     }
 
     byte read() {
-        limit--;
         return buffer[currentPosition++];
     }
 
     byte[] read(int size) throws IOException {
         assertLimit(size);
         limit -= size;
+
         byte[] result = new byte[size];
         int resultPosition = 0;
+        int available = available();
 
         while (size > 0) {
-            int available = available();
-
             if (size <= available) {
                 System.arraycopy(buffer, currentPosition, result, resultPosition, size);
                 currentPosition += size;
@@ -84,7 +82,7 @@ final class ReadBuffer {
             resultPosition += available;
             size -= available;
 
-            fillBuffer();
+            available = fillBuffer();
         }
 
         return result;
@@ -103,7 +101,7 @@ final class ReadBuffer {
         return new String(read(size), UTF_8);
     }
 
-    void skip(int size) throws IOException {
+    void skip(long size) throws IOException {
         assertLimit(size);
         limit -= size;
 
@@ -131,13 +129,13 @@ final class ReadBuffer {
         return currentPosition + size <= endPosition;
     }
 
-    private void assertLimit(int size) throws LimitExceededException {
+    private void assertLimit(long size) throws LimitExceededException {
         if (size > limit) {
             throw new LimitExceededException();
         }
     }
 
-    private void fillBuffer() throws IOException {
+    private int fillBuffer() throws IOException {
         int currentSize = available();
         int toRead = buffer.length - currentSize;
 
@@ -157,5 +155,7 @@ final class ReadBuffer {
             toRead -= read;
             endPosition += read;
         }
+
+        return endPosition;
     }
 }

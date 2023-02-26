@@ -240,7 +240,7 @@ public class ProtobufReader {
             switch (WireType.fromTag(tag)) {
                 case VARINT -> input.readVarint64();
                 case I64 -> input.skip(8);
-                case LEN -> input.skip(input.readVarint32());
+                case LEN -> input.skip(input.readVarint64());
                 case SGROUP -> throw new UnsupportedWireTypeException("SGROUP");
                 case EGROUP -> throw new UnsupportedWireTypeException("EGROUP");
                 case I32 -> input.skip(4);

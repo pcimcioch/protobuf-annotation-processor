@@ -106,7 +106,7 @@ class ProtoInput {
         return in.read(size);
     }
 
-    void skip(int size) throws IOException {
+    void skip(long size) throws IOException {
         in.skip(size);
     }
 }
