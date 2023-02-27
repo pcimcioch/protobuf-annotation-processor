@@ -2,9 +2,7 @@ package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 
@@ -13,14 +11,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public final class ProtobufAssertion {
 
-    private final ProtoInput input;
+    private final ProtobufInput input;
 
-    private ProtobufAssertion(InputStream inputStream) {
-        this.input = new ProtoInput(ReadBuffer.from(inputStream, 4096));
+    private ProtobufAssertion(byte[] data) {
+        this.input = ProtobufInput.from(data);
     }
 
     public static ProtobufAssertion assertProto(byte[] data) throws IOException {
-        return new ProtobufAssertion(new ByteArrayInputStream(data));
+        return new ProtobufAssertion(data);
     }
 
     public ProtobufAssertion double_(int number, double expectedValue) {

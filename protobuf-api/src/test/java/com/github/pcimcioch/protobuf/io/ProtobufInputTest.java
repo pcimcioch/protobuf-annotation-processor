@@ -11,18 +11,16 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ReadBufferTest {
+class ProtobufInputTest {
 
     @Nested
-    class ReadSingleByte {
-
-        private final ReadBuffer testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), 4);
+    class ReadByte {
+        private final ProtobufInput testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), 4);
 
         @Test
         void readOneByte() throws IOException {
             // when
-            testee.ensureAvailable(1);
-            byte read = testee.read();
+            byte read = testee.readByte();
 
             // then
             assertThat(read).isEqualTo((byte) 0);
@@ -31,10 +29,9 @@ class ReadBufferTest {
         @Test
         void readMultipleByte() throws IOException {
             // when
-            testee.ensureAvailable(3);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -45,11 +42,10 @@ class ReadBufferTest {
         @Test
         void readBufferSize() throws IOException {
             // when
-            testee.ensureAvailable(4);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
-            byte read4 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
+            byte read4 = testee.readByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -61,23 +57,16 @@ class ReadBufferTest {
         @Test
         void readAllData() throws IOException {
             // when
-            testee.ensureAvailable(4);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
-            byte read4 = testee.read();
-
-            testee.ensureAvailable(3);
-            byte read5 = testee.read();
-            byte read6 = testee.read();
-            byte read7 = testee.read();
-
-            testee.ensureAvailable(2);
-            byte read8 = testee.read();
-            byte read9 = testee.read();
-
-            testee.ensureAvailable(1);
-            byte read10 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
+            byte read4 = testee.readByte();
+            byte read5 = testee.readByte();
+            byte read6 = testee.readByte();
+            byte read7 = testee.readByte();
+            byte read8 = testee.readByte();
+            byte read9 = testee.readByte();
+            byte read10 = testee.readByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -95,23 +84,18 @@ class ReadBufferTest {
         @Test
         void readJustOverCapacity() throws IOException {
             // when
-            testee.ensureAvailable(4);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
-            byte read4 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
+            byte read4 = testee.readByte();
+            byte read5 = testee.readByte();
+            byte read6 = testee.readByte();
+            byte read7 = testee.readByte();
+            byte read8 = testee.readByte();
+            byte read9 = testee.readByte();
+            byte read10 = testee.readByte();
 
-            testee.ensureAvailable(4);
-            byte read5 = testee.read();
-            byte read6 = testee.read();
-            byte read7 = testee.read();
-            byte read8 = testee.read();
-
-            testee.ensureAvailable(2);
-            byte read9 = testee.read();
-            byte read10 = testee.read();
-
-            assertThatThrownBy(() -> testee.ensureAvailable(1))
+            assertThatThrownBy(testee::readByte)
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -130,19 +114,16 @@ class ReadBufferTest {
         @Test
         void readOverCapacity() throws IOException {
             // when
-            testee.ensureAvailable(4);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
-            byte read4 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
+            byte read4 = testee.readByte();
+            byte read5 = testee.readByte();
+            byte read6 = testee.readByte();
+            byte read7 = testee.readByte();
+            byte read8 = testee.readByte();
 
-            testee.ensureAvailable(4);
-            byte read5 = testee.read();
-            byte read6 = testee.read();
-            byte read7 = testee.read();
-            byte read8 = testee.read();
-
-            assertThatThrownBy(() -> testee.ensureAvailable(3))
+            assertThatThrownBy(() -> testee.readBytes(3))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -162,10 +143,9 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            testee.ensureAvailable(3);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -179,12 +159,11 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            testee.ensureAvailable(3);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
-            byte read3 = testee.read();
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
+            byte read3 = testee.readByte();
 
-            assertThatThrownBy(() -> testee.ensureAvailable(1))
+            assertThatThrownBy(testee::readByte)
                     .isInstanceOf(LimitExceededException.class);
 
             // then
@@ -199,7 +178,7 @@ class ReadBufferTest {
             testee.setLimit(3);
 
             // when
-            assertThatThrownBy(() -> testee.ensureAvailable(4))
+            assertThatThrownBy(() -> testee.readBytes(4))
                     .isInstanceOf(LimitExceededException.class);
         }
     }
@@ -210,31 +189,28 @@ class ReadBufferTest {
         @Test
         void readByteArrayFromBuffer() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
 
             // when
-            testee.ensureAvailable(4);
-
-            byte[] readArray = testee.read(3);
-            byte read1 = testee.read();
-            assertThatThrownBy(() -> testee.read(1))
+            byte read1 = testee.readByte();
+            byte[] readArray = testee.readBytes(3);
+            assertThatThrownBy(() -> testee.readBytes(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
-            assertThat(readArray).containsExactly(0, 1, 2);
-            assertThat(read1).isEqualTo((byte) 3);
+            assertThat(read1).isEqualTo((byte) 0);
+            assertThat(readArray).containsExactly(1, 2, 3);
         }
 
         @Test
         void readByteArrayWhenBufferEmpty() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
 
             // when
-            byte[] readArray = testee.read(3);
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
-            assertThatThrownBy(() -> testee.read(1))
+            byte[] readArray = testee.readBytes(3);
+            byte read1 = testee.readByte();
+            assertThatThrownBy(() -> testee.readBytes(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -245,16 +221,14 @@ class ReadBufferTest {
         @Test
         void readByteArrayOverMultipleBuffers() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
 
             // when
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
-            byte[] readArray = testee.read(9);
-            testee.ensureAvailable(1);
-            byte read2 = testee.read();
+            byte read1 = testee.readByte();
+            byte[] readArray = testee.readBytes(9);
+            byte read2 = testee.readByte();
 
-            assertThatThrownBy(() -> testee.read(1))
+            assertThatThrownBy(() -> testee.readBytes(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -266,33 +240,33 @@ class ReadBufferTest {
         @Test
         void readOverCapacity() {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2), 4);
+            ProtobufInput testee = testee(b(0, 1, 2), 4);
 
             // when
-            assertThatThrownBy(() -> testee.read(4))
+            assertThatThrownBy(() -> testee.readBytes(4))
                     .isInstanceOf(InputEndedException.class);
         }
 
         @Test
         void readOverLimit() {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 4), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 4), 4);
             testee.setLimit(3);
 
             // when
-            assertThatThrownBy(() -> testee.read(4))
+            assertThatThrownBy(() -> testee.readBytes(4))
                     .isInstanceOf(LimitExceededException.class);
         }
 
         @Test
         void readArrayDecreasesLimit() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7), 4);
             testee.setLimit(6);
 
             // when
-            byte[] readArray = testee.read(6);
-            assertThatThrownBy(() -> testee.read(1))
+            byte[] readArray = testee.readBytes(6);
+            assertThatThrownBy(() -> testee.readBytes(1))
                     .isInstanceOf(LimitExceededException.class);
 
             // then
@@ -306,30 +280,27 @@ class ReadBufferTest {
         @Test
         void readStringFromBuffer() throws IOException {
             // given
-            ReadBuffer testee = testee(b('b', 'a', 'r', 3), 4);
+            ProtobufInput testee = testee(b(0, 'b', 'a', 'r'), 4);
 
             // when
-            testee.ensureAvailable(4);
-
+            byte read1 = testee.readByte();
             String readString = testee.readString(3);
-            byte read1 = testee.read();
             assertThatThrownBy(() -> testee.readString(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
+            assertThat(read1).isEqualTo((byte) 0);
             assertThat(readString).isEqualTo("bar");
-            assertThat(read1).isEqualTo((byte) 3);
         }
 
         @Test
         void readStringWhenBufferEmpty() throws IOException {
             // given
-            ReadBuffer testee = testee(b('b', 'a', 'r', 3), 4);
+            ProtobufInput testee = testee(b('b', 'a', 'r', 3), 4);
 
             // when
             String readString = testee.readString(3);
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
+            byte read1 = testee.readByte();
             assertThatThrownBy(() -> testee.readString(1))
                     .isInstanceOf(InputEndedException.class);
 
@@ -341,14 +312,12 @@ class ReadBufferTest {
         @Test
         void readStringOverMultipleBuffers() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 't', 'e', 's', 't', ' ', 'f', 'o', 'o', '!', 10), 4);
+            ProtobufInput testee = testee(b(0, 't', 'e', 's', 't', ' ', 'f', 'o', 'o', '!', 10), 4);
 
             // when
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
+            byte read1 = testee.readByte();
             String readString = testee.readString(9);
-            testee.ensureAvailable(1);
-            byte read2 = testee.read();
+            byte read2 = testee.readByte();
 
             assertThatThrownBy(() -> testee.readString(1))
                     .isInstanceOf(InputEndedException.class);
@@ -362,7 +331,7 @@ class ReadBufferTest {
         @Test
         void readOverCapacity() {
             // given
-            ReadBuffer testee = testee(b('b', 'a', 'r'), 4);
+            ProtobufInput testee = testee(b('b', 'a', 'r'), 4);
 
             // when
             assertThatThrownBy(() -> testee.readString(4))
@@ -372,7 +341,7 @@ class ReadBufferTest {
         @Test
         void readOverLimit() {
             // given
-            ReadBuffer testee = testee(b('f', 'o', 'o', '!'), 4);
+            ProtobufInput testee = testee(b('f', 'o', 'o', '!'), 4);
             testee.setLimit(3);
 
             // when
@@ -383,7 +352,7 @@ class ReadBufferTest {
         @Test
         void readStringDecreasesLimit() throws IOException {
             // given
-            ReadBuffer testee = testee(b('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'), 4);
+            ProtobufInput testee = testee(b('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'), 4);
             testee.setLimit(6);
 
             // when
@@ -402,29 +371,26 @@ class ReadBufferTest {
         @Test
         void skipFromBuffer() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
 
             // when
-            testee.ensureAvailable(4);
-
+            byte read1 = testee.readByte();
             testee.skip(3);
-            byte read1 = testee.read();
             assertThatThrownBy(() -> testee.skip(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
-            assertThat(read1).isEqualTo((byte) 3);
+            assertThat(read1).isEqualTo((byte) 0);
         }
 
         @Test
         void skipWhenBufferEmpty() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
 
             // when
             testee.skip(3);
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
+            byte read1 = testee.readByte();
             assertThatThrownBy(() -> testee.skip(1))
                     .isInstanceOf(InputEndedException.class);
 
@@ -435,14 +401,12 @@ class ReadBufferTest {
         @Test
         void skipOverMultipleBuffers() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 4);
 
             // when
-            testee.ensureAvailable(1);
-            byte read1 = testee.read();
+            byte read1 = testee.readByte();
             testee.skip(9);
-            testee.ensureAvailable(1);
-            byte read2 = testee.read();
+            byte read2 = testee.readByte();
 
             assertThatThrownBy(() -> testee.skip(1))
                     .isInstanceOf(InputEndedException.class);
@@ -455,7 +419,7 @@ class ReadBufferTest {
         @Test
         void skipOverCapacity() {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2), 4);
+            ProtobufInput testee = testee(b(0, 1, 2), 4);
 
             // when
             assertThatThrownBy(() -> testee.skip(4))
@@ -465,7 +429,7 @@ class ReadBufferTest {
         @Test
         void skipOverLimit() {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 4), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 4), 4);
             testee.setLimit(3);
 
             // when
@@ -476,7 +440,7 @@ class ReadBufferTest {
         @Test
         void skipDecreasesLimit() throws IOException {
             // given
-            ReadBuffer testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3, 4, 5, 6, 7), 4);
             testee.setLimit(6);
 
             // when
@@ -492,7 +456,7 @@ class ReadBufferTest {
         @Test
         void mixedCalls() throws IOException {
             // given
-            ReadBuffer testee = testee(b(
+            ProtobufInput testee = testee(b(
                     0, 1, 2,
                     3,
                     4,
@@ -506,28 +470,24 @@ class ReadBufferTest {
             testee.setLimit(27);
 
             // when
-            byte[] readArray1 = testee.read(3);
-
-            testee.ensureAvailable(2);
-            byte read1 = testee.read();
-            byte read2 = testee.read();
+            byte[] readArray1 = testee.readBytes(3);
+            byte read1 = testee.readByte();
+            byte read2 = testee.readByte();
 
             String readString1 = testee.readString(3);
             String readString2 = testee.readString(5);
 
             testee.skip(9);
 
-            byte[] readArray2 = testee.read(4);
+            byte[] readArray2 = testee.readBytes(4);
+            byte read3 = testee.readByte();
 
-            testee.ensureAvailable(1);
-            byte read3 = testee.read();
-
-            assertThatThrownBy(() -> testee.ensureAvailable(1))
+            assertThatThrownBy(() -> testee.readBytes(1))
                     .isInstanceOf(LimitExceededException.class);
             testee.setLimit(10);
-            testee.ensureAvailable(2);
-            byte read4 = testee.read();
-            byte read5 = testee.read();
+
+            byte read4 = testee.readByte();
+            byte read5 = testee.readByte();
 
             // then
             assertThat(readArray1).containsExactly(0, 1, 2);
@@ -542,8 +502,8 @@ class ReadBufferTest {
         }
     }
 
-    private static ReadBuffer testee(byte[] bytes, int bufferSize) {
-        return ReadBuffer.from(new ByteArrayInputStream(bytes), bufferSize);
+    private static ProtobufInput testee(byte[] bytes, int bufferSize) {
+        return ProtobufInput.from(new ByteArrayInputStream(bytes), bufferSize);
     }
 
     private static byte[] b(int... values) {

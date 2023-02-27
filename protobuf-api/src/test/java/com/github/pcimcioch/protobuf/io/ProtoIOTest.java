@@ -17,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProtoIOTest {
-    private static final int BUFFER_SIZE = 32;
-
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     @Nested
@@ -683,7 +681,7 @@ class ProtoIOTest {
         @Test
         void read() throws IOException {
             // given
-            ProtoInput input = input(b(
+            ProtobufInput input = input(b(
                     0b11101000, 0b11, 0b0, 0b0, // 1000 fixed int
                     0b10000011, 0b00011010, 0b10011001, 0b10111110, 0b11100, 0b0, 0b0, 0b0, // 123456789123L fixed long
                     0b11000000, 0b11000100, 0b00000111, // 123456 varint
@@ -705,7 +703,7 @@ class ProtoIOTest {
         @Test
         void skipZero() throws IOException {
             // given
-            ProtoInput input = input(b(10, 0, 0, 0));
+            ProtobufInput input = input(b(10, 0, 0, 0));
 
             // when
             input.skip(0);
@@ -717,7 +715,7 @@ class ProtoIOTest {
         @Test
         void skip() throws IOException {
             // given
-            ProtoInput input = input(b(10, 20, 30, 10, 0, 0, 0));
+            ProtobufInput input = input(b(10, 20, 30, 10, 0, 0, 0));
 
             // when
             input.skip(3);
@@ -729,7 +727,7 @@ class ProtoIOTest {
         @Test
         void skipAll() throws IOException {
             // given
-            ProtoInput input = input(b(10, 20, 30));
+            ProtobufInput input = input(b(10, 20, 30));
 
             // when
             input.skip(3);
@@ -742,7 +740,7 @@ class ProtoIOTest {
         @Test
         void skipTooMany() {
             // given
-            ProtoInput input = input(b(10, 20, 30));
+            ProtobufInput input = input(b(10, 20, 30));
 
             // when then
             assertThatThrownBy(() -> input.skip(4))
@@ -754,8 +752,8 @@ class ProtoIOTest {
         return new ProtobufOutput(output);
     }
 
-    private ProtoInput input(byte[] bytes) {
-        return new ProtoInput(ReadBuffer.from(bytes, BUFFER_SIZE));
+    private ProtobufInput input(byte[] bytes) {
+        return ProtobufInput.from(bytes);
     }
 
     private void assertBinary(byte[] bytes) {

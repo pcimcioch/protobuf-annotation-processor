@@ -14,7 +14,7 @@ import java.io.InputStream;
 public class ProtobufReader {
     private static final int DEFAULT_BUFFER_SIZE = 4096;
 
-    private final ProtoInput input;
+    private final ProtobufInput input;
 
     /**
      * Constructor. Given input stream will not be closed by this class in any way
@@ -22,7 +22,7 @@ public class ProtobufReader {
      * @param inputStream input stream to read data from
      */
     public ProtobufReader(InputStream inputStream) {
-        this.input = new ProtoInput(ReadBuffer.from(inputStream, DEFAULT_BUFFER_SIZE));
+        this.input = ProtobufInput.from(inputStream, DEFAULT_BUFFER_SIZE);
     }
 
     /**
@@ -31,7 +31,7 @@ public class ProtobufReader {
      * @param bytes array to read data from
      */
     public ProtobufReader(byte[] bytes) {
-        this.input = new ProtoInput(ReadBuffer.from(bytes, DEFAULT_BUFFER_SIZE));
+        this.input = ProtobufInput.from(bytes);
     }
 
     /**
