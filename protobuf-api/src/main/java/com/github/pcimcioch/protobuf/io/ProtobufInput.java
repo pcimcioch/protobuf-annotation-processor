@@ -175,6 +175,10 @@ class ProtobufInput {
         return new String(getBytes(size), UTF_8);
     }
 
+    boolean isEnded() throws IOException {
+        return limit == 0 || (available() == 0 && (inputEnded || fillBuffer() == 0));
+    }
+
     private byte[] getBytes(int size) throws IOException {
         byte[] result = new byte[size];
         int resultPosition = 0;

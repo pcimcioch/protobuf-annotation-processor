@@ -41,11 +41,11 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public int tag() throws IOException {
-        try {
-            return input.readVarint32();
-        } catch (ProtobufException ex) { // TODO maybe ProtoInput should have some method isEnded?
+        if (input.isEnded()) {
             return -1;
         }
+
+        return input.readVarint32();
     }
 
     /**
