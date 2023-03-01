@@ -4,7 +4,6 @@ import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 import com.github.pcimcioch.protobuf.io.exception.LimitExceededException;
 import com.github.pcimcioch.protobuf.io.exception.MalformedVarintException;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,39 +12,26 @@ import static java.lang.Double.longBitsToDouble;
 import static java.lang.Float.intBitsToFloat;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+// TODO [performance] With project Panama there may be some more efficient ways to read little endians directly from the buffer's byte[]
+// TODO [performance] Reading varints can be faster if 9 bytes (max varint) are already in the buffer. No loops are needed and no calls to ensureAvailable()
 @SuppressWarnings("PointlessBitwiseExpression")
-class ProtobufInput {
-    private final InputStream input;
-    private boolean inputEnded;
+abstract class ProtobufInput {
+    protected final byte[] buffer;
+    protected int currentPosition;
+    protected int endPosition;
 
-    private final byte[] buffer;
-    private int currentPosition;
-    private int endPosition;
-    private long limit;
-
-    private ProtobufInput(InputStream input, int bufferSize) {
-        this.input = input;
-        this.inputEnded = false;
-
-        this.buffer = new byte[bufferSize];
+    protected ProtobufInput(byte[] buffer, int endPosition) {
+        this.buffer = buffer;
         this.currentPosition = 0;
-        this.endPosition = 0;
-        this.limit = Long.MAX_VALUE;
+        this.endPosition = endPosition;
     }
 
     static ProtobufInput from(InputStream input, int bufferSize) {
-        return new ProtobufInput(input, bufferSize);
+        return new StreamProtobufInput(input, bufferSize);
     }
 
     static ProtobufInput from(byte[] bytes) {
-        // TODO [performance] We could have dedicated implementation of ReadBuffer that operates on bytes directly
-        return new ProtobufInput(new ByteArrayInputStream(bytes), 4096);
-    }
-
-    long setLimit(long limit) {
-        long oldLimit = this.limit;
-        this.limit = limit;
-        return oldLimit;
+        return new ArrayProtobufInput(bytes);
     }
 
     int readFixedInt() throws IOException {
@@ -134,121 +120,226 @@ class ProtobufInput {
         return readString(readVarint32());
     }
 
-    void skip(long size) throws IOException {
-        consumeLimit(size);
+    abstract long setLimit(long limit) throws IOException;
 
-        int available = available();
-        if (size <= available) {
+    abstract void skip(long size) throws IOException;
+
+    abstract boolean isEnded() throws IOException;
+
+    abstract byte readByte() throws IOException;
+
+    abstract byte[] readBytes(int size) throws IOException;
+
+    abstract String readString(int size) throws IOException;
+
+    protected int available() {
+        return endPosition - currentPosition;
+    }
+
+    protected abstract void ensureAvailable(int size) throws IOException;
+
+    private static final class ArrayProtobufInput extends ProtobufInput {
+        private ArrayProtobufInput(byte[] data) {
+            super(data, data.length);
+        }
+
+        @Override
+        long setLimit(long limit) throws LimitExceededException {
+            long oldLimit = available();
+            if (limit + currentPosition > buffer.length) {
+                throw new LimitExceededException();
+            }
+            endPosition = currentPosition + (int) limit;
+            return oldLimit;
+        }
+
+        @Override
+        void skip(long size) throws IOException {
+            ensureAvailable((int) size);
             currentPosition += size;
-            return;
         }
 
-        try {
-            input.skipNBytes(size - available);
-        } catch (EOFException ex) {
-            throw new InputEndedException();
+        @Override
+        boolean isEnded() {
+            return available() == 0;
         }
 
-        currentPosition = 0;
-        endPosition = 0;
-    }
+        @Override
+        byte readByte() throws IOException {
+            ensureAvailable(1);
+            return buffer[currentPosition++];
+        }
 
-    byte readByte() throws IOException {
-        ensureAvailable(1);
-        return buffer[currentPosition++];
-    }
+        @Override
+        byte[] readBytes(int size) throws IOException {
+            ensureAvailable(size);
 
-    byte[] readBytes(int size) throws IOException {
-        consumeLimit(size);
-        return getBytes(size);
-    }
+            byte[] data = new byte[size];
+            System.arraycopy(buffer, currentPosition, data, 0, size);
+            currentPosition += size;
 
-    String readString(int size) throws IOException {
-        consumeLimit(size);
+            return data;
+        }
 
-        if (available() >= size) {
+        @Override
+        String readString(int size) throws IOException {
+            ensureAvailable(size);
+
             String result = new String(buffer, currentPosition, size, UTF_8);
             currentPosition += size;
+
             return result;
         }
 
-        return new String(getBytes(size), UTF_8);
+        @Override
+        protected void ensureAvailable(int size) throws IOException {
+            if (currentPosition + size > buffer.length) {
+                throw new InputEndedException();
+            }
+            if (available() < size) {
+                throw new LimitExceededException();
+            }
+        }
     }
 
-    boolean isEnded() throws IOException {
-        return limit == 0 || (available() == 0 && (inputEnded || fillBuffer() == 0));
-    }
+    private static final class StreamProtobufInput extends ProtobufInput {
+        private final InputStream input;
+        private boolean inputEnded;
+        private long limit;
 
-    private byte[] getBytes(int size) throws IOException {
-        byte[] result = new byte[size];
-        int resultPosition = 0;
-        int available = available();
+        private StreamProtobufInput(InputStream input, int bufferSize) {
+            super(new byte[bufferSize], 0);
 
-        while (size > 0) {
+            this.input = input;
+            this.inputEnded = false;
+            this.limit = Long.MAX_VALUE;
+        }
+
+        @Override
+        long setLimit(long limit) {
+            long oldLimit = this.limit;
+            this.limit = limit;
+            return oldLimit;
+        }
+
+        @Override
+        void skip(long size) throws IOException {
+            consumeLimit(size);
+
+            int available = available();
             if (size <= available) {
-                System.arraycopy(buffer, currentPosition, result, resultPosition, size);
+                currentPosition += size;
+                return;
+            }
+
+            try {
+                input.skipNBytes(size - available);
+            } catch (EOFException ex) {
+                throw new InputEndedException();
+            }
+
+            currentPosition = 0;
+            endPosition = 0;
+        }
+
+        @Override
+        boolean isEnded() throws IOException {
+            return limit == 0 || (available() == 0 && (inputEnded || fillBuffer() == 0));
+        }
+
+        @Override
+        byte readByte() throws IOException {
+            ensureAvailable(1);
+            return buffer[currentPosition++];
+        }
+
+        @Override
+        byte[] readBytes(int size) throws IOException {
+            consumeLimit(size);
+            return getBytes(size);
+        }
+
+        @Override
+        String readString(int size) throws IOException {
+            consumeLimit(size);
+
+            if (available() >= size) {
+                String result = new String(buffer, currentPosition, size, UTF_8);
                 currentPosition += size;
                 return result;
             }
 
-            if (inputEnded) {
+            return new String(getBytes(size), UTF_8);
+        }
+
+        @Override
+        protected void ensureAvailable(int size) throws IOException {
+            consumeLimit(size);
+            if (available() >= size) {
+                return;
+            }
+            if (fillBuffer() < size) {
                 throw new InputEndedException();
             }
-
-            System.arraycopy(buffer, currentPosition, result, resultPosition, available);
-            currentPosition += available;
-            resultPosition += available;
-            size -= available;
-
-            available = fillBuffer();
         }
 
-        return result;
-    }
-
-    private void ensureAvailable(int size) throws IOException {
-        consumeLimit(size);
-        if (available() >= size) {
-            return;
-        }
-        if (fillBuffer() < size) {
-            throw new InputEndedException();
-        }
-    }
-
-    private void consumeLimit(long size) throws LimitExceededException {
-        if (size > limit) {
-            throw new LimitExceededException();
-        }
-
-        limit -= size;
-    }
-
-    private int available() {
-        return endPosition - currentPosition;
-    }
-
-    private int fillBuffer() throws IOException {
-        int currentSize = available();
-        int toRead = buffer.length - currentSize;
-
-        // Move existing bytes to the beginning of the buffer
-        System.arraycopy(buffer, currentPosition, buffer, 0, currentSize);
-        currentPosition = 0;
-        endPosition = currentSize;
-
-        // Read data blocks until buffered is filled or nothing more in the input
-        while (toRead > 0) {
-            int read = input.read(buffer, currentSize, toRead);
-            if (read < 0) {
-                inputEnded = true;
-                break;
+        private void consumeLimit(long size) throws LimitExceededException {
+            if (size > limit) {
+                throw new LimitExceededException();
             }
 
-            toRead -= read;
-            endPosition += read;
+            limit -= size;
         }
 
-        return endPosition;
+        private int fillBuffer() throws IOException {
+            int currentSize = available();
+            int toRead = buffer.length - currentSize;
+
+            // Move existing bytes to the beginning of the buffer
+            System.arraycopy(buffer, currentPosition, buffer, 0, currentSize);
+            currentPosition = 0;
+            endPosition = currentSize;
+
+            // Read data blocks until buffered is filled or nothing more in the input
+            while (toRead > 0) {
+                int read = input.read(buffer, currentSize, toRead);
+                if (read < 0) {
+                    inputEnded = true;
+                    break;
+                }
+
+                toRead -= read;
+                endPosition += read;
+            }
+
+            return endPosition;
+        }
+
+        private byte[] getBytes(int size) throws IOException {
+            byte[] result = new byte[size];
+            int resultPosition = 0;
+            int available = available();
+
+            while (size > 0) {
+                if (size <= available) {
+                    System.arraycopy(buffer, currentPosition, result, resultPosition, size);
+                    currentPosition += size;
+                    return result;
+                }
+
+                if (inputEnded) {
+                    throw new InputEndedException();
+                }
+
+                System.arraycopy(buffer, currentPosition, result, resultPosition, available);
+                currentPosition += available;
+                resultPosition += available;
+                size -= available;
+
+                available = fillBuffer();
+            }
+
+            return result;
+        }
     }
 }

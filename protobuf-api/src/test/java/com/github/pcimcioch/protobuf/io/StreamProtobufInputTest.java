@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ProtobufInputTest {
+class StreamProtobufInputTest {
 
     @Nested
     class ReadByte {
@@ -173,7 +173,7 @@ class ProtobufInputTest {
         }
 
         @Test
-        void readOverLimit() {
+        void readOverLimit() throws IOException {
             // given
             testee.setLimit(3);
 
@@ -248,9 +248,9 @@ class ProtobufInputTest {
         }
 
         @Test
-        void readOverLimit() {
+        void readOverLimit() throws IOException {
             // given
-            ProtobufInput testee = testee(b(0, 1, 2, 4), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
             testee.setLimit(3);
 
             // when
@@ -339,7 +339,7 @@ class ProtobufInputTest {
         }
 
         @Test
-        void readOverLimit() {
+        void readOverLimit() throws IOException {
             // given
             ProtobufInput testee = testee(b('f', 'o', 'o', '!'), 4);
             testee.setLimit(3);
@@ -427,9 +427,9 @@ class ProtobufInputTest {
         }
 
         @Test
-        void skipOverLimit() {
+        void skipOverLimit() throws IOException {
             // given
-            ProtobufInput testee = testee(b(0, 1, 2, 4), 4);
+            ProtobufInput testee = testee(b(0, 1, 2, 3), 4);
             testee.setLimit(3);
 
             // when

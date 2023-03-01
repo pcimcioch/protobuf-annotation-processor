@@ -13,6 +13,6 @@ public class UnknownWireTypeException extends ProtobufException {
      * Constructor
      */
     public UnknownWireTypeException() {
-        super("Reading over limit");
+        super("Unknown wire type");
     }
 }
