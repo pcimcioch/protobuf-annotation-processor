@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
-import com.github.pcimcioch.protobuf.dto.ProtoDto;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public final class Size {
      * @return size
      */
     public static int double_(int number, double value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0d) {
             return 0;
         }
 
@@ -38,10 +37,6 @@ public final class Size {
      * @return size
      */
     public static int double_(int number, List<Double> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -53,7 +48,7 @@ public final class Size {
      * @return size
      */
     public static int float_(int number, float value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0f) {
             return 0;
         }
 
@@ -68,10 +63,6 @@ public final class Size {
      * @return size
      */
     public static int float_(int number, List<Float> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -84,7 +75,7 @@ public final class Size {
      */
     // TODO add tests
     public static int int32(int number, int value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0) {
             return 0;
         }
 
@@ -100,10 +91,6 @@ public final class Size {
      */
     // TODO add tests
     public static int int32(int number, List<Integer> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32(value);
@@ -121,7 +108,7 @@ public final class Size {
      */
     // TODO add tests
     public static int int64(int number, long value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0L) {
             return 0;
         }
 
@@ -137,10 +124,6 @@ public final class Size {
      */
     // TODO add tests
     public static int int64(int number, List<Long> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64(value);
@@ -158,7 +141,7 @@ public final class Size {
      */
     // TODO add tests
     public static int uint32(int number, int value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0) {
             return 0;
         }
 
@@ -174,10 +157,6 @@ public final class Size {
      */
     // TODO add tests
     public static int uint32(int number, List<Integer> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32(value);
@@ -195,7 +174,7 @@ public final class Size {
      */
     // TODO add tests
     public static int uint64(int number, long value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0L) {
             return 0;
         }
 
@@ -211,10 +190,6 @@ public final class Size {
      */
     // TODO add tests
     public static int uint64(int number, List<Long> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64(value);
@@ -232,7 +207,7 @@ public final class Size {
      */
     // TODO add tests
     public static int sint32(int number, int value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0) {
             return 0;
         }
 
@@ -248,10 +223,6 @@ public final class Size {
      */
     // TODO add tests
     public static int sint32(int number, List<Integer> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += zigzag32(value);
@@ -269,7 +240,7 @@ public final class Size {
      */
     // TODO add tests
     public static int sint64(int number, long value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0L) {
             return 0;
         }
 
@@ -285,10 +256,6 @@ public final class Size {
      */
     // TODO add tests
     public static int sint64(int number, List<Long> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += zigzag64(value);
@@ -305,7 +272,7 @@ public final class Size {
      * @return size
      */
     public static int fixed32(int number, int value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0) {
             return 0;
         }
 
@@ -320,10 +287,6 @@ public final class Size {
      * @return size
      */
     public static int fixed32(int number, List<Integer> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -335,7 +298,7 @@ public final class Size {
      * @return size
      */
     public static int fixed64(int number, long value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0L) {
             return 0;
         }
 
@@ -350,10 +313,6 @@ public final class Size {
      * @return size
      */
     public static int fixed64(int number, List<Long> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -365,7 +324,7 @@ public final class Size {
      * @return size
      */
     public static int sfixed32(int number, int value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0) {
             return 0;
         }
 
@@ -380,10 +339,6 @@ public final class Size {
      * @return size
      */
     public static int sfixed32(int number, List<Integer> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -395,7 +350,7 @@ public final class Size {
      * @return size
      */
     public static int sfixed64(int number, long value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value == 0L) {
             return 0;
         }
 
@@ -410,10 +365,6 @@ public final class Size {
      * @return size
      */
     public static int sfixed64(int number, List<Long> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -425,7 +376,7 @@ public final class Size {
      * @return size
      */
     public static int bool(int number, boolean value) {
-        if (ProtoDto.isDefault(value)) {
+        if (!value) {
             return 0;
         }
 
@@ -440,10 +391,6 @@ public final class Size {
      * @return size
      */
     public static int bool(int number, List<Boolean> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         return values.size() * (tagSize(number) + 1);
     }
 
@@ -455,7 +402,7 @@ public final class Size {
      * @return size
      */
     public static int bytes(int number, ByteArray value) {
-        if (ProtoDto.isDefault(value)) {
+        if (value.isEmpty()) {
             return 0;
         }
 
@@ -470,10 +417,6 @@ public final class Size {
      * @return size
      */
     public static int bytes(int number, List<ByteArray> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (ByteArray value : values) {
             size += varint32(value.length()) + value.length();
@@ -490,7 +433,7 @@ public final class Size {
      * @return size
      */
     public static int string(int number, String value) {
-        if (ProtoDto.isDefault(value)) {
+        if ("".equals(value)) {
             return 0;
         }
         // TODO [performance] this is quite slow and high-resource use
@@ -507,10 +450,6 @@ public final class Size {
      * @return size
      */
     public static int string(int number, List<String> values) {
-        if (ProtoDto.isDefault(values)) {
-            return 0;
-        }
-
         int size = tagSize(number) * values.size();
         for (String value : values) {
             byte[] data = value.getBytes(UTF_8);

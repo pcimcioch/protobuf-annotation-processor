@@ -363,8 +363,8 @@ class SizeTest {
 
     private static Stream<Arguments> bytesSource() {
         return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, null, 0),
-                Arguments.of(NUMBER_2_BIG, null, 0),
+                Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
+                Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
                 Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
                 Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
 
