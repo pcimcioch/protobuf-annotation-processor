@@ -412,8 +412,8 @@ class SizeTest {
 
     private static Stream<Arguments> stringSource() {
         return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, null, 0),
-                Arguments.of(NUMBER_2_BIG, null, 0),
+                Arguments.of(NUMBER_1_SMALL, "", 0),
+                Arguments.of(NUMBER_2_BIG, "", 0),
                 Arguments.of(NUMBER_1_SMALL, "", 0),
                 Arguments.of(NUMBER_2_BIG, "", 0),
 

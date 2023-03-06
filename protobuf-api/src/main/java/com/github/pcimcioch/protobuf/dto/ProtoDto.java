@@ -79,7 +79,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static ByteArray copy(ByteArray value) {
-        return value == null ? ByteArray.empty() : value;
+        return value == null || value.isEmpty() ? ByteArray.empty() : value;
     }
 
     /**
@@ -90,7 +90,7 @@ public final class ProtoDto {
      * @return value copy
      */
     public static <T extends ProtobufMessage<T>> T copy(T value) {
-        return isDefault(value) ? null : value;
+        return value == null || value.isEmpty() ? null : value;
     }
 
     /**
@@ -202,7 +202,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static int merge(int current, int toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == 0 ? current : toMerge;
     }
 
     /**
@@ -213,7 +213,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static long merge(long current, long toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == 0L ? current : toMerge;
     }
 
     /**
@@ -224,7 +224,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static float merge(float current, float toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == 0f ? current : toMerge;
     }
 
     /**
@@ -235,7 +235,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static double merge(double current, double toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == 0d ? current : toMerge;
     }
 
     /**
@@ -246,7 +246,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static boolean merge(boolean current, boolean toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge || current;
     }
 
     /**
@@ -257,7 +257,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static String merge(String current, String toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == null || "".equals(toMerge) ? current : toMerge;
     }
 
     /**
@@ -268,7 +268,7 @@ public final class ProtoDto {
      * @return current if toMerge is default, toMerge otherwise
      */
     public static ByteArray merge(ByteArray current, ByteArray toMerge) {
-        return isDefault(toMerge) ? current : toMerge;
+        return toMerge == null || toMerge.isEmpty() ? current : toMerge;
     }
 
     /**
@@ -292,10 +292,10 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static <T> List<T> merge(List<T> current, List<T> toMerge) {
-        if (isDefault(toMerge)) {
+        if (toMerge == null || toMerge.isEmpty()) {
             return current;
         }
-        if (isDefault(current)) {
+        if (current == null || current.isEmpty()) {
             return toMerge;
         }
 
