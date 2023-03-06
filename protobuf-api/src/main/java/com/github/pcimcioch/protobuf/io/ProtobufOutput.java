@@ -2,13 +2,16 @@ package com.github.pcimcioch.protobuf.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+
+import static java.lang.Double.doubleToLongBits;
+import static java.lang.Float.floatToIntBits;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Writes protobuf types to the raw data stream
  */
 @SuppressWarnings("PointlessBitwiseExpression")
-// TODO [performance] Replace with ProtoOutput similar to ProtoInput + ReadBuffer
+// TODO [performance] Replace with logic similar to ProtobufInput
 public class ProtobufOutput {
     private static final long LONG_PAYLOAD_MASK = 0b01111111;
     private static final int CONTINUATION_MASK = 0b10000000;
@@ -51,7 +54,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeDouble(double value) throws IOException {
-        writeLong(Double.doubleToLongBits(value));
+        writeLong(doubleToLongBits(value));
     }
 
     /**
@@ -61,7 +64,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeFloat(float value) throws IOException {
-        writeInt(Float.floatToIntBits(value));
+        writeInt(floatToIntBits(value));
     }
 
     /**
@@ -81,7 +84,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeString(String value) throws IOException {
-        writeBytes(value.getBytes(StandardCharsets.UTF_8));
+        writeBytes(value.getBytes(UTF_8));
     }
 
     /**
@@ -105,11 +108,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeZigZag64(long value) throws IOException {
-        if (value < 0) {
-            writeVarint64(((-value - 1) << 1) + 1);
-        } else {
-            writeVarint64(value << 1);
-        }
+        writeVarint64((value << 1) ^ (value >> 63));
     }
 
     /**
@@ -119,7 +118,7 @@ public class ProtobufOutput {
      * @throws IOException in case of any data write error
      */
     public void writeZigZag32(int value) throws IOException {
-        writeZigZag64(value);
+        writeVarint32((value << 1) ^ (value >> 31));
     }
 
     /**
