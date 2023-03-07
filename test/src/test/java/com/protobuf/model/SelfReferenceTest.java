@@ -14,6 +14,7 @@ class SelfReferenceTest {
         // then
         assertThat(first.value()).isEqualTo(10);
         assertThat(first.next()).isEqualTo(SelfReference.empty());
+        assertThat(first.protobufSize()).isEqualTo(2);
     }
 
     @Test
@@ -28,5 +29,9 @@ class SelfReferenceTest {
         assertThat(first.next().value()).isEqualTo(20);
         assertThat(first.next().next().value()).isEqualTo(30);
         assertThat(first.next().next().next()).isEqualTo(SelfReference.empty());
+
+        assertThat(first.protobufSize()).isEqualTo(10);
+        assertThat(second.protobufSize()).isEqualTo(6);
+        assertThat(third.protobufSize()).isEqualTo(2);
     }
 }

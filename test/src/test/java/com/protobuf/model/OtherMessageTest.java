@@ -29,6 +29,7 @@ class OtherMessageTest {
         assertThat(record.work().address().number()).isEqualTo(34000);
         assertThat(record.work().name()).isEqualTo("Software House inc.");
         assertThat(record.work().year()).isEqualTo(2001);
+        assertThat(record.protobufSize()).isEqualTo(67);
     }
 
     @Test
@@ -60,6 +61,7 @@ class OtherMessageTest {
         assertThat(record.work().address().number()).isEqualTo(34000);
         assertThat(record.work().name()).isEqualTo("Software House inc.");
         assertThat(record.work().year()).isEqualTo(2001);
+        assertThat(record.protobufSize()).isEqualTo(67);
     }
 
     @Test
@@ -76,5 +78,6 @@ class OtherMessageTest {
         assertThat(record.work().address().number()).isEqualTo(0);
         assertThat(record.work().name()).isEqualTo("");
         assertThat(record.work().year()).isEqualTo(0);
+        assertThat(record.protobufSize()).isEqualTo(0);
     }
 }

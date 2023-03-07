@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.util.List;
 
@@ -442,6 +443,39 @@ public final class Size {
         for (String value : values) {
             byte[] data = value.getBytes(UTF_8);
             size += varint32(data.length) + data.length;
+        }
+
+        return size;
+    }
+
+    /**
+     * Returns message size
+     *
+     * @param number tag number
+     * @param value  value
+     * @return size
+     */
+    public static int message(int number, ProtobufMessage<?> value) {
+        if (value == null) {
+            return 0;
+        }
+
+        int size = value.protobufSize();
+        return tagSize(number) + varint32(size) + size;
+    }
+
+    /**
+     * Returns list of message size
+     *
+     * @param number tag number
+     * @param values values
+     * @return size
+     */
+    public static int message(int number, List<? extends ProtobufMessage<?>> values) {
+        int size = tagSize(number) * values.size();
+        for (ProtobufMessage<?> value : values) {
+            int messageSize = value.protobufSize();
+            size += varint32(messageSize) + messageSize;
         }
 
         return size;

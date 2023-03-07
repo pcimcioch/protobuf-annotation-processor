@@ -24,6 +24,7 @@ class RepeatableEnumTest {
         // then
         assertThat(model.orders()).isEmpty();
         assertThat(model.ordersValue()).isEmpty();
+        assertThat(model.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -34,6 +35,7 @@ class RepeatableEnumTest {
         // then
         assertThat(model.orders()).containsExactly(SECOND);
         assertThat(model.ordersValue()).containsExactly(1);
+        assertThat(model.protobufSize()).isEqualTo(2);
     }
 
     @Test
@@ -44,6 +46,7 @@ class RepeatableEnumTest {
         // then
         assertThat(model.orders()).containsExactly(SECOND, THIRD);
         assertThat(model.ordersValue()).containsExactly(1, 2);
+        assertThat(model.protobufSize()).isEqualTo(4);
     }
 
     @Test
@@ -58,6 +61,7 @@ class RepeatableEnumTest {
 
         // then
         assertThat(model.ordersValue()).containsExactly(1);
+        assertThat(model.protobufSize()).isEqualTo(2);
     }
 
     @Test
@@ -93,6 +97,7 @@ class RepeatableEnumTest {
 
         // then
         assertThat(model.ordersValue()).containsExactly(0, 1, 2);
+        assertThat(model.protobufSize()).isEqualTo(6);
     }
 
     @Test
@@ -105,6 +110,7 @@ class RepeatableEnumTest {
 
         // then
         assertThat(model.ordersValue()).containsExactly(2, 1, 3, 3);
+        assertThat(model.protobufSize()).isEqualTo(8);
     }
 
     @Test
@@ -119,6 +125,7 @@ class RepeatableEnumTest {
 
         // then
         assertThat(model.ordersValue()).containsExactly(0, 2, 2, 1, 0, 3);
+        assertThat(model.protobufSize()).isEqualTo(12);
     }
 
     @Test
@@ -131,6 +138,7 @@ class RepeatableEnumTest {
         // then
         assertThat(model.ordersValue()).containsExactly(0, 10, 2);
         assertThat(model.orders()).containsExactly(FIRST, UNRECOGNIZED, THIRD);
+        assertThat(model.protobufSize()).isEqualTo(6);
     }
 
     @Test

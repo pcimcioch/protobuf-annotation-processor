@@ -55,6 +55,7 @@ abstract class SerializationTestBase {
         }
 
         assertThat(rawData).isEqualTo(streamData);
+        assertThat(rawData.length).isEqualTo(record.protobufSize());
 
         return rawData;
     }

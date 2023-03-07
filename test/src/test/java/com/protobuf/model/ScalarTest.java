@@ -16,6 +16,7 @@ class ScalarTest {
         assertThat(record.amount()).isEqualTo(10);
         assertThat(record.latitude()).isEqualTo(20.0);
         assertThat(record.longitude()).isEqualTo(30.0);
+        assertThat(record.protobufSize()).isEqualTo(20);
     }
 
     @Test
@@ -31,6 +32,7 @@ class ScalarTest {
         assertThat(record.amount()).isEqualTo(10);
         assertThat(record.latitude()).isEqualTo(20.0);
         assertThat(record.longitude()).isEqualTo(30.0);
+        assertThat(record.protobufSize()).isEqualTo(20);
     }
 
     @Test
@@ -42,6 +44,7 @@ class ScalarTest {
         assertThat(record.amount()).isEqualTo(0);
         assertThat(record.latitude()).isEqualTo(0d);
         assertThat(record.longitude()).isEqualTo(0d);
+        assertThat(record.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -69,6 +72,7 @@ class ScalarTest {
         assertThat(record.bool()).isTrue();
         assertThat(record.string()).isEqualTo("test");
         assertThat(record.bytes()).isEqualTo(ba(1, 20, 3));
+        assertThat(record.protobufSize()).isEqualTo(69);
     }
 
     @Test
@@ -108,6 +112,7 @@ class ScalarTest {
         assertThat(record.bool()).isTrue();
         assertThat(record.string()).isEqualTo("test");
         assertThat(record.bytes()).isEqualTo(ba(1, 20, 3));
+        assertThat(record.protobufSize()).isEqualTo(69);
     }
 
     @Test
@@ -131,5 +136,6 @@ class ScalarTest {
         assertThat(record.bool()).isFalse();
         assertThat(record.string()).isEqualTo("");
         assertThat(record.bytes()).isEqualTo(ba());
+        assertThat(record.protobufSize()).isEqualTo(0);
     }
 }

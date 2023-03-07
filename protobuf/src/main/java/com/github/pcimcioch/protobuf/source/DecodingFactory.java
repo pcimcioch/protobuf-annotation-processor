@@ -145,7 +145,6 @@ class DecodingFactory {
             );
             case MESSAGE -> body("builder.$merge(reader.message($Type::parse));",
                     param("merge", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldNamePrefixed("merge")),
-                    param("field", field.javaFieldName()),
                     param("Type", field.rules().repeated() ? field.javaFieldType().generic() : field.javaFieldType())
             );
         };

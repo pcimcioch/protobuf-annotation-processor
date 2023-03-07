@@ -30,5 +30,10 @@ class NestedTest {
         assertThat(user.work().typeValue()).isEqualTo(1);
         assertThat(user.work().address().street()).isEqualTo("Factorial Street");
         assertThat(user.work().address().number()).isEqualTo(123);
+
+        assertThat(user.protobufSize()).isEqualTo(70);
+        assertThat(work.protobufSize()).isEqualTo(41);
+        assertThat(workAddress.protobufSize()).isEqualTo(20);
+        assertThat(userAddress.protobufSize()).isEqualTo(15);
     }
 }

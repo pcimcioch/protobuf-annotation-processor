@@ -39,4 +39,11 @@ public interface ProtobufMessage<T extends ProtobufMessage<T>> {
      * @return new message
      */
     T merge(T toMerge);
+
+    /**
+     * Returns message size in protobuf format
+     *
+     * @return message size
+     */
+    int protobufSize();
 }

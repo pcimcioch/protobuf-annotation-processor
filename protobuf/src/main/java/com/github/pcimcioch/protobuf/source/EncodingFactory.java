@@ -65,7 +65,8 @@ class EncodingFactory {
 
         for (FieldDefinition field : message.fields()) {
             body.appendExceptFirst("\n");
-            body.append(encodingCode(field),
+            body.append("writer.$method($number, $name);",
+                    param("method", encodingMethod(field)),
                     param("number", field.number()),
                     param("name", field.javaFieldName())
             );
@@ -79,24 +80,24 @@ class EncodingFactory {
         );
     }
 
-    private String encodingCode(FieldDefinition field) {
+    private String encodingMethod(FieldDefinition field) {
         return switch (field.protoKind()) {
-            case DOUBLE -> "writer.double_($number, $name);";
-            case FLOAT -> "writer.float_($number, $name);";
-            case INT32, ENUM -> "writer.int32($number, $name);";
-            case INT64 -> "writer.int64($number, $name);";
-            case UINT32 -> "writer.uint32($number, $name);";
-            case UINT64 -> "writer.uint64($number, $name);";
-            case SINT32 -> "writer.sint32($number, $name);";
-            case SINT64 -> "writer.sint64($number, $name);";
-            case FIXED32 -> "writer.fixed32($number, $name);";
-            case FIXED64 -> "writer.fixed64($number, $name);";
-            case SFIXED32 -> "writer.sfixed32($number, $name);";
-            case SFIXED64 -> "writer.sfixed64($number, $name);";
-            case BOOL -> "writer.bool($number, $name);";
-            case STRING -> "writer.string($number, $name);";
-            case MESSAGE -> "writer.message($number, $name);";
-            case BYTES -> "writer.bytes($number, $name);";
+            case DOUBLE -> "double_";
+            case FLOAT -> "float_";
+            case INT32, ENUM -> "int32";
+            case INT64 -> "int64";
+            case UINT32 -> "uint32";
+            case UINT64 -> "uint64";
+            case SINT32 -> "sint32";
+            case SINT64 -> "sint64";
+            case FIXED32 -> "fixed32";
+            case FIXED64 -> "fixed64";
+            case SFIXED32 -> "sfixed32";
+            case SFIXED64 -> "sfixed64";
+            case BOOL -> "bool";
+            case STRING -> "string";
+            case MESSAGE -> "message";
+            case BYTES -> "bytes";
         };
     }
 }

@@ -33,6 +33,7 @@ class RepeatableScalarTest {
         assertThat(model.bools()).isEmpty();
         assertThat(model.strings()).isEmpty();
         assertThat(model.bytes()).isEmpty();
+        assertThat(model.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -72,6 +73,7 @@ class RepeatableScalarTest {
         assertThat(model.bools()).containsExactly(true);
         assertThat(model.strings()).containsExactly("test");
         assertThat(model.bytes()).containsExactly(ba(1));
+        assertThat(model.protobufSize()).isEqualTo(67);
     }
 
     @Test
@@ -111,6 +113,7 @@ class RepeatableScalarTest {
         assertThat(model.bools()).containsExactly(true, false);
         assertThat(model.strings()).containsExactly("test", "foobar");
         assertThat(model.bytes()).containsExactly(ba(1, 2));
+        assertThat(model.protobufSize()).isEqualTo(134);
     }
 
     @Test
@@ -126,6 +129,7 @@ class RepeatableScalarTest {
 
         // then
         assertThat(model.doubles()).containsExactly(10d);
+        assertThat(model.protobufSize()).isEqualTo(9);
     }
 
     @Test
@@ -162,6 +166,7 @@ class RepeatableScalarTest {
 
         // then
         assertThat(model.doubles()).containsExactly(10d, 11d, 20d, 21d, 30d);
+        assertThat(model.protobufSize()).isEqualTo(45);
     }
 
     @Test
@@ -174,5 +179,6 @@ class RepeatableScalarTest {
 
         // then
         assertThat(model.doubles()).containsExactly(100d, 200d);
+        assertThat(model.protobufSize()).isEqualTo(18);
     }
 }

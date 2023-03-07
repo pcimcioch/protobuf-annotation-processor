@@ -1,10 +1,13 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -795,6 +798,57 @@ class SizeTest {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("messageSource")
+    void messageSize(int number, TestMessage value, int expectedSize) {
+        // when then
+        assertThat(Size.message(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> messageSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, null, 0),
+                Arguments.of(NUMBER_2_BIG, null, 0),
+                Arguments.of(NUMBER_1_SMALL, null, 0),
+                Arguments.of(NUMBER_2_BIG, null, 0),
+
+                Arguments.of(NUMBER_1_SMALL, message(1), 3),
+                Arguments.of(NUMBER_1_BIG, message(1), 3),
+                Arguments.of(NUMBER_2_SMALL, message(1), 4),
+                Arguments.of(NUMBER_2_BIG, message(1), 4),
+
+                Arguments.of(NUMBER_1_SMALL, message(6), 8),
+                Arguments.of(NUMBER_1_SMALL, message(127), 129),
+                Arguments.of(NUMBER_1_SMALL, message(128), 131)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("messageListSource")
+    void messageListSize(int number, List<TestMessage> values, int expectedSize) {
+        // when then
+        assertThat(Size.message(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> messageListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(message(1)), 3),
+                Arguments.of(NUMBER_1_BIG, List.of(message(1)), 3),
+                Arguments.of(NUMBER_2_SMALL, List.of(message(1)), 4),
+                Arguments.of(NUMBER_2_BIG, List.of(message(1)), 4),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(message(4)), 6),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(message(1), message(1), message(0), message(3)), 13),
+                Arguments.of(NUMBER_1_BIG, List.of(message(1), message(1), message(0), message(3)), 13),
+                Arguments.of(NUMBER_2_SMALL, List.of(message(1), message(1), message(0), message(3)), 17),
+                Arguments.of(NUMBER_2_BIG, List.of(message(1), message(1), message(0), message(3)), 17)
+        );
+    }
+
     public static ByteArray ba(int... bytes) {
         byte[] data = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
@@ -802,5 +856,35 @@ class SizeTest {
         }
 
         return ByteArray.fromByteArray(data);
+    }
+
+    public static ProtobufMessage<?> message(int size) {
+        return new TestMessage(size);
+    }
+
+    private record TestMessage(int size) implements ProtobufMessage<TestMessage> {
+        @Override
+        public void writeTo(OutputStream output) {
+        }
+
+        @Override
+        public byte[] toByteArray() {
+            return new byte[0];
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public TestMessage merge(TestMessage toMerge) {
+            return null;
+        }
+
+        @Override
+        public int protobufSize() {
+            return size;
+        }
     }
 }

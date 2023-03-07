@@ -7,15 +7,23 @@ import com.github.pcimcioch.protobuf.io.exception.MalformedVarintException;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.nio.ByteOrder;
 
 import static java.lang.Double.longBitsToDouble;
 import static java.lang.Float.intBitsToFloat;
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-// TODO [performance] With project Panama there may be some more efficient ways to read little endians directly from the buffer's byte[]
-// TODO [performance] Reading varints can be faster if 9 bytes (max varint) are already in the buffer. No loops are needed and no calls to ensureAvailable()
+// TODO [performance] Reading varints can be faster if 10 bytes (max varint) are already in the buffer. No loops are needed and no calls to ensureAvailable()
 @SuppressWarnings("PointlessBitwiseExpression")
 abstract class ProtobufInput {
+    private static final VarHandle LONG = MethodHandles.byteArrayViewVarHandle(long[].class, LITTLE_ENDIAN);
+    private static final VarHandle INT = MethodHandles.byteArrayViewVarHandle(int[].class, LITTLE_ENDIAN);
+    private static final VarHandle DOUBLE = MethodHandles.byteArrayViewVarHandle(double[].class, LITTLE_ENDIAN);
+    private static final VarHandle FLOAT = MethodHandles.byteArrayViewVarHandle(float[].class, LITTLE_ENDIAN);
+
     protected final byte[] buffer;
     protected int currentPosition;
     protected int endPosition;
@@ -36,46 +44,30 @@ abstract class ProtobufInput {
 
     int readFixedInt() throws IOException {
         ensureAvailable(4);
-
-        byte ch4 = buffer[currentPosition++];
-        byte ch3 = buffer[currentPosition++];
-        byte ch2 = buffer[currentPosition++];
-        byte ch1 = buffer[currentPosition++];
-
-        return (((ch1 & 0xff) << 24) |
-                ((ch2 & 0xff) << 16) |
-                ((ch3 & 0xff) << 8) |
-                ((ch4 & 0xff) << 0));
+        int value = (int) INT.get(buffer, currentPosition);
+        currentPosition += 4;
+        return value;
     }
 
     long readFixedLong() throws IOException {
         ensureAvailable(8);
-
-        byte ch8 = buffer[currentPosition++];
-        byte ch7 = buffer[currentPosition++];
-        byte ch6 = buffer[currentPosition++];
-        byte ch5 = buffer[currentPosition++];
-        byte ch4 = buffer[currentPosition++];
-        byte ch3 = buffer[currentPosition++];
-        byte ch2 = buffer[currentPosition++];
-        byte ch1 = buffer[currentPosition++];
-
-        return (((ch1 & 0xffL) << 56) |
-                ((ch2 & 0xffL) << 48) |
-                ((ch3 & 0xffL) << 40) |
-                ((ch4 & 0xffL) << 32) |
-                ((ch5 & 0xffL) << 24) |
-                ((ch6 & 0xffL) << 16) |
-                ((ch7 & 0xffL) << 8) |
-                ((ch8 & 0xffL) << 0));
+        long value = (long) LONG.get(buffer, currentPosition);
+        currentPosition += 8;
+        return value;
     }
 
     double readDouble() throws IOException {
-        return longBitsToDouble(readFixedLong());
+        ensureAvailable(8);
+        double value = (double) DOUBLE.get(buffer, currentPosition);
+        currentPosition += 8;
+        return value;
     }
 
     float readFloat() throws IOException {
-        return intBitsToFloat(readFixedInt());
+        ensureAvailable(4);
+        float value = (float) FLOAT.get(buffer, currentPosition);
+        currentPosition += 4;
+        return value;
     }
 
     boolean readBoolean() throws IOException {

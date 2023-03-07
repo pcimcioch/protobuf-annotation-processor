@@ -26,6 +26,7 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).isEmpty();
+        assertThat(model.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -35,6 +36,7 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).containsExactly(address1);
+        assertThat(model.protobufSize()).isEqualTo(10);
     }
 
     @Test
@@ -44,6 +46,7 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).containsExactly(address1, address2);
+        assertThat(model.protobufSize()).isEqualTo(22);
     }
 
     @Test
@@ -58,6 +61,7 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).containsExactly(address1);
+        assertThat(model.protobufSize()).isEqualTo(10);
     }
 
     @Test
@@ -93,6 +97,7 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).containsExactly(address1, address2, address3, address4, address5);
+        assertThat(model.protobufSize()).isEqualTo(65);
     }
 
     @Test
@@ -105,5 +110,6 @@ class RepeatableMessageTest {
 
         // then
         assertThat(model.addresses()).containsExactly(address3, address4);
+        assertThat(model.protobufSize()).isEqualTo(27);
     }
 }

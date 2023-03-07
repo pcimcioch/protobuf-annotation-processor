@@ -28,7 +28,7 @@ import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibili
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
-class BuilderFactory {
+class BuilderClassFactory {
     private static final Map<TypeName, String> DEFAULTS = Map.of(
             simpleName("double"), "0d",
             simpleName("float"), "0f",

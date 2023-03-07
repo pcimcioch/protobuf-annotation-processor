@@ -2,7 +2,6 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.RecordSource;
-import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -12,16 +11,11 @@ import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.code.CompactConstructorSource.compactConstructor;
-import static com.github.pcimcioch.protobuf.code.FieldSource.field;
-import static com.github.pcimcioch.protobuf.code.FinalSource.finalModifier;
 import static com.github.pcimcioch.protobuf.code.ImplementsSource.implementz;
-import static com.github.pcimcioch.protobuf.code.InitializerSource.initializer;
 import static com.github.pcimcioch.protobuf.code.MethodSource.method;
 import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
 import static com.github.pcimcioch.protobuf.code.RecordSource.record;
 import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
-import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
-import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
@@ -29,7 +23,9 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 class MessageFactory {
     private final EncodingFactory encodingFactory = new EncodingFactory();
     private final DecodingFactory decodingFactory = new DecodingFactory();
-    private final BuilderFactory builderFactory = new BuilderFactory();
+    private final SizeFactory sizeFactory = new SizeFactory();
+    private final BuilderMethodsFactory builderMethodsFactory = new BuilderMethodsFactory();
+    private final BuilderClassFactory builderClassFactory = new BuilderClassFactory();
 
     RecordSource buildMessageRecord(MessageDefinition message) {
         RecordSource source = buildSourceFile(message);
@@ -41,8 +37,7 @@ class MessageFactory {
         addConstructor(source, message);
         addEncodingMethods(source, message);
         addDecodingMethods(source, message);
-        addEmptyMethods(source, message);
-        addMergeMethod(source, message);
+        addSizeMethods(source, message);
         addBuilderMethods(source, message);
         addBuilderClass(source, message);
 
@@ -142,63 +137,15 @@ class MessageFactory {
         decodingFactory.addDecodingMethods(source, message);
     }
 
-    private void addEmptyMethods(RecordSource source, MessageDefinition message) {
-        source.add(field(message.name(), "EMPTY")
-                .set(privateVisibility())
-                .set(staticModifier())
-                .set(finalModifier())
-                .set(initializer("new Builder().build()"))
-        );
-
-        CodeBody emptyBody = body("return EMPTY;");
-        source.add(method("empty")
-                .set(publicVisibility())
-                .set(staticModifier())
-                .set(returns(message.name()))
-                .set(emptyBody)
-        );
-
-        CodeBody isEmptyBody = body("return EMPTY.equals(this);");
-        source.add(method("isEmpty")
-                .set(publicVisibility())
-                .set(returns(boolean.class))
-                .set(isEmptyBody)
-                .add(annotation(Override.class))
-        );
-    }
-
-    private void addMergeMethod(RecordSource source, MessageDefinition message) {
-        CodeBody body = body("return toBuilder().merge(toMerge).build();");
-
-        source.add(method("merge")
-                .set(publicVisibility())
-                .set(returns(message.name()))
-                .set(body)
-                .add(annotation(Override.class))
-                .add(parameter(message.name(), "toMerge"))
-        );
+    private void addSizeMethods(RecordSource source, MessageDefinition message) {
+        sizeFactory.addSizeMethods(source, message);
     }
 
     private void addBuilderMethods(RecordSource source, MessageDefinition message) {
-        CodeBody toBuilderBody = body("return builder().merge(this);");
-        source.add(method("toBuilder")
-                .set(publicVisibility())
-                .set(returns(message.builderName()))
-                .set(toBuilderBody)
-        );
-
-        CodeBody builderBody = body("return new $BuilderType();",
-                param("BuilderType", message.builderName())
-        );
-        source.add(method("builder")
-                .set(publicVisibility())
-                .set(staticModifier())
-                .set(returns(message.builderName()))
-                .set(builderBody)
-        );
+        builderMethodsFactory.addBuilderMethods(source, message);
     }
 
     private void addBuilderClass(RecordSource source, MessageDefinition message) {
-        source.add(builderFactory.buildBuilderClass(message));
+        source.add(builderClassFactory.buildBuilderClass(message));
     }
 }

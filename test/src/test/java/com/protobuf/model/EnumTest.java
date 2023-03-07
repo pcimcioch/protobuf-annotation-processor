@@ -19,6 +19,7 @@ class EnumTest {
         // then
         assertThat(enumeration.orderValue()).isEqualTo(0);
         assertThat(enumeration.order()).isEqualTo(FIRST);
+        assertThat(enumeration.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -29,6 +30,7 @@ class EnumTest {
         // then
         assertThat(enumeration.orderValue()).isEqualTo(0);
         assertThat(enumeration.order()).isEqualTo(FIRST);
+        assertThat(enumeration.protobufSize()).isEqualTo(0);
     }
 
     @Test
@@ -41,6 +43,7 @@ class EnumTest {
         // then
         assertThat(enumeration.orderValue()).isEqualTo(1);
         assertThat(enumeration.order()).isEqualTo(SECOND);
+        assertThat(enumeration.protobufSize()).isEqualTo(2);
     }
 
     @Test
@@ -53,6 +56,7 @@ class EnumTest {
         // then
         assertThat(enumeration.orderValue()).isEqualTo(2);
         assertThat(enumeration.order()).isEqualTo(THIRD);
+        assertThat(enumeration.protobufSize()).isEqualTo(2);
     }
 
     @Test
@@ -65,6 +69,7 @@ class EnumTest {
         // then
         assertThat(enumeration.orderValue()).isEqualTo(10);
         assertThat(enumeration.order()).isEqualTo(UNRECOGNIZED);
+        assertThat(enumeration.protobufSize()).isEqualTo(2);
     }
 
     @Test
