@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.io;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
+import java.util.IdentityHashMap;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -10,9 +11,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Utils to compute size of given value
  */
-public final class Size {
+public class Size {
+    private static final Size INSTANCE = new Size();
 
-    private Size() {
+    /**
+     * Constructor
+     */
+    protected Size() {
     }
 
     /**
@@ -22,7 +27,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int double_(int number, double value) {
+    public int double_(int number, double value) {
         if (value == 0d) {
             return 0;
         }
@@ -37,7 +42,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int double_(int number, List<Double> values) {
+    public int double_(int number, List<Double> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -48,7 +53,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int float_(int number, float value) {
+    public int float_(int number, float value) {
         if (value == 0f) {
             return 0;
         }
@@ -63,7 +68,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int float_(int number, List<Float> values) {
+    public int float_(int number, List<Float> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -74,12 +79,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int int32(int number, int value) {
+    public int int32(int number, int value) {
         if (value == 0) {
             return 0;
         }
 
-        return tagSize(number) + varint32(value);
+        return tagSize(number) + varint32Size(value);
     }
 
     /**
@@ -89,10 +94,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int32(int number, List<Integer> values) {
+    public int int32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
-            size += varint32(value);
+            size += varint32Size(value);
         }
 
         return size;
@@ -105,12 +110,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int int64(int number, long value) {
+    public int int64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
 
-        return tagSize(number) + varint64(value);
+        return tagSize(number) + varint64Size(value);
     }
 
     /**
@@ -120,10 +125,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int64(int number, List<Long> values) {
+    public int int64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
-            size += varint64(value);
+            size += varint64Size(value);
         }
 
         return size;
@@ -136,12 +141,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int uint32(int number, int value) {
+    public int uint32(int number, int value) {
         if (value == 0) {
             return 0;
         }
 
-        return tagSize(number) + varint32(value);
+        return tagSize(number) + varint32Size(value);
     }
 
     /**
@@ -151,10 +156,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint32(int number, List<Integer> values) {
+    public int uint32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
-            size += varint32(value);
+            size += varint32Size(value);
         }
 
         return size;
@@ -167,12 +172,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int uint64(int number, long value) {
+    public int uint64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
 
-        return tagSize(number) + varint64(value);
+        return tagSize(number) + varint64Size(value);
     }
 
     /**
@@ -182,10 +187,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint64(int number, List<Long> values) {
+    public int uint64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
-            size += varint64(value);
+            size += varint64Size(value);
         }
 
         return size;
@@ -198,12 +203,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sint32(int number, int value) {
+    public int sint32(int number, int value) {
         if (value == 0) {
             return 0;
         }
 
-        return tagSize(number) + zigzag32(value);
+        return tagSize(number) + zigzag32Size(value);
     }
 
     /**
@@ -213,10 +218,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint32(int number, List<Integer> values) {
+    public int sint32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
-            size += zigzag32(value);
+            size += zigzag32Size(value);
         }
 
         return size;
@@ -229,12 +234,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sint64(int number, long value) {
+    public int sint64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
 
-        return tagSize(number) + zigzag64(value);
+        return tagSize(number) + zigzag64Size(value);
     }
 
     /**
@@ -244,10 +249,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint64(int number, List<Long> values) {
+    public int sint64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
-            size += zigzag64(value);
+            size += zigzag64Size(value);
         }
 
         return size;
@@ -260,7 +265,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int fixed32(int number, int value) {
+    public int fixed32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -275,7 +280,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed32(int number, List<Integer> values) {
+    public int fixed32(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -286,7 +291,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int fixed64(int number, long value) {
+    public int fixed64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -301,7 +306,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed64(int number, List<Long> values) {
+    public int fixed64(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -312,7 +317,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sfixed32(int number, int value) {
+    public int sfixed32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -327,7 +332,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed32(int number, List<Integer> values) {
+    public int sfixed32(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -338,7 +343,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sfixed64(int number, long value) {
+    public int sfixed64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -353,7 +358,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed64(int number, List<Long> values) {
+    public int sfixed64(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -364,7 +369,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int bool(int number, boolean value) {
+    public int bool(int number, boolean value) {
         if (!value) {
             return 0;
         }
@@ -379,7 +384,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int bool(int number, List<Boolean> values) {
+    public int bool(int number, List<Boolean> values) {
         return values.size() * (tagSize(number) + 1);
     }
 
@@ -390,12 +395,12 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int bytes(int number, ByteArray value) {
+    public int bytes(int number, ByteArray value) {
         if (value.isEmpty()) {
             return 0;
         }
 
-        return tagSize(number) + varint32(value.length()) + value.length();
+        return tagSize(number) + varint32Size(value.length()) + value.length();
     }
 
     /**
@@ -405,10 +410,10 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int bytes(int number, List<ByteArray> values) {
+    public int bytes(int number, List<ByteArray> values) {
         int size = tagSize(number) * values.size();
         for (ByteArray value : values) {
-            size += varint32(value.length()) + value.length();
+            size += varint32Size(value.length()) + value.length();
         }
 
         return size;
@@ -421,14 +426,13 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int string(int number, String value) {
+    public int string(int number, String value) {
         if ("".equals(value)) {
             return 0;
         }
-        // TODO [performance] this is quite slow and high-resource use
-        byte[] data = value.getBytes(UTF_8);
+        int valueSize = stringSize(value);
 
-        return tagSize(number) + varint32(data.length) + data.length;
+        return tagSize(number) + varint32Size(valueSize) + valueSize;
     }
 
     /**
@@ -438,11 +442,11 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int string(int number, List<String> values) {
+    public int string(int number, List<String> values) {
         int size = tagSize(number) * values.size();
         for (String value : values) {
-            byte[] data = value.getBytes(UTF_8);
-            size += varint32(data.length) + data.length;
+            int valueSize = stringSize(value);
+            size += varint32Size(valueSize) + valueSize;
         }
 
         return size;
@@ -455,13 +459,13 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int message(int number, ProtobufMessage<?> value) {
+    public int message(int number, ProtobufMessage<?> value) {
         if (value == null) {
             return 0;
         }
 
-        int size = value.protobufSize();
-        return tagSize(number) + varint32(size) + size;
+        int valueSize = messageSize(value);
+        return tagSize(number) + varint32Size(valueSize) + valueSize;
     }
 
     /**
@@ -471,21 +475,33 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int message(int number, List<? extends ProtobufMessage<?>> values) {
+    public int message(int number, List<? extends ProtobufMessage<?>> values) {
         int size = tagSize(number) * values.size();
         for (ProtobufMessage<?> value : values) {
-            int messageSize = value.protobufSize();
-            size += varint32(messageSize) + messageSize;
+            int valueSize = messageSize(value);
+            size += varint32Size(valueSize) + valueSize;
         }
 
         return size;
     }
 
-    private static int tagSize(int number) {
-        return varint32(number << 3);
+    /**
+     * Returns tag size
+     *
+     * @param number number
+     * @return size
+     */
+    protected int tagSize(int number) {
+        return varint32Size(number << 3);
     }
 
-    private static int varint32(int value) {
+    /**
+     * Returns varint32 size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int varint32Size(int value) {
         if ((value & (~0 << 7)) == 0) {
             return 1;
         }
@@ -504,7 +520,13 @@ public final class Size {
         return 5;
     }
 
-    private static int varint64(long value) {
+    /**
+     * Returns varint64 size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int varint64Size(long value) {
         if ((value & (~0L << 7)) == 0L) {
             return 1;
         }
@@ -527,11 +549,72 @@ public final class Size {
         return bytes;
     }
 
-    private static int zigzag32(int value) {
-        return varint32((value << 1) ^ (value >> 31));
+    /**
+     * Returns zigzag32 size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int zigzag32Size(int value) {
+        return varint32Size((value << 1) ^ (value >> 31));
     }
 
-    private static int zigzag64(long value) {
-        return varint64((value << 1) ^ (value >> 63));
+    /**
+     * Returns zigzag64 size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int zigzag64Size(long value) {
+        return varint64Size((value << 1) ^ (value >> 63));
+    }
+
+    /**
+     * Returns string size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int stringSize(String value) {
+        // TODO [performance] this is quite slow and high-resource use
+        return value.getBytes(UTF_8).length;
+    }
+
+    /**
+     * Returns message size
+     *
+     * @param value value
+     * @return size
+     */
+    protected int messageSize(ProtobufMessage<?> value) {
+        return value.protobufSize(this);
+    }
+
+    /**
+     * Returns size computer that will always recompute size of the whole message including its nested messages
+     *
+     * @return size computer
+     */
+    public static Size inPlace() {
+        return INSTANCE;
+    }
+
+    /**
+     * Returns size computer that will cache nested messages sizes for performance improvement with the cost of additional space requirements
+     *
+     * @return size computer
+     */
+    public static Size cached() {
+        return new Cached();
+    }
+
+    private static final class Cached extends Size {
+        private final IdentityHashMap<ProtobufMessage<?>, Integer> sizes = new IdentityHashMap<>();
+
+        @Override
+        protected int messageSize(ProtobufMessage<?> value) {
+            // TODO [performance] does using lambda here costs us performance?
+            return sizes.computeIfAbsent(value, super::messageSize);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.github.pcimcioch.protobuf.dto;
 
+import com.github.pcimcioch.protobuf.io.Size;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -43,7 +45,19 @@ public interface ProtobufMessage<T extends ProtobufMessage<T>> {
     /**
      * Returns message size in protobuf format
      *
+     * @param size size computer
      * @return message size
      */
-    int protobufSize();
+    int protobufSize(Size size);
+
+    /**
+     * Returns message size in protobuf format. This method will always recompute whole message and all its nested messages sizes.
+     * This may be very inefficient in case of big and nested messages. For better performance use {@link #protobufSize(Size)}
+     * passing {@link Size#cached()} implementation
+     *
+     * @return message size
+     */
+    default int protobufSize() {
+        return protobufSize(Size.inPlace());
+    }
 }

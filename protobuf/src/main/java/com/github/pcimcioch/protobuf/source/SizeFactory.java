@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
+import com.github.pcimcioch.protobuf.code.ParameterSource;
 import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.io.Size;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -10,6 +11,7 @@ import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.code.MethodSource.method;
+import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
 import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 
@@ -18,22 +20,22 @@ class SizeFactory {
     void addSizeMethods(RecordSource messageRecord, MessageDefinition message) {
         CodeBody body = body();
 
-        body.appendln("int size = 0;");
+        body.appendln("int totalSize = 0;");
         for (FieldDefinition field : message.fields()) {
-            body.append("size += $Size.$method($number, $name);",
-                    param("Size", Size.class),
+            body.append("totalSize += size.$method($number, $name);",
                     param("method", sizeMethod(field)),
                     param("number", field.number()),
                     param("name", field.javaFieldName())
             );
         }
-        body.append("return size;");
+        body.append("return totalSize;");
 
         messageRecord.add(method("protobufSize")
                 .set(publicVisibility())
                 .set(returns(int.class))
                 .set(body)
                 .add(annotation(Override.class))
+                .add(parameter(Size.class, "size"))
         );
     }
 
