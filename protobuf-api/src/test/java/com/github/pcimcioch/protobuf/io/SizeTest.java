@@ -116,6 +116,347 @@ class SizeTest {
     }
 
     @ParameterizedTest
+    @MethodSource("int32Source")
+    void int32Size(int number, int value, int expectedSize) {
+        // when then
+        assertThat(Size.int32(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> int32Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0, 0),
+                Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1, 2),
+                Arguments.of(NUMBER_1_BIG, 1, 2),
+                Arguments.of(NUMBER_2_SMALL, 1, 3),
+                Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 127, 2),
+                Arguments.of(NUMBER_1_SMALL, 128, 3),
+                Arguments.of(NUMBER_1_SMALL, 16383, 3),
+                Arguments.of(NUMBER_1_SMALL, 16384, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097151, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097152, 5),
+                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6),
+                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11),
+                Arguments.of(NUMBER_1_SMALL, -1, 11)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("int32ListSource")
+    void int32ListSize(int number, List<Integer> values, int expectedSize) {
+        // when then
+        assertThat(Size.int32(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> int32ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
+                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1, 128, -1, 0), 18),
+                Arguments.of(NUMBER_1_BIG, List.of(1, 128, -1, 0), 18),
+                Arguments.of(NUMBER_2_SMALL, List.of(1, 128, -1, 0), 22),
+                Arguments.of(NUMBER_2_BIG, List.of(1, 128, -1, 0), 22)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("int64Source")
+    void int64Size(int number, long value, int expectedSize) {
+        // when then
+        assertThat(Size.int64(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> int64Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                Arguments.of(NUMBER_1_BIG, 1L, 2),
+                Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 127L, 2),
+                Arguments.of(NUMBER_1_SMALL, 128L, 3),
+                Arguments.of(NUMBER_1_SMALL, 16383L, 3),
+                Arguments.of(NUMBER_1_SMALL, 16384L, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
+                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10),
+                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11),
+                Arguments.of(NUMBER_1_SMALL, -1L, 11)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("int64ListSource")
+    void int64ListSize(int number, List<Long> values, int expectedSize) {
+        // when then
+        assertThat(Size.int64(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> int64ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, -1L, 0L), 18),
+                Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, -1L, 0L), 18),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, -1L, 0L), 22),
+                Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, -1L, 0L), 22)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("uint32Source")
+    void uint32Size(int number, int value, int expectedSize) {
+        // when then
+        assertThat(Size.uint32(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> uint32Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0, 0),
+                Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1, 2),
+                Arguments.of(NUMBER_1_BIG, 1, 2),
+                Arguments.of(NUMBER_2_SMALL, 1, 3),
+                Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 127, 2),
+                Arguments.of(NUMBER_1_SMALL, 128, 3),
+                Arguments.of(NUMBER_1_SMALL, 16383, 3),
+                Arguments.of(NUMBER_1_SMALL, 16384, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097151, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097152, 5),
+                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("uint32ListSource")
+    void uint32ListSize(int number, List<Integer> values, int expectedSize) {
+        // when then
+        assertThat(Size.uint32(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> uint32ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1, 128, 0), 7),
+                Arguments.of(NUMBER_1_BIG, List.of(1, 128, 0), 7),
+                Arguments.of(NUMBER_2_SMALL, List.of(1, 128, 0), 10),
+                Arguments.of(NUMBER_2_BIG, List.of(1, 128, 0), 10)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("uint64Source")
+    void uint64Size(int number, long value, int expectedSize) {
+        // when then
+        assertThat(Size.uint64(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> uint64Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                Arguments.of(NUMBER_1_BIG, 1L, 2),
+                Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 127L, 2),
+                Arguments.of(NUMBER_1_SMALL, 128L, 3),
+                Arguments.of(NUMBER_1_SMALL, 16383L, 3),
+                Arguments.of(NUMBER_1_SMALL, 16384L, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
+                Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
+                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("uint64ListSource")
+    void uint64ListSize(int number, List<Long> values, int expectedSize) {
+        // when then
+        assertThat(Size.uint64(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> uint64ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, 0L), 7),
+                Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, 0L), 7),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, 0L), 10),
+                Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, 0L), 10)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sint32Source")
+    void sint32Size(int number, int value, int expectedSize) {
+        // when then
+        assertThat(Size.sint32(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> sint32Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0, 0),
+                Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1, 2),
+                Arguments.of(NUMBER_1_BIG, 1, 2),
+                Arguments.of(NUMBER_2_SMALL, 1, 3),
+                Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 63, 2),
+                Arguments.of(NUMBER_1_SMALL, 64, 3),
+                Arguments.of(NUMBER_1_SMALL, 8191, 3),
+                Arguments.of(NUMBER_1_SMALL, 8192, 4),
+                Arguments.of(NUMBER_1_SMALL, 1048575, 4),
+                Arguments.of(NUMBER_1_SMALL, 1048576, 5),
+                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 11),
+                Arguments.of(NUMBER_1_SMALL, -64, 2),
+                Arguments.of(NUMBER_1_SMALL, -65, 3),
+                Arguments.of(NUMBER_1_SMALL, -8192, 3),
+                Arguments.of(NUMBER_1_SMALL, -8193, 4),
+                Arguments.of(NUMBER_1_SMALL, -1048576, 4),
+                Arguments.of(NUMBER_1_SMALL, -1048577, 5),
+                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sint32ListSource")
+    void sint32ListSize(int number, List<Integer> values, int expectedSize) {
+        // when then
+        assertThat(Size.sint32(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> sint32ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
+                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 11),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1, 64, -8193, 0), 11),
+                Arguments.of(NUMBER_1_BIG, List.of(1, 64, -8193, 0), 11),
+                Arguments.of(NUMBER_2_SMALL, List.of(1, 64, -8193, 0), 15),
+                Arguments.of(NUMBER_2_BIG, List.of(1, 64, -8193, 0), 15)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sint64Source")
+    void sint64Size(int number, long value, int expectedSize) {
+        // when then
+        assertThat(Size.sint64(number, value)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> sint64Source() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                Arguments.of(NUMBER_1_BIG, 1L, 2),
+                Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                Arguments.of(NUMBER_1_SMALL, 63L, 2),
+                Arguments.of(NUMBER_1_SMALL, 64L, 3),
+                Arguments.of(NUMBER_1_SMALL, 8191L, 3),
+                Arguments.of(NUMBER_1_SMALL, 8192L, 4),
+                Arguments.of(NUMBER_1_SMALL, 1048575L, 4),
+                Arguments.of(NUMBER_1_SMALL, 1048576L, 5),
+                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 11),
+                Arguments.of(NUMBER_1_SMALL, -64L, 2),
+                Arguments.of(NUMBER_1_SMALL, -65L, 3),
+                Arguments.of(NUMBER_1_SMALL, -8192L, 3),
+                Arguments.of(NUMBER_1_SMALL, -8193L, 4),
+                Arguments.of(NUMBER_1_SMALL, -1048576L, 4),
+                Arguments.of(NUMBER_1_SMALL, -1048577L, 5),
+                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("sint64ListSource")
+    void sint64ListSize(int number, List<Long> values, int expectedSize) {
+        // when then
+        assertThat(Size.sint64(number, values)).isEqualTo(expectedSize);
+    }
+
+    private static Stream<Arguments> sint64ListSource() {
+        return Stream.of(
+                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
+                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 11),
+
+                Arguments.of(NUMBER_1_SMALL, List.of(1L, 64L, -8193L, 0L), 11),
+                Arguments.of(NUMBER_1_BIG, List.of(1L, 64L, -8193L, 0L), 11),
+                Arguments.of(NUMBER_2_SMALL, List.of(1L, 64L, -8193L, 0L), 15),
+                Arguments.of(NUMBER_2_BIG, List.of(1L, 64L, -8193L, 0L), 15)
+        );
+    }
+
+    @ParameterizedTest
     @MethodSource("fixed32Source")
     void fixed32Size(int number, int value, int expectedSize) {
         // when then

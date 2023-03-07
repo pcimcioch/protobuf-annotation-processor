@@ -73,7 +73,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int int32(int number, int value) {
         if (value == 0) {
             return 0;
@@ -89,7 +88,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int int32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
@@ -106,7 +104,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int int64(int number, long value) {
         if (value == 0L) {
             return 0;
@@ -122,7 +119,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int int64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
@@ -139,7 +135,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int uint32(int number, int value) {
         if (value == 0) {
             return 0;
@@ -155,7 +150,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int uint32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
@@ -172,7 +166,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int uint64(int number, long value) {
         if (value == 0L) {
             return 0;
@@ -188,7 +181,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int uint64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
@@ -205,7 +197,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int sint32(int number, int value) {
         if (value == 0) {
             return 0;
@@ -221,7 +212,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int sint32(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
@@ -238,7 +228,6 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    // TODO add tests
     public static int sint64(int number, long value) {
         if (value == 0L) {
             return 0;
@@ -254,7 +243,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int sint64(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
