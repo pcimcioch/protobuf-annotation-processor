@@ -1,7 +1,9 @@
 package com.github.pcimcioch.protobuf.dto;
 
+import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.github.pcimcioch.protobuf.io.Size;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -11,20 +13,12 @@ import java.io.OutputStream;
 public interface ProtobufMessage<T extends ProtobufMessage<T>> {
 
     /**
-     * Writes this message as binary to the given output stream
+     * Writes this message as binary to the given writer
      *
-     * @param output output stream
+     * @param writer protobuf writer
      * @throws IOException in case of any write error
      */
-    void writeTo(OutputStream output) throws IOException;
-
-    /**
-     * Returns this message as binary representation
-     *
-     * @return binary representation
-     * @throws IOException in case of any write error
-     */
-    byte[] toByteArray() throws IOException;
+    void writeTo(ProtobufWriter writer) throws IOException;
 
     /**
      * Returns whether this message is empty. Meaning all the fields have default values
@@ -59,5 +53,27 @@ public interface ProtobufMessage<T extends ProtobufMessage<T>> {
      */
     default int protobufSize() {
         return protobufSize(Size.inPlace());
+    }
+
+    /**
+     * Writes this message as binary to the given output stream
+     *
+     * @param output output stream
+     * @throws IOException in case of any write error
+     */
+    default void writeTo(OutputStream output) throws IOException {
+        writeTo(new ProtobufWriter(output));
+    }
+
+    /**
+     * Returns this message as binary representation
+     *
+     * @return binary representation
+     * @throws IOException in case of any write error
+     */
+    default byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        writeTo(new ProtobufWriter(output));
+        return output.toByteArray();
     }
 }

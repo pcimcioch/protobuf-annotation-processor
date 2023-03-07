@@ -18,6 +18,7 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 public class ProtobufWriter {
 
     private final ProtobufOutput output;
+    private final Size size;
 
     /**
      * Constructor. Given output stream will not be closed by this class in any way
@@ -26,6 +27,7 @@ public class ProtobufWriter {
      */
     public ProtobufWriter(OutputStream outputStream) {
         this.output = new ProtobufOutput(outputStream);
+        this.size = Size.cached();
     }
 
     /**
@@ -551,7 +553,8 @@ public class ProtobufWriter {
     public ProtobufWriter message(int number, ProtobufMessage<?> value) throws IOException {
         if (value != null) {
             output.writeVarint32(LEN.tagFrom(number));
-            output.writeBytes(value.toByteArray());
+            output.writeVarint32(size.messageSize(value));
+            value.writeTo(this);
         }
 
         return this;
@@ -568,7 +571,8 @@ public class ProtobufWriter {
     public ProtobufWriter message(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
         for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
-            output.writeBytes(value.toByteArray());
+            output.writeVarint32(size.messageSize(value));
+            value.writeTo(this);
         }
 
         return this;

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Stream;
@@ -865,6 +866,10 @@ class SizeTest {
     private record TestMessage(int size) implements ProtobufMessage<TestMessage> {
         @Override
         public void writeTo(OutputStream output) {
+        }
+
+        @Override
+        public void writeTo(ProtobufWriter writer) {
         }
 
         @Override
