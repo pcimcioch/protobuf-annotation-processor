@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
-import com.github.pcimcioch.protobuf.io.exception.ProtobufException;
 import com.github.pcimcioch.protobuf.io.exception.UnknownWireTypeException;
 import com.github.pcimcioch.protobuf.io.exception.UnsupportedWireTypeException;
 

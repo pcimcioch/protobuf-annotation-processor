@@ -15,7 +15,8 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 /**
  * Writes protobuf data
  */
-public class ProtobufWriter {
+public class ProtobufWriter implements AutoCloseable {
+    private static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private final ProtobufOutput output;
     private final Size size;
@@ -24,10 +25,22 @@ public class ProtobufWriter {
      * Constructor. Given output stream will not be closed by this class in any way
      *
      * @param outputStream output stream to save data to
+     * @param size         size calculator
      */
-    public ProtobufWriter(OutputStream outputStream) {
-        this.output = new ProtobufOutput(outputStream);
-        this.size = Size.cached();
+    public ProtobufWriter(OutputStream outputStream, Size size) {
+        this.output = ProtobufOutput.from(outputStream, DEFAULT_BUFFER_SIZE);
+        this.size = size;
+    }
+
+    /**
+     * Constructor. Given data array must be big enough for write operations
+     *
+     * @param data output array
+     * @param size size calculator
+     */
+    public ProtobufWriter(byte[] data, Size size) {
+        this.output = ProtobufOutput.from(data);
+        this.size = size;
     }
 
     /**
@@ -576,5 +589,10 @@ public class ProtobufWriter {
         }
 
         return this;
+    }
+
+    @Override
+    public void close() throws IOException {
+        output.close();
     }
 }

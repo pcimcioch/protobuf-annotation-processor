@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.github.pcimcioch.protobuf.io.ByteUtils.ba;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SizeTest {
@@ -847,15 +848,6 @@ class SizeTest {
                 Arguments.of(NUMBER_2_SMALL, List.of(message(1), message(1), message(0), message(3)), 17),
                 Arguments.of(NUMBER_2_BIG, List.of(message(1), message(1), message(0), message(3)), 17)
         );
-    }
-
-    public static ByteArray ba(int... bytes) {
-        byte[] data = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            data[i] = (byte) bytes[i];
-        }
-
-        return ByteArray.fromByteArray(data);
     }
 
     public static ProtobufMessage<?> message(int size) {

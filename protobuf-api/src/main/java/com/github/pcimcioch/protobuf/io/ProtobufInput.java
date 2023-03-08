@@ -9,15 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
 
-import static java.lang.Double.longBitsToDouble;
-import static java.lang.Float.intBitsToFloat;
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 // TODO [performance] Reading varints can be faster if 10 bytes (max varint) are already in the buffer. No loops are needed and no calls to ensureAvailable()
-@SuppressWarnings("PointlessBitwiseExpression")
 abstract class ProtobufInput {
     private static final VarHandle LONG = MethodHandles.byteArrayViewVarHandle(long[].class, LITTLE_ENDIAN);
     private static final VarHandle INT = MethodHandles.byteArrayViewVarHandle(int[].class, LITTLE_ENDIAN);
@@ -105,11 +101,11 @@ abstract class ProtobufInput {
     }
 
     byte[] readBytes() throws IOException {
-        return readBytes(readVarint32());
+        return readRawBytes(readVarint32());
     }
 
     String readString() throws IOException {
-        return readString(readVarint32());
+        return readRawString(readVarint32());
     }
 
     abstract long setLimit(long limit) throws IOException;
@@ -118,15 +114,18 @@ abstract class ProtobufInput {
 
     abstract boolean isEnded() throws IOException;
 
-    abstract byte readByte() throws IOException;
-
-    abstract byte[] readBytes(int size) throws IOException;
-
-    abstract String readString(int size) throws IOException;
-
     protected int available() {
         return endPosition - currentPosition;
     }
+
+    protected byte readRawByte() throws IOException {
+        ensureAvailable(1);
+        return buffer[currentPosition++];
+    }
+
+    protected abstract String readRawString(int size) throws IOException;
+
+    protected abstract byte[] readRawBytes(int size) throws IOException;
 
     protected abstract void ensureAvailable(int size) throws IOException;
 
@@ -157,13 +156,7 @@ abstract class ProtobufInput {
         }
 
         @Override
-        byte readByte() throws IOException {
-            ensureAvailable(1);
-            return buffer[currentPosition++];
-        }
-
-        @Override
-        byte[] readBytes(int size) throws IOException {
+        protected byte[] readRawBytes(int size) throws IOException {
             ensureAvailable(size);
 
             byte[] data = new byte[size];
@@ -174,7 +167,7 @@ abstract class ProtobufInput {
         }
 
         @Override
-        String readString(int size) throws IOException {
+        protected String readRawString(int size) throws IOException {
             ensureAvailable(size);
 
             String result = new String(buffer, currentPosition, size, UTF_8);
@@ -240,19 +233,13 @@ abstract class ProtobufInput {
         }
 
         @Override
-        byte readByte() throws IOException {
-            ensureAvailable(1);
-            return buffer[currentPosition++];
-        }
-
-        @Override
-        byte[] readBytes(int size) throws IOException {
+        protected byte[] readRawBytes(int size) throws IOException {
             consumeLimit(size);
             return getBytes(size);
         }
 
         @Override
-        String readString(int size) throws IOException {
+        protected String readRawString(int size) throws IOException {
             consumeLimit(size);
 
             if (available() >= size) {

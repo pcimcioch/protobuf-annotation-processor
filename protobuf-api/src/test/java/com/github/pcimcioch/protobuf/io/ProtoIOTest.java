@@ -12,12 +12,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+import static com.github.pcimcioch.protobuf.io.ByteUtils.b;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProtoIOTest {
-    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    private final ProtobufOutput output = ProtobufOutput.from(outputStream, 4096);
 
     @Nested
     class FixedInts {
@@ -26,7 +28,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(int value, byte[] bytes) throws IOException {
             // when
-            output().writeFixedInt(value);
+            output.writeFixedInt(value);
 
             // then
             assertBinary(bytes);
@@ -80,7 +82,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(long value, byte[] bytes) throws IOException {
             // when
-            output().writeFixedLong(value);
+            output.writeFixedLong(value);
 
             // then
             assertBinary(bytes);
@@ -140,7 +142,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(float value, byte[] bytes) throws IOException {
             // when
-            output().writeFloat(value);
+            output.writeFloat(value);
 
             // then
             assertBinary(bytes);
@@ -191,7 +193,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(double value, byte[] bytes) throws IOException {
             // when
-            output().writeDouble(value);
+            output.writeDouble(value);
 
             // then
             assertBinary(bytes);
@@ -246,7 +248,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(boolean value, byte[] bytes) throws IOException {
             // when
-            output().writeBoolean(value);
+            output.writeBoolean(value);
 
             // then
             assertBinary(bytes);
@@ -298,7 +300,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(long value, byte[] bytes) throws IOException {
             // when
-            output().writeVarint64(value);
+            output.writeVarint64(value);
 
             // then
             assertBinary(bytes);
@@ -372,7 +374,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(int value, byte[] bytes) throws IOException {
             // when
-            output().writeVarint32(value);
+            output.writeVarint32(value);
 
             // then
             assertBinary(bytes);
@@ -458,7 +460,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(String value, byte[] bytes) throws IOException {
             // when
-            output().writeString(value);
+            output.writeString(value);
 
             // then
             assertBinary(bytes);
@@ -503,7 +505,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(byte[] value, byte[] bytes) throws IOException {
             // when
-            output().writeBytes(value);
+            output.writeBytes(value);
 
             // then
             assertBinary(bytes);
@@ -547,7 +549,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(long value, byte[] bytes) throws IOException {
             // when
-            output().writeZigZag64(value);
+            output.writeZigZag64(value);
 
             // then
             assertBinary(bytes);
@@ -599,7 +601,7 @@ class ProtoIOTest {
         @MethodSource("arguments")
         void write(int value, byte[] bytes) throws IOException {
             // when
-            output().writeZigZag32(value);
+            output.writeZigZag32(value);
 
             // then
             assertBinary(bytes);
@@ -664,11 +666,11 @@ class ProtoIOTest {
         @Test
         void write() throws IOException {
             // when
-            output().writeFixedInt(1000);
-            output().writeFixedLong(123456789123L);
-            output().writeVarint32(123456);
-            output().writeString("abc");
-            output().writeZigZag32(2);
+            output.writeFixedInt(1000);
+            output.writeFixedLong(123456789123L);
+            output.writeVarint32(123456);
+            output.writeString("abc");
+            output.writeZigZag32(2);
 
             // then
             assertBinary(b(
@@ -750,23 +752,12 @@ class ProtoIOTest {
         }
     }
 
-    private ProtobufOutput output() {
-        return new ProtobufOutput(output);
-    }
-
     private ProtobufInput input(byte[] bytes) {
         return ProtobufInput.from(bytes);
     }
 
-    private void assertBinary(byte[] bytes) {
-        assertThat(output.toByteArray()).isEqualTo(bytes);
-    }
-
-    private static byte[] b(int... values) {
-        byte[] bytes = new byte[values.length];
-        for (int i = 0; i < values.length; i++) {
-            bytes[i] = (byte) values[i];
-        }
-        return bytes;
+    private void assertBinary(byte[] bytes) throws IOException {
+        output.close();
+        assertThat(outputStream.toByteArray()).isEqualTo(bytes);
     }
 }

@@ -62,7 +62,9 @@ public interface ProtobufMessage<T extends ProtobufMessage<T>> {
      * @throws IOException in case of any write error
      */
     default void writeTo(OutputStream output) throws IOException {
-        writeTo(new ProtobufWriter(output));
+        try (ProtobufWriter writer = new ProtobufWriter(output, Size.cached())) {
+            writeTo(writer);
+        }
     }
 
     /**
@@ -72,8 +74,13 @@ public interface ProtobufMessage<T extends ProtobufMessage<T>> {
      * @throws IOException in case of any write error
      */
     default byte[] toByteArray() throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        writeTo(new ProtobufWriter(output));
-        return output.toByteArray();
+        Size size = Size.cached();
+        byte[] data = new byte[protobufSize(size)];
+
+        try (ProtobufWriter writer = new ProtobufWriter(data, size)) {
+            writeTo(writer);
+        }
+
+        return data;
     }
 }

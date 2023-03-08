@@ -19,7 +19,7 @@ class ArrayProtobufInputTest {
         @Test
         void readOneByte() throws IOException {
             // when
-            byte read = testee.readByte();
+            byte read = testee.readRawByte();
 
             // then
             assertThat(read).isEqualTo((byte) 0);
@@ -28,9 +28,9 @@ class ArrayProtobufInputTest {
         @Test
         void readMultipleByte() throws IOException {
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -41,11 +41,11 @@ class ArrayProtobufInputTest {
         @Test
         void readAllData() throws IOException {
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
-            byte read4 = testee.readByte();
-            byte read5 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
+            byte read4 = testee.readRawByte();
+            byte read5 = testee.readRawByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -58,13 +58,13 @@ class ArrayProtobufInputTest {
         @Test
         void readJustOverCapacity() throws IOException {
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
-            byte read4 = testee.readByte();
-            byte read5 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
+            byte read4 = testee.readRawByte();
+            byte read5 = testee.readRawByte();
 
-            assertThatThrownBy(testee::readByte)
+            assertThatThrownBy(testee::readRawByte)
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -78,11 +78,11 @@ class ArrayProtobufInputTest {
         @Test
         void readOverCapacity() throws IOException {
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
 
-            assertThatThrownBy(() -> testee.readBytes(3))
+            assertThatThrownBy(() -> testee.readRawBytes(3))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -97,9 +97,9 @@ class ArrayProtobufInputTest {
             testee.setLimit(3);
 
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
 
             // then
             assertThat(read1).isEqualTo((byte) 0);
@@ -113,11 +113,11 @@ class ArrayProtobufInputTest {
             testee.setLimit(3);
 
             // when
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
-            byte read3 = testee.readByte();
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
+            byte read3 = testee.readRawByte();
 
-            assertThatThrownBy(testee::readByte)
+            assertThatThrownBy(testee::readRawByte)
                     .isInstanceOf(LimitExceededException.class);
 
             // then
@@ -132,7 +132,7 @@ class ArrayProtobufInputTest {
             testee.setLimit(3);
 
             // when
-            assertThatThrownBy(() -> testee.readBytes(4))
+            assertThatThrownBy(() -> testee.readRawBytes(4))
                     .isInstanceOf(LimitExceededException.class);
         }
     }
@@ -146,9 +146,9 @@ class ArrayProtobufInputTest {
             ProtobufInput testee = testee(0, 1, 2, 3);
 
             // when
-            byte read1 = testee.readByte();
-            byte[] readArray = testee.readBytes(3);
-            assertThatThrownBy(() -> testee.readBytes(1))
+            byte read1 = testee.readRawByte();
+            byte[] readArray = testee.readRawBytes(3);
+            assertThatThrownBy(() -> testee.readRawBytes(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -162,7 +162,7 @@ class ArrayProtobufInputTest {
             ProtobufInput testee = testee(0, 1, 2);
 
             // when
-            assertThatThrownBy(() -> testee.readBytes(4))
+            assertThatThrownBy(() -> testee.readRawBytes(4))
                     .isInstanceOf(InputEndedException.class);
         }
 
@@ -173,7 +173,7 @@ class ArrayProtobufInputTest {
             testee.setLimit(3);
 
             // when
-            assertThatThrownBy(() -> testee.readBytes(4))
+            assertThatThrownBy(() -> testee.readRawBytes(4))
                     .isInstanceOf(LimitExceededException.class);
         }
 
@@ -184,8 +184,8 @@ class ArrayProtobufInputTest {
             testee.setLimit(6);
 
             // when
-            byte[] readArray = testee.readBytes(6);
-            assertThatThrownBy(() -> testee.readBytes(1))
+            byte[] readArray = testee.readRawBytes(6);
+            assertThatThrownBy(() -> testee.readRawBytes(1))
                     .isInstanceOf(LimitExceededException.class);
 
             // then
@@ -202,9 +202,9 @@ class ArrayProtobufInputTest {
             ProtobufInput testee = testee(0, 'b', 'a', 'r');
 
             // when
-            byte read1 = testee.readByte();
-            String readString = testee.readString(3);
-            assertThatThrownBy(() -> testee.readString(1))
+            byte read1 = testee.readRawByte();
+            String readString = testee.readRawString(3);
+            assertThatThrownBy(() -> testee.readRawString(1))
                     .isInstanceOf(InputEndedException.class);
 
             // then
@@ -218,7 +218,7 @@ class ArrayProtobufInputTest {
             ProtobufInput testee = testee('b', 'a', 'r');
 
             // when
-            assertThatThrownBy(() -> testee.readString(4))
+            assertThatThrownBy(() -> testee.readRawString(4))
                     .isInstanceOf(InputEndedException.class);
         }
 
@@ -229,7 +229,7 @@ class ArrayProtobufInputTest {
             testee.setLimit(3);
 
             // when
-            assertThatThrownBy(() -> testee.readString(4))
+            assertThatThrownBy(() -> testee.readRawString(4))
                     .isInstanceOf(LimitExceededException.class);
         }
 
@@ -240,8 +240,8 @@ class ArrayProtobufInputTest {
             testee.setLimit(6);
 
             // when
-            String readString = testee.readString(6);
-            assertThatThrownBy(() -> testee.readString(1))
+            String readString = testee.readRawString(6);
+            assertThatThrownBy(() -> testee.readRawString(1))
                     .isInstanceOf(LimitExceededException.class);
 
             // then
@@ -258,7 +258,7 @@ class ArrayProtobufInputTest {
             ProtobufInput testee = testee(0, 1, 2, 3);
 
             // when
-            byte read1 = testee.readByte();
+            byte read1 = testee.readRawByte();
             testee.skip(3);
             assertThatThrownBy(() -> testee.skip(1))
                     .isInstanceOf(InputEndedException.class);
@@ -321,24 +321,24 @@ class ArrayProtobufInputTest {
             testee.setLimit(27);
 
             // when
-            byte[] readArray1 = testee.readBytes(3);
-            byte read1 = testee.readByte();
-            byte read2 = testee.readByte();
+            byte[] readArray1 = testee.readRawBytes(3);
+            byte read1 = testee.readRawByte();
+            byte read2 = testee.readRawByte();
 
-            String readString1 = testee.readString(3);
-            String readString2 = testee.readString(5);
+            String readString1 = testee.readRawString(3);
+            String readString2 = testee.readRawString(5);
 
             testee.skip(9);
 
-            byte[] readArray2 = testee.readBytes(4);
-            byte read3 = testee.readByte();
+            byte[] readArray2 = testee.readRawBytes(4);
+            byte read3 = testee.readRawByte();
 
-            assertThatThrownBy(() -> testee.readBytes(1))
+            assertThatThrownBy(() -> testee.readRawBytes(1))
                     .isInstanceOf(LimitExceededException.class);
             testee.setLimit(2);
 
-            byte read4 = testee.readByte();
-            byte read5 = testee.readByte();
+            byte read4 = testee.readRawByte();
+            byte read5 = testee.readRawByte();
 
             // then
             assertThat(readArray1).containsExactly(0, 1, 2);

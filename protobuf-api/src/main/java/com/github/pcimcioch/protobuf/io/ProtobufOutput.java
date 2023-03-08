@@ -2,169 +2,198 @@ package com.github.pcimcioch.protobuf.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 
-import static java.lang.Double.doubleToLongBits;
-import static java.lang.Float.floatToIntBits;
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Writes protobuf types to the raw data stream
- */
-@SuppressWarnings("PointlessBitwiseExpression")
-// TODO [performance] Replace with logic similar to ProtobufInput
-public class ProtobufOutput {
-    private static final long LONG_PAYLOAD_MASK = 0b01111111;
-    private static final int CONTINUATION_MASK = 0b10000000;
+abstract class ProtobufOutput implements AutoCloseable {
+    private static final VarHandle LONG = MethodHandles.byteArrayViewVarHandle(long[].class, LITTLE_ENDIAN);
+    private static final VarHandle INT = MethodHandles.byteArrayViewVarHandle(int[].class, LITTLE_ENDIAN);
+    private static final VarHandle DOUBLE = MethodHandles.byteArrayViewVarHandle(double[].class, LITTLE_ENDIAN);
+    private static final VarHandle FLOAT = MethodHandles.byteArrayViewVarHandle(float[].class, LITTLE_ENDIAN);
 
-    private final OutputStream out;
+    protected final byte[] buffer;
+    protected int currentPosition;
 
-    /**
-     * Constructor. Given output stream will not be closed by this class in any way
-     *
-     * @param out output stream to save data to
-     */
-    public ProtobufOutput(OutputStream out) {
-        this.out = out;
+    protected ProtobufOutput(byte[] buffer) {
+        this.buffer = buffer;
+        this.currentPosition = 0;
     }
 
-    /**
-     * Writes 4 bytes to the stream
-     *
-     * @param value int value
-     * @throws IOException in case of any data write error
-     */
-    public void writeFixedInt(int value) throws IOException {
-        writeInt(value);
+    static ProtobufOutput from(OutputStream outputStream, int bufferSize) {
+        return new StreamProtobufOutput(outputStream, bufferSize);
     }
 
-    /**
-     * Writes 8 bytes to the stream
-     *
-     * @param value long value
-     * @throws IOException in case of any data write error
-     */
-    public void writeFixedLong(long value) throws IOException {
-        writeLong(value);
+    static ProtobufOutput from(byte[] data) {
+        return new ArrayProtobufOutput(data);
     }
 
-    /**
-     * Writes 8 bytes to the stream
-     *
-     * @param value double value
-     * @throws IOException in case of any data write error
-     */
-    public void writeDouble(double value) throws IOException {
-        writeLong(doubleToLongBits(value));
+    void writeFixedInt(int value) throws IOException {
+        ensureAvailable(4);
+        INT.set(buffer, currentPosition, value);
+        currentPosition += 4;
     }
 
-    /**
-     * Writes 4 bytes to the stream
-     *
-     * @param value float value
-     * @throws IOException in case of any data write error
-     */
-    public void writeFloat(float value) throws IOException {
-        writeInt(floatToIntBits(value));
+    void writeFixedLong(long value) throws IOException {
+        ensureAvailable(8);
+        LONG.set(buffer, currentPosition, value);
+        currentPosition += 8;
     }
 
-    /**
-     * Writes one byte to the stream
-     *
-     * @param value boolean value
-     * @throws IOException in case of any data write error
-     */
-    public void writeBoolean(boolean value) throws IOException {
-        out.write(value ? 1 : 0);
+    void writeDouble(double value) throws IOException {
+        ensureAvailable(8);
+        DOUBLE.set(buffer, currentPosition, value);
+        currentPosition += 8;
     }
 
-    /**
-     * Writes undefined number of bytes to the stream
-     *
-     * @param value String value
-     * @throws IOException in case of any data write error
-     */
-    public void writeString(String value) throws IOException {
+    void writeFloat(float value) throws IOException {
+        ensureAvailable(4);
+        FLOAT.set(buffer, currentPosition, value);
+        currentPosition += 4;
+    }
+
+    void writeBoolean(boolean value) throws IOException {
+        ensureAvailable(1);
+        buffer[currentPosition++] = value ? (byte) 1 : (byte) 0;
+    }
+
+    void writeString(String value) throws IOException {
+        // TODO [performance] not the most efficient way to handle string
         writeBytes(value.getBytes(UTF_8));
     }
 
-    /**
-     * Writes undefined number of bytes to the stream
-     *
-     * @param value bytes array
-     * @throws IOException in case of any data write error
-     */
-    public void writeBytes(byte[] value) throws IOException {
+    void writeBytes(byte[] value) throws IOException {
         writeVarint32(value.length);
-
-        for (byte b : value) {
-            out.write(b);
-        }
+        writeRawBytes(value);
     }
 
-    /**
-     * Writes undefined number of bytes to encode given signed integer in a zig-zag format
-     *
-     * @param value long value
-     * @throws IOException in case of any data write error
-     */
-    public void writeZigZag64(long value) throws IOException {
-        writeVarint64((value << 1) ^ (value >> 63));
-    }
-
-    /**
-     * Writes undefined number of bytes to encode given signed integer in a zig-zag format
-     *
-     * @param value int value
-     * @throws IOException in case of any data write error
-     */
-    public void writeZigZag32(int value) throws IOException {
+    void writeZigZag32(int value) throws IOException {
         writeVarint32((value << 1) ^ (value >> 31));
     }
 
-    /**
-     * Writes undefined number of bytes to encode given integer in a variant integer format
-     *
-     * @param value long value
-     * @throws IOException in case of any data write error
-     */
-    public void writeVarint64(long value) throws IOException {
-        int toWrite;
+    void writeZigZag64(long value) throws IOException {
+        writeVarint64((value << 1) ^ (value >> 63));
+    }
 
-        do {
-            toWrite = (int) (value & LONG_PAYLOAD_MASK);
-            value >>>= 7;
-            if (value != 0) {
-                toWrite |= CONTINUATION_MASK;
+    void writeVarint32(int value) throws IOException {
+        if (value < 0) {
+            writeVarint64(value);
+            return;
+        }
+
+        ensureAvailable(5);
+        while (true) {
+            if ((value & ~0x7F) == 0) {
+                buffer[currentPosition++] = (byte) value;
+                return;
+            } else {
+                buffer[currentPosition++] = (byte) ((value & 0x7F) | 0x80);
+                value >>>= 7;
             }
-            out.write(toWrite);
-        } while (value != 0);
+        }
     }
 
-    /**
-     * Writes undefined number of bytes to encode given integer in a variant integer format
-     *
-     * @param value int value
-     * @throws IOException in case of any data write error
-     */
-    public void writeVarint32(int value) throws IOException {
-        writeVarint64(value);
+    void writeVarint64(long value) throws IOException {
+        ensureAvailable(10);
+        while (true) {
+            if ((value & ~0x7FL) == 0) {
+                buffer[currentPosition++] = (byte) value;
+                return;
+            } else {
+                buffer[currentPosition++] = (byte) (((int) value & 0x7F) | 0x80);
+                value >>>= 7;
+            }
+        }
     }
 
-    private void writeInt(int value) throws IOException {
-        out.write(value >>> 0);
-        out.write(value >>> 8);
-        out.write(value >>> 16);
-        out.write(value >>> 24);
+    void writeRawByte(byte value) throws IOException {
+        ensureAvailable(1);
+        buffer[currentPosition++] = value;
     }
 
-    private void writeLong(long value) throws IOException {
-        out.write((int) (value >>> 0));
-        out.write((int) (value >>> 8));
-        out.write((int) (value >>> 16));
-        out.write((int) (value >>> 24));
-        out.write((int) (value >>> 32));
-        out.write((int) (value >>> 40));
-        out.write((int) (value >>> 48));
-        out.write((int) (value >>> 56));
+    protected int available() {
+        return buffer.length - currentPosition;
+    }
+
+    protected abstract void ensureAvailable(int size) throws IOException;
+
+    protected abstract void writeRawBytes(byte[] value) throws IOException;
+
+    @Override
+    public abstract void close() throws IOException;
+
+    private static final class ArrayProtobufOutput extends ProtobufOutput {
+        private ArrayProtobufOutput(byte[] data) {
+            super(data);
+        }
+
+        @Override
+        public void close() {
+            // Do Nothing
+        }
+
+        @Override
+        protected void ensureAvailable(int size) {
+            // Do Nothing
+        }
+
+        @Override
+        protected void writeRawBytes(byte[] value) {
+            System.arraycopy(value, 0, buffer, currentPosition, value.length);
+            currentPosition += value.length;
+        }
+    }
+
+    private static final class StreamProtobufOutput extends ProtobufOutput {
+        private final OutputStream output;
+
+        private StreamProtobufOutput(OutputStream output, int bufferSize) {
+            super(new byte[bufferSize]);
+            this.output = output;
+        }
+
+        @Override
+        public void close() throws IOException {
+            flush();
+        }
+
+        @Override
+        protected void ensureAvailable(int size) throws IOException {
+            if (available() < size) {
+                flush();
+            }
+        }
+
+        @Override
+        protected void writeRawBytes(byte[] value) throws IOException {
+            if (available() >= value.length) {
+                System.arraycopy(value, 0, buffer, currentPosition, value.length);
+                currentPosition += value.length;
+                return;
+            }
+
+            int srcPosition = 0;
+            while (true) {
+                flush();
+
+                int toWrite = value.length - srcPosition;
+                if (available() >= toWrite) {
+                    System.arraycopy(value, srcPosition, buffer, currentPosition, toWrite);
+                    currentPosition += toWrite;
+                    return;
+                }
+
+                System.arraycopy(value, srcPosition, buffer, 0, buffer.length);
+                currentPosition = buffer.length;
+                srcPosition += buffer.length;
+            }
+        }
+
+        private void flush() throws IOException {
+            output.write(buffer, 0, currentPosition);
+            currentPosition = 0;
+        }
     }
 }
