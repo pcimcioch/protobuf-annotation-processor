@@ -203,17 +203,10 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static <T> List<T> merge(List<T> current, List<T> toMerge) {
-        if (toMerge == null || toMerge.isEmpty()) {
-            return current;
-        }
-        if (current == null || current.isEmpty()) {
-            return toMerge;
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
         }
 
-        List<T> sum = new ArrayList<>();
-        sum.addAll(current);
-        sum.addAll(toMerge);
-
-        return List.copyOf(sum);
+        return current;
     }
 }

@@ -42,7 +42,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int double_(int number, List<Double> values) {
+    public int double_Unpacked(int number, List<Double> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -68,7 +68,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int float_(int number, List<Float> values) {
+    public int float_Unpacked(int number, List<Float> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -94,7 +94,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int int32(int number, List<Integer> values) {
+    public int int32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32Size(value);
@@ -125,7 +125,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int int64(int number, List<Long> values) {
+    public int int64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64Size(value);
@@ -156,7 +156,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int uint32(int number, List<Integer> values) {
+    public int uint32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32Size(value);
@@ -187,7 +187,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int uint64(int number, List<Long> values) {
+    public int uint64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64Size(value);
@@ -218,7 +218,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int sint32(int number, List<Integer> values) {
+    public int sint32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += zigzag32Size(value);
@@ -249,7 +249,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int sint64(int number, List<Long> values) {
+    public int sint64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += zigzag64Size(value);
@@ -280,7 +280,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int fixed32(int number, List<Integer> values) {
+    public int fixed32Unpacked(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -306,7 +306,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int fixed64(int number, List<Long> values) {
+    public int fixed64Unpacked(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -332,7 +332,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int sfixed32(int number, List<Integer> values) {
+    public int sfixed32Unpacked(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -358,7 +358,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int sfixed64(int number, List<Long> values) {
+    public int sfixed64Unpacked(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -384,7 +384,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int bool(int number, List<Boolean> values) {
+    public int boolUnpacked(int number, List<Boolean> values) {
         return values.size() * (tagSize(number) + 1);
     }
 
@@ -410,7 +410,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int bytes(int number, List<ByteArray> values) {
+    public int bytesUnpacked(int number, List<ByteArray> values) {
         int size = tagSize(number) * values.size();
         for (ByteArray value : values) {
             size += varint32Size(value.length()) + value.length();
@@ -442,7 +442,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int string(int number, List<String> values) {
+    public int stringUnpacked(int number, List<String> values) {
         int size = tagSize(number) * values.size();
         for (String value : values) {
             int valueSize = stringSize(value);
@@ -475,7 +475,7 @@ public class Size {
      * @param values values
      * @return size
      */
-    public int message(int number, List<? extends ProtobufMessage<?>> values) {
+    public int messageUnpacked(int number, List<? extends ProtobufMessage<?>> values) {
         int size = tagSize(number) * values.size();
         for (ProtobufMessage<?> value : values) {
             int valueSize = messageSize(value);

@@ -72,7 +72,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             RepeatableEnumMessage record = deserialize(writer -> writer
-                    .int32(1, List.of(2, 0))
+                    .int32Unpacked(1, List.of(2, 0))
             );
 
             // then

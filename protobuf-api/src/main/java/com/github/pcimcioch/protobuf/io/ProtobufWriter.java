@@ -55,7 +55,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter double_(int number, List<Double> values) throws IOException {
+    public ProtobufWriter double_Unpacked(int number, List<Double> values) throws IOException {
         for (double value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeDouble(value);
@@ -89,7 +89,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter float_(int number, List<Float> values) throws IOException {
+    public ProtobufWriter float_Unpacked(int number, List<Float> values) throws IOException {
         for (float value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFloat(value);
@@ -123,7 +123,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int32(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter int32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -157,7 +157,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int64(int number, List<Long> values) throws IOException {
+    public ProtobufWriter int64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -191,7 +191,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint32(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter uint32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -225,7 +225,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint64(int number, List<Long> values) throws IOException {
+    public ProtobufWriter uint64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -259,7 +259,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint32(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter sint32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag32(value);
@@ -293,7 +293,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint64(int number, List<Long> values) throws IOException {
+    public ProtobufWriter sint64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag64(value);
@@ -327,7 +327,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed32(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter fixed32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -361,7 +361,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed64(int number, List<Long> values) throws IOException {
+    public ProtobufWriter fixed64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -395,7 +395,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed32(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter sfixed32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -429,7 +429,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed64(int number, List<Long> values) throws IOException {
+    public ProtobufWriter sfixed64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -463,7 +463,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter bool(int number, List<Boolean> values) throws IOException {
+    public ProtobufWriter boolUnpacked(int number, List<Boolean> values) throws IOException {
         for (boolean value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeBoolean(value);
@@ -497,7 +497,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter string(int number, List<String> values) throws IOException {
+    public ProtobufWriter stringUnpacked(int number, List<String> values) throws IOException {
         for (String value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeString(value);
@@ -533,7 +533,7 @@ public class ProtobufWriter {
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    public ProtobufWriter bytes(int number, List<ByteArray> values) throws IOException {
+    public ProtobufWriter bytesUnpacked(int number, List<ByteArray> values) throws IOException {
         for (ByteArray value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
@@ -568,7 +568,7 @@ public class ProtobufWriter {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter message(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
+    public ProtobufWriter messageUnpacked(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
         for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(size.messageSize(value));

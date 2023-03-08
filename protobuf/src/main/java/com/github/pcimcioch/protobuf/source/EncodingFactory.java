@@ -44,7 +44,8 @@ class EncodingFactory {
     }
 
     private String encodingMethod(FieldDefinition field) {
-        return switch (field.protoKind()) {
+        String suffix = field.rules().repeated() ? "Unpacked" : "";
+        String method = switch (field.protoKind()) {
             case DOUBLE -> "double_";
             case FLOAT -> "float_";
             case INT32, ENUM -> "int32";
@@ -62,5 +63,7 @@ class EncodingFactory {
             case MESSAGE -> "message";
             case BYTES -> "bytes";
         };
+
+        return method + suffix;
     }
 }

@@ -1,7 +1,6 @@
 package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
-import com.github.pcimcioch.protobuf.code.ParameterSource;
 import com.github.pcimcioch.protobuf.code.RecordSource;
 import com.github.pcimcioch.protobuf.io.Size;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -40,7 +39,8 @@ class SizeFactory {
     }
 
     private String sizeMethod(FieldDefinition field) {
-        return switch (field.protoKind()) {
+        String suffix = field.rules().repeated() ? "Unpacked" : "";
+        String method = switch (field.protoKind()) {
             case DOUBLE -> "double_";
             case FLOAT -> "float_";
             case INT32, ENUM -> "int32";
@@ -58,5 +58,7 @@ class SizeFactory {
             case MESSAGE -> "message";
             case BYTES -> "bytes";
         };
+
+        return method + suffix;
     }
 }
