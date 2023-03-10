@@ -10,7 +10,6 @@ import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
 import static com.github.pcimcioch.protobuf.code.MethodSource.method;
-import static com.github.pcimcioch.protobuf.code.ParameterSource.parameter;
 import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
 
@@ -21,7 +20,8 @@ class SizeFactory {
 
         body.appendln("int totalSize = 0;");
         for (FieldDefinition field : message.fields()) {
-            body.append("totalSize += size.$method($number, $name);",
+            body.append("totalSize += $Size.$method($number, $name);",
+                    param("Size", Size.class),
                     param("method", sizeMethod(field)),
                     param("number", field.number()),
                     param("name", field.javaFieldName())
@@ -34,7 +34,6 @@ class SizeFactory {
                 .set(returns(int.class))
                 .set(body)
                 .add(annotation(Override.class))
-                .add(parameter(Size.class, "size"))
         );
     }
 

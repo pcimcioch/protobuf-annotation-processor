@@ -1,6 +1,5 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -101,7 +100,7 @@ public final class ProtoDto {
      * @return list copy
      */
     public static <T> List<T> copy(Collection<? extends T> value) {
-        // TODO [performance] check if this copying causes any performance issues. How fast would it be if the list was not copied?
+        // TODO [performance] if we get rid of this copying it would be faster
         return value == null ? List.of() : List.copyOf(value);
     }
 

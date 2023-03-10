@@ -3,7 +3,6 @@ package com.protobuf.serialization;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
-import com.github.pcimcioch.protobuf.io.Size;
 import org.assertj.core.api.ThrowingConsumer;
 import org.assertj.core.api.iterable.ThrowingExtractor;
 
@@ -40,7 +39,7 @@ abstract class SerializationTestBase {
 
     protected ByteArray serialize(ThrowingConsumer<ProtobufWriter> writerAction) {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
-        try (ProtobufWriter proto = new ProtobufWriter(data, Size.cached())) {
+        try (ProtobufWriter proto = new ProtobufWriter(data)) {
             writerAction.accept(proto);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);

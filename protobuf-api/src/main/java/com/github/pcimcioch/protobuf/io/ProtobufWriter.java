@@ -19,28 +19,23 @@ public class ProtobufWriter implements AutoCloseable {
     private static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private final ProtobufOutput output;
-    private final Size size;
 
     /**
      * Constructor. Given output stream will not be closed by this class in any way
      *
      * @param outputStream output stream to save data to
-     * @param size         size calculator
      */
-    public ProtobufWriter(OutputStream outputStream, Size size) {
+    public ProtobufWriter(OutputStream outputStream) {
         this.output = ProtobufOutput.from(outputStream, DEFAULT_BUFFER_SIZE);
-        this.size = size;
     }
 
     /**
      * Constructor. Given data array must be big enough for write operations
      *
      * @param data output array
-     * @param size size calculator
      */
-    public ProtobufWriter(byte[] data, Size size) {
+    public ProtobufWriter(byte[] data) {
         this.output = ProtobufOutput.from(data);
-        this.size = size;
     }
 
     /**
@@ -566,7 +561,7 @@ public class ProtobufWriter implements AutoCloseable {
     public ProtobufWriter message(int number, ProtobufMessage<?> value) throws IOException {
         if (value != null) {
             output.writeVarint32(LEN.tagFrom(number));
-            output.writeVarint32(size.messageSize(value));
+            output.writeVarint32(value.protobufSize());
             value.writeTo(this);
         }
 
@@ -584,7 +579,7 @@ public class ProtobufWriter implements AutoCloseable {
     public ProtobufWriter messageUnpacked(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
         for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
-            output.writeVarint32(size.messageSize(value));
+            output.writeVarint32(value.protobufSize());
             value.writeTo(this);
         }
 
