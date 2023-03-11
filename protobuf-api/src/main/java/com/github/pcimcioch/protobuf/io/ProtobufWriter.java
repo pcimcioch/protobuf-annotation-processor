@@ -15,7 +15,6 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 /**
  * Writes protobuf data
  */
-// TODO rename all ProtobufReader and ProtobufWriter methods to contain read and write. Get rid of those underscores
 public class ProtobufWriter implements AutoCloseable {
     private static final int DEFAULT_BUFFER_SIZE = 4096;
 
@@ -47,7 +46,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter double_(int number, double value) throws IOException {
+    public ProtobufWriter writeDouble(int number, double value) throws IOException {
         if (value != 0d) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeDouble(value);
@@ -64,7 +63,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter double_Unpacked(int number, List<Double> values) throws IOException {
+    public ProtobufWriter writeDoubleUnpacked(int number, List<Double> values) throws IOException {
         for (double value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeDouble(value);
@@ -81,7 +80,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter double_Packed(int number, List<Double> values) throws IOException {
+    public ProtobufWriter writeDoublePacked(int number, List<Double> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -103,7 +102,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter float_(int number, float value) throws IOException {
+    public ProtobufWriter writeFloat(int number, float value) throws IOException {
         if (value != 0f) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFloat(value);
@@ -120,7 +119,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter float_Unpacked(int number, List<Float> values) throws IOException {
+    public ProtobufWriter writeFloatUnpacked(int number, List<Float> values) throws IOException {
         for (float value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFloat(value);
@@ -137,7 +136,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter float_Packed(int number, List<Float> values) throws IOException {
+    public ProtobufWriter writeFloatPacked(int number, List<Float> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -159,7 +158,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int32(int number, int value) throws IOException {
+    public ProtobufWriter writeInt32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -176,7 +175,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int32Unpacked(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeInt32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -193,7 +192,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int32Packed(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeInt32Packed(int number, List<Integer> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -215,7 +214,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int64(int number, long value) throws IOException {
+    public ProtobufWriter writeInt64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -232,7 +231,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int64Unpacked(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeInt64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -249,7 +248,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter int64Packed(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeInt64Packed(int number, List<Long> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -271,7 +270,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint32(int number, int value) throws IOException {
+    public ProtobufWriter writeUint32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -288,7 +287,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint32Unpacked(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeUint32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
@@ -305,7 +304,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint32Packed(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeUint32Packed(int number, List<Integer> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -327,7 +326,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint64(int number, long value) throws IOException {
+    public ProtobufWriter writeUint64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -344,7 +343,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint64Unpacked(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeUint64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
@@ -361,7 +360,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter uint64Packed(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeUint64Packed(int number, List<Long> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -383,7 +382,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint32(int number, int value) throws IOException {
+    public ProtobufWriter writeSint32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag32(value);
@@ -400,7 +399,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint32Unpacked(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeSint32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag32(value);
@@ -417,7 +416,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint32Packed(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeSint32Packed(int number, List<Integer> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -439,7 +438,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint64(int number, long value) throws IOException {
+    public ProtobufWriter writeSint64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag64(value);
@@ -456,7 +455,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint64Unpacked(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeSint64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag64(value);
@@ -473,7 +472,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sint64Packed(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeSint64Packed(int number, List<Long> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -495,7 +494,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed32(int number, int value) throws IOException {
+    public ProtobufWriter writeFixed32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -512,7 +511,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed32Unpacked(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeFixed32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -529,7 +528,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed32Packed(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeFixed32Packed(int number, List<Integer> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -551,7 +550,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed64(int number, long value) throws IOException {
+    public ProtobufWriter writeFixed64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -568,7 +567,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed64Unpacked(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeFixed64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -585,7 +584,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter fixed64Packed(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeFixed64Packed(int number, List<Long> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -607,7 +606,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed32(int number, int value) throws IOException {
+    public ProtobufWriter writeSfixed32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -624,7 +623,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed32Unpacked(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeSfixed32Unpacked(int number, List<Integer> values) throws IOException {
         for (int value : values) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
@@ -641,7 +640,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed32Packed(int number, List<Integer> values) throws IOException {
+    public ProtobufWriter writeSfixed32Packed(int number, List<Integer> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -663,7 +662,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed64(int number, long value) throws IOException {
+    public ProtobufWriter writeSfixed64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -680,7 +679,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed64Unpacked(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeSfixed64Unpacked(int number, List<Long> values) throws IOException {
         for (long value : values) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
@@ -697,7 +696,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter sfixed64Packed(int number, List<Long> values) throws IOException {
+    public ProtobufWriter writeSfixed64Packed(int number, List<Long> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -719,7 +718,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter bool(int number, boolean value) throws IOException {
+    public ProtobufWriter writeBool(int number, boolean value) throws IOException {
         if (value) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeBoolean(true);
@@ -736,7 +735,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter boolUnpacked(int number, List<Boolean> values) throws IOException {
+    public ProtobufWriter writeBoolUnpacked(int number, List<Boolean> values) throws IOException {
         for (boolean value : values) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeBoolean(value);
@@ -753,7 +752,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter boolPacked(int number, List<Boolean> values) throws IOException {
+    public ProtobufWriter writeBoolPacked(int number, List<Boolean> values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
@@ -775,7 +774,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter string(int number, String value) throws IOException {
+    public ProtobufWriter writeString(int number, String value) throws IOException {
         if (!"".equals(value)) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeString(value);
@@ -792,7 +791,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter stringUnpacked(int number, List<String> values) throws IOException {
+    public ProtobufWriter writeStringUnpacked(int number, List<String> values) throws IOException {
         for (String value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeString(value);
@@ -810,7 +809,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    public ProtobufWriter bytes(int number, ByteArray value) throws IOException {
+    public ProtobufWriter writeBytes(int number, ByteArray value) throws IOException {
         if (!value.isEmpty()) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
@@ -828,7 +827,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    public ProtobufWriter bytesUnpacked(int number, List<ByteArray> values) throws IOException {
+    public ProtobufWriter writeBytesUnpacked(int number, List<ByteArray> values) throws IOException {
         for (ByteArray value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
@@ -845,7 +844,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter message(int number, ProtobufMessage<?> value) throws IOException {
+    public ProtobufWriter writeMessage(int number, ProtobufMessage<?> value) throws IOException {
         if (value != null) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());
@@ -863,7 +862,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter messageUnpacked(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
+    public ProtobufWriter writeMessageUnpacked(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
         for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());

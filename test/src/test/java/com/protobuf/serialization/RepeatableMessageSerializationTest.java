@@ -88,13 +88,13 @@ class RepeatableMessageSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             RepeatableOtherWork record = deserialize(writer -> writer
-                    .bytes(1, serialize(address -> address
-                            .string(1, "Street")
-                            .int32(2, 10)
+                    .writeBytes(1, serialize(address -> address
+                            .writeString(1, "Street")
+                            .writeInt32(2, 10)
                     ))
-                    .bytes(1, serialize(address -> address
-                            .string(1, "Alley")
-                            .int32(2, 20)
+                    .writeBytes(1, serialize(address -> address
+                            .writeString(1, "Alley")
+                            .writeInt32(2, 20)
                     ))
             );
 
@@ -111,18 +111,18 @@ class RepeatableMessageSerializationTest extends SerializationTestBase {
         void unknownFields() throws IOException {
             // given when
             RepeatableOtherWork record = deserialize(writer -> writer
-                    .int32(10, 123)
-                    .bytes(1, serialize(address -> address
-                            .string(1, "Street")
-                            .int32(2, 10)
+                    .writeInt32(10, 123)
+                    .writeBytes(1, serialize(address -> address
+                            .writeString(1, "Street")
+                            .writeInt32(2, 10)
                     ))
-                    .bytes(2, serialize(address -> address
-                            .string(1, "Other")
-                            .int32(2, 11)
+                    .writeBytes(2, serialize(address -> address
+                            .writeString(1, "Other")
+                            .writeInt32(2, 11)
                     ))
-                    .bytes(1, serialize(address -> address
-                            .string(1, "Alley")
-                            .int32(2, 20)
+                    .writeBytes(1, serialize(address -> address
+                            .writeString(1, "Alley")
+                            .writeInt32(2, 20)
                     ))
             );
 

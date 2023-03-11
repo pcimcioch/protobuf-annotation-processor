@@ -61,7 +61,7 @@ class DecodingFactory {
                         $BuilderType builder = new $BuilderType();
                                         
                         int tag;
-                        while ((tag = reader.tag()) != -1) {
+                        while ((tag = reader.readTag()) != -1) {
                             $readFields
                         }
                                         
@@ -98,52 +98,52 @@ class DecodingFactory {
 
     private CodeBody decodingCode(FieldDefinition field) {
         return switch (field.protoKind()) {
-            case DOUBLE -> body("builder.$field(reader.double_());",
+            case DOUBLE -> body("builder.$field(reader.readDouble());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FLOAT -> body("builder.$field(reader.float_());",
+            case FLOAT -> body("builder.$field(reader.readFloat());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case INT32, ENUM -> body("builder.$field(reader.int32());",
+            case INT32, ENUM -> body("builder.$field(reader.readInt32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case INT64 -> body("builder.$field(reader.int64());",
+            case INT64 -> body("builder.$field(reader.readInt64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case UINT32 -> body("builder.$field(reader.uint32());",
+            case UINT32 -> body("builder.$field(reader.readUint32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case UINT64 -> body("builder.$field(reader.uint64());",
+            case UINT64 -> body("builder.$field(reader.readUint64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SINT32 -> body("builder.$field(reader.sint32());",
+            case SINT32 -> body("builder.$field(reader.readSint32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SINT64 -> body("builder.$field(reader.sint64());",
+            case SINT64 -> body("builder.$field(reader.readSint64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FIXED32 -> body("builder.$field(reader.fixed32());",
+            case FIXED32 -> body("builder.$field(reader.readFixed32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case FIXED64 -> body("builder.$field(reader.fixed64());",
+            case FIXED64 -> body("builder.$field(reader.readFixed64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SFIXED32 -> body("builder.$field(reader.sfixed32());",
+            case SFIXED32 -> body("builder.$field(reader.readSfixed32());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case SFIXED64 -> body("builder.$field(reader.sfixed64());",
+            case SFIXED64 -> body("builder.$field(reader.readSfixed64());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case BOOL -> body("builder.$field(reader.bool());",
+            case BOOL -> body("builder.$field(reader.readBool());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case STRING -> body("builder.$field(reader.string());",
+            case STRING -> body("builder.$field(reader.readString());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case BYTES -> body("builder.$field(reader.bytes());",
+            case BYTES -> body("builder.$field(reader.readBytes());",
                     param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
             );
-            case MESSAGE -> body("builder.$merge(reader.message($Type::parse));",
+            case MESSAGE -> body("builder.$merge(reader.readMessage($Type::parse));",
                     param("merge", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldNamePrefixed("merge")),
                     param("Type", field.rules().repeated() ? field.javaFieldType().generic() : field.javaFieldType())
             );

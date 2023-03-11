@@ -61,11 +61,11 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             SelfReference record = deserialize(writer -> writer
-                    .int32(1, 10)
-                    .bytes(2, serialize(second -> second
-                            .int32(1, 20)
-                            .bytes(2, serialize(third -> third
-                                    .int32(1, 30)
+                    .writeInt32(1, 10)
+                    .writeBytes(2, serialize(second -> second
+                            .writeInt32(1, 20)
+                            .writeBytes(2, serialize(third -> third
+                                    .writeInt32(1, 30)
                             ))
                     ))
             );

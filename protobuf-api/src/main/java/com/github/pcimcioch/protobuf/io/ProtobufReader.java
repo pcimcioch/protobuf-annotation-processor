@@ -43,7 +43,7 @@ public class ProtobufReader {
      * @return tag or null if end of input reached
      * @throws IOException in case of any data read error
      */
-    public int tag() throws IOException {
+    public int readTag() throws IOException {
         if (input.isEnded()) {
             return -1;
         }
@@ -57,22 +57,22 @@ public class ProtobufReader {
      * @return double
      * @throws IOException in case of any data read error
      */
-    public double double_() throws IOException {
+    public double readDouble() throws IOException {
         return input.readDouble();
     }
 
     /**
-     * Reads unpacked list of double
+     * Reads packed list of double
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void double_Unpacked(DoubleConsumer consumer) throws IOException {
+    public void readDoublePacked(DoubleConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(double_());
+            consumer.accept(readDouble());
         }
 
         input.setLimit(oldLimit - size);
@@ -84,22 +84,22 @@ public class ProtobufReader {
      * @return float
      * @throws IOException in case of any data read error
      */
-    public float float_() throws IOException {
+    public float readFloat() throws IOException {
         return input.readFloat();
     }
 
     /**
-     * Reads unpacked list of float
+     * Reads packed list of float
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void float_Unpacked(FloatConsumer consumer) throws IOException {
+    public void readFloatPacked(FloatConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(float_());
+            consumer.accept(readFloat());
         }
 
         input.setLimit(oldLimit - size);
@@ -111,22 +111,22 @@ public class ProtobufReader {
      * @return int32
      * @throws IOException in case of any data read error
      */
-    public int int32() throws IOException {
+    public int readInt32() throws IOException {
         return input.readVarint32();
     }
 
     /**
-     * Reads unpacked list of int32
+     * Reads packed list of int32
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void int32Unpacked(IntConsumer consumer) throws IOException {
+    public void readInt32Packed(IntConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(int32());
+            consumer.accept(readInt32());
         }
 
         input.setLimit(oldLimit - size);
@@ -138,22 +138,22 @@ public class ProtobufReader {
      * @return int64
      * @throws IOException in case of any data read error
      */
-    public long int64() throws IOException {
+    public long readInt64() throws IOException {
         return input.readVarint64();
     }
 
     /**
-     * Reads unpacked list of int64
+     * Reads packed list of int64
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void int64Unpacked(LongConsumer consumer) throws IOException {
+    public void readInt64Packed(LongConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(int64());
+            consumer.accept(readInt64());
         }
 
         input.setLimit(oldLimit - size);
@@ -165,22 +165,22 @@ public class ProtobufReader {
      * @return uint32
      * @throws IOException in case of any data read error
      */
-    public int uint32() throws IOException {
+    public int readUint32() throws IOException {
         return input.readVarint32();
     }
 
     /**
-     * Reads unpacked list of uint32
+     * Reads packed list of uint32
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void uint32Unpacked(IntConsumer consumer) throws IOException {
+    public void readUint32Packed(IntConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(uint32());
+            consumer.accept(readUint32());
         }
 
         input.setLimit(oldLimit - size);
@@ -192,22 +192,22 @@ public class ProtobufReader {
      * @return uint64
      * @throws IOException in case of any data read error
      */
-    public long uint64() throws IOException {
+    public long readUint64() throws IOException {
         return input.readVarint64();
     }
 
     /**
-     * Reads unpacked list of uint64
+     * Reads packed list of uint64
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void uint64Unpacked(LongConsumer consumer) throws IOException {
+    public void readUint64Packed(LongConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(uint64());
+            consumer.accept(readUint64());
         }
 
         input.setLimit(oldLimit - size);
@@ -219,22 +219,22 @@ public class ProtobufReader {
      * @return sint32
      * @throws IOException in case of any data read error
      */
-    public int sint32() throws IOException {
+    public int readSint32() throws IOException {
         return input.readZigZag32();
     }
 
     /**
-     * Reads unpacked list of sint32
+     * Reads packed list of sint32
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void sint32Unpacked(IntConsumer consumer) throws IOException {
+    public void readSint32Packed(IntConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(sint32());
+            consumer.accept(readSint32());
         }
 
         input.setLimit(oldLimit - size);
@@ -246,22 +246,22 @@ public class ProtobufReader {
      * @return sint64
      * @throws IOException in case of any data read error
      */
-    public long sint64() throws IOException {
+    public long readSint64() throws IOException {
         return input.readZigZag64();
     }
 
     /**
-     * Reads unpacked list of sint64
+     * Reads packed list of sint64
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void sint64Unpacked(LongConsumer consumer) throws IOException {
+    public void readSint64Packed(LongConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(sint64());
+            consumer.accept(readSint64());
         }
 
         input.setLimit(oldLimit - size);
@@ -273,22 +273,22 @@ public class ProtobufReader {
      * @return fixed32
      * @throws IOException in case of any data read error
      */
-    public int fixed32() throws IOException {
+    public int readFixed32() throws IOException {
         return input.readFixedInt();
     }
 
     /**
-     * Reads unpacked list of fixed32
+     * Reads packed list of fixed32
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void fixed32Unpacked(IntConsumer consumer) throws IOException {
+    public void readFixed32Packed(IntConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(fixed32());
+            consumer.accept(readFixed32());
         }
 
         input.setLimit(oldLimit - size);
@@ -300,22 +300,22 @@ public class ProtobufReader {
      * @return fixed64
      * @throws IOException in case of any data read error
      */
-    public long fixed64() throws IOException {
+    public long readFixed64() throws IOException {
         return input.readFixedLong();
     }
 
     /**
-     * Reads unpacked list of fixed64
+     * Reads packed list of fixed64
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void fixed64Unpacked(LongConsumer consumer) throws IOException {
+    public void readFixed64Packed(LongConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(fixed64());
+            consumer.accept(readFixed64());
         }
 
         input.setLimit(oldLimit - size);
@@ -327,22 +327,22 @@ public class ProtobufReader {
      * @return sfixed32
      * @throws IOException in case of any data read error
      */
-    public int sfixed32() throws IOException {
+    public int readSfixed32() throws IOException {
         return input.readFixedInt();
     }
 
     /**
-     * Reads unpacked list of sfixed32
+     * Reads packed list of sfixed32
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void sfixed32Unpacked(IntConsumer consumer) throws IOException {
+    public void readSfixed32Packed(IntConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(sfixed32());
+            consumer.accept(readSfixed32());
         }
 
         input.setLimit(oldLimit - size);
@@ -354,22 +354,22 @@ public class ProtobufReader {
      * @return sfixed64
      * @throws IOException in case of any data read error
      */
-    public long sfixed64() throws IOException {
+    public long readSfixed64() throws IOException {
         return input.readFixedLong();
     }
 
     /**
-     * Reads unpacked list of sfixed64
+     * Reads packed list of sfixed64
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void sfixed64Unpacked(LongConsumer consumer) throws IOException {
+    public void readSfixed64Packed(LongConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(sfixed64());
+            consumer.accept(readSfixed64());
         }
 
         input.setLimit(oldLimit - size);
@@ -381,22 +381,22 @@ public class ProtobufReader {
      * @return bool
      * @throws IOException in case of any data read error
      */
-    public boolean bool() throws IOException {
+    public boolean readBool() throws IOException {
         return input.readBoolean();
     }
 
     /**
-     * Reads unpacked list of bool
+     * Reads packed list of bool
      *
      * @param consumer consumer to take values
      * @throws IOException in case of any data read error
      */
-    public void boolUnpacked(BooleanConsumer consumer) throws IOException {
+    public void readBoolPacked(BooleanConsumer consumer) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 
         while (!input.isEnded()) {
-            consumer.accept(bool());
+            consumer.accept(readBool());
         }
 
         input.setLimit(oldLimit - size);
@@ -408,7 +408,7 @@ public class ProtobufReader {
      * @return string
      * @throws IOException in case of any data read error
      */
-    public String string() throws IOException {
+    public String readString() throws IOException {
         return input.readString();
     }
 
@@ -419,7 +419,7 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     @SuppressWarnings("deprecation")
-    public ByteArray bytes() throws IOException {
+    public ByteArray readBytes() throws IOException {
         return ByteArray.unsafeFromByteArray(input.readBytes());
     }
 
@@ -431,7 +431,7 @@ public class ProtobufReader {
      * @return message
      * @throws IOException in case of any data read error
      */
-    public <T> T message(MessageFactory<T> factory) throws IOException {
+    public <T> T readMessage(MessageFactory<T> factory) throws IOException {
         int size = input.readVarint32();
         int oldLimit = input.setLimit(size);
 

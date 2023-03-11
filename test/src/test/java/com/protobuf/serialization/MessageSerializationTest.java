@@ -105,19 +105,19 @@ class MessageSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
-                    .string(1, "Tomas")
-                    .int32(2, 40)
-                    .bytes(3, serialize(address -> address
-                            .string(1, "Java St.")
-                            .int32(2, 12)
+                    .writeString(1, "Tomas")
+                    .writeInt32(2, 40)
+                    .writeBytes(3, serialize(address -> address
+                            .writeString(1, "Java St.")
+                            .writeInt32(2, 12)
                     ))
-                    .bytes(4, serialize(work -> work
-                            .bytes(1, serialize(address -> address
-                                    .string(1, "Test Al.")
-                                    .int32(2, 34000)
+                    .writeBytes(4, serialize(work -> work
+                            .writeBytes(1, serialize(address -> address
+                                    .writeString(1, "Test Al.")
+                                    .writeInt32(2, 34000)
                             ))
-                            .string(2, "Software House inc.")
-                            .fixed32(3, 2001)
+                            .writeString(2, "Software House inc.")
+                            .writeFixed32(3, 2001)
                     ))
             );
 
@@ -138,10 +138,10 @@ class MessageSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
-                    .string(1, "Tomas")
-                    .int32(2, 40)
-                    .bytes(4, serialize(work -> work
-                            .string(2, "Software House inc.")
+                    .writeString(1, "Tomas")
+                    .writeInt32(2, 40)
+                    .writeBytes(4, serialize(work -> work
+                            .writeString(2, "Software House inc.")
                     ))
             );
 
@@ -161,20 +161,20 @@ class MessageSerializationTest extends SerializationTestBase {
         void fullObjectReverseOrder() throws IOException {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
-                    .bytes(4, serialize(work -> work
-                            .fixed32(3, 2001)
-                            .string(2, "Software House inc.")
-                            .bytes(1, serialize(address -> address
-                                    .string(1, "Test Al.")
-                                    .int32(2, 34000)
+                    .writeBytes(4, serialize(work -> work
+                            .writeFixed32(3, 2001)
+                            .writeString(2, "Software House inc.")
+                            .writeBytes(1, serialize(address -> address
+                                    .writeString(1, "Test Al.")
+                                    .writeInt32(2, 34000)
                             ))
                     ))
-                    .bytes(3, serialize(address -> address
-                            .int32(2, 12)
-                            .string(1, "Java St.")
+                    .writeBytes(3, serialize(address -> address
+                            .writeInt32(2, 12)
+                            .writeString(1, "Java St.")
                     ))
-                    .int32(2, 40)
-                    .string(1, "Tomas")
+                    .writeInt32(2, 40)
+                    .writeString(1, "Tomas")
             );
 
             // then
@@ -194,23 +194,23 @@ class MessageSerializationTest extends SerializationTestBase {
         void unknownFields() throws IOException {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
-                    .bytes(10, ba(10, 20, 30, 40))
-                    .string(1, "Tomas")
-                    .int32(2, 40)
-                    .bytes(3, serialize(address -> address
-                            .string(1, "Java St.")
-                            .fixed32(11, 500)
-                            .int32(2, 12)
+                    .writeBytes(10, ba(10, 20, 30, 40))
+                    .writeString(1, "Tomas")
+                    .writeInt32(2, 40)
+                    .writeBytes(3, serialize(address -> address
+                            .writeString(1, "Java St.")
+                            .writeFixed32(11, 500)
+                            .writeInt32(2, 12)
                     ))
-                    .bytes(4, serialize(work -> work
-                            .bytes(1, serialize(address -> address
-                                    .fixed64(12, 123456L)
-                                    .string(1, "Test Al.")
-                                    .int32(2, 34000)
+                    .writeBytes(4, serialize(work -> work
+                            .writeBytes(1, serialize(address -> address
+                                    .writeFixed64(12, 123456L)
+                                    .writeString(1, "Test Al.")
+                                    .writeInt32(2, 34000)
                             ))
-                            .string(2, "Software House inc.")
-                            .fixed32(3, 2001)
-                            .string(13, "some string")
+                            .writeString(2, "Software House inc.")
+                            .writeFixed32(3, 2001)
+                            .writeString(13, "some string")
                     ))
             );
 
@@ -232,27 +232,27 @@ class MessageSerializationTest extends SerializationTestBase {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
                     // first message
-                    .string(1, "test")
-                    .int32(2, 10)
-                    .bytes(4, serialize(work -> work
-                            .bytes(1, serialize(address -> address
-                                    .string(1, "Test")
-                                    .int32(2, 20)
+                    .writeString(1, "test")
+                    .writeInt32(2, 10)
+                    .writeBytes(4, serialize(work -> work
+                            .writeBytes(1, serialize(address -> address
+                                    .writeString(1, "Test")
+                                    .writeInt32(2, 20)
                             ))
-                            .string(2, "Work")
-                            .fixed32(3, 1999)
+                            .writeString(2, "Work")
+                            .writeFixed32(3, 1999)
                     ))
                     // second message
-                    .string(1, "test2")
-                    .bytes(3, serialize(address -> address
-                            .string(1, "Sun Street")
-                            .int32(2, 100)
+                    .writeString(1, "test2")
+                    .writeBytes(3, serialize(address -> address
+                            .writeString(1, "Sun Street")
+                            .writeInt32(2, 100)
                     ))
-                    .bytes(4, serialize(work -> work
-                            .bytes(1, serialize(address -> address
-                                    .int32(2, 200)
+                    .writeBytes(4, serialize(work -> work
+                            .writeBytes(1, serialize(address -> address
+                                    .writeInt32(2, 200)
                             ))
-                            .fixed32(3, 2022)
+                            .writeFixed32(3, 2022)
                     ))
             );
 

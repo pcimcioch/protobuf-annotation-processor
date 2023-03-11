@@ -59,7 +59,7 @@ class EnumSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             SimpleEnumMessage record = deserialize(writer -> writer
-                    .int32(1, 2)
+                    .writeInt32(1, 2)
             );
 
             // then
@@ -72,7 +72,7 @@ class EnumSerializationTest extends SerializationTestBase {
         void unknownEnum() throws IOException {
             // given when
             SimpleEnumMessage record = deserialize(writer -> writer
-                    .int32(1, 10)
+                    .writeInt32(1, 10)
             );
 
             // then

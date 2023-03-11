@@ -46,22 +46,22 @@ class EncodingFactory {
     private String encodingMethod(FieldDefinition field) {
         String suffix = field.rules().repeated() ? "Unpacked" : "";
         String method = switch (field.protoKind()) {
-            case DOUBLE -> "double_";
-            case FLOAT -> "float_";
-            case INT32, ENUM -> "int32";
-            case INT64 -> "int64";
-            case UINT32 -> "uint32";
-            case UINT64 -> "uint64";
-            case SINT32 -> "sint32";
-            case SINT64 -> "sint64";
-            case FIXED32 -> "fixed32";
-            case FIXED64 -> "fixed64";
-            case SFIXED32 -> "sfixed32";
-            case SFIXED64 -> "sfixed64";
-            case BOOL -> "bool";
-            case STRING -> "string";
-            case MESSAGE -> "message";
-            case BYTES -> "bytes";
+            case DOUBLE -> "writeDouble";
+            case FLOAT -> "writeFloat";
+            case INT32, ENUM -> "writeInt32";
+            case INT64 -> "writeInt64";
+            case UINT32 -> "writeUint32";
+            case UINT64 -> "writeUint64";
+            case SINT32 -> "writeSint32";
+            case SINT64 -> "writeSint64";
+            case FIXED32 -> "writeFixed32";
+            case FIXED64 -> "writeFixed64";
+            case SFIXED32 -> "writeSfixed32";
+            case SFIXED64 -> "writeSfixed64";
+            case BOOL -> "writeBool";
+            case STRING -> "writeString";
+            case MESSAGE -> "writeMessage";
+            case BYTES -> "writeBytes";
         };
 
         return method + suffix;
