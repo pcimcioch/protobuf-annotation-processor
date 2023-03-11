@@ -13,7 +13,6 @@ import java.lang.invoke.VarHandle;
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-// TODO [performance] Reading varints can be faster if 10 bytes (max varint) are already in the buffer. No loops are needed and no calls to ensureAvailable()
 abstract class ProtobufInput {
     private static final VarHandle LONG = MethodHandles.byteArrayViewVarHandle(long[].class, LITTLE_ENDIAN);
     private static final VarHandle INT = MethodHandles.byteArrayViewVarHandle(int[].class, LITTLE_ENDIAN);
@@ -108,15 +107,11 @@ abstract class ProtobufInput {
         return readRawString(readVarint32());
     }
 
-    abstract long setLimit(long limit) throws IOException;
+    abstract int setLimit(int limit) throws IOException;
 
-    abstract void skip(long size) throws IOException;
+    abstract void skip(int size) throws IOException;
 
     abstract boolean isEnded() throws IOException;
-
-    protected int available() {
-        return endPosition - currentPosition;
-    }
 
     protected byte readRawByte() throws IOException {
         ensureAvailable(1);
@@ -135,24 +130,24 @@ abstract class ProtobufInput {
         }
 
         @Override
-        long setLimit(long limit) throws LimitExceededException {
-            long oldLimit = available();
+        int setLimit(int limit) throws LimitExceededException {
+            int oldLimit = availableWithLimit();
             if (limit + currentPosition > buffer.length) {
                 throw new LimitExceededException();
             }
-            endPosition = currentPosition + (int) limit;
+            endPosition = currentPosition + limit;
             return oldLimit;
         }
 
         @Override
-        void skip(long size) throws IOException {
-            ensureAvailable((int) size);
+        void skip(int size) throws IOException {
+            ensureAvailable(size);
             currentPosition += size;
         }
 
         @Override
         boolean isEnded() {
-            return available() == 0;
+            return availableWithLimit() == 0;
         }
 
         @Override
@@ -178,40 +173,48 @@ abstract class ProtobufInput {
 
         @Override
         protected void ensureAvailable(int size) throws IOException {
-            if (currentPosition + size > buffer.length) {
+            if (availableInBuffer() < size) {
                 throw new InputEndedException();
             }
-            if (available() < size) {
+            if (availableWithLimit() < size) {
                 throw new LimitExceededException();
             }
+        }
+
+        private int availableWithLimit() {
+            return endPosition - currentPosition;
+        }
+
+        private int availableInBuffer() {
+            return buffer.length - currentPosition;
         }
     }
 
     private static final class StreamProtobufInput extends ProtobufInput {
         private final InputStream input;
         private boolean inputEnded;
-        private long limit;
+        private int limit;
 
         private StreamProtobufInput(InputStream input, int bufferSize) {
             super(new byte[bufferSize], 0);
 
             this.input = input;
             this.inputEnded = false;
-            this.limit = Long.MAX_VALUE;
+            this.limit = Integer.MAX_VALUE;
         }
 
         @Override
-        long setLimit(long limit) {
-            long oldLimit = this.limit;
+        int setLimit(int limit) {
+            int oldLimit = this.limit;
             this.limit = limit;
             return oldLimit;
         }
 
         @Override
-        void skip(long size) throws IOException {
+        void skip(int size) throws IOException {
             consumeLimit(size);
 
-            int available = available();
+            int available = availableInBuffer();
             if (size <= available) {
                 currentPosition += size;
                 return;
@@ -229,12 +232,13 @@ abstract class ProtobufInput {
 
         @Override
         boolean isEnded() throws IOException {
-            return limit == 0 || (available() == 0 && (inputEnded || fillBuffer() == 0));
+            return limit == 0 || (availableInBuffer() == 0 && (inputEnded || fillBuffer() == 0));
         }
 
         @Override
         protected byte[] readRawBytes(int size) throws IOException {
             consumeLimit(size);
+
             return getBytes(size);
         }
 
@@ -242,7 +246,7 @@ abstract class ProtobufInput {
         protected String readRawString(int size) throws IOException {
             consumeLimit(size);
 
-            if (available() >= size) {
+            if (availableInBuffer() >= size) {
                 String result = new String(buffer, currentPosition, size, UTF_8);
                 currentPosition += size;
                 return result;
@@ -254,7 +258,8 @@ abstract class ProtobufInput {
         @Override
         protected void ensureAvailable(int size) throws IOException {
             consumeLimit(size);
-            if (available() >= size) {
+
+            if (availableInBuffer() >= size) {
                 return;
             }
             if (fillBuffer() < size) {
@@ -262,16 +267,15 @@ abstract class ProtobufInput {
             }
         }
 
-        private void consumeLimit(long size) throws LimitExceededException {
-            if (size > limit) {
+        private void consumeLimit(int size) throws LimitExceededException {
+            if (availableWithLimit() < size) {
                 throw new LimitExceededException();
             }
-
             limit -= size;
         }
 
         private int fillBuffer() throws IOException {
-            int currentSize = available();
+            int currentSize = availableInBuffer();
             int toRead = buffer.length - currentSize;
 
             // Move existing bytes to the beginning of the buffer
@@ -297,7 +301,7 @@ abstract class ProtobufInput {
         private byte[] getBytes(int size) throws IOException {
             byte[] result = new byte[size];
             int resultPosition = 0;
-            int available = available();
+            int available = availableInBuffer();
 
             while (size > 0) {
                 if (size <= available) {
@@ -319,6 +323,14 @@ abstract class ProtobufInput {
             }
 
             return result;
+        }
+
+        private int availableInBuffer() {
+            return endPosition - currentPosition;
+        }
+
+        private int availableWithLimit() {
+            return limit;
         }
     }
 }

@@ -207,8 +207,8 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public <T> T message(MessageFactory<T> factory) throws IOException {
-        long size = input.readVarint64();
-        long oldLimit = input.setLimit(size);
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
 
         T message = factory.parse(this);
         input.setLimit(oldLimit - size);
@@ -245,7 +245,7 @@ public class ProtobufReader {
             switch (WireType.fromTag(tag)) {
                 case VARINT -> input.readVarint64();
                 case I64 -> input.skip(8);
-                case LEN -> input.skip(input.readVarint64());
+                case LEN -> input.skip(input.readVarint32());
                 case SGROUP -> throw new UnsupportedWireTypeException("SGROUP");
                 case EGROUP -> throw new UnsupportedWireTypeException("EGROUP");
                 case I32 -> input.skip(4);
