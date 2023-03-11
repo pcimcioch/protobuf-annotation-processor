@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-// TODO when writing nested object (message, string, bytearray), do not copy any arrays
 public final class Algorithm<T> {
     static final String OUR = "OUR";
     static final String PROTO = "PROTO";
