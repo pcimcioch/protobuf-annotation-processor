@@ -6,12 +6,12 @@ import org.openjdk.jmh.infra.Blackhole;
 
 public class ReadRepeatableTest extends TestBase {
 
-    @Benchmark
+    //@Benchmark
     public void bytes(Blackhole bh, RepeatableData data) throws Exception {
         bh.consume(data.algorithm.parseBytes());
     }
 
-    @Benchmark
+    //@Benchmark
     public void stream(Blackhole bh, RepeatableData data) throws Exception {
         bh.consume(data.algorithm.parseStream());
     }

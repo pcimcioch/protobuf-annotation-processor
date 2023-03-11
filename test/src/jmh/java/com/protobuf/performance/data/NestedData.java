@@ -20,7 +20,7 @@ import static com.protobuf.performance.data.Algorithm.PROTO;
 
 @State(Scope.Benchmark)
 public class NestedData {
-    @Param({OUR, PROTO})
+    @Param({OUR/*, PROTO*/})
     public String type;
 
     public Algorithm<?> algorithm;

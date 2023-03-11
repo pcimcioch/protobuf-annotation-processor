@@ -6,6 +6,10 @@ import com.github.pcimcioch.protobuf.io.exception.UnsupportedWireTypeException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 /**
  * Reads protobuf data
@@ -58,6 +62,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of double
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void double_Unpacked(DoubleConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(double_());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads float
      *
      * @return float
@@ -65,6 +86,23 @@ public class ProtobufReader {
      */
     public float float_() throws IOException {
         return input.readFloat();
+    }
+
+    /**
+     * Reads unpacked list of float
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void float_Unpacked(FloatConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(float_());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -78,6 +116,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of int32
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void int32Unpacked(IntConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(int32());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads int64
      *
      * @return int64
@@ -85,6 +140,23 @@ public class ProtobufReader {
      */
     public long int64() throws IOException {
         return input.readVarint64();
+    }
+
+    /**
+     * Reads unpacked list of int64
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void int64Unpacked(LongConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(int64());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -98,6 +170,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of uint32
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void uint32Unpacked(IntConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(uint32());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads uint64
      *
      * @return uint64
@@ -105,6 +194,23 @@ public class ProtobufReader {
      */
     public long uint64() throws IOException {
         return input.readVarint64();
+    }
+
+    /**
+     * Reads unpacked list of uint64
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void uint64Unpacked(LongConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(uint64());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -118,6 +224,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of sint32
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void sint32Unpacked(IntConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(sint32());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads sint64
      *
      * @return sint64
@@ -125,6 +248,23 @@ public class ProtobufReader {
      */
     public long sint64() throws IOException {
         return input.readZigZag64();
+    }
+
+    /**
+     * Reads unpacked list of sint64
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void sint64Unpacked(LongConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(sint64());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -138,6 +278,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of fixed32
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void fixed32Unpacked(IntConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(fixed32());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads fixed64
      *
      * @return fixed64
@@ -145,6 +302,23 @@ public class ProtobufReader {
      */
     public long fixed64() throws IOException {
         return input.readFixedLong();
+    }
+
+    /**
+     * Reads unpacked list of fixed64
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void fixed64Unpacked(LongConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(fixed64());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -158,6 +332,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of sfixed32
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void sfixed32Unpacked(IntConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(sfixed32());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads sfixed64
      *
      * @return sfixed64
@@ -168,6 +359,23 @@ public class ProtobufReader {
     }
 
     /**
+     * Reads unpacked list of sfixed64
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void sfixed64Unpacked(LongConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(sfixed64());
+        }
+
+        input.setLimit(oldLimit - size);
+    }
+
+    /**
      * Reads bool
      *
      * @return bool
@@ -175,6 +383,23 @@ public class ProtobufReader {
      */
     public boolean bool() throws IOException {
         return input.readBoolean();
+    }
+
+    /**
+     * Reads unpacked list of bool
+     *
+     * @param consumer consumer to take values
+     * @throws IOException in case of any data read error
+     */
+    public void boolUnpacked(BooleanConsumer consumer) throws IOException {
+        int size = input.readVarint32();
+        int oldLimit = input.setLimit(size);
+
+        while (!input.isEnded()) {
+            consumer.accept(bool());
+        }
+
+        input.setLimit(oldLimit - size);
     }
 
     /**
@@ -217,24 +442,6 @@ public class ProtobufReader {
     }
 
     /**
-     * Factory that creates message from byte array
-     *
-     * @param <T> type of the message
-     */
-    @FunctionalInterface
-    public interface MessageFactory<T> {
-
-        /**
-         * Creates message from reader
-         *
-         * @param reader reader
-         * @return new message
-         * @throws IOException in case of any data read error
-         */
-        T parse(ProtobufReader reader) throws IOException;
-    }
-
-    /**
      * Skips unknown value
      *
      * @param tag tag
@@ -253,5 +460,61 @@ public class ProtobufReader {
         } catch (IllegalArgumentException ex) {
             throw new UnknownWireTypeException();
         }
+    }
+
+    /**
+     * Factory that creates message from byte array
+     *
+     * @param <T> type of the message
+     */
+    @FunctionalInterface
+    public interface MessageFactory<T> {
+
+        /**
+         * Creates message from reader
+         *
+         * @param reader reader
+         * @return new message
+         * @throws IOException in case of any data read error
+         */
+        T parse(ProtobufReader reader) throws IOException;
+    }
+
+    /**
+     * Represents an operation that accepts a single {@code float}-valued argument and
+     * returns no result.  This is the primitive type specialization of
+     * {@link Consumer} for {@code double}.  Unlike most other functional interfaces,
+     * {@code FloatConsumer} is expected to operate via side-effects.
+     * <p>This is a <a href="package-summary.html">functional interface</a>
+     * whose functional method is {@link #accept(float)}.
+     */
+    @FunctionalInterface
+    public interface FloatConsumer {
+
+        /**
+         * Performs this operation on the given argument.
+         *
+         * @param value the input argument
+         */
+        void accept(float value);
+    }
+
+    /**
+     * Represents an operation that accepts a single {@code boolean}-valued argument and
+     * returns no result.  This is the primitive type specialization of
+     * {@link Consumer} for {@code double}.  Unlike most other functional interfaces,
+     * {@code BooleanConsumer} is expected to operate via side-effects.
+     * <p>This is a <a href="package-summary.html">functional interface</a>
+     * whose functional method is {@link #accept(boolean)}.
+     */
+    @FunctionalInterface
+    public interface BooleanConsumer {
+
+        /**
+         * Performs this operation on the given argument.
+         *
+         * @param value the input argument
+         */
+        void accept(boolean value);
     }
 }

@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,866 +20,1518 @@ class SizeTest {
     private static final int NUMBER_2_SMALL = 0b10000;
     private static final int NUMBER_2_BIG = 0b11111111111;
 
-    @ParameterizedTest
-    @MethodSource("doubleSource")
-    void doubleSize(int number, double value, int expectedSize) {
-        // when then
-        assertThat(Size.double_(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> doubleSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0d, 0),
-                Arguments.of(NUMBER_2_BIG, 0d, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1d, 9),
-                Arguments.of(NUMBER_1_BIG, 1d, 9),
-                Arguments.of(NUMBER_2_SMALL, 1d, 10),
-                Arguments.of(NUMBER_2_BIG, 1d, 10),
-
-                Arguments.of(NUMBER_1_SMALL, Double.MIN_VALUE, 9),
-                Arguments.of(NUMBER_1_SMALL, Double.MAX_VALUE, 9)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("doubleUnpackedSource")
-    void doubleUnpackedSize(int number, List<Double> values, int expectedSize) {
-        // when then
-        assertThat(Size.double_Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> doubleUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1d), 9),
-                Arguments.of(NUMBER_1_BIG, List.of(1d), 9),
-                Arguments.of(NUMBER_2_SMALL, List.of(1d), 10),
-                Arguments.of(NUMBER_2_BIG, List.of(1d), 10),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Double.MIN_VALUE), 9),
-                Arguments.of(NUMBER_1_SMALL, List.of(Double.MAX_VALUE), 9),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1d, 2d, -1d, 0d), 36),
-                Arguments.of(NUMBER_1_BIG, List.of(1d, 2d, -1d, 0d), 36),
-                Arguments.of(NUMBER_2_SMALL, List.of(1d, 2d, -1d, 0d), 40),
-                Arguments.of(NUMBER_2_BIG, List.of(1d, 2d, -1d, 0d), 40)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("floatSource")
-    void floatSize(int number, float value, int expectedSize) {
-        // when then
-        assertThat(Size.float_(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> floatSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0f, 0),
-                Arguments.of(NUMBER_2_BIG, 0f, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1f, 5),
-                Arguments.of(NUMBER_1_BIG, 1f, 5),
-                Arguments.of(NUMBER_2_SMALL, 1f, 6),
-                Arguments.of(NUMBER_2_BIG, 1f, 6),
-
-                Arguments.of(NUMBER_1_SMALL, Float.MIN_VALUE, 5),
-                Arguments.of(NUMBER_1_SMALL, Float.MAX_VALUE, 5)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("floatUnpackedSource")
-    void floatUnpackedSize(int number, List<Float> values, int expectedSize) {
-        // when then
-        assertThat(Size.float_Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> floatUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1f), 5),
-                Arguments.of(NUMBER_1_BIG, List.of(1f), 5),
-                Arguments.of(NUMBER_2_SMALL, List.of(1f), 6),
-                Arguments.of(NUMBER_2_BIG, List.of(1f), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Float.MIN_VALUE), 5),
-                Arguments.of(NUMBER_1_SMALL, List.of(Float.MAX_VALUE), 5),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1f, 2f, -1f, 0f), 20),
-                Arguments.of(NUMBER_1_BIG, List.of(1f, 2f, -1f, 0f), 20),
-                Arguments.of(NUMBER_2_SMALL, List.of(1f, 2f, -1f, 0f), 24),
-                Arguments.of(NUMBER_2_BIG, List.of(1f, 2f, -1f, 0f), 24)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("int32Source")
-    void int32Size(int number, int value, int expectedSize) {
-        // when then
-        assertThat(Size.int32(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> int32Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0, 0),
-                Arguments.of(NUMBER_2_BIG, 0, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1, 2),
-                Arguments.of(NUMBER_1_BIG, 1, 2),
-                Arguments.of(NUMBER_2_SMALL, 1, 3),
-                Arguments.of(NUMBER_2_BIG, 1, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 127, 2),
-                Arguments.of(NUMBER_1_SMALL, 128, 3),
-                Arguments.of(NUMBER_1_SMALL, 16383, 3),
-                Arguments.of(NUMBER_1_SMALL, 16384, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097151, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097152, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6),
-                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11),
-                Arguments.of(NUMBER_1_SMALL, -1, 11)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("int32UnpackedSource")
-    void int32UnpackedSize(int number, List<Integer> values, int expectedSize) {
-        // when then
-        assertThat(Size.int32Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> int32UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1, 128, -1, 0), 18),
-                Arguments.of(NUMBER_1_BIG, List.of(1, 128, -1, 0), 18),
-                Arguments.of(NUMBER_2_SMALL, List.of(1, 128, -1, 0), 22),
-                Arguments.of(NUMBER_2_BIG, List.of(1, 128, -1, 0), 22)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("int64Source")
-    void int64Size(int number, long value, int expectedSize) {
-        // when then
-        assertThat(Size.int64(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> int64Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0L, 0),
-                Arguments.of(NUMBER_2_BIG, 0L, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1L, 2),
-                Arguments.of(NUMBER_1_BIG, 1L, 2),
-                Arguments.of(NUMBER_2_SMALL, 1L, 3),
-                Arguments.of(NUMBER_2_BIG, 1L, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 127L, 2),
-                Arguments.of(NUMBER_1_SMALL, 128L, 3),
-                Arguments.of(NUMBER_1_SMALL, 16383L, 3),
-                Arguments.of(NUMBER_1_SMALL, 16384L, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
-                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10),
-                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11),
-                Arguments.of(NUMBER_1_SMALL, -1L, 11)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("int64UnpackedSource")
-    void int64UnpackedSize(int number, List<Long> values, int expectedSize) {
-        // when then
-        assertThat(Size.int64Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> int64UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, -1L, 0L), 18),
-                Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, -1L, 0L), 18),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, -1L, 0L), 22),
-                Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, -1L, 0L), 22)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("uint32Source")
-    void uint32Size(int number, int value, int expectedSize) {
-        // when then
-        assertThat(Size.uint32(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> uint32Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0, 0),
-                Arguments.of(NUMBER_2_BIG, 0, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1, 2),
-                Arguments.of(NUMBER_1_BIG, 1, 2),
-                Arguments.of(NUMBER_2_SMALL, 1, 3),
-                Arguments.of(NUMBER_2_BIG, 1, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 127, 2),
-                Arguments.of(NUMBER_1_SMALL, 128, 3),
-                Arguments.of(NUMBER_1_SMALL, 16383, 3),
-                Arguments.of(NUMBER_1_SMALL, 16384, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097151, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097152, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("uint32UnpackedSource")
-    void uint32UnpackedSize(int number, List<Integer> values, int expectedSize) {
-        // when then
-        assertThat(Size.uint32Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> uint32UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1, 128, 0), 7),
-                Arguments.of(NUMBER_1_BIG, List.of(1, 128, 0), 7),
-                Arguments.of(NUMBER_2_SMALL, List.of(1, 128, 0), 10),
-                Arguments.of(NUMBER_2_BIG, List.of(1, 128, 0), 10)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("uint64Source")
-    void uint64Size(int number, long value, int expectedSize) {
-        // when then
-        assertThat(Size.uint64(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> uint64Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0L, 0),
-                Arguments.of(NUMBER_2_BIG, 0L, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1L, 2),
-                Arguments.of(NUMBER_1_BIG, 1L, 2),
-                Arguments.of(NUMBER_2_SMALL, 1L, 3),
-                Arguments.of(NUMBER_2_BIG, 1L, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 127L, 2),
-                Arguments.of(NUMBER_1_SMALL, 128L, 3),
-                Arguments.of(NUMBER_1_SMALL, 16383L, 3),
-                Arguments.of(NUMBER_1_SMALL, 16384L, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
-                Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
-                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("uint64UnpackedSource")
-    void uint64UnpackedSize(int number, List<Long> values, int expectedSize) {
-        // when then
-        assertThat(Size.uint64Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> uint64UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, 0L), 7),
-                Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, 0L), 7),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, 0L), 10),
-                Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, 0L), 10)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sint32Source")
-    void sint32Size(int number, int value, int expectedSize) {
-        // when then
-        assertThat(Size.sint32(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sint32Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0, 0),
-                Arguments.of(NUMBER_2_BIG, 0, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1, 2),
-                Arguments.of(NUMBER_1_BIG, 1, 2),
-                Arguments.of(NUMBER_2_SMALL, 1, 3),
-                Arguments.of(NUMBER_2_BIG, 1, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 63, 2),
-                Arguments.of(NUMBER_1_SMALL, 64, 3),
-                Arguments.of(NUMBER_1_SMALL, 8191, 3),
-                Arguments.of(NUMBER_1_SMALL, 8192, 4),
-                Arguments.of(NUMBER_1_SMALL, 1048575, 4),
-                Arguments.of(NUMBER_1_SMALL, 1048576, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 11),
-                Arguments.of(NUMBER_1_SMALL, -64, 2),
-                Arguments.of(NUMBER_1_SMALL, -65, 3),
-                Arguments.of(NUMBER_1_SMALL, -8192, 3),
-                Arguments.of(NUMBER_1_SMALL, -8193, 4),
-                Arguments.of(NUMBER_1_SMALL, -1048576, 4),
-                Arguments.of(NUMBER_1_SMALL, -1048577, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sint32UnpackedSource")
-    void sint32UnpackedSize(int number, List<Integer> values, int expectedSize) {
-        // when then
-        assertThat(Size.sint32Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sint32UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 11),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1, 64, -8193, 0), 11),
-                Arguments.of(NUMBER_1_BIG, List.of(1, 64, -8193, 0), 11),
-                Arguments.of(NUMBER_2_SMALL, List.of(1, 64, -8193, 0), 15),
-                Arguments.of(NUMBER_2_BIG, List.of(1, 64, -8193, 0), 15)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sint64Source")
-    void sint64Size(int number, long value, int expectedSize) {
-        // when then
-        assertThat(Size.sint64(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sint64Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0L, 0),
-                Arguments.of(NUMBER_2_BIG, 0L, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1L, 2),
-                Arguments.of(NUMBER_1_BIG, 1L, 2),
-                Arguments.of(NUMBER_2_SMALL, 1L, 3),
-                Arguments.of(NUMBER_2_BIG, 1L, 3),
-
-                Arguments.of(NUMBER_1_SMALL, 63L, 2),
-                Arguments.of(NUMBER_1_SMALL, 64L, 3),
-                Arguments.of(NUMBER_1_SMALL, 8191L, 3),
-                Arguments.of(NUMBER_1_SMALL, 8192L, 4),
-                Arguments.of(NUMBER_1_SMALL, 1048575L, 4),
-                Arguments.of(NUMBER_1_SMALL, 1048576L, 5),
-                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 11),
-                Arguments.of(NUMBER_1_SMALL, -64L, 2),
-                Arguments.of(NUMBER_1_SMALL, -65L, 3),
-                Arguments.of(NUMBER_1_SMALL, -8192L, 3),
-                Arguments.of(NUMBER_1_SMALL, -8193L, 4),
-                Arguments.of(NUMBER_1_SMALL, -1048576L, 4),
-                Arguments.of(NUMBER_1_SMALL, -1048577L, 5),
-                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sint64UnpackedSource")
-    void sint64UnpackedSize(int number, List<Long> values, int expectedSize) {
-        // when then
-        assertThat(Size.sint64Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sint64UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 11),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L, 64L, -8193L, 0L), 11),
-                Arguments.of(NUMBER_1_BIG, List.of(1L, 64L, -8193L, 0L), 11),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L, 64L, -8193L, 0L), 15),
-                Arguments.of(NUMBER_2_BIG, List.of(1L, 64L, -8193L, 0L), 15)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("fixed32Source")
-    void fixed32Size(int number, int value, int expectedSize) {
-        // when then
-        assertThat(Size.fixed32(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> fixed32Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0, 0),
-                Arguments.of(NUMBER_2_BIG, 0, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1, 5),
-                Arguments.of(NUMBER_1_BIG, 1, 5),
-                Arguments.of(NUMBER_2_SMALL, 1, 6),
-                Arguments.of(NUMBER_2_BIG, 1, 6),
-
-                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 5)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("fixed32UnpackedSource")
-    void fixed32UnpackedSize(int number, List<Integer> values, int expectedSize) {
-        // when then
-        assertThat(Size.fixed32Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> fixed32UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1), 5),
-                Arguments.of(NUMBER_1_BIG, List.of(1), 5),
-                Arguments.of(NUMBER_2_SMALL, List.of(1), 6),
-                Arguments.of(NUMBER_2_BIG, List.of(1), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 5),
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 5),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 20),
-                Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 20),
-                Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 24),
-                Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 24)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("fixed64Source")
-    void fixed64Size(int number, long value, int expectedSize) {
-        // when then
-        assertThat(Size.fixed64(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> fixed64Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0L, 0),
-                Arguments.of(NUMBER_2_BIG, 0L, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1L, 9),
-                Arguments.of(NUMBER_1_BIG, 1L, 9),
-                Arguments.of(NUMBER_2_SMALL, 1L, 10),
-                Arguments.of(NUMBER_2_BIG, 1L, 10),
-
-                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 9),
-                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 9)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("fixed64UnpackedSource")
-    void fixed64UnpackedSize(int number, List<Long> values, int expectedSize) {
-        // when then
-        assertThat(Size.fixed64Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> fixed64UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L), 9),
-                Arguments.of(NUMBER_1_BIG, List.of(1L), 9),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L), 10),
-                Arguments.of(NUMBER_2_BIG, List.of(1L), 10),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 9),
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 9),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 36),
-                Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 36),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 40),
-                Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 40)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sfixed32Source")
-    void sfixed32Size(int number, int value, int expectedSize) {
-        // when then
-        assertThat(Size.sfixed32(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sfixed32Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0, 0),
-                Arguments.of(NUMBER_2_BIG, 0, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1, 5),
-                Arguments.of(NUMBER_1_BIG, 1, 5),
-                Arguments.of(NUMBER_2_SMALL, 1, 6),
-                Arguments.of(NUMBER_2_BIG, 1, 6),
-
-                Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 5),
-                Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 5)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sfixed32UnpackedSource")
-    void sfixed32UnpackedSize(int number, List<Integer> values, int expectedSize) {
-        // when then
-        assertThat(Size.sfixed32Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sfixed32UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1), 5),
-                Arguments.of(NUMBER_1_BIG, List.of(1), 5),
-                Arguments.of(NUMBER_2_SMALL, List.of(1), 6),
-                Arguments.of(NUMBER_2_BIG, List.of(1), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 5),
-                Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 5),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 20),
-                Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 20),
-                Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 24),
-                Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 24)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sfixed64Source")
-    void sfixed64Size(int number, long value, int expectedSize) {
-        // when then
-        assertThat(Size.sfixed64(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sfixed64Source() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, 0L, 0),
-                Arguments.of(NUMBER_2_BIG, 0L, 0),
-
-                Arguments.of(NUMBER_1_SMALL, 1L, 9),
-                Arguments.of(NUMBER_1_BIG, 1L, 9),
-                Arguments.of(NUMBER_2_SMALL, 1L, 10),
-                Arguments.of(NUMBER_2_BIG, 1L, 10),
-
-                Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 9),
-                Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 9)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("sfixed64UnpackedSource")
-    void sfixed64UnpackedSize(int number, List<Long> values, int expectedSize) {
-        // when then
-        assertThat(Size.sfixed64Unpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> sfixed64UnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L), 9),
-                Arguments.of(NUMBER_1_BIG, List.of(1L), 9),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L), 10),
-                Arguments.of(NUMBER_2_BIG, List.of(1L), 10),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 9),
-                Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 9),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 36),
-                Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 36),
-                Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 40),
-                Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 40)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("boolSource")
-    void boolSize(int number, boolean value, int expectedSize) {
-        // when then
-        assertThat(Size.bool(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> boolSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, false, 0),
-                Arguments.of(NUMBER_2_BIG, false, 0),
-
-                Arguments.of(NUMBER_1_SMALL, true, 2),
-                Arguments.of(NUMBER_1_BIG, true, 2),
-                Arguments.of(NUMBER_2_SMALL, true, 3),
-                Arguments.of(NUMBER_2_BIG, true, 3)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("boolUnpackedSource")
-    void boolUnpackedSize(int number, List<Boolean> values, int expectedSize) {
-        // when then
-        assertThat(Size.boolUnpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> boolUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(true), 2),
-                Arguments.of(NUMBER_1_BIG, List.of(true), 2),
-                Arguments.of(NUMBER_2_SMALL, List.of(true), 3),
-                Arguments.of(NUMBER_2_BIG, List.of(true), 3),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(true, false, false, true), 8),
-                Arguments.of(NUMBER_1_BIG, List.of(true, false, false, true), 8),
-                Arguments.of(NUMBER_2_SMALL, List.of(true, false, false, true), 12),
-                Arguments.of(NUMBER_2_BIG, List.of(true, false, false, true), 12)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("bytesSource")
-    void bytesSize(int number, ByteArray value, int expectedSize) {
-        // when then
-        assertThat(Size.bytes(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> bytesSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
-                Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
-                Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
-                Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, ba(1), 3),
-                Arguments.of(NUMBER_1_BIG, ba(1), 3),
-                Arguments.of(NUMBER_2_SMALL, ba(1), 4),
-                Arguments.of(NUMBER_2_BIG, ba(1), 4),
-
-                Arguments.of(NUMBER_1_SMALL, ba(1, 2, 3, 4, 5, 6), 8)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("bytesUnpackedSource")
-    void bytesUnpackedSize(int number, List<ByteArray> values, int expectedSize) {
-        // when then
-        assertThat(Size.bytesUnpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> bytesUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(ba(1)), 3),
-                Arguments.of(NUMBER_1_BIG, List.of(ba(1)), 3),
-                Arguments.of(NUMBER_2_SMALL, List.of(ba(1)), 4),
-                Arguments.of(NUMBER_2_BIG, List.of(ba(1)), 4),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(ba(1, 2, 3, 4)), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
-                Arguments.of(NUMBER_1_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
-                Arguments.of(NUMBER_2_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17),
-                Arguments.of(NUMBER_2_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("stringSource")
-    void stringSize(int number, String value, int expectedSize) {
-        // when then
-        assertThat(Size.string(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> stringSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, "", 0),
-                Arguments.of(NUMBER_2_BIG, "", 0),
-                Arguments.of(NUMBER_1_SMALL, "", 0),
-                Arguments.of(NUMBER_2_BIG, "", 0),
-
-                Arguments.of(NUMBER_1_SMALL, "a", 3),
-                Arguments.of(NUMBER_1_BIG, "a", 3),
-                Arguments.of(NUMBER_2_SMALL, "a", 4),
-                Arguments.of(NUMBER_2_BIG, "a", 4),
-
-                Arguments.of(NUMBER_1_SMALL, "test12", 8),
-                Arguments.of(NUMBER_1_SMALL, "testąę", 16)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("stringUnpackedSource")
-    void stringUnpackedSize(int number, List<String> values, int expectedSize) {
-        // when then
-        assertThat(Size.stringUnpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> stringUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of("a"), 3),
-                Arguments.of(NUMBER_1_BIG, List.of("a"), 3),
-                Arguments.of(NUMBER_2_SMALL, List.of("a"), 4),
-                Arguments.of(NUMBER_2_BIG, List.of("a"), 4),
-
-                Arguments.of(NUMBER_1_SMALL, List.of("test"), 6),
-                Arguments.of(NUMBER_1_SMALL, List.of("testść"), 16),
-
-                Arguments.of(NUMBER_1_SMALL, List.of("a", "b", "", "foo"), 13),
-                Arguments.of(NUMBER_1_BIG, List.of("a", "b", "", "foo"), 13),
-                Arguments.of(NUMBER_2_SMALL, List.of("a", "b", "", "foo"), 17),
-                Arguments.of(NUMBER_2_BIG, List.of("a", "b", "", "foo"), 17)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("messageSource")
-    void messageSize(int number, TestMessage value, int expectedSize) {
-        // when then
-        assertThat(Size.message(number, value)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> messageSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, null, 0),
-                Arguments.of(NUMBER_2_BIG, null, 0),
-                Arguments.of(NUMBER_1_SMALL, null, 0),
-                Arguments.of(NUMBER_2_BIG, null, 0),
-
-                Arguments.of(NUMBER_1_SMALL, message(1), 3),
-                Arguments.of(NUMBER_1_BIG, message(1), 3),
-                Arguments.of(NUMBER_2_SMALL, message(1), 4),
-                Arguments.of(NUMBER_2_BIG, message(1), 4),
-
-                Arguments.of(NUMBER_1_SMALL, message(6), 8),
-                Arguments.of(NUMBER_1_SMALL, message(127), 129),
-                Arguments.of(NUMBER_1_SMALL, message(128), 131)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("messageUnpackedSource")
-    void messageUnpackedSize(int number, List<TestMessage> values, int expectedSize) {
-        // when then
-        assertThat(Size.messageUnpacked(number, values)).isEqualTo(expectedSize);
-    }
-
-    private static Stream<Arguments> messageUnpackedSource() {
-        return Stream.of(
-                Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                Arguments.of(NUMBER_2_BIG, List.of(), 0),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(message(1)), 3),
-                Arguments.of(NUMBER_1_BIG, List.of(message(1)), 3),
-                Arguments.of(NUMBER_2_SMALL, List.of(message(1)), 4),
-                Arguments.of(NUMBER_2_BIG, List.of(message(1)), 4),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(message(4)), 6),
-
-                Arguments.of(NUMBER_1_SMALL, List.of(message(1), message(1), message(0), message(3)), 13),
-                Arguments.of(NUMBER_1_BIG, List.of(message(1), message(1), message(0), message(3)), 13),
-                Arguments.of(NUMBER_2_SMALL, List.of(message(1), message(1), message(0), message(3)), 17),
-                Arguments.of(NUMBER_2_BIG, List.of(message(1), message(1), message(0), message(3)), 17)
-        );
-    }
-
-    public static ProtobufMessage<?> message(int size) {
-        return new TestMessage(size);
-    }
-
-    private record TestMessage(int size) implements ProtobufMessage<TestMessage> {
-        @Override
-        public void writeTo(OutputStream output) {
+    @Nested
+    class Doubles {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, double value, int expectedSize) {
+            // when then
+            assertThat(Size.double_(number, value)).isEqualTo(expectedSize);
         }
 
-        @Override
-        public void writeTo(ProtobufWriter writer) {
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0d, 0),
+                    Arguments.of(NUMBER_2_BIG, 0d, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1d, 9),
+                    Arguments.of(NUMBER_1_BIG, 1d, 9),
+                    Arguments.of(NUMBER_2_SMALL, 1d, 10),
+                    Arguments.of(NUMBER_2_BIG, 1d, 10),
+
+                    Arguments.of(NUMBER_1_SMALL, Double.MIN_VALUE, 9),
+                    Arguments.of(NUMBER_1_SMALL, Double.MAX_VALUE, 9)
+            );
         }
 
-        @Override
-        public byte[] toByteArray() {
-            return new byte[0];
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Double> values, int expectedSize) {
+            // when then
+            assertThat(Size.double_Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
-        @Override
-        public boolean isEmpty() {
-            return false;
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1d), 9),
+                    Arguments.of(NUMBER_1_BIG, List.of(1d), 9),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1d), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1d), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Double.MIN_VALUE), 9),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Double.MAX_VALUE), 9),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1d, 2d, -1d, 0d), 36),
+                    Arguments.of(NUMBER_1_BIG, List.of(1d, 2d, -1d, 0d), 36),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1d, 2d, -1d, 0d), 40),
+                    Arguments.of(NUMBER_2_BIG, List.of(1d, 2d, -1d, 0d), 40)
+            );
         }
 
-        @Override
-        public TestMessage merge(TestMessage toMerge) {
-            return null;
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Double> values, int expectedSize) {
+            // when then
+            assertThat(Size.double_Packed(number, values)).isEqualTo(expectedSize);
         }
 
-        @Override
-        public int protobufSize() {
-            return size;
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1d), 10),
+                    Arguments.of(NUMBER_1_BIG, List.of(1d), 10),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1d), 11),
+                    Arguments.of(NUMBER_2_BIG, List.of(1d), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Double.MIN_VALUE), 10),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Double.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1d, 2d, -1d, 0d), 34),
+                    Arguments.of(NUMBER_1_BIG, List.of(1d, 2d, -1d, 0d), 34),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1d, 2d, -1d, 0d), 35),
+                    Arguments.of(NUMBER_2_BIG, List.of(1d, 2d, -1d, 0d), 35)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Double> values, int expectedSize) {
+            // when then
+            assertThat(Size.double_Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1d), 8),
+                    Arguments.of(List.of(Double.MIN_VALUE), 8),
+                    Arguments.of(List.of(Double.MAX_VALUE), 8),
+
+                    Arguments.of(List.of(1d, 2d, -1d, 0d), 32)
+            );
+        }
+    }
+
+    @Nested
+    class Floats {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, float value, int expectedSize) {
+            // when then
+            assertThat(Size.float_(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0f, 0),
+                    Arguments.of(NUMBER_2_BIG, 0f, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1f, 5),
+                    Arguments.of(NUMBER_1_BIG, 1f, 5),
+                    Arguments.of(NUMBER_2_SMALL, 1f, 6),
+                    Arguments.of(NUMBER_2_BIG, 1f, 6),
+
+                    Arguments.of(NUMBER_1_SMALL, Float.MIN_VALUE, 5),
+                    Arguments.of(NUMBER_1_SMALL, Float.MAX_VALUE, 5)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Float> values, int expectedSize) {
+            // when then
+            assertThat(Size.float_Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1f), 5),
+                    Arguments.of(NUMBER_1_BIG, List.of(1f), 5),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1f), 6),
+                    Arguments.of(NUMBER_2_BIG, List.of(1f), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Float.MIN_VALUE), 5),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Float.MAX_VALUE), 5),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1f, 2f, -1f, 0f), 20),
+                    Arguments.of(NUMBER_1_BIG, List.of(1f, 2f, -1f, 0f), 20),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1f, 2f, -1f, 0f), 24),
+                    Arguments.of(NUMBER_2_BIG, List.of(1f, 2f, -1f, 0f), 24)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Float> values, int expectedSize) {
+            // when then
+            assertThat(Size.float_Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1f), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(1f), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1f), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(1f), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Float.MIN_VALUE), 6),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Float.MAX_VALUE), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1f, 2f, -1f, 0f), 18),
+                    Arguments.of(NUMBER_1_BIG, List.of(1f, 2f, -1f, 0f), 18),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1f, 2f, -1f, 0f), 19),
+                    Arguments.of(NUMBER_2_BIG, List.of(1f, 2f, -1f, 0f), 19)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Float> values, int expectedSize) {
+            // when then
+            assertThat(Size.float_Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1f), 4),
+                    Arguments.of(List.of(Float.MIN_VALUE), 4),
+                    Arguments.of(List.of(Float.MAX_VALUE), 4),
+
+                    Arguments.of(List.of(1f, 2f, -1f, 0f), 16)
+            );
+        }
+    }
+
+    @Nested
+    class Int32 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, int value, int expectedSize) {
+            // when then
+            assertThat(Size.int32(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0, 0),
+                    Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1, 2),
+                    Arguments.of(NUMBER_1_BIG, 1, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1, 3),
+                    Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 127, 2),
+                    Arguments.of(NUMBER_1_SMALL, 128, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16383, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16384, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097151, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097152, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11),
+                    Arguments.of(NUMBER_1_SMALL, -1, 11)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.int32Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 128, -1, 0), 18),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 128, -1, 0), 18),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 128, -1, 0), 22),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 128, -1, 0), 22)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.int32Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 12),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 128, -1, 0), 16),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 128, -1, 0), 16),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 128, -1, 0), 17),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 128, -1, 0), 17)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.int32Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1), 1),
+                    Arguments.of(List.of(Integer.MIN_VALUE), 10),
+                    Arguments.of(List.of(Integer.MAX_VALUE), 5),
+
+                    Arguments.of(List.of(1, 128, -1, 0), 14)
+            );
+        }
+    }
+
+    @Nested
+    class Int64 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, long value, int expectedSize) {
+            // when then
+            assertThat(Size.int64(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                    Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                    Arguments.of(NUMBER_1_BIG, 1L, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                    Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 127L, 2),
+                    Arguments.of(NUMBER_1_SMALL, 128L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16383L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16384L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
+                    Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10),
+                    Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11),
+                    Arguments.of(NUMBER_1_SMALL, -1L, 11)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.int64Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, -1L, 0L), 18),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, -1L, 0L), 18),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, -1L, 0L), 22),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, -1L, 0L), 22)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.int64Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 12),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, -1L, 0L), 16),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, -1L, 0L), 16),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, -1L, 0L), 17),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, -1L, 0L), 17)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.int64Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1L), 1),
+                    Arguments.of(List.of(Long.MIN_VALUE), 10),
+                    Arguments.of(List.of(Long.MAX_VALUE), 9),
+
+                    Arguments.of(List.of(1L, 128L, -1L, 0L), 14)
+            );
+        }
+    }
+
+    @Nested
+    class UInt32 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, int value, int expectedSize) {
+            // when then
+            assertThat(Size.uint32(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0, 0),
+                    Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1, 2),
+                    Arguments.of(NUMBER_1_BIG, 1, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1, 3),
+                    Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 127, 2),
+                    Arguments.of(NUMBER_1_SMALL, 128, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16383, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16384, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097151, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097152, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 6)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint32Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 128, 0), 7),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 128, 0), 7),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 128, 0), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 128, 0), 10)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint32Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 128, 0), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 128, 0), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 128, 0), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 128, 0), 7)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint32Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1), 1),
+                    Arguments.of(List.of(Integer.MAX_VALUE), 5),
+
+                    Arguments.of(List.of(1, 128, 0), 4)
+            );
+        }
+    }
+
+    @Nested
+    class UInt64 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, long value, int expectedSize) {
+            // when then
+            assertThat(Size.uint64(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                    Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                    Arguments.of(NUMBER_1_BIG, 1L, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                    Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 127L, 2),
+                    Arguments.of(NUMBER_1_SMALL, 128L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16383L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 16384L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097151L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 2097152L, 5),
+                    Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 10)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint64Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, 0L), 7),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, 0L), 7),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, 0L), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, 0L), 10)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint64Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 128L, 0L), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 128L, 0L), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 128L, 0L), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 128L, 0L), 7)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.uint64Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1L), 1),
+                    Arguments.of(List.of(Long.MAX_VALUE), 9),
+
+                    Arguments.of(List.of(1L, 128L, 0L), 4)
+            );
+        }
+    }
+
+    @Nested
+    class SInt32 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, int value, int expectedSize) {
+            // when then
+            assertThat(Size.sint32(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0, 0),
+                    Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1, 2),
+                    Arguments.of(NUMBER_1_BIG, 1, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1, 3),
+                    Arguments.of(NUMBER_2_BIG, 1, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 63, 2),
+                    Arguments.of(NUMBER_1_SMALL, 64, 3),
+                    Arguments.of(NUMBER_1_SMALL, 8191, 3),
+                    Arguments.of(NUMBER_1_SMALL, 8192, 4),
+                    Arguments.of(NUMBER_1_SMALL, 1048575, 4),
+                    Arguments.of(NUMBER_1_SMALL, 1048576, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 11),
+                    Arguments.of(NUMBER_1_SMALL, -64, 2),
+                    Arguments.of(NUMBER_1_SMALL, -65, 3),
+                    Arguments.of(NUMBER_1_SMALL, -8192, 3),
+                    Arguments.of(NUMBER_1_SMALL, -8193, 4),
+                    Arguments.of(NUMBER_1_SMALL, -1048576, 4),
+                    Arguments.of(NUMBER_1_SMALL, -1048577, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 11)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint32Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 11),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 64, -8193, 0), 11),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 64, -8193, 0), 11),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 64, -8193, 0), 15),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 64, -8193, 0), 15)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint32Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 12),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 12),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 64, -8193, 0), 9),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 64, -8193, 0), 9),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 64, -8193, 0), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 64, -8193, 0), 10)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint32Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1), 1),
+                    Arguments.of(List.of(Integer.MIN_VALUE), 10),
+                    Arguments.of(List.of(Integer.MAX_VALUE), 10),
+
+                    Arguments.of(List.of(1, 64, -8193, 0), 7)
+            );
+        }
+    }
+
+    @Nested
+    class SInt64 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, long value, int expectedSize) {
+            // when then
+            assertThat(Size.sint64(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                    Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1L, 2),
+                    Arguments.of(NUMBER_1_BIG, 1L, 2),
+                    Arguments.of(NUMBER_2_SMALL, 1L, 3),
+                    Arguments.of(NUMBER_2_BIG, 1L, 3),
+
+                    Arguments.of(NUMBER_1_SMALL, 63L, 2),
+                    Arguments.of(NUMBER_1_SMALL, 64L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 8191L, 3),
+                    Arguments.of(NUMBER_1_SMALL, 8192L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 1048575L, 4),
+                    Arguments.of(NUMBER_1_SMALL, 1048576L, 5),
+                    Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 11),
+                    Arguments.of(NUMBER_1_SMALL, -64L, 2),
+                    Arguments.of(NUMBER_1_SMALL, -65L, 3),
+                    Arguments.of(NUMBER_1_SMALL, -8192L, 3),
+                    Arguments.of(NUMBER_1_SMALL, -8193L, 4),
+                    Arguments.of(NUMBER_1_SMALL, -1048576L, 4),
+                    Arguments.of(NUMBER_1_SMALL, -1048577L, 5),
+                    Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 11)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint64Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 11),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 64L, -8193L, 0L), 11),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 64L, -8193L, 0L), 11),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 64L, -8193L, 0L), 15),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 64L, -8193L, 0L), 15)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint64Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 12),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 12),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 64L, -8193L, 0L), 9),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 64L, -8193L, 0L), 9),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 64L, -8193L, 0L), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 64L, -8193L, 0L), 10)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sint64Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1L), 1),
+                    Arguments.of(List.of(Long.MIN_VALUE), 10),
+                    Arguments.of(List.of(Long.MAX_VALUE), 10),
+
+                    Arguments.of(List.of(1L, 64L, -8193L, 0L), 7)
+            );
+        }
+    }
+
+    @Nested
+    class Fixed32 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, int value, int expectedSize) {
+            // when then
+            assertThat(Size.fixed32(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0, 0),
+                    Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1, 5),
+                    Arguments.of(NUMBER_1_BIG, 1, 5),
+                    Arguments.of(NUMBER_2_SMALL, 1, 6),
+                    Arguments.of(NUMBER_2_BIG, 1, 6),
+
+                    Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 5)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed32Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 5),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 5),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 6),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 5),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 5),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 20),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 20),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 24),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 24)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed32Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 6),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 18),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 18),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 19),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 19)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed32Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1), 4),
+                    Arguments.of(List.of(Integer.MIN_VALUE), 4),
+                    Arguments.of(List.of(Integer.MAX_VALUE), 4),
+
+                    Arguments.of(List.of(1, 2, -1, 0), 16)
+            );
+        }
+    }
+
+    @Nested
+    class Fixed64 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, long value, int expectedSize) {
+            // when then
+            assertThat(Size.fixed64(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                    Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1L, 9),
+                    Arguments.of(NUMBER_1_BIG, 1L, 9),
+                    Arguments.of(NUMBER_2_SMALL, 1L, 10),
+                    Arguments.of(NUMBER_2_BIG, 1L, 10),
+
+                    Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 9),
+                    Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 9)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed64Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 9),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 9),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 9),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 9),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 36),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 36),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 40),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 40)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed64Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 10),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 10),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 11),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 10),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 34),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 34),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 35),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 35)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.fixed64Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1L), 8),
+                    Arguments.of(List.of(Long.MIN_VALUE), 8),
+                    Arguments.of(List.of(Long.MAX_VALUE), 8),
+
+                    Arguments.of(List.of(1L, 2L, -1L, 0L), 32)
+            );
+        }
+    }
+
+    @Nested
+    class SFixed32 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, int value, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed32(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0, 0),
+                    Arguments.of(NUMBER_2_BIG, 0, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1, 5),
+                    Arguments.of(NUMBER_1_BIG, 1, 5),
+                    Arguments.of(NUMBER_2_SMALL, 1, 6),
+                    Arguments.of(NUMBER_2_BIG, 1, 6),
+
+                    Arguments.of(NUMBER_1_SMALL, Integer.MIN_VALUE, 5),
+                    Arguments.of(NUMBER_1_SMALL, Integer.MAX_VALUE, 5)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed32Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 5),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 5),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 6),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 5),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 5),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 20),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 20),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 24),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 24)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed32Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(1), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(1), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MIN_VALUE), 6),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Integer.MAX_VALUE), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1, 2, -1, 0), 18),
+                    Arguments.of(NUMBER_1_BIG, List.of(1, 2, -1, 0), 18),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1, 2, -1, 0), 19),
+                    Arguments.of(NUMBER_2_BIG, List.of(1, 2, -1, 0), 19)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Integer> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed32Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1), 4),
+                    Arguments.of(List.of(Integer.MIN_VALUE), 4),
+                    Arguments.of(List.of(Integer.MAX_VALUE), 4),
+
+                    Arguments.of(List.of(1, 2, -1, 0), 16)
+            );
+        }
+    }
+
+    @Nested
+    class SFixed64 {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, long value, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed64(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0L, 0),
+                    Arguments.of(NUMBER_2_BIG, 0L, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1L, 9),
+                    Arguments.of(NUMBER_1_BIG, 1L, 9),
+                    Arguments.of(NUMBER_2_SMALL, 1L, 10),
+                    Arguments.of(NUMBER_2_BIG, 1L, 10),
+
+                    Arguments.of(NUMBER_1_SMALL, Long.MIN_VALUE, 9),
+                    Arguments.of(NUMBER_1_SMALL, Long.MAX_VALUE, 9)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed64Unpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 9),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 9),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 10),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 9),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 9),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 36),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 36),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 40),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 40)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed64Packed(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L), 10),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L), 10),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L), 11),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MIN_VALUE), 10),
+                    Arguments.of(NUMBER_1_SMALL, List.of(Long.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(1L, 2L, -1L, 0L), 34),
+                    Arguments.of(NUMBER_1_BIG, List.of(1L, 2L, -1L, 0L), 34),
+                    Arguments.of(NUMBER_2_SMALL, List.of(1L, 2L, -1L, 0L), 35),
+                    Arguments.of(NUMBER_2_BIG, List.of(1L, 2L, -1L, 0L), 35)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Long> values, int expectedSize) {
+            // when then
+            assertThat(Size.sfixed64Packed(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(1L), 8),
+                    Arguments.of(List.of(Long.MIN_VALUE), 8),
+                    Arguments.of(List.of(Long.MAX_VALUE), 8),
+
+                    Arguments.of(List.of(1L, 2L, -1L, 0L), 32)
+            );
+        }
+    }
+
+    @Nested
+    class Bool {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, boolean value, int expectedSize) {
+            // when then
+            assertThat(Size.bool(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, false, 0),
+                    Arguments.of(NUMBER_2_BIG, false, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, true, 2),
+                    Arguments.of(NUMBER_1_BIG, true, 2),
+                    Arguments.of(NUMBER_2_SMALL, true, 3),
+                    Arguments.of(NUMBER_2_BIG, true, 3)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<Boolean> values, int expectedSize) {
+            // when then
+            assertThat(Size.boolUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(true), 2),
+                    Arguments.of(NUMBER_1_BIG, List.of(true), 2),
+                    Arguments.of(NUMBER_2_SMALL, List.of(true), 3),
+                    Arguments.of(NUMBER_2_BIG, List.of(true), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(true, false, false, true), 8),
+                    Arguments.of(NUMBER_1_BIG, List.of(true, false, false, true), 8),
+                    Arguments.of(NUMBER_2_SMALL, List.of(true, false, false, true), 12),
+                    Arguments.of(NUMBER_2_BIG, List.of(true, false, false, true), 12)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, List<Boolean> values, int expectedSize) {
+            // when then
+            assertThat(Size.boolPacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(true), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(true), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(true), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(true), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(true, false, false, true), 6),
+                    Arguments.of(NUMBER_1_BIG, List.of(true, false, false, true), 6),
+                    Arguments.of(NUMBER_2_SMALL, List.of(true, false, false, true), 7),
+                    Arguments.of(NUMBER_2_BIG, List.of(true, false, false, true), 7)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(List<Boolean> values, int expectedSize) {
+            // when then
+            assertThat(Size.boolPacked(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(List.of(), 0),
+
+                    Arguments.of(List.of(true), 1),
+
+                    Arguments.of(List.of(true, false, false, true), 4)
+            );
+        }
+    }
+
+    @Nested
+    class Bytes {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, ByteArray value, int expectedSize) {
+            // when then
+            assertThat(Size.bytes(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
+                    Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
+                    Arguments.of(NUMBER_1_SMALL, ByteArray.empty(), 0),
+                    Arguments.of(NUMBER_2_BIG, ByteArray.empty(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, ba(1), 3),
+                    Arguments.of(NUMBER_1_BIG, ba(1), 3),
+                    Arguments.of(NUMBER_2_SMALL, ba(1), 4),
+                    Arguments.of(NUMBER_2_BIG, ba(1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, ba(1, 2, 3, 4, 5, 6), 8)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<ByteArray> values, int expectedSize) {
+            // when then
+            assertThat(Size.bytesUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1)), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(ba(1)), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(ba(1)), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(ba(1)), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1, 2, 3, 4)), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
+                    Arguments.of(NUMBER_1_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
+                    Arguments.of(NUMBER_2_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17),
+                    Arguments.of(NUMBER_2_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17)
+            );
+        }
+    }
+
+    @Nested
+    class Strings {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, String value, int expectedSize) {
+            // when then
+            assertThat(Size.string(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, "", 0),
+                    Arguments.of(NUMBER_2_BIG, "", 0),
+                    Arguments.of(NUMBER_1_SMALL, "", 0),
+                    Arguments.of(NUMBER_2_BIG, "", 0),
+
+                    Arguments.of(NUMBER_1_SMALL, "a", 3),
+                    Arguments.of(NUMBER_1_BIG, "a", 3),
+                    Arguments.of(NUMBER_2_SMALL, "a", 4),
+                    Arguments.of(NUMBER_2_BIG, "a", 4),
+
+                    Arguments.of(NUMBER_1_SMALL, "test12", 8),
+                    Arguments.of(NUMBER_1_SMALL, "testąę", 16)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<String> values, int expectedSize) {
+            // when then
+            assertThat(Size.stringUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of("a"), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of("a"), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of("a"), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of("a"), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of("test"), 6),
+                    Arguments.of(NUMBER_1_SMALL, List.of("testść"), 16),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of("a", "b", "", "foo"), 13),
+                    Arguments.of(NUMBER_1_BIG, List.of("a", "b", "", "foo"), 13),
+                    Arguments.of(NUMBER_2_SMALL, List.of("a", "b", "", "foo"), 17),
+                    Arguments.of(NUMBER_2_BIG, List.of("a", "b", "", "foo"), 17)
+            );
+        }
+    }
+
+    @Nested
+    class Messages {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, TestMessage value, int expectedSize) {
+            // when then
+            assertThat(Size.message(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, null, 0),
+                    Arguments.of(NUMBER_2_BIG, null, 0),
+                    Arguments.of(NUMBER_1_SMALL, null, 0),
+                    Arguments.of(NUMBER_2_BIG, null, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, message(1), 3),
+                    Arguments.of(NUMBER_1_BIG, message(1), 3),
+                    Arguments.of(NUMBER_2_SMALL, message(1), 4),
+                    Arguments.of(NUMBER_2_BIG, message(1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, message(6), 8),
+                    Arguments.of(NUMBER_1_SMALL, message(127), 129),
+                    Arguments.of(NUMBER_1_SMALL, message(128), 131)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, List<TestMessage> values, int expectedSize) {
+            // when then
+            assertThat(Size.messageUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(message(1)), 3),
+                    Arguments.of(NUMBER_1_BIG, List.of(message(1)), 3),
+                    Arguments.of(NUMBER_2_SMALL, List.of(message(1)), 4),
+                    Arguments.of(NUMBER_2_BIG, List.of(message(1)), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(message(4)), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, List.of(message(1), message(1), message(0), message(3)), 13),
+                    Arguments.of(NUMBER_1_BIG, List.of(message(1), message(1), message(0), message(3)), 13),
+                    Arguments.of(NUMBER_2_SMALL, List.of(message(1), message(1), message(0), message(3)), 17),
+                    Arguments.of(NUMBER_2_BIG, List.of(message(1), message(1), message(0), message(3)), 17)
+            );
+        }
+
+        public static ProtobufMessage<?> message(int size) {
+            return new TestMessage(size);
+        }
+
+        private record TestMessage(int size) implements ProtobufMessage<TestMessage> {
+            @Override
+            public void writeTo(OutputStream output) {
+            }
+
+            @Override
+            public void writeTo(ProtobufWriter writer) {
+            }
+
+            @Override
+            public byte[] toByteArray() {
+                return new byte[0];
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public TestMessage merge(TestMessage toMerge) {
+                return null;
+            }
+
+            @Override
+            public int protobufSize() {
+                return size;
+            }
         }
     }
 }

@@ -6,12 +6,12 @@ import org.openjdk.jmh.infra.Blackhole;
 
 public class ReadScalarTest extends TestBase {
 
-    @Benchmark
+    //@Benchmark
     public void bytes(Blackhole bh, ScalarData data) throws Exception {
         bh.consume(data.algorithm.parseBytes());
     }
 
-    @Benchmark
+    //@Benchmark
     public void stream(Blackhole bh, ScalarData data) throws Exception {
         bh.consume(data.algorithm.parseStream());
     }

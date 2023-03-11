@@ -16,7 +16,7 @@ import static java.util.stream.IntStream.rangeClosed;
 
 @State(Scope.Benchmark)
 public class RepeatableData {
-    @Param({OUR, PROTO})
+    @Param({OUR/*, PROTO*/})
     public String type;
 
     public Algorithm<?> algorithm;
