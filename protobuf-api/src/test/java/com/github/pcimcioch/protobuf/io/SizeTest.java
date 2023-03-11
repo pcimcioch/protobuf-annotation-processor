@@ -27,7 +27,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, double value, int expectedSize) {
             // when then
-            assertThat(Size.double_(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofDouble(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -49,7 +49,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Double> values, int expectedSize) {
             // when then
-            assertThat(Size.double_Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofDoubleUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -76,7 +76,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Double> values, int expectedSize) {
             // when then
-            assertThat(Size.double_Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofDoublePacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -103,7 +103,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Double> values, int expectedSize) {
             // when then
-            assertThat(Size.double_Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofDoublePacked(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -126,7 +126,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, float value, int expectedSize) {
             // when then
-            assertThat(Size.float_(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofFloat(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -148,7 +148,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Float> values, int expectedSize) {
             // when then
-            assertThat(Size.float_Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFloatUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -175,7 +175,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Float> values, int expectedSize) {
             // when then
-            assertThat(Size.float_Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFloatPacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -202,7 +202,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Float> values, int expectedSize) {
             // when then
-            assertThat(Size.float_Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFloatPacked(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -225,7 +225,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, int value, int expectedSize) {
             // when then
-            assertThat(Size.int32(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt32(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -254,7 +254,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.int32Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt32Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -281,7 +281,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.int32Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt32Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -308,7 +308,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.int32Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt32Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -331,7 +331,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, long value, int expectedSize) {
             // when then
-            assertThat(Size.int64(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt64(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -360,7 +360,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.int64Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt64Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -387,7 +387,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.int64Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt64Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -414,7 +414,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.int64Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofInt64Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -437,7 +437,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, int value, int expectedSize) {
             // when then
-            assertThat(Size.uint32(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint32(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -464,7 +464,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.uint32Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint32Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -490,7 +490,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.uint32Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint32Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -516,7 +516,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.uint32Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint32Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -538,7 +538,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, long value, int expectedSize) {
             // when then
-            assertThat(Size.uint64(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint64(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -565,7 +565,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.uint64Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint64Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -591,7 +591,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.uint64Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint64Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -617,7 +617,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.uint64Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofUint64Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -639,7 +639,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, int value, int expectedSize) {
             // when then
-            assertThat(Size.sint32(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint32(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -673,7 +673,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sint32Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint32Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -700,7 +700,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sint32Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint32Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -727,7 +727,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sint32Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint32Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -750,7 +750,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, long value, int expectedSize) {
             // when then
-            assertThat(Size.sint64(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint64(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -784,7 +784,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sint64Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint64Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -811,7 +811,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sint64Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint64Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -838,7 +838,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sint64Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSint64Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -861,7 +861,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, int value, int expectedSize) {
             // when then
-            assertThat(Size.fixed32(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed32(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -883,7 +883,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed32Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed32Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -910,7 +910,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed32Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed32Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -937,7 +937,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed32Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed32Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -960,7 +960,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, long value, int expectedSize) {
             // when then
-            assertThat(Size.fixed64(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed64(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -982,7 +982,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed64Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed64Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1009,7 +1009,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed64Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed64Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -1036,7 +1036,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.fixed64Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofFixed64Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -1059,7 +1059,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, int value, int expectedSize) {
             // when then
-            assertThat(Size.sfixed32(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed32(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1081,7 +1081,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed32Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed32Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1108,7 +1108,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed32Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed32Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -1135,7 +1135,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Integer> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed32Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed32Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -1158,7 +1158,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, long value, int expectedSize) {
             // when then
-            assertThat(Size.sfixed64(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed64(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1180,7 +1180,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed64Unpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed64Unpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1207,7 +1207,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed64Packed(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed64Packed(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -1234,7 +1234,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Long> values, int expectedSize) {
             // when then
-            assertThat(Size.sfixed64Packed(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofSfixed64Packed(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -1257,7 +1257,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, boolean value, int expectedSize) {
             // when then
-            assertThat(Size.bool(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofBool(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1276,7 +1276,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<Boolean> values, int expectedSize) {
             // when then
-            assertThat(Size.boolUnpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofBoolUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1300,7 +1300,7 @@ class SizeTest {
         @MethodSource("packedSource")
         void packedSize(int number, List<Boolean> values, int expectedSize) {
             // when then
-            assertThat(Size.boolPacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofBoolPacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
@@ -1324,7 +1324,7 @@ class SizeTest {
         @MethodSource("packedNoTagSource")
         void packedNoTagSize(List<Boolean> values, int expectedSize) {
             // when then
-            assertThat(Size.boolPacked(values)).isEqualTo(expectedSize);
+            assertThat(Size.ofBoolPacked(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
@@ -1345,7 +1345,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, ByteArray value, int expectedSize) {
             // when then
-            assertThat(Size.bytes(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofBytes(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1368,7 +1368,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<ByteArray> values, int expectedSize) {
             // when then
-            assertThat(Size.bytesUnpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofBytesUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1398,7 +1398,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, String value, int expectedSize) {
             // when then
-            assertThat(Size.string(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofString(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1422,7 +1422,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<String> values, int expectedSize) {
             // when then
-            assertThat(Size.stringUnpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofStringUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
@@ -1453,7 +1453,7 @@ class SizeTest {
         @MethodSource("source")
         void size(int number, TestMessage value, int expectedSize) {
             // when then
-            assertThat(Size.message(number, value)).isEqualTo(expectedSize);
+            assertThat(Size.ofMessage(number, value)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> source() {
@@ -1478,7 +1478,7 @@ class SizeTest {
         @MethodSource("unpackedSource")
         void unpackedSize(int number, List<TestMessage> values, int expectedSize) {
             // when then
-            assertThat(Size.messageUnpacked(number, values)).isEqualTo(expectedSize);
+            assertThat(Size.ofMessageUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {

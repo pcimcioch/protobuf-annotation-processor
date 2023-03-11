@@ -40,22 +40,22 @@ class SizeFactory {
     private String sizeMethod(FieldDefinition field) {
         String suffix = field.rules().repeated() ? "Unpacked" : "";
         String method = switch (field.protoKind()) {
-            case DOUBLE -> "double_";
-            case FLOAT -> "float_";
-            case INT32, ENUM -> "int32";
-            case INT64 -> "int64";
-            case UINT32 -> "uint32";
-            case UINT64 -> "uint64";
-            case SINT32 -> "sint32";
-            case SINT64 -> "sint64";
-            case FIXED32 -> "fixed32";
-            case FIXED64 -> "fixed64";
-            case SFIXED32 -> "sfixed32";
-            case SFIXED64 -> "sfixed64";
-            case BOOL -> "bool";
-            case STRING -> "string";
-            case MESSAGE -> "message";
-            case BYTES -> "bytes";
+            case DOUBLE -> "ofDouble";
+            case FLOAT -> "ofFloat";
+            case INT32, ENUM -> "ofInt32";
+            case INT64 -> "ofInt64";
+            case UINT32 -> "ofUint32";
+            case UINT64 -> "ofUint64";
+            case SINT32 -> "ofSint32";
+            case SINT64 -> "ofSint64";
+            case FIXED32 -> "ofFixed32";
+            case FIXED64 -> "ofFixed64";
+            case SFIXED32 -> "ofSfixed32";
+            case SFIXED64 -> "ofSfixed64";
+            case BOOL -> "ofBool";
+            case STRING -> "ofString";
+            case MESSAGE -> "ofMessage";
+            case BYTES -> "ofBytes";
         };
 
         return method + suffix;

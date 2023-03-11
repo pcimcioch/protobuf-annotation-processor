@@ -86,7 +86,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.double_Packed(values));
+        output.writeVarint32(Size.ofDoublePacked(values));
         for (double value : values) {
             output.writeDouble(value);
         }
@@ -142,7 +142,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.float_Packed(values));
+        output.writeVarint32(Size.ofFloatPacked(values));
         for (float value : values) {
             output.writeFloat(value);
         }
@@ -198,7 +198,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.int32Packed(values));
+        output.writeVarint32(Size.ofInt32Packed(values));
         for (int value : values) {
             output.writeVarint32(value);
         }
@@ -254,7 +254,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.int64Packed(values));
+        output.writeVarint32(Size.ofInt64Packed(values));
         for (long value : values) {
             output.writeVarint64(value);
         }
@@ -310,7 +310,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.uint32Packed(values));
+        output.writeVarint32(Size.ofUint32Packed(values));
         for (int value : values) {
             output.writeVarint32(value);
         }
@@ -366,7 +366,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.uint64Packed(values));
+        output.writeVarint32(Size.ofUint64Packed(values));
         for (long value : values) {
             output.writeVarint64(value);
         }
@@ -422,7 +422,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.sint32Packed(values));
+        output.writeVarint32(Size.ofSint32Packed(values));
         for (int value : values) {
             output.writeZigZag32(value);
         }
@@ -478,7 +478,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.sint64Packed(values));
+        output.writeVarint32(Size.ofSint64Packed(values));
         for (long value : values) {
             output.writeZigZag64(value);
         }
@@ -534,7 +534,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.fixed32Packed(values));
+        output.writeVarint32(Size.ofFixed32Packed(values));
         for (int value : values) {
             output.writeFixedInt(value);
         }
@@ -590,7 +590,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.fixed64Packed(values));
+        output.writeVarint32(Size.ofFixed64Packed(values));
         for (long value : values) {
             output.writeFixedLong(value);
         }
@@ -646,7 +646,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.sfixed32Packed(values));
+        output.writeVarint32(Size.ofSfixed32Packed(values));
         for (int value : values) {
             output.writeFixedInt(value);
         }
@@ -702,7 +702,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.sfixed64Packed(values));
+        output.writeVarint32(Size.ofSfixed64Packed(values));
         for (long value : values) {
             output.writeFixedLong(value);
         }
@@ -758,7 +758,7 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.boolPacked(values));
+        output.writeVarint32(Size.ofBoolPacked(values));
         for (boolean value : values) {
             output.writeBoolean(value);
         }

@@ -22,7 +22,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int double_(int number, double value) {
+    public static int ofDouble(int number, double value) {
         if (value == 0d) {
             return 0;
         }
@@ -37,7 +37,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int double_Unpacked(int number, List<Double> values) {
+    public static int ofDoubleUnpacked(int number, List<Double> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -48,7 +48,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int double_Packed(int number, List<Double> values) {
+    public static int ofDoublePacked(int number, List<Double> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -62,7 +62,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int double_Packed(List<Double> values) {
+    public static int ofDoublePacked(List<Double> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -77,7 +77,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int float_(int number, float value) {
+    public static int ofFloat(int number, float value) {
         if (value == 0f) {
             return 0;
         }
@@ -92,7 +92,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int float_Unpacked(int number, List<Float> values) {
+    public static int ofFloatUnpacked(int number, List<Float> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -103,7 +103,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int float_Packed(int number, List<Float> values) {
+    public static int ofFloatPacked(int number, List<Float> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -117,7 +117,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int float_Packed(List<Float> values) {
+    public static int ofFloatPacked(List<Float> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -132,7 +132,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int int32(int number, int value) {
+    public static int ofInt32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -147,7 +147,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int32Unpacked(int number, List<Integer> values) {
+    public static int ofInt32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32Size(value);
@@ -163,7 +163,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int32Packed(int number, List<Integer> values) {
+    public static int ofInt32Packed(int number, List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -182,8 +182,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int int32Packed(List<Integer> values) {
+    public static int ofInt32Packed(List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -203,7 +202,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int int64(int number, long value) {
+    public static int ofInt64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -218,7 +217,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int64Unpacked(int number, List<Long> values) {
+    public static int ofInt64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64Size(value);
@@ -234,7 +233,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int int64Packed(int number, List<Long> values) {
+    public static int ofInt64Packed(int number, List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -253,8 +252,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int int64Packed(List<Long> values) {
+    public static int ofInt64Packed(List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -274,7 +272,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int uint32(int number, int value) {
+    public static int ofUint32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -289,7 +287,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint32Unpacked(int number, List<Integer> values) {
+    public static int ofUint32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += varint32Size(value);
@@ -305,7 +303,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint32Packed(int number, List<Integer> values) {
+    public static int ofUint32Packed(int number, List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -324,8 +322,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int uint32Packed(List<Integer> values) {
+    public static int ofUint32Packed(List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -345,7 +342,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int uint64(int number, long value) {
+    public static int ofUint64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -360,7 +357,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint64Unpacked(int number, List<Long> values) {
+    public static int ofUint64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += varint64Size(value);
@@ -376,7 +373,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int uint64Packed(int number, List<Long> values) {
+    public static int ofUint64Packed(int number, List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -395,8 +392,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int uint64Packed(List<Long> values) {
+    public static int ofUint64Packed(List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -416,7 +412,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sint32(int number, int value) {
+    public static int ofSint32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -431,7 +427,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint32Unpacked(int number, List<Integer> values) {
+    public static int ofSint32Unpacked(int number, List<Integer> values) {
         int size = tagSize(number) * values.size();
         for (Integer value : values) {
             size += zigzag32Size(value);
@@ -447,7 +443,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint32Packed(int number, List<Integer> values) {
+    public static int ofSint32Packed(int number, List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -466,8 +462,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int sint32Packed(List<Integer> values) {
+    public static int ofSint32Packed(List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -487,7 +482,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sint64(int number, long value) {
+    public static int ofSint64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -502,7 +497,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint64Unpacked(int number, List<Long> values) {
+    public static int ofSint64Unpacked(int number, List<Long> values) {
         int size = tagSize(number) * values.size();
         for (Long value : values) {
             size += zigzag64Size(value);
@@ -518,7 +513,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sint64Packed(int number, List<Long> values) {
+    public static int ofSint64Packed(int number, List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -537,8 +532,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO ad dtest
-    public static int sint64Packed(List<Long> values) {
+    public static int ofSint64Packed(List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -558,7 +552,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int fixed32(int number, int value) {
+    public static int ofFixed32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -573,7 +567,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed32Unpacked(int number, List<Integer> values) {
+    public static int ofFixed32Unpacked(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -584,7 +578,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed32Packed(int number, List<Integer> values) {
+    public static int ofFixed32Packed(int number, List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -599,8 +593,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int fixed32Packed(List<Integer> values) {
+    public static int ofFixed32Packed(List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -615,7 +608,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int fixed64(int number, long value) {
+    public static int ofFixed64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -630,7 +623,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed64Unpacked(int number, List<Long> values) {
+    public static int ofFixed64Unpacked(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -641,7 +634,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int fixed64Packed(int number, List<Long> values) {
+    public static int ofFixed64Packed(int number, List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -656,8 +649,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int fixed64Packed(List<Long> values) {
+    public static int ofFixed64Packed(List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -672,7 +664,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sfixed32(int number, int value) {
+    public static int ofSfixed32(int number, int value) {
         if (value == 0) {
             return 0;
         }
@@ -687,7 +679,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed32Unpacked(int number, List<Integer> values) {
+    public static int ofSfixed32Unpacked(int number, List<Integer> values) {
         return values.size() * (tagSize(number) + 4);
     }
 
@@ -698,7 +690,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed32Packed(int number, List<Integer> values) {
+    public static int ofSfixed32Packed(int number, List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -713,8 +705,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int sfixed32Packed(List<Integer> values) {
+    public static int ofSfixed32Packed(List<Integer> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -729,7 +720,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int sfixed64(int number, long value) {
+    public static int ofSfixed64(int number, long value) {
         if (value == 0L) {
             return 0;
         }
@@ -744,7 +735,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed64Unpacked(int number, List<Long> values) {
+    public static int ofSfixed64Unpacked(int number, List<Long> values) {
         return values.size() * (tagSize(number) + 8);
     }
 
@@ -755,7 +746,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int sfixed64Packed(int number, List<Long> values) {
+    public static int ofSfixed64Packed(int number, List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -770,8 +761,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int sfixed64Packed(List<Long> values) {
+    public static int ofSfixed64Packed(List<Long> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -786,7 +776,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int bool(int number, boolean value) {
+    public static int ofBool(int number, boolean value) {
         if (!value) {
             return 0;
         }
@@ -801,7 +791,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int boolUnpacked(int number, List<Boolean> values) {
+    public static int ofBoolUnpacked(int number, List<Boolean> values) {
         return values.size() * (tagSize(number) + 1);
     }
 
@@ -812,7 +802,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int boolPacked(int number, List<Boolean> values) {
+    public static int ofBoolPacked(int number, List<Boolean> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -826,8 +816,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
-    public static int boolPacked(List<Boolean> values) {
+    public static int ofBoolPacked(List<Boolean> values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -842,7 +831,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int bytes(int number, ByteArray value) {
+    public static int ofBytes(int number, ByteArray value) {
         if (value.isEmpty()) {
             return 0;
         }
@@ -857,7 +846,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int bytesUnpacked(int number, List<ByteArray> values) {
+    public static int ofBytesUnpacked(int number, List<ByteArray> values) {
         int size = tagSize(number) * values.size();
         for (ByteArray value : values) {
             size += varint32Size(value.length()) + value.length();
@@ -873,7 +862,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int string(int number, String value) {
+    public static int ofString(int number, String value) {
         if ("".equals(value)) {
             return 0;
         }
@@ -889,7 +878,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int stringUnpacked(int number, List<String> values) {
+    public static int ofStringUnpacked(int number, List<String> values) {
         int size = tagSize(number) * values.size();
         for (String value : values) {
             int valueSize = stringSize(value);
@@ -906,7 +895,7 @@ public final class Size {
      * @param value  value
      * @return size
      */
-    public static int message(int number, ProtobufMessage<?> value) {
+    public static int ofMessage(int number, ProtobufMessage<?> value) {
         if (value == null) {
             return 0;
         }
@@ -922,7 +911,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int messageUnpacked(int number, List<? extends ProtobufMessage<?>> values) {
+    public static int ofMessageUnpacked(int number, List<? extends ProtobufMessage<?>> values) {
         int size = tagSize(number) * values.size();
         for (ProtobufMessage<?> value : values) {
             int valueSize = value.protobufSize();
