@@ -93,6 +93,20 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
                     .ordersValue(List.of(10))
                     .build());
         }
+
+        @Test
+        void packedEnum() throws IOException {
+            // given when
+            RepeatableEnumMessage record = deserialize(writer -> writer
+                    .writeInt32(1, 1)
+                    .writeInt32Packed(1, List.of(2, 0))
+            );
+
+            // then
+            assertThat(record).isEqualTo(RepeatableEnumMessage.builder()
+                    .ordersValue(List.of(1, 2, 0))
+                    .build());
+        }
     }
 
     @Nested

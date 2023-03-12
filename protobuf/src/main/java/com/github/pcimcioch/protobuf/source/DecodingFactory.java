@@ -17,6 +17,10 @@ import static com.github.pcimcioch.protobuf.code.ReturnSource.returns;
 import static com.github.pcimcioch.protobuf.code.StaticSource.staticModifier;
 import static com.github.pcimcioch.protobuf.code.ThrowsSource.throwsEx;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
+import static com.github.pcimcioch.protobuf.io.WireType.I32;
+import static com.github.pcimcioch.protobuf.io.WireType.I64;
+import static com.github.pcimcioch.protobuf.io.WireType.LEN;
+import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 
 class DecodingFactory {
 
@@ -84,9 +88,7 @@ class DecodingFactory {
         CodeBody body = body("switch(tag) {");
 
         for (FieldDefinition field : message.fields()) {
-            body
-                    .append("case $fieldTag -> ", param("fieldTag", field.tag()))
-                    .appendln(decodingCode(field));
+            body.appendln(decodingCode(field));
         }
 
         return body.append("""
@@ -97,55 +99,184 @@ class DecodingFactory {
     }
 
     private CodeBody decodingCode(FieldDefinition field) {
+        return field.rules().repeated() ? decodingCodeRepeated(field) : decodingCodeSimple(field);
+    }
+
+    private CodeBody decodingCodeSimple(FieldDefinition field) {
         return switch (field.protoKind()) {
-            case DOUBLE -> body("builder.$field(reader.readDouble());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case DOUBLE -> body("case $fieldTag -> builder.$field(reader.readDouble());",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case FLOAT -> body("builder.$field(reader.readFloat());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case FLOAT -> body("case $fieldTag -> builder.$field(reader.readFloat());",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case INT32, ENUM -> body("builder.$field(reader.readInt32());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case INT32, ENUM -> body("case $fieldTag -> builder.$field(reader.readInt32());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case INT64 -> body("builder.$field(reader.readInt64());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case INT64 -> body("case $fieldTag -> builder.$field(reader.readInt64());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case UINT32 -> body("builder.$field(reader.readUint32());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case UINT32 -> body("case $fieldTag -> builder.$field(reader.readUint32());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case UINT64 -> body("builder.$field(reader.readUint64());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case UINT64 -> body("case $fieldTag -> builder.$field(reader.readUint64());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case SINT32 -> body("builder.$field(reader.readSint32());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case SINT32 -> body("case $fieldTag -> builder.$field(reader.readSint32());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case SINT64 -> body("builder.$field(reader.readSint64());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case SINT64 -> body("case $fieldTag -> builder.$field(reader.readSint64());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case FIXED32 -> body("builder.$field(reader.readFixed32());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case FIXED32 -> body("case $fieldTag -> builder.$field(reader.readFixed32());",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case FIXED64 -> body("builder.$field(reader.readFixed64());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case FIXED64 -> body("case $fieldTag -> builder.$field(reader.readFixed64());",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case SFIXED32 -> body("builder.$field(reader.readSfixed32());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case SFIXED32 -> body("case $fieldTag -> builder.$field(reader.readSfixed32());",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case SFIXED64 -> body("builder.$field(reader.readSfixed64());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case SFIXED64 -> body("case $fieldTag -> builder.$field(reader.readSfixed64());",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case BOOL -> body("builder.$field(reader.readBool());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case BOOL -> body("case $fieldTag -> builder.$field(reader.readBool());",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case STRING -> body("builder.$field(reader.readString());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case STRING -> body("case $fieldTag -> builder.$field(reader.readString());",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case BYTES -> body("builder.$field(reader.readBytes());",
-                    param("field", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldName())
+            case BYTES -> body("case $fieldTag -> builder.$field(reader.readBytes());",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldName())
             );
-            case MESSAGE -> body("builder.$merge(reader.readMessage($Type::parse));",
-                    param("merge", field.rules().repeated() ? field.javaFieldNamePrefixed("add") : field.javaFieldNamePrefixed("merge")),
-                    param("Type", field.rules().repeated() ? field.javaFieldType().generic() : field.javaFieldType())
+            case MESSAGE -> body("case $fieldTag -> builder.$merge(reader.readMessage($Type::parse));",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("merge", field.javaFieldNamePrefixed("merge")),
+                    param("Type", field.javaFieldType())
+            );
+        };
+    }
+
+    private CodeBody decodingCodeRepeated(FieldDefinition field) {
+        return switch (field.protoKind()) {
+            case DOUBLE -> body("""
+                            case $fieldTag -> builder.$field(reader.readDouble());
+                            case $packedFieldTag -> reader.readDoublePacked(builder::$field);""",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case FLOAT -> body("""
+                            case $fieldTag -> builder.$field(reader.readFloat());
+                            case $packedFieldTag -> reader.readFloatPacked(builder::$field);""",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case INT32, ENUM -> body("""
+                            case $fieldTag -> builder.$field(reader.readInt32());
+                            case $packedFieldTag -> reader.readInt32Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case INT64 -> body("""
+                            case $fieldTag -> builder.$field(reader.readInt64());
+                            case $packedFieldTag -> reader.readInt64Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case UINT32 -> body("""
+                            case $fieldTag -> builder.$field(reader.readUint32());
+                            case $packedFieldTag -> reader.readUint32Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case UINT64 -> body("""
+                            case $fieldTag -> builder.$field(reader.readUint64());
+                            case $packedFieldTag -> reader.readUint64Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case SINT32 -> body("""
+                            case $fieldTag -> builder.$field(reader.readSint32());
+                            case $packedFieldTag -> reader.readSint32Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case SINT64 -> body("""
+                            case $fieldTag -> builder.$field(reader.readSint64());
+                            case $packedFieldTag -> reader.readSint64Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case FIXED32 -> body("""
+                            case $fieldTag -> builder.$field(reader.readFixed32());
+                            case $packedFieldTag -> reader.readFixed32Packed(builder::$field);""",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case FIXED64 -> body("""
+                            case $fieldTag -> builder.$field(reader.readFixed64());
+                            case $packedFieldTag -> reader.readFixed64Packed(builder::$field);""",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case SFIXED32 -> body("""
+                            case $fieldTag -> builder.$field(reader.readSfixed32());
+                            case $packedFieldTag -> reader.readSfixed32Packed(builder::$field);""",
+                    param("fieldTag", I32.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case SFIXED64 -> body("""
+                            case $fieldTag -> builder.$field(reader.readSfixed64());
+                            case $packedFieldTag -> reader.readSfixed64Packed(builder::$field);""",
+                    param("fieldTag", I64.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case BOOL -> body("""
+                            case $fieldTag -> builder.$field(reader.readBool());
+                            case $packedFieldTag -> reader.readBoolPacked(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case STRING -> body("case $fieldTag -> builder.$field(reader.readString());",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case BYTES -> body("case $fieldTag -> builder.$field(reader.readBytes());",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add"))
+            );
+            case MESSAGE -> body("case $fieldTag -> builder.$merge(reader.readMessage($Type::parse));",
+                    param("fieldTag", LEN.tagFrom(field.number())),
+                    param("merge", field.javaFieldNamePrefixed("add")),
+                    param("Type", field.javaFieldType().generic())
             );
         };
     }

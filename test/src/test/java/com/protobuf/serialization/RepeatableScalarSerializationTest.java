@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static com.protobuf.ByteUtils.b;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.bs;
-import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RepeatableScalarSerializationTest extends SerializationTestBase {
@@ -420,17 +420,17 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     // different wire type
                     .writeFloat(1, 11f)
                     .writeDouble(2, 21d)
-                    .writeString(3, "30")
-                    .writeString(4, "40L")
-                    .writeString(5, "50")
-                    .writeString(6, "60L")
-                    .writeString(7, "70")
-                    .writeString(8, "80L")
-                    .writeString(9, "90")
-                    .writeString(10, "100L")
-                    .writeString(11, "110")
-                    .writeString(12, "120L")
-                    .writeString(13, "true")
+                    .writeFixed32(3, 30)
+                    .writeFixed32(4, 40)
+                    .writeFixed32(5, 50)
+                    .writeFixed32(6, 60)
+                    .writeFixed32(7, 70)
+                    .writeFixed32(8, 80)
+                    .writeInt32(9, 90)
+                    .writeInt32(10, 100)
+                    .writeInt32(11, 110)
+                    .writeInt32(12, 120)
+                    .writeFixed32(13, 1)
                     .writeInt32(14, 1001)
                     .writeInt32(15, 1002)
             );
@@ -507,6 +507,68 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .bools(List.of(true, false))
                     .strings(List.of("test1", "test2"))
                     .bytes(List.of(ba(1, 2, 3), ba(20, 30, 40)))
+                    .build());
+        }
+
+        @Test
+        void packedFields() throws IOException {
+            // given when
+            RepeatableScalar record = deserialize(writer -> writer
+                    .writeDouble(1, 10d)
+                    .writeDouble(1, 11d)
+                    .writeDoublePacked(1, List.of(12d, 13d, 14d))
+                    .writeFloat(2, 20f)
+                    .writeFloat(2, 21f)
+                    .writeFloatPacked(2, List.of(22f, 23f, 24f))
+                    .writeInt32(3, 30)
+                    .writeInt32(3, 31)
+                    .writeInt32Packed(3, List.of(32, 33, 34))
+                    .writeInt64(4, 40L)
+                    .writeInt64(4, 41L)
+                    .writeInt64Packed(4, List.of(42L, 43L, 44L))
+                    .writeUint32(5, 50)
+                    .writeUint32(5, 51)
+                    .writeUint32Packed(5, List.of(52, 53, 54))
+                    .writeUint64(6, 60L)
+                    .writeUint64(6, 61L)
+                    .writeUint64Packed(6, List.of(62L, 63L, 64L))
+                    .writeSint32(7, 70)
+                    .writeSint32(7, 71)
+                    .writeSint32Packed(7, List.of(72, 73, 74))
+                    .writeSint64(8, 80L)
+                    .writeSint64(8, 81L)
+                    .writeSint64Packed(8, List.of(82L, 83L, 84L))
+                    .writeFixed32(9, 90)
+                    .writeFixed32(9, 91)
+                    .writeFixed32Packed(9, List.of(92, 93, 94))
+                    .writeFixed64(10, 100L)
+                    .writeFixed64(10, 101L)
+                    .writeFixed64Packed(10, List.of(102L, 103L, 104L))
+                    .writeSfixed32(11, 110)
+                    .writeSfixed32(11, 111)
+                    .writeSfixed32Packed(11, List.of(112, 113, 114))
+                    .writeSfixed64(12, 120L)
+                    .writeSfixed64(12, 121L)
+                    .writeSfixed64Packed(12, List.of(122L, 123L, 124L))
+                    .writeBoolUnpacked(13, List.of(true, false))
+                    .writeBoolPacked(13, List.of(false, true))
+            );
+
+            // then
+            assertThat(record).isEqualTo(RepeatableScalar.builder()
+                    .doubles(List.of(10d, 11d, 12d, 13d, 14d))
+                    .floats(List.of(20f, 21f, 22f, 23f, 24f))
+                    .int32s(List.of(30, 31, 32, 33, 34))
+                    .int64s(List.of(40L, 41L, 42L, 43L, 44L))
+                    .uint32s(List.of(50, 51, 52, 53, 54))
+                    .uint64s(List.of(60L, 61L, 62L, 63L, 64L))
+                    .sint32s(List.of(70, 71, 72, 73, 74))
+                    .sint64s(List.of(80L, 81L, 82L, 83L, 84L))
+                    .fixed32s(List.of(90, 91, 92, 93, 94))
+                    .fixed64s(List.of(100L, 101L, 102L, 103L, 104L))
+                    .sfixed32s(List.of(110, 111, 112, 113, 114))
+                    .sfixed64s(List.of(120L, 121L, 122L, 123L, 124L))
+                    .bools(List.of(true, false, false, true))
                     .build());
         }
     }

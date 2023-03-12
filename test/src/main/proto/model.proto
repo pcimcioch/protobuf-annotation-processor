@@ -98,3 +98,21 @@ message RepeatableOtherAddressProto {
 message RepeatableOtherWorkProto {
   repeated RepeatableOtherAddressProto addresses = 1 [packed = false];
 }
+
+// ******************** Repeatable Packed ********************
+message RepeatablePackedProto {
+  repeated double doubles = 1 [packed = true];
+  repeated float floats = 2 [packed = true];
+  repeated int32 int32s = 3 [packed = true];
+  repeated int64 int64s = 4 [packed = true];
+  repeated uint32 uint32s = 5 [packed = true];
+  repeated uint64 uint64s = 6 [packed = true];
+  repeated sint32 sint32s = 7 [packed = true];
+  repeated sint64 sint64s = 8 [packed = true];
+  repeated fixed32 fixed32s = 9 [packed = true];
+  repeated fixed64 fixed64s = 10 [packed = true];
+  repeated sfixed32 sfixed32s = 11 [packed = true];
+  repeated sfixed64 sfixed64s = 12 [packed = true];
+  repeated bool bools = 13 [packed = true];
+  repeated RepeatableEnumProto orders = 14 [packed = true];
+}
