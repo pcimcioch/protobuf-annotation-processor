@@ -79,7 +79,7 @@ public class ModelFactory {
     }
 
     private FieldRules buildFieldRules(Field field) {
-        return new FieldRules(field.deprecated(), field.repeated());
+        return new FieldRules(field.deprecated(), field.repeated(), field.packed());
     }
 
     private List<EnumerationDefinition> buildEnumerations(Stream<Clazz> enumerations) {

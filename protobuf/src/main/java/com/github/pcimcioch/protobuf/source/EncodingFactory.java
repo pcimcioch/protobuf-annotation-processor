@@ -44,7 +44,9 @@ class EncodingFactory {
     }
 
     private String encodingMethod(FieldDefinition field) {
-        String suffix = field.rules().repeated() ? "Unpacked" : "";
+        String suffix = field.rules().repeated()
+                ? field.rules().packed() ? "Packed" : "Unpacked"
+                : "";
         String method = switch (field.protoKind()) {
             case DOUBLE -> "writeDouble";
             case FLOAT -> "writeFloat";

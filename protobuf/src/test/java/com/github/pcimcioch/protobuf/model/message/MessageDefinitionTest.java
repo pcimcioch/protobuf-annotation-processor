@@ -27,7 +27,7 @@ class MessageDefinitionTest {
     private static final TypeName CHILD_MESSAGE_NAME = canonicalName("com.example.MyType.ChildMessage");
     private static final TypeName CHILD_ENUM_NAME = canonicalName("com.example.MyType.ChildEnum");
     private static final ReservedDefinition NO_RESERVED = new ReservedDefinition(Set.of(), Set.of(), Set.of());
-    private static final FieldRules NO_RULES = new FieldRules(false, false);
+    private static final FieldRules NO_RULES = new FieldRules(false, false, false);
 
     @Test
     void correctMessage() {

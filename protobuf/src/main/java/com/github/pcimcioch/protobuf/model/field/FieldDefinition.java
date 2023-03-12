@@ -25,6 +25,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.STRING;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT32;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
+import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertFalse;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
 import static java.util.Locale.ENGLISH;
@@ -49,7 +50,7 @@ public final class FieldDefinition {
         this.type = Valid.type(type);
         this.javaType = Valid.javaType(javaType);
         this.protoKind = Valid.protoType(protoKind);
-        this.rules = Valid.rules(rules);
+        this.rules = Valid.rules(protoKind, rules);
     }
 
     /**
@@ -388,8 +389,10 @@ public final class FieldDefinition {
             return type;
         }
 
-        private static FieldRules rules(FieldRules rules) {
+        private static FieldRules rules(ProtoKind kind, FieldRules rules) {
             assertNonNull(rules, "Must provide rules");
+            assertFalse(rules.repeated() && rules.packed() && (kind == STRING || kind == MESSAGE || kind == BYTES), "Only primitive types can be packed");
+
             return rules;
         }
     }

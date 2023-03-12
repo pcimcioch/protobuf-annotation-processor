@@ -11,7 +11,5 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.Throughput)
 @Fork(3)
-@Measurement(iterations = 3)
-@Warmup(iterations = 3)
 public class TestBase {
 }

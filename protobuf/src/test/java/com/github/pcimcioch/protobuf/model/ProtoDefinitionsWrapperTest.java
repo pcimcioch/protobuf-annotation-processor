@@ -107,7 +107,7 @@ class ProtoDefinitionsWrapperTest {
     private MessageDefinition message(String name) {
         return new MessageDefinition(
                 canonicalName(name),
-                List.of(scalar("field", 1, "int32", new FieldRules(false, false))),
+                List.of(scalar("field", 1, "int32", new FieldRules(false, false, false))),
                 new ReservedDefinition(emptySet(), emptySet(), emptySet()),
                 emptyList(),
                 emptyList()

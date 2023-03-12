@@ -88,6 +88,14 @@ class Main {
 
 Library is available in Central Maven Repository
 
+```kotlin
+implementation("com.github.pcimcioch:protobuf-api:1.0.0")
+annotationProcessor("com.github.pcimcioch:protobuf:1.0.0")
+```
+
+Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
+
+TODO make sure this is correct maven configuration
 ```xml
 
 <dependencies>
@@ -117,13 +125,6 @@ Library is available in Central Maven Repository
 </plugins>
 </pluginManagement>
 ```
-
-```kotlin
-implementation("com.github.pcimcioch:protobuf-api:1.0.0")
-annotationProcessor("com.github.pcimcioch:protobuf:1.0.0")
-```
-
-Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
 
 # Examples
 

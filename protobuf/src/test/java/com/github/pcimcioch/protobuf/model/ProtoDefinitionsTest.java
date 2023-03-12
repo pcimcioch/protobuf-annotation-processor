@@ -218,7 +218,7 @@ class ProtoDefinitionsTest {
     private static MessageDefinition message(String typeCanonical) {
         TypeName type = canonicalName(typeCanonical);
         List<FieldDefinition> fields = singletonList(
-                scalar("name1", 1, "bool", new FieldRules(false, false))
+                scalar("name1", 1, "bool", new FieldRules(false, false, false))
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 

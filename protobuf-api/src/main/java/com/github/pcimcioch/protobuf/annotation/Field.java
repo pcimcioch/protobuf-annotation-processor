@@ -44,6 +44,13 @@ public @interface Field {
     boolean repeated() default false;
 
     /**
+     * Whether field is packed. Notice that the default is false for all types!
+     *
+     * @return whether field is packed
+     */
+    boolean packed() default false;
+
+    /**
      * double
      */
     String double_ = "double";

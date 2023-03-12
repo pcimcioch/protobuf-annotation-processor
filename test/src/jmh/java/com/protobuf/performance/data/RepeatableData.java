@@ -14,9 +14,10 @@ import static com.protobuf.performance.data.Algorithm.OUR;
 import static com.protobuf.performance.data.Algorithm.PROTO;
 import static java.util.stream.IntStream.rangeClosed;
 
+// TODO add packed tests
 @State(Scope.Benchmark)
 public class RepeatableData {
-    @Param({OUR/*, PROTO*/})
+    @Param({OUR, PROTO})
     public String type;
 
     public Algorithm<?> algorithm;

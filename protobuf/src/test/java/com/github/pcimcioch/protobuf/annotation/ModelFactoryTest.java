@@ -28,9 +28,9 @@ class ModelFactoryTest {
 
     private static final Reserved NO_RESERVED = reserved();
     private static final ReservedDefinition NO_RESERVED_DEF = reservedDef();
-    private static final FieldRules NO_RULES = new FieldRules(false, false);
-    private static final FieldRules DEPRECATED = new FieldRules(true, false);
-    private static final FieldRules REPEATED = new FieldRules(false, true);
+    private static final FieldRules NO_RULES = new FieldRules(false, false, false);
+    private static final FieldRules DEPRECATED = new FieldRules(true, false, false);
+    private static final FieldRules REPEATED = new FieldRules(false, true, false);
 
     private final ModelFactory testee = new ModelFactory();
 
@@ -207,14 +207,14 @@ class ModelFactoryTest {
                                     element("RIGHT", 1)),
                             message("Address",
                                     field("string", "street", 1),
-                                    field("int32", "number", 2, true, false)),
+                                    field("int32", "number", 2, true, false, false)),
                             message("Other",
                                     field("double", "value", 1),
-                                    field("float", "deprecatedValue", 2, true, false),
+                                    field("float", "deprecatedValue", 2, true, false, false),
                                     field("MyEnum", "en", 3),
-                                    field("MyEnum", "enDeprecated", 4, true, false),
+                                    field("MyEnum", "enDeprecated", 4, true, false, false),
                                     field("Address", "add", 5),
-                                    field("Address", "addDeprecated", 6, true, false))));
+                                    field("Address", "addDeprecated", 6, true, false, false))));
 
             // when
             ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
@@ -249,14 +249,14 @@ class ModelFactoryTest {
                                     element("RIGHT", 1)),
                             message("Address",
                                     field("string", "street", 1),
-                                    field("int32", "number", 2, false, true)),
+                                    field("int32", "number", 2, false, true, false)),
                             message("Other",
                                     field("double", "value", 1),
-                                    field("float", "repeatedValue", 2, false, true),
+                                    field("float", "repeatedValue", 2, false, true, false),
                                     field("MyEnum", "en", 3),
-                                    field("MyEnum", "enRepeated", 4, false, true),
+                                    field("MyEnum", "enRepeated", 4, false, true, false),
                                     field("Address", "add", 5),
-                                    field("Address", "addRepeated", 6, false, true))));
+                                    field("Address", "addRepeated", 6, false, true, false))));
 
             // when
             ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
@@ -646,10 +646,10 @@ class ModelFactoryTest {
     }
 
     private static Field field(String type, String name, int number) {
-        return field(type, name, number, false, false);
+        return field(type, name, number, false, false, false);
     }
 
-    private static Field field(String type, String name, int number, boolean deprecated, boolean repeated) {
+    private static Field field(String type, String name, int number, boolean deprecated, boolean repeated, boolean packed) {
         return new Field() {
             @Override
             public String type() {
@@ -674,6 +674,11 @@ class ModelFactoryTest {
             @Override
             public boolean repeated() {
                 return repeated;
+            }
+
+            @Override
+            public boolean packed() {
+                return packed;
             }
 
             @Override
