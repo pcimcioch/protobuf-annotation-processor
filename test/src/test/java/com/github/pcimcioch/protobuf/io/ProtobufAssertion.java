@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,11 +26,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 1;
 
         try {
-            int tag = input.readVarint32();
-            double value = input.readDouble();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readDouble()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion doublePacked(int number, Double... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofDoublePacked(List.of(expectedValues)));
+
+            for (double expectedValue : expectedValues) {
+                assertThat(input.readDouble()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -41,11 +56,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 5;
 
         try {
-            int tag = input.readVarint32();
-            float value = input.readFloat();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readFloat()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion floatPacked(int number, Float... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofFloatPacked(List.of(expectedValues)));
+
+            for (float expectedValue : expectedValues) {
+                assertThat(input.readFloat()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -57,11 +86,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            int value = input.readVarint32();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion int32Packed(int number, Integer... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofInt32Packed(List.of(expectedValues)));
+
+            for (int expectedValue : expectedValues) {
+                assertThat(input.readVarint32()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -73,11 +116,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            long value = input.readVarint64();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint64()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion int64Packed(int number, Long... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofInt64Packed(List.of(expectedValues)));
+
+            for (long expectedValue : expectedValues) {
+                assertThat(input.readVarint64()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -89,11 +146,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            int value = input.readVarint32();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion uint32Packed(int number, Integer... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofUint32Packed(List.of(expectedValues)));
+
+            for (int expectedValue : expectedValues) {
+                assertThat(input.readVarint32()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -105,11 +176,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            long value = input.readVarint64();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint64()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion uint64Packed(int number, Long... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofUint64Packed(List.of(expectedValues)));
+
+            for (long expectedValue : expectedValues) {
+                assertThat(input.readVarint64()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -121,11 +206,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            int value = input.readZigZag32();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readZigZag32()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion sint32Packed(int number, Integer... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSint32Packed(List.of(expectedValues)));
+
+            for (int expectedValue : expectedValues) {
+                assertThat(input.readZigZag32()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -137,11 +236,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            long value = input.readZigZag64();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readZigZag64()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion sint64Packed(int number, Long... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSint64Packed(List.of(expectedValues)));
+
+            for (long expectedValue : expectedValues) {
+                assertThat(input.readZigZag64()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -153,11 +266,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 5;
 
         try {
-            int tag = input.readVarint32();
-            int value = input.readFixedInt();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readFixedInt()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion fixed32Packed(int number, Integer... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofFixed32Packed(List.of(expectedValues)));
+
+            for (int expectedValue : expectedValues) {
+                assertThat(input.readFixedInt()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -169,11 +296,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 1;
 
         try {
-            int tag = input.readVarint32();
-            long value = input.readFixedLong();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readFixedLong()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion fixed64Packed(int number, Long... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofFixed64Packed(List.of(expectedValues)));
+
+            for (long expectedValue : expectedValues) {
+                assertThat(input.readFixedLong()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -185,11 +326,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 5;
 
         try {
-            int tag = input.readVarint32();
-            int value = input.readFixedInt();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readFixedInt()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion sfixed32Packed(int number, Integer... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSfixed32Packed(List.of(expectedValues)));
+
+            for (int expectedValue : expectedValues) {
+                assertThat(input.readFixedInt()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -201,11 +356,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 1;
 
         try {
-            int tag = input.readVarint32();
-            long value = input.readFixedLong();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readFixedLong()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion sfixed64Packed(int number, Long... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSfixed64Packed(List.of(expectedValues)));
+
+            for (long expectedValue : expectedValues) {
+                assertThat(input.readFixedLong()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -217,11 +386,25 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3;
 
         try {
-            int tag = input.readVarint32();
-            boolean value = input.readBoolean();
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readBoolean()).isEqualTo(expectedValue);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
 
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+        return this;
+    }
+
+    public ProtobufAssertion boolPacked(int number, Boolean... expectedValues) {
+        int expectedTag = number << 3 | 2;
+
+        try {
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readVarint32()).isEqualTo(Size.ofBoolPacked(List.of(expectedValues)));
+
+            for (boolean expectedValue : expectedValues) {
+                assertThat(input.readBoolean()).isEqualTo(expectedValue);
+            }
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -233,11 +416,8 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 2;
 
         try {
-            int tag = input.readVarint32();
-            String value = input.readString();
-
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readString()).isEqualTo(expectedValue);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -249,11 +429,8 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 2;
 
         try {
-            int tag = input.readVarint32();
-            byte[] value = input.readBytes();
-
-            assertThat(tag).isEqualTo(expectedTag);
-            assertThat(value).isEqualTo(expectedValue);
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            assertThat(input.readBytes()).isEqualTo(expectedValue);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -265,11 +442,8 @@ public final class ProtobufAssertion {
         int expectedTag = number << 3 | 2;
 
         try {
-            int tag = input.readVarint32();
-            byte[] value = input.readBytes();
-
-            assertThat(tag).isEqualTo(expectedTag);
-            messageAssertions.accept(assertProto(value));
+            assertThat(input.readVarint32()).isEqualTo(expectedTag);
+            messageAssertions.accept(assertProto(input.readBytes()));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }

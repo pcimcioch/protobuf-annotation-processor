@@ -35,6 +35,7 @@ message ScalarProto {
   fixed64 fixed64 = 10;
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
+  bool bool = 13;
 }
 
 message RepeatedScalarProto {
@@ -50,4 +51,21 @@ message RepeatedScalarProto {
   repeated fixed64 fixed64 = 10 [packed = false];
   repeated sfixed32 sfixed32 = 11 [packed = false];
   repeated sfixed64 sfixed64 = 12 [packed = false];
+  repeated bool bool = 13 [packed = false];
+}
+
+message RepeatedPackedProto {
+  repeated double double_ = 1 [packed = true];
+  repeated float float_ = 2 [packed = true];
+  repeated int32 int32 = 3 [packed = true];
+  repeated int64 int64 = 4 [packed = true];
+  repeated uint32 uint32 = 5 [packed = true];
+  repeated uint64 uint64 = 6 [packed = true];
+  repeated sint32 sint32 = 7 [packed = true];
+  repeated sint64 sint64 = 8 [packed = true];
+  repeated fixed32 fixed32 = 9 [packed = true];
+  repeated fixed64 fixed64 = 10 [packed = true];
+  repeated sfixed32 sfixed32 = 11 [packed = true];
+  repeated sfixed64 sfixed64 = 12 [packed = true];
+  repeated bool bool = 13 [packed = true];
 }

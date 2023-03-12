@@ -1,18 +1,18 @@
 package com.protobuf.performance;
 
-import com.protobuf.performance.data.ScalarData;
+import com.protobuf.performance.data.RepeatedData;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.infra.Blackhole;
 
-public class ReadScalarTest extends TestBase {
+public class ReadRepeatedTest extends TestBase {
 
     @Benchmark
-    public void bytes(Blackhole bh, ScalarData data) throws Exception {
+    public void bytes(Blackhole bh, RepeatedData data) throws Exception {
         bh.consume(data.algorithm.parseBytes());
     }
 
     @Benchmark
-    public void stream(Blackhole bh, ScalarData data) throws Exception {
+    public void stream(Blackhole bh, RepeatedData data) throws Exception {
         bh.consume(data.algorithm.parseStream());
     }
 }

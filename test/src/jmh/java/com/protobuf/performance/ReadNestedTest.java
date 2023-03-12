@@ -6,12 +6,12 @@ import org.openjdk.jmh.infra.Blackhole;
 
 public class ReadNestedTest extends TestBase {
 
-    //@Benchmark
+    @Benchmark
     public void bytes(Blackhole bh, NestedData data) throws Exception {
         bh.consume(data.algorithm.parseBytes());
     }
 
-    //@Benchmark
+    @Benchmark
     public void stream(Blackhole bh, NestedData data) throws Exception {
         bh.consume(data.algorithm.parseStream());
     }

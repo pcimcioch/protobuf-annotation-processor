@@ -18,6 +18,7 @@ import com.github.pcimcioch.protobuf.annotation.Message;
                 @Field(type = "fixed64", name = "fixed64", number = 10, repeated = true),
                 @Field(type = "sfixed32", name = "sfixed32", number = 11, repeated = true),
                 @Field(type = "sfixed64", name = "sfixed64", number = 12, repeated = true),
+                @Field(type = "bool", name = "bool", number = 13, repeated = true),
         }
 )
 class RepeatedScalarMarker {

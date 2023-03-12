@@ -1,7 +1,7 @@
 package com.protobuf.performance.data;
 
-import com.protobuf.performance.RepeatedScalar;
-import com.protobuf.performance.RepeatedScalarProto;
+import com.protobuf.performance.RepeatedPacked;
+import com.protobuf.performance.RepeatedPackedProto;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
@@ -14,9 +14,8 @@ import static com.protobuf.performance.data.Algorithm.OUR;
 import static com.protobuf.performance.data.Algorithm.PROTO;
 import static java.util.stream.IntStream.rangeClosed;
 
-// TODO add packed tests
 @State(Scope.Benchmark)
-public class RepeatableData {
+public class RepeatedPackedData {
     @Param({OUR, PROTO})
     public String type;
 
@@ -26,15 +25,15 @@ public class RepeatableData {
     public void setUp() {
         this.algorithm = switch (type) {
             case OUR ->
-                    new Algorithm<>(our(), RepeatedScalar::toByteArray, RepeatedScalar::writeTo, RepeatedScalar::parse, RepeatedScalar::parse);
+                    new Algorithm<>(our(), RepeatedPacked::toByteArray, RepeatedPacked::writeTo, RepeatedPacked::parse, RepeatedPacked::parse);
             case PROTO ->
-                    new Algorithm<>(proto(), RepeatedScalarProto::toByteArray, RepeatedScalarProto::writeTo, RepeatedScalarProto::parseFrom, RepeatedScalarProto::parseFrom);
+                    new Algorithm<>(proto(), RepeatedPackedProto::toByteArray, RepeatedPackedProto::writeTo, RepeatedPackedProto::parseFrom, RepeatedPackedProto::parseFrom);
             default -> null;
         };
     }
 
-    private RepeatedScalar our() {
-        return RepeatedScalar.builder()
+    private RepeatedPacked our() {
+        return RepeatedPacked.builder()
                 .double_(doubleList(10d))
                 .float_(floatList(20f))
                 .int32(intList(30))
@@ -47,11 +46,12 @@ public class RepeatableData {
                 .fixed64(longList(100L))
                 .sfixed32(intList(110))
                 .sfixed64(longList(120L))
+                .bool(boolList(true))
                 .build();
     }
 
-    private RepeatedScalarProto proto() {
-        return RepeatedScalarProto.newBuilder()
+    private RepeatedPackedProto proto() {
+        return RepeatedPackedProto.newBuilder()
                 .addAllDouble(doubleList(10d))
                 .addAllFloat(floatList(20f))
                 .addAllInt32(intList(30))
@@ -64,6 +64,7 @@ public class RepeatableData {
                 .addAllFixed64(longList(100L))
                 .addAllSfixed32(intList(110))
                 .addAllSfixed64(longList(120L))
+                .addAllBool(boolList(true))
                 .build();
     }
 
@@ -84,4 +85,10 @@ public class RepeatableData {
     private static List<Long> longList(long seed) {
         return rangeClosed(1, 100).mapToObj(i -> seed * i).toList();
     }
+
+    @SuppressWarnings("SameParameterValue")
+    private static List<Boolean> boolList(boolean seed) {
+        return rangeClosed(1, 100).mapToObj(i -> seed).toList();
+    }
 }
+

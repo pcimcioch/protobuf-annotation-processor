@@ -20,7 +20,7 @@ class SizeFactory {
 
         body.appendln("int totalSize = 0;");
         for (FieldDefinition field : message.fields()) {
-            body.append("totalSize += $Size.$method($number, $name);",
+            body.appendln("totalSize += $Size.$method($number, $name);",
                     param("Size", Size.class),
                     param("method", sizeMethod(field)),
                     param("number", field.number()),
@@ -38,7 +38,9 @@ class SizeFactory {
     }
 
     private String sizeMethod(FieldDefinition field) {
-        String suffix = field.rules().repeated() ? "Unpacked" : "";
+        String suffix = field.rules().repeated()
+                ? field.rules().packed() ? "Packed" : "Unpacked"
+                : "";
         String method = switch (field.protoKind()) {
             case DOUBLE -> "ofDouble";
             case FLOAT -> "ofFloat";

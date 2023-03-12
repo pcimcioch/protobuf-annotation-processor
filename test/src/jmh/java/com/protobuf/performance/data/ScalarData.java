@@ -29,7 +29,7 @@ public class ScalarData {
     }
 
     private Scalar our() {
-        return new Scalar(10d, 20f, 30, 40L, 50, 60L, 70, 80L, 90, 100L, 110, 120L);
+        return new Scalar(10d, 20f, 30, 40L, 50, 60L, 70, 80L, 90, 100L, 110, 120L, true);
     }
 
     private ScalarProto proto() {
@@ -46,6 +46,7 @@ public class ScalarData {
                 .setFixed64(100L)
                 .setSfixed32(110)
                 .setSfixed64(120L)
+                .setBool(true)
                 .build();
     }
 }
