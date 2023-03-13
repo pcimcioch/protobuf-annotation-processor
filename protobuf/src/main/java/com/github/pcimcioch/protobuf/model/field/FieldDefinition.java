@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.model.field;
 
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.dto.ByteArray;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -8,23 +9,10 @@ import java.util.regex.Pattern;
 
 import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BOOL;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.BYTES;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FIXED32;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FIXED64;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.FLOAT;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.INT32;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.INT64;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SFIXED32;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SFIXED64;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SINT32;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.SINT64;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.STRING;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT32;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UINT64;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertFalse;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
@@ -36,21 +24,17 @@ import static java.util.Locale.ENGLISH;
 public final class FieldDefinition {
 
     private final String name;
-    private final String fieldName;
     private final int number;
-    private final TypeName type;
-    private final TypeName javaType;
+    private final TypeName protobufType;
     private final FieldRules rules;
     private final ProtoKind protoKind;
 
-    private FieldDefinition(String name, String fieldName, int number, TypeName type, TypeName javaType, ProtoKind protoKind, FieldRules rules) {
+    private FieldDefinition(String name, int number, ProtoKind protoKind, FieldRules rules, TypeName protobufType) {
         this.name = Valid.name(name);
-        this.fieldName = Valid.fieldName(fieldName);
         this.number = Valid.number(number);
-        this.type = Valid.type(type);
-        this.javaType = Valid.javaType(javaType);
         this.protoKind = Valid.protoType(protoKind);
         this.rules = Valid.rules(protoKind, rules);
+        this.protobufType = Valid.protobufType(protoKind, protobufType);
     }
 
     /**
@@ -76,8 +60,8 @@ public final class FieldDefinition {
      *
      * @return protobuf type of the field
      */
-    public TypeName type() {
-        return type;
+    public TypeName protobufType() {
+        return protobufType;
     }
 
     /**
@@ -95,7 +79,18 @@ public final class FieldDefinition {
      * @return field java type
      */
     public TypeName javaFieldType() {
-        return javaType;
+        return switch (protoKind) {
+            case DOUBLE -> rules.repeated() ? simpleName("Double").inList() : simpleName("double");
+            case FLOAT -> rules.repeated() ? simpleName("Float").inList() : simpleName("float");
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
+                    rules.repeated() ? simpleName("Integer").inList() : simpleName("int");
+            case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
+                    rules.repeated() ? simpleName("Long").inList() : simpleName("long");
+            case BOOL -> rules.repeated() ? simpleName("Boolean").inList() : simpleName("boolean");
+            case STRING -> rules.repeated() ? simpleName("String").inList() : simpleName("String");
+            case BYTES -> rules.repeated() ? canonicalName(ByteArray.class).inList() : canonicalName(ByteArray.class);
+            case MESSAGE -> rules.repeated() ? protobufType.inList() : protobufType;
+        };
     }
 
     /**
@@ -104,7 +99,7 @@ public final class FieldDefinition {
      * @return field name
      */
     public String javaFieldName() {
-        return fieldName;
+        return protoKind == ENUM ? name + "Value" : name;
     }
 
     /**
@@ -141,13 +136,12 @@ public final class FieldDefinition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FieldDefinition that = (FieldDefinition) o;
-        return number == that.number && name.equals(that.name) && fieldName.equals(that.fieldName) && type.equals(that.type)
-                && javaType.equals(that.javaType) && rules.equals(that.rules) && protoKind == that.protoKind;
+        return number == that.number && name.equals(that.name) && rules.equals(that.rules) && protoKind == that.protoKind;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, fieldName, number, type, javaType, rules, protoKind);
+        return Objects.hash(name, number, rules, protoKind);
     }
 
     /**
@@ -160,68 +154,8 @@ public final class FieldDefinition {
      * @return scalar field
      */
     public static FieldDefinition scalar(String name, int number, String protoType, FieldRules rules) {
-        Optional<ScalarDefinition> definition = rules.repeated()
-                ? ScalarDefinition.fromRepeatable(protoType)
-                : ScalarDefinition.from(protoType);
-        return definition
-                .map(def -> new FieldDefinition(name, name, number, def.type, def.javaType, def.protoKind, rules))
-                .orElseThrow(() -> new IllegalArgumentException("Incorrect protobuf scalar type: " + protoType));
-    }
-
-    private record ScalarDefinition(TypeName type, TypeName javaType, ProtoKind protoKind) {
-        private static Optional<ScalarDefinition> from(String protoType) {
-            return Optional.ofNullable(switch (protoType) {
-                case "double" -> new ScalarDefinition(simpleName("double"), simpleName("double"), DOUBLE);
-                case "float" -> new ScalarDefinition(simpleName("float"), simpleName("float"), FLOAT);
-                case "int32" -> new ScalarDefinition(simpleName("int"), simpleName("int"), INT32);
-                case "int64" -> new ScalarDefinition(simpleName("long"), simpleName("long"), INT64);
-                case "uint32" -> new ScalarDefinition(simpleName("int"), simpleName("int"), UINT32);
-                case "uint64" -> new ScalarDefinition(simpleName("long"), simpleName("long"), UINT64);
-                case "sint32" -> new ScalarDefinition(simpleName("int"), simpleName("int"), SINT32);
-                case "sint64" -> new ScalarDefinition(simpleName("long"), simpleName("long"), SINT64);
-                case "fixed32" -> new ScalarDefinition(simpleName("int"), simpleName("int"), FIXED32);
-                case "fixed64" -> new ScalarDefinition(simpleName("long"), simpleName("long"), FIXED64);
-                case "sfixed32" -> new ScalarDefinition(simpleName("int"), simpleName("int"), SFIXED32);
-                case "sfixed64" -> new ScalarDefinition(simpleName("long"), simpleName("long"), SFIXED64);
-                case "bool" -> new ScalarDefinition(simpleName("boolean"), simpleName("boolean"), BOOL);
-                case "string" -> new ScalarDefinition(simpleName("String"), simpleName("String"), STRING);
-                case "bytes" ->
-                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), BYTES);
-                default -> null;
-            });
-        }
-
-        private static Optional<ScalarDefinition> fromRepeatable(String protoType) {
-            return Optional.ofNullable(switch (protoType) {
-                case "double" ->
-                        new ScalarDefinition(simpleName("Double").inList(), simpleName("Double").inList(), DOUBLE);
-                case "float" -> new ScalarDefinition(simpleName("Float").inList(), simpleName("Float").inList(), FLOAT);
-                case "int32" ->
-                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), INT32);
-                case "int64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), INT64);
-                case "uint32" ->
-                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), UINT32);
-                case "uint64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), UINT64);
-                case "sint32" ->
-                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), SINT32);
-                case "sint64" -> new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), SINT64);
-                case "fixed32" ->
-                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), FIXED32);
-                case "fixed64" ->
-                        new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), FIXED64);
-                case "sfixed32" ->
-                        new ScalarDefinition(simpleName("Integer").inList(), simpleName("Integer").inList(), SFIXED32);
-                case "sfixed64" ->
-                        new ScalarDefinition(simpleName("Long").inList(), simpleName("Long").inList(), SFIXED64);
-                case "bool" ->
-                        new ScalarDefinition(simpleName("Boolean").inList(), simpleName("Boolean").inList(), BOOL);
-                case "string" ->
-                        new ScalarDefinition(simpleName("String").inList(), simpleName("String").inList(), STRING);
-                case "bytes" ->
-                        new ScalarDefinition(canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray").inList(), BYTES);
-                default -> null;
-            });
-        }
+        ProtoKind protoKind = ProtoKind.fromScalar(protoType).orElseThrow(() -> new IllegalArgumentException("Incorrect protobuf scalar type: " + protoType));
+        return new FieldDefinition(name, number, protoKind, rules, null);
     }
 
     /**
@@ -231,7 +165,7 @@ public final class FieldDefinition {
      * @return whether type is scalar
      */
     public static boolean isScalar(String protoType) {
-        return ScalarDefinition.from(protoType).isPresent();
+        return ProtoKind.fromScalar(protoType).isPresent();
     }
 
     /**
@@ -244,9 +178,7 @@ public final class FieldDefinition {
      * @return new field
      */
     public static FieldDefinition enumeration(String name, int number, TypeName type, FieldRules rules) {
-        return rules.repeated()
-                ? new FieldDefinition(name, name + "Value", number, type.inList(), simpleName("Integer").inList(), ENUM, rules)
-                : new FieldDefinition(name, name + "Value", number, type, simpleName("int"), ENUM, rules);
+        return new FieldDefinition(name, number, ENUM, rules, type);
     }
 
     /**
@@ -259,9 +191,7 @@ public final class FieldDefinition {
      * @return new field
      */
     public static FieldDefinition message(String name, int number, TypeName type, FieldRules rules) {
-        return rules.repeated()
-                ? new FieldDefinition(name, name, number, type.inList(), type.inList(), MESSAGE, rules)
-                : new FieldDefinition(name, name, number, type, type, MESSAGE, rules);
+        return new FieldDefinition(name, number, MESSAGE, rules, type);
     }
 
     /**
@@ -351,7 +281,34 @@ public final class FieldDefinition {
         /**
          * Other message
          */
-        MESSAGE
+        MESSAGE;
+
+        /**
+         * Returns enum representing this protobuf scalar type
+         *
+         * @param protoType name of protobuf scalar type
+         * @return optional enum
+         */
+        public static Optional<ProtoKind> fromScalar(String protoType) {
+            return Optional.ofNullable(switch (protoType) {
+                case "double" -> DOUBLE;
+                case "float" -> FLOAT;
+                case "int32" -> INT32;
+                case "int64" -> INT64;
+                case "uint32" -> UINT32;
+                case "uint64" -> UINT64;
+                case "sint32" -> SINT32;
+                case "sint64" -> SINT64;
+                case "fixed32" -> FIXED32;
+                case "fixed64" -> FIXED64;
+                case "sfixed32" -> SFIXED32;
+                case "sfixed64" -> SFIXED64;
+                case "bool" -> BOOL;
+                case "string" -> STRING;
+                case "bytes" -> BYTES;
+                default -> null;
+            });
+        }
     }
 
     private static final class Valid {
@@ -368,22 +325,6 @@ public final class FieldDefinition {
             return name;
         }
 
-        private static String fieldName(String name) {
-            assertNonNull(name, "Incorrect field name: <null>");
-            assertTrue(namePattern.matcher(name).matches(), "Incorrect field name: " + name);
-            return name;
-        }
-
-        private static TypeName type(TypeName type) {
-            assertNonNull(type, "Must provide field type");
-            return type;
-        }
-
-        private static TypeName javaType(TypeName type) {
-            assertNonNull(type, "Must provide field java type");
-            return type;
-        }
-
         private static ProtoKind protoType(ProtoKind type) {
             assertNonNull(type, "Must provide proto type");
             return type;
@@ -394,6 +335,14 @@ public final class FieldDefinition {
             assertFalse(rules.repeated() && rules.packed() && (kind == STRING || kind == MESSAGE || kind == BYTES), "Only primitive types can be packed");
 
             return rules;
+        }
+
+        private static TypeName protobufType(ProtoKind kind, TypeName protobufType) {
+            if (kind == ENUM || kind == MESSAGE) {
+                assertNonNull(protobufType, "Must provide protobuf type");
+            }
+
+            return protobufType;
         }
     }
 }

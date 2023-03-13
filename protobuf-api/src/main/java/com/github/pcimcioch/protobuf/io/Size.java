@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public final class Size {
      * @param values values
      * @return size
      */
+    // TODO remove
     public static int ofDoubleUnpacked(int number, List<Double> values) {
         return values.size() * (tagSize(number) + 8);
     }
@@ -48,6 +50,7 @@ public final class Size {
      * @param values values
      * @return size
      */
+    // TODO remove
     public static int ofDoublePacked(int number, List<Double> values) {
         if (values.isEmpty()) {
             return 0;
@@ -62,7 +65,48 @@ public final class Size {
      * @param values values
      * @return size
      */
+    // TODO remove
     public static int ofDoublePacked(List<Double> values) {
+        if (values.isEmpty()) {
+            return 0;
+        }
+
+        return values.size() * 8;
+    }
+
+    /**
+     * Returns unpacked list of doubles size
+     *
+     * @param number tag number
+     * @param values values
+     * @return size
+     */
+    public static int ofDoubleUnpacked(int number, DoubleList values) {
+        return values.size() * (tagSize(number) + 8);
+    }
+
+    /**
+     * Returns packed list of doubles size
+     *
+     * @param number tag number
+     * @param values values
+     * @return size
+     */
+    public static int ofDoublePacked(int number, DoubleList values) {
+        if (values.isEmpty()) {
+            return 0;
+        }
+        int size = values.size() * 8;
+        return tagSize(number) + varint32Size(size) + size;
+    }
+
+    /**
+     * Returns packed list of doubles size without tag
+     *
+     * @param values values
+     * @return size
+     */
+    public static int ofDoublePacked(DoubleList values) {
         if (values.isEmpty()) {
             return 0;
         }

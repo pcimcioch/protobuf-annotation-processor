@@ -18,5 +18,12 @@ import com.github.pcimcioch.protobuf.annotation.Message;
                 @Field(type = "RepeatableEnum", name = "orders", number = 1, repeated = true)
         }
 )
+
+@Message(
+        name = "Tester",
+        fields = {
+                @Field(type = "double", name = "pole", number = 1, repeated = true)
+        }
+)
 class RepeatableEnumMarker {
 }

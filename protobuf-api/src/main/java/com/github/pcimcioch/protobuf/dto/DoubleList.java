@@ -8,7 +8,12 @@ import java.util.RandomAccess;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * Immutable list of doubles
+ */
 public final class DoubleList extends AbstractList<Double> implements RandomAccess {
+    private static final DoubleList EMPTY = new DoubleList(new double[0], 0);
+
     private final double[] values;
     private final int size;
 
@@ -22,6 +27,12 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
         return values[rangeCheck(index)];
     }
 
+    /**
+     * Return primitive value
+     *
+     * @param index index
+     * @return primitive value
+     */
     public double getDouble(int index) {
         return values[rangeCheck(index)];
     }
@@ -31,8 +42,25 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
         return size;
     }
 
+    // TODO add better hashcode and equals
+
+    /**
+     * Returns new builder
+     *
+     * @return new builder
+     */
     public static Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * Create new list from given elements
+     *
+     * @param elements elements
+     * @return new list
+     */
+    public static DoubleList of(double... elements) {
+        return elements.length == 0 ? EMPTY : new DoubleList(elements, elements.length);
     }
 
     private int rangeCheck(int index) {
@@ -42,17 +70,28 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
         return index;
     }
 
+    /**
+     * Builder
+     */
     public static final class Builder {
-        private static final DoubleList EMPTY = new DoubleList(new double[0], 0);
-
         private double[] values = new double[8];
         private int size = 0;
 
+        /**
+         * Add element
+         *
+         * @param element element to add
+         */
         public void add(double element) {
             grow(1);
             values[size++] = element;
         }
 
+        /**
+         * Add all elements
+         *
+         * @param elements elements to add
+         */
         public void addAll(Collection<Double> elements) {
             grow(elements.size());
 
@@ -66,11 +105,19 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
             }
         }
 
+        /**
+         * Clear all elements
+         */
         public void clear() {
             size = 0;
             values = new double[8];
         }
 
+        /**
+         * Build list
+         *
+         * @return new immutable list
+         */
         public DoubleList build() {
             DoubleList list = size == 0 ? EMPTY : new DoubleList(values, size);
             values = null;

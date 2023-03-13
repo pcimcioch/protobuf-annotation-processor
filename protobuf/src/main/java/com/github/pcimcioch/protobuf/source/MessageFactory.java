@@ -73,13 +73,13 @@ class MessageFactory {
 
     private void addEnumSingleGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $EnumType.forNumber($valueName);",
-                param("EnumType", field.type()),
+                param("EnumType", field.protobufType()),
                 param("valueName", field.javaFieldName())
         );
 
         source.add(method(field.name())
                 .set(publicVisibility())
-                .set(returns(field.type()))
+                .set(returns(field.protobufType()))
                 .set(body)
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
@@ -87,13 +87,13 @@ class MessageFactory {
 
     private void addEnumListGetter(RecordSource source, FieldDefinition field) {
         CodeBody body = body("return $valueName.stream().map($EnumType::forNumber).toList();",
-                param("EnumType", field.type().generic()),
+                param("EnumType", field.protobufType()),
                 param("valueName", field.javaFieldName())
         );
 
         source.add(method(field.name())
                 .set(publicVisibility())
-                .set(returns(field.type()))
+                .set(returns(field.protobufType().inList()))
                 .set(body)
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );

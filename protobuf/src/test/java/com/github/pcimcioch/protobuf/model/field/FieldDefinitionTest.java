@@ -62,7 +62,7 @@ class FieldDefinitionTest {
         // when then
         assertThatThrownBy(() -> FieldDefinition.enumeration("name", 1, null, NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Must provide field type");
+                .hasMessageContaining("Must provide protobuf type");
     }
 
     @Test
@@ -70,7 +70,7 @@ class FieldDefinitionTest {
         // when then
         assertThatThrownBy(() -> FieldDefinition.message("name", 1, null, NO_RULES))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Must provide field type");
+                .hasMessageContaining("Must provide protobuf type");
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -78,7 +78,8 @@ class FieldDefinitionTest {
     void nullRules() {
         // when then
         assertThatThrownBy(() -> FieldDefinition.scalar("name", 1, "bool", null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Must provide rules");
     }
 
     @ParameterizedTest

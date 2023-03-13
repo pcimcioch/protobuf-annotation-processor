@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.code.ClassSource;
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.InitializerSource;
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -36,7 +37,7 @@ class BuilderClassFactory {
             simpleName("long"), "0L",
             simpleName("boolean"), "false",
             simpleName("String"), "\"\"",
-            canonicalName("com.github.pcimcioch.protobuf.dto.ByteArray"), "com.github.pcimcioch.protobuf.dto.ByteArray.empty()"
+            canonicalName(ByteArray.class), "com.github.pcimcioch.protobuf.dto.ByteArray.empty()"
     );
 
     ClassSource buildBuilderClass(MessageDefinition message) {
@@ -126,7 +127,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.type(), field.name()))
+                .add(parameter(field.protobufType(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -146,7 +147,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.type(), field.name()))
+                .add(parameter(field.protobufType().inList(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -217,7 +218,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.type().generic(), field.name()))
+                .add(parameter(field.protobufType(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -237,7 +238,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.type().generic().inCollection(), field.name()))
+                .add(parameter(field.protobufType().inCollection(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }

@@ -1,6 +1,7 @@
 package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +22,8 @@ class SizeTest {
     private static final int NUMBER_2_BIG = 0b11111111111;
 
     @Nested
-    class Doubles {
+    // TODO remove
+    class OldDoubles {
 
         @ParameterizedTest
         @MethodSource("source")
@@ -115,6 +117,105 @@ class SizeTest {
                     Arguments.of(List.of(Double.MAX_VALUE), 8),
 
                     Arguments.of(List.of(1d, 2d, -1d, 0d), 32)
+            );
+        }
+    }
+
+    @Nested
+    class Doubles {
+
+        @ParameterizedTest
+        @MethodSource("source")
+        void size(int number, double value, int expectedSize) {
+            // when then
+            assertThat(Size.ofDouble(number, value)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> source() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, 0d, 0),
+                    Arguments.of(NUMBER_2_BIG, 0d, 0),
+
+                    Arguments.of(NUMBER_1_SMALL, 1d, 9),
+                    Arguments.of(NUMBER_1_BIG, 1d, 9),
+                    Arguments.of(NUMBER_2_SMALL, 1d, 10),
+                    Arguments.of(NUMBER_2_BIG, 1d, 10),
+
+                    Arguments.of(NUMBER_1_SMALL, Double.MIN_VALUE, 9),
+                    Arguments.of(NUMBER_1_SMALL, Double.MAX_VALUE, 9)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, DoubleList values, int expectedSize) {
+            // when then
+            assertThat(Size.ofDoubleUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(1d), 9),
+                    Arguments.of(NUMBER_1_BIG, DoubleList.of(1d), 9),
+                    Arguments.of(NUMBER_2_SMALL, DoubleList.of(1d), 10),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(1d), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(Double.MIN_VALUE), 9),
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(Double.MAX_VALUE), 9),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(1d, 2d, -1d, 0d), 36),
+                    Arguments.of(NUMBER_1_BIG, DoubleList.of(1d, 2d, -1d, 0d), 36),
+                    Arguments.of(NUMBER_2_SMALL, DoubleList.of(1d, 2d, -1d, 0d), 40),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(1d, 2d, -1d, 0d), 40)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, DoubleList values, int expectedSize) {
+            // when then
+            assertThat(Size.ofDoublePacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(1d), 10),
+                    Arguments.of(NUMBER_1_BIG, DoubleList.of(1d), 10),
+                    Arguments.of(NUMBER_2_SMALL, DoubleList.of(1d), 11),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(1d), 11),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(Double.MIN_VALUE), 10),
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(Double.MAX_VALUE), 10),
+
+                    Arguments.of(NUMBER_1_SMALL, DoubleList.of(1d, 2d, -1d, 0d), 34),
+                    Arguments.of(NUMBER_1_BIG, DoubleList.of(1d, 2d, -1d, 0d), 34),
+                    Arguments.of(NUMBER_2_SMALL, DoubleList.of(1d, 2d, -1d, 0d), 35),
+                    Arguments.of(NUMBER_2_BIG, DoubleList.of(1d, 2d, -1d, 0d), 35)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedNoTagSource")
+        void packedNoTagSize(DoubleList values, int expectedSize) {
+            // when then
+            assertThat(Size.ofDoublePacked(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedNoTagSource() {
+            return Stream.of(
+                    Arguments.of(DoubleList.of(), 0),
+
+                    Arguments.of(DoubleList.of(1d), 8),
+                    Arguments.of(DoubleList.of(Double.MIN_VALUE), 8),
+                    Arguments.of(DoubleList.of(Double.MAX_VALUE), 8),
+
+                    Arguments.of(DoubleList.of(1d, 2d, -1d, 0d), 32)
             );
         }
     }

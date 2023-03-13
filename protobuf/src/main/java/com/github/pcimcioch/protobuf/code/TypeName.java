@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.code;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -15,8 +16,8 @@ public final class TypeName {
     private static final Pattern simpleTypePattern = Pattern.compile("^[a-zA-Z]+$");
     private static final Pattern canonicalNamePattern = Pattern.compile("^(?<package>[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*)(?<classes>(\\.[A-Z][A-Za-z0-9_]*)+)$");
 
-    private static final TypeName list = canonicalName("java.util.List");
-    private static final TypeName collection = canonicalName("java.util.Collection");
+    private static final TypeName list = canonicalName(List.class);
+    private static final TypeName collection = canonicalName(Collection.class);
 
     private final String packageName;
     private final LinkedList<String> classNames;
@@ -214,6 +215,16 @@ public final class TypeName {
                 trim(matcher.group("classes")),
                 null
         );
+    }
+
+    /**
+     * Create type from full canonical class name
+     *
+     * @param clazz class type
+     * @return type name
+     */
+    public static TypeName canonicalName(Class<?> clazz) {
+        return canonicalName(clazz.getCanonicalName());
     }
 
     private static Matcher mustMatch(Pattern pattern, String name, String message) {

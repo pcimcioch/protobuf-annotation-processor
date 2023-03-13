@@ -82,6 +82,16 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of doubles. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @return list copy
+     */
+    public static DoubleList copy(DoubleList value) {
+        return value == null ? DoubleList.of() : value;
+    }
+
+    /**
      * Copy message value
      *
      * @param value value
@@ -202,6 +212,21 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static <T> List<T> merge(List<T> current, List<T> toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of doubles
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return merged lists
+     */
+    public static DoubleList.Builder merge(DoubleList.Builder current, DoubleList toMerge) {
         if (toMerge != null && !toMerge.isEmpty()) {
             current.addAll(toMerge);
         }
