@@ -5,12 +5,12 @@ import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.InitializerSource;
 import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.github.pcimcioch.protobuf.code.AnnotationSource.annotation;
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
@@ -26,6 +26,7 @@ import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
@@ -103,7 +104,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .add(parameter(collectionAddType(field), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -138,7 +139,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.protobufType().inList(), field.name()))
+                .add(parameter(field.protobufType().inCollection(), field.name()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -157,20 +158,26 @@ class BuilderClassFactory {
     }
 
     private void addListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
-        CodeBody body = body("""
+        TypeName addType = singleAddType(field);
+        CodeBody body = addType.isPrimitive()
+                ? body("""
+                        this.$field.add($field);
+                        return this;
+                        """,
+                param("field", field.javaFieldName()))
+                : body("""
                         if ($field != null) {
                           this.$field.add($field);
                         }
                         return this;
                         """,
-                param("field", field.javaFieldName())
-        );
+                param("field", field.javaFieldName()));
 
         builderClass.add(method(field.javaFieldNamePrefixed("add"))
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(singleAddType(field), field.javaFieldName()))
+                .add(parameter(addType, field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -292,7 +299,10 @@ class BuilderClassFactory {
 
     private static InitializerSource initializerOf(FieldDefinition field) {
         if (field.rules().repeated()) {
-            return initializer("new java.util.ArrayList<>()");
+            return initializer(switch (field.protoKind()) {
+                case DOUBLE -> "com.github.pcimcioch.protobuf.dto.DoubleList.builder()";
+                default -> "new java.util.ArrayList<>()";
+            });
         }
 
         return initializer(switch (field.protoKind()) {
@@ -308,18 +318,42 @@ class BuilderClassFactory {
     }
 
     private static TypeName builderFieldType(FieldDefinition field) {
+        if (field.rules().repeated() && field.protoKind() == DOUBLE) {
+            return canonicalName(DoubleList.Builder.class);
+        }
         return field.javaFieldType();
     }
 
     private static String fieldToRecordTransform(FieldDefinition field) {
+        if (field.rules().repeated() && field.protoKind() == DOUBLE) {
+            return field.javaFieldName() + ".build()";
+        }
         return field.javaFieldName();
     }
 
     private static TypeName singleAddType(FieldDefinition field) {
-        return field.javaFieldType().generic();
+        return switch (field.protoKind()) {
+            case DOUBLE -> simpleName("double");
+            case FLOAT -> simpleName("float");
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> simpleName("int");
+            case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> simpleName("long");
+            case BOOL -> simpleName("boolean");
+            case STRING -> simpleName("String");
+            case BYTES -> canonicalName(ByteArray.class);
+            case MESSAGE -> field.protobufType();
+        };
     }
 
     private static TypeName collectionAddType(FieldDefinition field) {
-        return field.javaFieldType().generic().inCollection();
+        return switch (field.protoKind()) {
+            case DOUBLE -> simpleName("Double").inCollection();
+            case FLOAT -> simpleName("Float").inCollection();
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> simpleName("Integer").inCollection();
+            case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> simpleName("Long").inCollection();
+            case BOOL -> simpleName("Boolean").inCollection();
+            case STRING -> simpleName("String").inCollection();
+            case BYTES -> canonicalName(ByteArray.class).inCollection();
+            case MESSAGE -> field.protobufType().inCollection();
+        };
     }
 }

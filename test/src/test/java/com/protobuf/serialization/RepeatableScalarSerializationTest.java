@@ -1,6 +1,7 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;
@@ -28,7 +29,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given
             RepeatableScalar record = new RepeatableScalar(
-                    List.of(10d, 11d),
+                    DoubleList.of(10d, 11d),
                     List.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
@@ -123,7 +124,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void defaultValues() throws IOException {
             // given
             RepeatableScalar record = new RepeatableScalar(
-                    List.of(0d),
+                    DoubleList.of(0d),
                     List.of(0f),
                     List.of(0),
                     List.of(0L),
@@ -164,7 +165,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void negativeValues() throws IOException {
             // given
             RepeatableScalar record = new RepeatableScalar(
-                    List.of(-10d, -11d),
+                    DoubleList.of(-10d, -11d),
                     List.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
@@ -516,7 +517,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             RepeatableScalar record = deserialize(writer -> writer
                     .writeDouble(1, 10d)
                     .writeDouble(1, 11d)
-                    .writeDoublePacked(1, List.of(12d, 13d, 14d))
+                    .writeDoublePacked(1, DoubleList.of(12d, 13d, 14d))
                     .writeFloat(2, 20f)
                     .writeFloat(2, 21f)
                     .writeFloatPacked(2, List.of(22f, 23f, 24f))
@@ -592,7 +593,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given
             RepeatableScalar record = new RepeatableScalar(
-                    List.of(10d, 11d),
+                    DoubleList.of(10d, 11d),
                     List.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
@@ -639,7 +640,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         void negativeValues() throws IOException {
             // given
             RepeatableScalar record = new RepeatableScalar(
-                    List.of(-10d, -11d),
+                    DoubleList.of(-10d, -11d),
                     List.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),

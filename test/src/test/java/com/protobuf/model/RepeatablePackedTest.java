@@ -1,5 +1,6 @@
 package com.protobuf.model;
 
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ class RepeatablePackedTest {
     void singleElements() {
         // when
         RepeatablePacked model = new RepeatablePacked(
-                List.of(10d),
+                DoubleList.of(10d),
                 List.of(20f),
                 List.of(30),
                 List.of(40L),
@@ -83,7 +84,7 @@ class RepeatablePackedTest {
     void multipleElements() {
         // when
         RepeatablePacked model = new RepeatablePacked(
-                List.of(10d, 11d),
+                DoubleList.of(10d, 11d),
                 List.of(20f, 21f),
                 List.of(30, 31),
                 List.of(40L, 41L),
@@ -119,33 +120,12 @@ class RepeatablePackedTest {
     }
 
     @Test
-    void modifyInputList() {
-        // given
-        List<Double> doubles = new ArrayList<>();
-        List<Integer> enums = new ArrayList<>();
-        doubles.add(10d);
-        enums.add(1);
-        RepeatablePacked model = new RepeatablePacked(doubles, List.of(), List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), enums);
-
-        // when
-        doubles.add(20d);
-        enums.add(2);
-
-        // then
-        assertThat(model.doubles()).containsExactly(10d);
-        assertThat(model.ordersValue()).containsExactly(1);
-        assertThat(model.protobufSize()).isEqualTo(13);
-    }
-
-    @Test
     void modifyOutputList() {
         // given
-        List<Double> doubles = new ArrayList<>();
         List<Integer> enums = new ArrayList<>();
-        doubles.add(10d);
         enums.add(1);
-        RepeatablePacked model = new RepeatablePacked(doubles, List.of(), List.of(), List.of(), List.of(), List.of(),
+
+        RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), List.of(), List.of(), List.of(), List.of(), List.of(),
                 List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), enums);
 
         // when then
@@ -160,35 +140,30 @@ class RepeatablePackedTest {
     @Test
     void modifyBuilderParameters() {
         // given
-        List<Double> doubles1 = new ArrayList<>();
-        doubles1.add(10d);
-        doubles1.add(11d);
-        List<Double> doubles2 = new ArrayList<>();
-        doubles2.add(20d);
-        doubles2.add(21d);
+        List<Double> doubles = new ArrayList<>();
+        doubles.add(10d);
+        doubles.add(11d);
         List<Integer> enums1 = new ArrayList<>();
         enums1.add(0);
         List<Integer> enums2 = new ArrayList<>();
         enums2.add(1);
         RepeatablePacked.Builder modelBuilder = RepeatablePacked.builder()
-                .doubles(doubles1)
-                .addAllDoubles(doubles2)
-                .addDoubles(30d)
+                .addAllDoubles(doubles)
+                .addDoubles(20d)
                 .ordersValue(enums1)
                 .addAllOrdersValue(enums2)
                 .addOrdersValue(2);
 
         // when
-        doubles1.add(12d);
-        doubles2.add(22d);
+        doubles.add(12d);
         enums1.add(2);
         enums2.add(2);
         RepeatablePacked model = modelBuilder.build();
 
         // then
-        assertThat(model.doubles()).containsExactly(10d, 11d, 20d, 21d, 30d);
+        assertThat(model.doubles()).containsExactly(10d, 11d, 20d);
         assertThat(model.ordersValue()).containsExactly(0, 1, 2);
-        assertThat(model.protobufSize()).isEqualTo(47);
+        assertThat(model.protobufSize()).isEqualTo(31);
     }
 
     @Test

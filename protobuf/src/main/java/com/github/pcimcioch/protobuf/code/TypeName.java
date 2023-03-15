@@ -173,6 +173,16 @@ public final class TypeName {
         return withoutGeneric().equals(other.withoutGeneric().with(simpleName()));
     }
 
+    /**
+     * Checks whether type is primitive
+     *
+     * @return whether type is primitive
+     */
+    // TODO add tests
+    public boolean isPrimitive() {
+        return "".equals(packageName) && classNames.size() == 1 && Character.isLowerCase(simpleName().charAt(0));
+    }
+
     @Override
     public String toString() {
         return canonicalName();

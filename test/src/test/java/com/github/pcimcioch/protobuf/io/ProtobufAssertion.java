@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
 import java.io.IOException;
@@ -35,12 +36,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion doublePacked(int number, Double... expectedValues) {
+    public ProtobufAssertion doublePacked(int number, double... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofDoublePacked(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofDoublePacked(DoubleList.of(expectedValues)));
 
             for (double expectedValue : expectedValues) {
                 assertThat(input.readDouble()).isEqualTo(expectedValue);

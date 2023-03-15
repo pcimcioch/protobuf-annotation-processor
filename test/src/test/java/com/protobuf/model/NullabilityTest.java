@@ -65,14 +65,14 @@ class NullabilityTest {
     void repeatableScalar() {
         // given
         RepeatableScalar repeatableNull = RepeatableScalar.builder()
-                .doubles(null)
-                .addAllDoubles(null)
-                .addDoubles(null)
+                .strings(null)
+                .addAllStrings(null)
+                .addStrings(null)
                 .build();
         RepeatableScalar repeatableEmpty = RepeatableScalar.builder()
-                .doubles(List.of())
-                .addAllDoubles(List.of())
-                .addDoubles(null)
+                .strings(List.of())
+                .addAllStrings(List.of())
+                .addStrings(null)
                 .build();
 
         // when then
@@ -85,7 +85,7 @@ class NullabilityTest {
     void repeatableScalarNullValues() {
         // given
         RepeatableScalar.Builder builder = RepeatableScalar.builder()
-                .doubles(asList(null, 10d));
+                .strings(asList(null, "test"));
 
         // when then
         assertThatThrownBy(builder::build)
@@ -101,7 +101,6 @@ class NullabilityTest {
                 .addOrders(null)
                 .ordersValue(null)
                 .addAllOrdersValue(null)
-                .addOrdersValue(null)
                 .build();
         RepeatableEnumMessage repeatableEmpty = RepeatableEnumMessage.builder()
                 .orders(List.of())
@@ -109,7 +108,6 @@ class NullabilityTest {
                 .addOrders(null)
                 .ordersValue(List.of())
                 .addAllOrdersValue(List.of())
-                .addOrdersValue(null)
                 .build();
 
         // when then

@@ -1,5 +1,6 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.RepeatableEnum;
 import com.protobuf.model.RepeatableEnumProto;
@@ -24,7 +25,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given
             RepeatablePacked record = new RepeatablePacked(
-                    List.of(10d, 11d),
+                    DoubleList.of(10d, 11d),
                     List.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
@@ -96,7 +97,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void defaultValues() throws IOException {
             // given
             RepeatablePacked record = new RepeatablePacked(
-                    List.of(0d),
+                    DoubleList.of(0d),
                     List.of(0f),
                     List.of(0),
                     List.of(0L),
@@ -135,7 +136,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void negativeValues() throws IOException {
             // given
             RepeatablePacked record = new RepeatablePacked(
-                    List.of(-10d, -11d),
+                    DoubleList.of(-10d, -11d),
                     List.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
@@ -187,7 +188,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
-                    .writeDoublePacked(1, List.of(10d, 11d))
+                    .writeDoublePacked(1, DoubleList.of(10d, 11d))
                     .writeFloatPacked(2, List.of(20f, 21f))
                     .writeInt32Packed(3, List.of(30, 31))
                     .writeInt64Packed(4, List.of(40L, 41L))
@@ -226,7 +227,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void partialObject() throws IOException {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
-                    .writeDoublePacked(1, List.of(10d))
+                    .writeDoublePacked(1, DoubleList.of(10d))
                     .writeInt64Packed(4, List.of(40L, 41L, 42L))
                     .writeSint32Packed(7, List.of(70, 71))
                     .writeSfixed32Packed(11, List.of(110))
@@ -247,7 +248,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void fullObjectReverseOrder() throws IOException {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
-                    .writeDoublePacked(1, List.of(10d))
+                    .writeDoublePacked(1, DoubleList.of(10d))
                     .writeSint32Packed(7, List.of(70))
                     .writeInt32Packed(3, List.of(30))
                     .writeFloatPacked(2, List.of(20f))
@@ -261,7 +262,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeInt32Packed(14, List.of(1))
                     .writeUint32Packed(5, List.of(51))
                     .writeUint64Packed(6, List.of(60L))
-                    .writeDoublePacked(1, List.of(11d))
+                    .writeDoublePacked(1, DoubleList.of(11d))
                     .writeFloatPacked(2, List.of(21f))
                     .writeUint64Packed(6, List.of(61L))
                     .writeInt64Packed(4, List.of(41L))
@@ -301,7 +302,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
                     // unknown
-                    .writeDoublePacked(21, List.of(110d, 111d))
+                    .writeDoublePacked(21, DoubleList.of(110d, 111d))
                     .writeFloatPacked(22, List.of(120f, 121f))
                     .writeInt32Packed(23, List.of(130, 131))
                     .writeInt64Packed(24, List.of(140L, 141L))
@@ -315,7 +316,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeSfixed64Packed(32, List.of(1120L, 1121L))
                     .writeBoolPacked(33, List.of(true, false))
                     // record
-                    .writeDoublePacked(1, List.of(10d))
+                    .writeDoublePacked(1, DoubleList.of(10d))
                     .writeFloatPacked(2, List.of(20f))
                     .writeInt32Packed(3, List.of(30))
                     .writeInt64Packed(4, List.of(40L))
@@ -369,7 +370,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void negativeValues() throws IOException {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
-                    .writeDoublePacked(1, List.of(-10d, -11d))
+                    .writeDoublePacked(1, DoubleList.of(-10d, -11d))
                     .writeFloatPacked(2, List.of(-20f, -21f))
                     .writeInt32Packed(3, List.of(-30, -31))
                     .writeInt64Packed(4, List.of(-40L, -41L))
@@ -410,7 +411,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = deserialize(writer -> writer
                     .writeDouble(1, 10d)
                     .writeDouble(1, 11d)
-                    .writeDoublePacked(1, List.of(12d, 13d, 14d))
+                    .writeDoublePacked(1, DoubleList.of(12d, 13d, 14d))
                     .writeFloat(2, 20f)
                     .writeFloat(2, 21f)
                     .writeFloatPacked(2, List.of(22f, 23f, 24f))
@@ -489,7 +490,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given
             RepeatablePacked record = new RepeatablePacked(
-                    List.of(10d, 11d),
+                    DoubleList.of(10d, 11d),
                     List.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
@@ -534,7 +535,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
         void negativeValues() throws IOException {
             // given
             RepeatablePacked record = new RepeatablePacked(
-                    List.of(-10d, -11d),
+                    DoubleList.of(-10d, -11d),
                     List.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),

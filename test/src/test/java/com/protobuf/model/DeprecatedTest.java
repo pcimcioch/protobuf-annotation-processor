@@ -37,19 +37,19 @@ class DeprecatedTest {
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someEnumValue", int.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someOther", DeprecatedSubRecord.class)).isFalse();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableField", List.class)).isFalse();
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableField", Integer.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableField", Collection.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableField", int.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableField", Collection.class)).isFalse();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnum", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnum", Collection.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableEnum", DeprecatedEnum.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableEnum", Collection.class)).isFalse();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnumValue", List.class)).isFalse();
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableEnumValue", Integer.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnumValue", Collection.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableEnumValue", int.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableEnumValue", Collection.class)).isFalse();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableOther", List.class)).isFalse();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "someRepeatableOther", Collection.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addSomeRepeatableOther", DeprecatedSubRecord.class)).isFalse();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllSomeRepeatableOther", Collection.class)).isFalse();
     }
@@ -62,19 +62,19 @@ class DeprecatedTest {
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedEnumValue", int.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedOther", DeprecatedSubRecord.class)).isTrue();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableField", List.class)).isTrue();
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableField", Integer.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableField", Collection.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableField", int.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableField", Collection.class)).isTrue();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnum", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnum", Collection.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableEnum", DeprecatedEnum.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableEnum", Collection.class)).isTrue();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnumValue", List.class)).isTrue();
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableEnumValue", Integer.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnumValue", Collection.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableEnumValue", int.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableEnumValue", Collection.class)).isTrue();
 
-        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableOther", List.class)).isTrue();
+        assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableOther", Collection.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addDeprecatedRepeatableOther", DeprecatedSubRecord.class)).isTrue();
         assertThat(methodDeprecated(DeprecatedRecord.Builder.class, "addAllDeprecatedRepeatableOther", Collection.class)).isTrue();
     }

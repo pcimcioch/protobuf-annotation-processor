@@ -64,47 +64,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    // TODO remove
-    public ProtobufWriter writeDoubleUnpacked(int number, List<Double> values) throws IOException {
-        for (double value : values) {
-            output.writeVarint32(I64.tagFrom(number));
-            output.writeDouble(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of double
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeDoublePacked(int number, List<Double> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofDoublePacked(values));
-        for (double value : values) {
-            output.writeDouble(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of double
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
     public ProtobufWriter writeDoubleUnpacked(int number, DoubleList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I64.tagFrom(number));

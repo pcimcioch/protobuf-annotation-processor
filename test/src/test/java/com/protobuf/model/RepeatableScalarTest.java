@@ -1,5 +1,6 @@
 package com.protobuf.model;
 
+import com.github.pcimcioch.protobuf.dto.DoubleList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ class RepeatableScalarTest {
     void singleElements() {
         // when
         RepeatableScalar model = new RepeatableScalar(
-                List.of(10d),
+                DoubleList.of(10d),
                 List.of(20f),
                 List.of(30),
                 List.of(40L),
@@ -80,7 +81,7 @@ class RepeatableScalarTest {
     void multipleElements() {
         // when
         RepeatableScalar model = new RepeatableScalar(
-                List.of(10d, 11d),
+                DoubleList.of(10d, 11d),
                 List.of(20f, 21f),
                 List.of(30, 31),
                 List.of(40L, 41L),
@@ -117,27 +118,9 @@ class RepeatableScalarTest {
     }
 
     @Test
-    void modifyInputList() {
-        // given
-        List<Double> input = new ArrayList<>();
-        input.add(10d);
-        RepeatableScalar model = new RepeatableScalar(input, List.of(), List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
-
-        // when
-        input.add(20d);
-
-        // then
-        assertThat(model.doubles()).containsExactly(10d);
-        assertThat(model.protobufSize()).isEqualTo(9);
-    }
-
-    @Test
     void modifyOutputList() {
         // given
-        List<Double> input = new ArrayList<>();
-        input.add(10d);
-        RepeatableScalar model = new RepeatableScalar(input, List.of(), List.of(), List.of(), List.of(), List.of(),
+        RepeatableScalar model = new RepeatableScalar(DoubleList.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
                 List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
 
         // when then
@@ -148,25 +131,20 @@ class RepeatableScalarTest {
     @Test
     void modifyBuilderParameters() {
         // given
-        List<Double> input1 = new ArrayList<>();
-        input1.add(10d);
-        input1.add(11d);
-        List<Double> input2 = new ArrayList<>();
-        input2.add(20d);
-        input2.add(21d);
+        List<Double> input = new ArrayList<>();
+        input.add(10d);
+        input.add(11d);
         RepeatableScalar.Builder modelBuilder = RepeatableScalar.builder()
-                .doubles(input1)
-                .addAllDoubles(input2)
-                .addDoubles(30d);
+                .addAllDoubles(input)
+                .addDoubles(20d);
 
         // when
-        input1.add(12d);
-        input2.add(22d);
+        input.add(12d);
         RepeatableScalar model = modelBuilder.build();
 
         // then
-        assertThat(model.doubles()).containsExactly(10d, 11d, 20d, 21d, 30d);
-        assertThat(model.protobufSize()).isEqualTo(45);
+        assertThat(model.doubles()).containsExactly(10d, 11d, 20d);
+        assertThat(model.protobufSize()).isEqualTo(27);
     }
 
     @Test
