@@ -92,6 +92,36 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of floats. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @return list copy
+     */
+    public static FloatList copy(FloatList value) {
+        return value == null ? FloatList.of() : value;
+    }
+
+    /**
+     * Copy list of longs. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @return list copy
+     */
+    public static LongList copy(LongList value) {
+        return value == null ? LongList.of() : value;
+    }
+
+    /**
+     * Copy list of ints. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @return list copy
+     */
+    public static IntList copy(IntList value) {
+        return value == null ? IntList.of() : value;
+    }
+
+    /**
      * Copy message value
      *
      * @param value value
@@ -227,6 +257,51 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static DoubleList.Builder merge(DoubleList.Builder current, DoubleList toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of floats
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return merged lists
+     */
+    public static FloatList.Builder merge(FloatList.Builder current, FloatList toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of longs
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return merged lists
+     */
+    public static LongList.Builder merge(LongList.Builder current, LongList toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of ints
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return merged lists
+     */
+    public static IntList.Builder merge(IntList.Builder current, IntList toMerge) {
         if (toMerge != null && !toMerge.isEmpty()) {
             current.addAll(toMerge);
         }

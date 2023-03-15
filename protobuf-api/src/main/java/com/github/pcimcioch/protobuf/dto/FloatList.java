@@ -9,26 +9,26 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 /**
- * Immutable list of doubles
+ * Immutable list of floats
  */
-public final class DoubleList extends AbstractList<Double> implements RandomAccess {
-    private static final DoubleList EMPTY = new DoubleList(new double[0], 0);
+public final class FloatList extends AbstractList<Float> implements RandomAccess {
+    private static final FloatList EMPTY = new FloatList(new float[0], 0);
 
-    private final double[] values;
+    private final float[] values;
     private final int size;
 
-    private DoubleList(double[] values, int size) {
+    private FloatList(float[] values, int size) {
         this.values = values;
         this.size = size;
     }
 
-    private DoubleList(double[] values) {
+    private FloatList(float[] values) {
         this(values, values.length);
     }
 
     @Override
     @Deprecated
-    public Double get(int index) {
+    public Float get(int index) {
         return values[rangeCheck(index)];
     }
 
@@ -38,7 +38,7 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
      * @param index index
      * @return primitive value
      */
-    public double getDouble(int index) {
+    public float getFloat(int index) {
         return values[rangeCheck(index)];
     }
 
@@ -64,26 +64,26 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
      * @param elements elements
      * @return new list
      */
-    public static DoubleList of(double... elements) {
-        return elements.length == 0 ? EMPTY : new DoubleList(elements);
+    public static FloatList of(float... elements) {
+        return elements.length == 0 ? EMPTY : new FloatList(elements);
     }
 
     /**
      * Return immutable copy of given collection
      *
      * @param elements elements
-     * @return double list
+     * @return float list
      */
-    public static DoubleList copyOf(Collection<Double> elements) {
+    public static FloatList copyOf(Collection<Float> elements) {
         if (elements.isEmpty()) {
             return EMPTY;
         }
-        double[] data = new double[elements.size()];
+        float[] data = new float[elements.size()];
         int i = 0;
-        for (double element : elements) {
+        for (float element : elements) {
             data[i++] = element;
         }
-        return new DoubleList(data);
+        return new FloatList(data);
     }
 
     private int rangeCheck(int index) {
@@ -97,7 +97,7 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
      * Builder
      */
     public static final class Builder {
-        private double[] values = new double[8];
+        private float[] values = new float[8];
         private int size = 0;
 
         /**
@@ -105,7 +105,7 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
          *
          * @param element element to add
          */
-        public void add(double element) {
+        public void add(float element) {
             grow(1);
             values[size++] = element;
         }
@@ -115,14 +115,14 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
          *
          * @param elements elements to add
          */
-        public void addAll(Collection<Double> elements) {
+        public void addAll(Collection<Float> elements) {
             grow(elements.size());
 
-            if (elements instanceof DoubleList our) {
+            if (elements instanceof FloatList our) {
                 System.arraycopy(our.values, 0, values, size, our.size);
                 size += our.size;
             } else {
-                for (double element : elements) {
+                for (float element : elements) {
                     values[size++] = element;
                 }
             }
@@ -133,7 +133,7 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
          */
         public void clear() {
             size = 0;
-            values = new double[8];
+            values = new float[8];
         }
 
         /**
@@ -141,8 +141,8 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
          *
          * @return new immutable list
          */
-        public DoubleList build() {
-            DoubleList list = size == 0 ? EMPTY : new DoubleList(values, size);
+        public FloatList build() {
+            FloatList list = size == 0 ? EMPTY : new FloatList(values, size);
             values = null;
             return list;
         }
