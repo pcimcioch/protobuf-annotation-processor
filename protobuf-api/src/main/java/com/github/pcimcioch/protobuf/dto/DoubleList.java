@@ -22,6 +22,10 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
         this.size = size;
     }
 
+    private DoubleList(double[] values) {
+        this(values, values.length);
+    }
+
     @Override
     public Double get(int index) {
         return values[rangeCheck(index)];
@@ -60,7 +64,25 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
      * @return new list
      */
     public static DoubleList of(double... elements) {
-        return elements.length == 0 ? EMPTY : new DoubleList(elements, elements.length);
+        return elements.length == 0 ? EMPTY : new DoubleList(elements);
+    }
+
+    /**
+     * Return immutable copy of given collection
+     *
+     * @param elements elements
+     * @return double list
+     */
+    public static DoubleList copyOf(Collection<Double> elements) {
+        if (elements.isEmpty()) {
+            return EMPTY;
+        }
+        double[] data = new double[elements.size()];
+        int i = 0;
+        for (Double element : elements) {
+            data[i++] = element;
+        }
+        return new DoubleList(data);
     }
 
     private int rangeCheck(int index) {

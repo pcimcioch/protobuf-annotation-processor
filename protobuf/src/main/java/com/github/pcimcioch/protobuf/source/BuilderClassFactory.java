@@ -30,15 +30,6 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
 class BuilderClassFactory {
-    private static final Map<TypeName, String> DEFAULTS = Map.of(
-            simpleName("double"), "0d",
-            simpleName("float"), "0f",
-            simpleName("int"), "0",
-            simpleName("long"), "0L",
-            simpleName("boolean"), "false",
-            simpleName("String"), "\"\"",
-            canonicalName(ByteArray.class), "com.github.pcimcioch.protobuf.dto.ByteArray.empty()"
-    );
 
     ClassSource buildBuilderClass(MessageDefinition message) {
         ClassSource builderClass = buildSourceFile(message);
@@ -62,7 +53,7 @@ class BuilderClassFactory {
     }
 
     private void addField(ClassSource builderClass, FieldDefinition field) {
-        builderClass.add(field(field.javaFieldType(), field.javaFieldName())
+        builderClass.add(field(builderFieldType(field), field.javaFieldName())
                 .set(privateVisibility())
                 .set(initializerOf(field))
         );
@@ -179,7 +170,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.javaFieldType().generic(), field.javaFieldName()))
+                .add(parameter(singleAddType(field), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -198,7 +189,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.javaFieldType().generic().inCollection(), field.javaFieldName()))
+                .add(parameter(collectionAddType(field), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -263,7 +254,7 @@ class BuilderClassFactory {
 
     private void addBuildMethod(ClassSource builderClass, MessageDefinition message) {
         List<String> constructorParameters = message.fields().stream()
-                .map(FieldDefinition::javaFieldName)
+                .map(BuilderClassFactory::fieldToRecordTransform)
                 .toList();
 
         CodeBody body = body("return new $MessageType($constructorParameters);",
@@ -303,9 +294,32 @@ class BuilderClassFactory {
         if (field.rules().repeated()) {
             return initializer("new java.util.ArrayList<>()");
         }
-        if (field.protoKind() == MESSAGE) {
-            return initializer("null");
-        }
-        return initializer(DEFAULTS.get(field.javaFieldType()));
+
+        return initializer(switch (field.protoKind()) {
+            case DOUBLE -> "0d";
+            case FLOAT -> "0f";
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> "0";
+            case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> "0L";
+            case BOOL -> "false";
+            case STRING -> "\"\"";
+            case BYTES -> "com.github.pcimcioch.protobuf.dto.ByteArray.empty()";
+            case MESSAGE -> "null";
+        });
+    }
+
+    private static TypeName builderFieldType(FieldDefinition field) {
+        return field.javaFieldType();
+    }
+
+    private static String fieldToRecordTransform(FieldDefinition field) {
+        return field.javaFieldName();
+    }
+
+    private static TypeName singleAddType(FieldDefinition field) {
+        return field.javaFieldType().generic();
+    }
+
+    private static TypeName collectionAddType(FieldDefinition field) {
+        return field.javaFieldType().generic().inCollection();
     }
 }
