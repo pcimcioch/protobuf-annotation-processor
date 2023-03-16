@@ -120,12 +120,8 @@ class NullabilityTest {
 
     @Test
     void repeatableEnumNullValues() {
-        // given
-        RepeatableEnumMessage.Builder builder = RepeatableEnumMessage.builder()
-                .ordersValue(asList(null, 1));
-
         // when then
-        assertThatThrownBy(builder::build)
+        assertThatThrownBy(() -> RepeatableEnumMessage.builder().ordersValue(asList(null, 1)))
                 .isInstanceOf(NullPointerException.class);
     }
 

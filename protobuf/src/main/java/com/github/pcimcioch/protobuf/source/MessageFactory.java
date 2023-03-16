@@ -86,6 +86,7 @@ class MessageFactory {
     }
 
     private void addEnumListGetter(RecordSource source, FieldDefinition field) {
+        // TODO [performance] instead of creating enum list every time create some kind of wrapper list class
         CodeBody body = body("return $valueName.stream().map($EnumType::forNumber).toList();",
                 param("EnumType", field.protobufType()),
                 param("valueName", field.javaFieldName())

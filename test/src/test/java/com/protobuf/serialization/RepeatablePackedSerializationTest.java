@@ -41,7 +41,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     List.of(true, false),
-                    List.of(2, 1)
+                    IntList.of(2, 1)
             );
 
             // when then
@@ -113,7 +113,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(0),
                     LongList.of(0L),
                     List.of(false),
-                    List.of(0)
+                    IntList.of(0)
             );
 
             // when then
@@ -152,7 +152,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     List.of(true, false),
-                    List.of(1, 0)
+                    IntList.of(1, 0)
             );
 
             // when then
@@ -506,7 +506,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     List.of(true, false),
-                    List.of(1, 2)
+                    IntList.of(1, 2)
             );
 
             // when
@@ -551,7 +551,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     List.of(true, false),
-                    List.of(2, 10)
+                    IntList.of(2, 10)
             );
 
             // when

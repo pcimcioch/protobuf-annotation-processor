@@ -61,7 +61,7 @@ class RepeatablePackedTest {
                 IntList.of(110),
                 LongList.of(120L),
                 List.of(true),
-                List.of(1)
+                IntList.of(1)
         );
 
         // then
@@ -100,7 +100,7 @@ class RepeatablePackedTest {
                 IntList.of(110, 111),
                 LongList.of(120L, 121L),
                 List.of(true, false),
-                List.of(1, 2)
+                IntList.of(1, 2)
         );
 
         // then
@@ -125,12 +125,9 @@ class RepeatablePackedTest {
     @Test
     void modifyOutputList() {
         // given
-        List<Integer> enums = new ArrayList<>();
-        enums.add(1);
-
         RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), FloatList.of(), IntList.of(),
                 LongList.of(), IntList.of(), LongList.of(), IntList.of(), LongList.of(), IntList.of(), LongList.of(),
-                IntList.of(), LongList.of(), List.of(), enums);
+                IntList.of(), LongList.of(), List.of(), IntList.of(1));
 
         // when then
         assertThatThrownBy(() -> model.doubles().add(20d))

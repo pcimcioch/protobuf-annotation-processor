@@ -1,5 +1,6 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.RepeatableEnum;
 import com.protobuf.model.RepeatableEnumMessage;
@@ -23,7 +24,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given
-            RepeatableEnumMessage record = new RepeatableEnumMessage(List.of(2, 1));
+            RepeatableEnumMessage record = new RepeatableEnumMessage(IntList.of(2, 1));
 
             // when then
             assertProto(serialize(record))
@@ -45,7 +46,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         @Test
         void defaultValue() throws IOException {
             // given
-            RepeatableEnumMessage record = new RepeatableEnumMessage(List.of(0));
+            RepeatableEnumMessage record = new RepeatableEnumMessage(IntList.of(0));
 
             // when then
             assertProto(serialize(record))
@@ -127,7 +128,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given
-            RepeatableEnumMessage record = new RepeatableEnumMessage(List.of(2, 0));
+            RepeatableEnumMessage record = new RepeatableEnumMessage(IntList.of(2, 0));
 
             // when
             RepeatableEnumMessage deserialized = deserialize(serialize(record));
@@ -139,7 +140,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         @Test
         void unknownEnum() throws IOException {
             // given
-            RepeatableEnumMessage record = new RepeatableEnumMessage(List.of(10));
+            RepeatableEnumMessage record = new RepeatableEnumMessage(IntList.of(10));
 
             // when
             RepeatableEnumMessage deserialized = deserialize(serialize(record));

@@ -304,8 +304,8 @@ class BuilderClassFactory {
             return initializer(switch (field.protoKind()) {
                 case DOUBLE -> "com.github.pcimcioch.protobuf.dto.DoubleList.builder()";
                 case FLOAT -> "com.github.pcimcioch.protobuf.dto.FloatList.builder()";
+                case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> "com.github.pcimcioch.protobuf.dto.IntList.builder()";
                 case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> "com.github.pcimcioch.protobuf.dto.LongList.builder()";
-                case INT32, UINT32, SINT32, FIXED32, SFIXED32 -> "com.github.pcimcioch.protobuf.dto.IntList.builder()";
                 default -> "new java.util.ArrayList<>()";
             });
         }
@@ -330,8 +330,8 @@ class BuilderClassFactory {
         return switch (field.protoKind()) {
             case DOUBLE -> canonicalName(DoubleList.Builder.class);
             case FLOAT -> canonicalName(FloatList.Builder.class);
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> canonicalName(IntList.Builder.class);
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> canonicalName(LongList.Builder.class);
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32 -> canonicalName(IntList.Builder.class);
             default -> field.javaFieldType();
         };
     }
@@ -342,7 +342,7 @@ class BuilderClassFactory {
         }
 
         return switch (field.protoKind()) {
-            case BOOL, STRING, BYTES, ENUM, MESSAGE -> field.javaFieldName();
+            case BOOL, STRING, BYTES, MESSAGE -> field.javaFieldName();
             default -> field.javaFieldName() + ".build()";
         };
     }
