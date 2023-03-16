@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.LongList;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +88,7 @@ public final class FieldDefinition {
             case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
                     rules.repeated() ? simpleName("Integer").inList() : simpleName("int");
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
-                    rules.repeated() ? simpleName("Long").inList() : simpleName("long");
+                    rules.repeated() ? canonicalName(LongList.class) : simpleName("long");
             case BOOL -> rules.repeated() ? simpleName("Boolean").inList() : simpleName("boolean");
             case STRING -> rules.repeated() ? simpleName("String").inList() : simpleName("String");
             case BYTES -> rules.repeated() ? canonicalName(ByteArray.class).inList() : canonicalName(ByteArray.class);

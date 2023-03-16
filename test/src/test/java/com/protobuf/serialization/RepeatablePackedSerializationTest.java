@@ -2,6 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.RepeatableEnum;
 import com.protobuf.model.RepeatableEnumProto;
@@ -29,15 +30,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
                     List.of(30, 31),
-                    List.of(40L, 41L),
+                    LongList.of(40L, 41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(70, 71),
-                    List.of(80L, 81L),
+                    LongList.of(80L, 81L),
                     List.of(90, 91),
-                    List.of(100L, 101L),
+                    LongList.of(100L, 101L),
                     List.of(110, 111),
-                    List.of(120L, 121L),
+                    LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of(2, 1)
             );
@@ -101,15 +102,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     DoubleList.of(0d),
                     FloatList.of(0f),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(false),
                     List.of(0)
             );
@@ -140,15 +141,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
                     List.of(-30, -31),
-                    List.of(-40L, -41L),
+                    LongList.of(-40L, -41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(-70, -71),
-                    List.of(-80L, -81L),
+                    LongList.of(-80L, -81L),
                     List.of(-90, -91),
-                    List.of(-100L, -101L),
+                    LongList.of(-100L, -101L),
                     List.of(-110, -111),
-                    List.of(-120L, -121L),
+                    LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of(1, 0)
             );
@@ -190,17 +191,17 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
                     .writeDoublePacked(1, DoubleList.of(10d, 11d))
-                    .writeFloatPacked(2, List.of(20f, 21f))
+                    .writeFloatPacked(2, FloatList.of(20f, 21f))
                     .writeInt32Packed(3, List.of(30, 31))
-                    .writeInt64Packed(4, List.of(40L, 41L))
+                    .writeInt64Packed(4, LongList.of(40L, 41L))
                     .writeUint32Packed(5, List.of(50, 51))
-                    .writeUint64Packed(6, List.of(60L, 61L))
+                    .writeUint64Packed(6, LongList.of(60L, 61L))
                     .writeSint32Packed(7, List.of(70, 71))
-                    .writeSint64Packed(8, List.of(80L, 81L))
+                    .writeSint64Packed(8, LongList.of(80L, 81L))
                     .writeFixed32Packed(9, List.of(90, 91))
-                    .writeFixed64Packed(10, List.of(100L, 101L))
+                    .writeFixed64Packed(10, LongList.of(100L, 101L))
                     .writeSfixed32Packed(11, List.of(110, 111))
-                    .writeSfixed64Packed(12, List.of(120L, 121L))
+                    .writeSfixed64Packed(12, LongList.of(120L, 121L))
                     .writeBoolPacked(13, List.of(true, false))
                     .writeInt32Packed(14, List.of(2, 0))
             );
@@ -229,7 +230,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
                     .writeDoublePacked(1, DoubleList.of(10d))
-                    .writeInt64Packed(4, List.of(40L, 41L, 42L))
+                    .writeInt64Packed(4, LongList.of(40L, 41L, 42L))
                     .writeSint32Packed(7, List.of(70, 71))
                     .writeSfixed32Packed(11, List.of(110))
                     .writeBoolPacked(13, List.of(false, true, true))
@@ -252,29 +253,29 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeDoublePacked(1, DoubleList.of(10d))
                     .writeSint32Packed(7, List.of(70))
                     .writeInt32Packed(3, List.of(30))
-                    .writeFloatPacked(2, List.of(20f))
+                    .writeFloatPacked(2, FloatList.of(20f))
                     .writeSfixed32Packed(11, List.of(110))
                     .writeInt32Packed(3, List.of(31))
-                    .writeFixed64Packed(10, List.of(100L))
-                    .writeInt64Packed(4, List.of(40L))
+                    .writeFixed64Packed(10, LongList.of(100L))
+                    .writeInt64Packed(4, LongList.of(40L))
                     .writeUint32Packed(5, List.of(50))
                     .writeSint32Packed(7, List.of(71))
                     .writeFixed32Packed(9, List.of(90))
                     .writeInt32Packed(14, List.of(1))
                     .writeUint32Packed(5, List.of(51))
-                    .writeUint64Packed(6, List.of(60L))
+                    .writeUint64Packed(6, LongList.of(60L))
                     .writeDoublePacked(1, DoubleList.of(11d))
-                    .writeFloatPacked(2, List.of(21f))
-                    .writeUint64Packed(6, List.of(61L))
-                    .writeInt64Packed(4, List.of(41L))
+                    .writeFloatPacked(2, FloatList.of(21f))
+                    .writeUint64Packed(6, LongList.of(61L))
+                    .writeInt64Packed(4, LongList.of(41L))
                     .writeBoolPacked(13, List.of(true))
-                    .writeSint64Packed(8, List.of(80L))
-                    .writeSint64Packed(8, List.of(81L))
+                    .writeSint64Packed(8, LongList.of(80L))
+                    .writeSint64Packed(8, LongList.of(81L))
                     .writeFixed32Packed(9, List.of(91))
-                    .writeSfixed64Packed(12, List.of(120L))
-                    .writeFixed64Packed(10, List.of(101L))
+                    .writeSfixed64Packed(12, LongList.of(120L))
+                    .writeFixed64Packed(10, LongList.of(101L))
                     .writeSfixed32Packed(11, List.of(111))
-                    .writeSfixed64Packed(12, List.of(121L))
+                    .writeSfixed64Packed(12, LongList.of(121L))
                     .writeBoolPacked(13, List.of(false))
                     .writeInt32Packed(14, List.of(2))
             );
@@ -304,31 +305,31 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = deserialize(writer -> writer
                     // unknown
                     .writeDoublePacked(21, DoubleList.of(110d, 111d))
-                    .writeFloatPacked(22, List.of(120f, 121f))
+                    .writeFloatPacked(22, FloatList.of(120f, 121f))
                     .writeInt32Packed(23, List.of(130, 131))
-                    .writeInt64Packed(24, List.of(140L, 141L))
+                    .writeInt64Packed(24, LongList.of(140L, 141L))
                     .writeUint32Packed(25, List.of(150, 151))
-                    .writeUint64Packed(26, List.of(160L, 161L))
+                    .writeUint64Packed(26, LongList.of(160L, 161L))
                     .writeSint32Packed(27, List.of(170, 171))
-                    .writeSint64Packed(28, List.of(180L, 181L))
+                    .writeSint64Packed(28, LongList.of(180L, 181L))
                     .writeFixed32Packed(29, List.of(190, 191))
-                    .writeFixed64Packed(30, List.of(1100L, 1101L))
+                    .writeFixed64Packed(30, LongList.of(1100L, 1101L))
                     .writeSfixed32Packed(31, List.of(1110, 1111))
-                    .writeSfixed64Packed(32, List.of(1120L, 1121L))
+                    .writeSfixed64Packed(32, LongList.of(1120L, 1121L))
                     .writeBoolPacked(33, List.of(true, false))
                     // record
                     .writeDoublePacked(1, DoubleList.of(10d))
-                    .writeFloatPacked(2, List.of(20f))
+                    .writeFloatPacked(2, FloatList.of(20f))
                     .writeInt32Packed(3, List.of(30))
-                    .writeInt64Packed(4, List.of(40L))
+                    .writeInt64Packed(4, LongList.of(40L))
                     .writeUint32Packed(5, List.of(50))
-                    .writeUint64Packed(6, List.of(60L))
+                    .writeUint64Packed(6, LongList.of(60L))
                     .writeSint32Packed(7, List.of(70))
-                    .writeSint64Packed(8, List.of(80L))
+                    .writeSint64Packed(8, LongList.of(80L))
                     .writeFixed32Packed(9, List.of(90))
-                    .writeFixed64Packed(10, List.of(100L))
+                    .writeFixed64Packed(10, LongList.of(100L))
                     .writeSfixed32Packed(11, List.of(110))
-                    .writeSfixed64Packed(12, List.of(120L))
+                    .writeSfixed64Packed(12, LongList.of(120L))
                     .writeBoolPacked(13, List.of(true))
                     .writeInt32Packed(14, List.of(10))
                     // different wire type
@@ -372,17 +373,17 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given when
             RepeatablePacked record = deserialize(writer -> writer
                     .writeDoublePacked(1, DoubleList.of(-10d, -11d))
-                    .writeFloatPacked(2, List.of(-20f, -21f))
+                    .writeFloatPacked(2, FloatList.of(-20f, -21f))
                     .writeInt32Packed(3, List.of(-30, -31))
-                    .writeInt64Packed(4, List.of(-40L, -41L))
+                    .writeInt64Packed(4, LongList.of(-40L, -41L))
                     .writeUint32Packed(5, List.of(50, 51))
-                    .writeUint64Packed(6, List.of(60L, 61L))
+                    .writeUint64Packed(6, LongList.of(60L, 61L))
                     .writeSint32Packed(7, List.of(-70, -71))
-                    .writeSint64Packed(8, List.of(-80L, -81L))
+                    .writeSint64Packed(8, LongList.of(-80L, -81L))
                     .writeFixed32Packed(9, List.of(-90, -91))
-                    .writeFixed64Packed(10, List.of(-100L, -101L))
+                    .writeFixed64Packed(10, LongList.of(-100L, -101L))
                     .writeSfixed32Packed(11, List.of(-110, -111))
-                    .writeSfixed64Packed(12, List.of(-120L, -121L))
+                    .writeSfixed64Packed(12, LongList.of(-120L, -121L))
                     .writeBoolPacked(13, List.of(true, false))
                     .writeInt32Packed(14, List.of(1, 2))
             );
@@ -415,37 +416,37 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeDoublePacked(1, DoubleList.of(12d, 13d, 14d))
                     .writeFloat(2, 20f)
                     .writeFloat(2, 21f)
-                    .writeFloatPacked(2, List.of(22f, 23f, 24f))
+                    .writeFloatPacked(2, FloatList.of(22f, 23f, 24f))
                     .writeInt32(3, 30)
                     .writeInt32(3, 31)
                     .writeInt32Packed(3, List.of(32, 33, 34))
                     .writeInt64(4, 40L)
                     .writeInt64(4, 41L)
-                    .writeInt64Packed(4, List.of(42L, 43L, 44L))
+                    .writeInt64Packed(4, LongList.of(42L, 43L, 44L))
                     .writeUint32(5, 50)
                     .writeUint32(5, 51)
                     .writeUint32Packed(5, List.of(52, 53, 54))
                     .writeUint64(6, 60L)
                     .writeUint64(6, 61L)
-                    .writeUint64Packed(6, List.of(62L, 63L, 64L))
+                    .writeUint64Packed(6, LongList.of(62L, 63L, 64L))
                     .writeSint32(7, 70)
                     .writeSint32(7, 71)
                     .writeSint32Packed(7, List.of(72, 73, 74))
                     .writeSint64(8, 80L)
                     .writeSint64(8, 81L)
-                    .writeSint64Packed(8, List.of(82L, 83L, 84L))
+                    .writeSint64Packed(8, LongList.of(82L, 83L, 84L))
                     .writeFixed32(9, 90)
                     .writeFixed32(9, 91)
                     .writeFixed32Packed(9, List.of(92, 93, 94))
                     .writeFixed64(10, 100L)
                     .writeFixed64(10, 101L)
-                    .writeFixed64Packed(10, List.of(102L, 103L, 104L))
+                    .writeFixed64Packed(10, LongList.of(102L, 103L, 104L))
                     .writeSfixed32(11, 110)
                     .writeSfixed32(11, 111)
                     .writeSfixed32Packed(11, List.of(112, 113, 114))
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
-                    .writeSfixed64Packed(12, List.of(122L, 123L, 124L))
+                    .writeSfixed64Packed(12, LongList.of(122L, 123L, 124L))
                     .writeBoolUnpacked(13, List.of(true, false))
                     .writeBoolPacked(13, List.of(false, true))
                     .writeInt32(14, 1)
@@ -494,15 +495,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
                     List.of(30, 31),
-                    List.of(40L, 41L),
+                    LongList.of(40L, 41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(70, 71),
-                    List.of(80L, 81L),
+                    LongList.of(80L, 81L),
                     List.of(90, 91),
-                    List.of(100L, 101L),
+                    LongList.of(100L, 101L),
                     List.of(110, 111),
-                    List.of(120L, 121L),
+                    LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of(1, 2)
             );
@@ -539,15 +540,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
                     List.of(-30, -31),
-                    List.of(-40L, -41L),
+                    LongList.of(-40L, -41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(-70, -71),
-                    List.of(-80L, -81L),
+                    LongList.of(-80L, -81L),
                     List.of(-90, -91),
-                    List.of(-100L, -101L),
+                    LongList.of(-100L, -101L),
                     List.of(-110, -111),
-                    List.of(-120L, -121L),
+                    LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of(2, 10)
             );

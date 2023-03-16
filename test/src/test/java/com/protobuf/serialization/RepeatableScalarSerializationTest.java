@@ -3,6 +3,7 @@ package com.protobuf.serialization;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;
@@ -33,15 +34,15 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
                     List.of(30, 31),
-                    List.of(40L, 41L),
+                    LongList.of(40L, 41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(70, 71),
-                    List.of(80L, 81L),
+                    LongList.of(80L, 81L),
                     List.of(90, 91),
-                    List.of(100L, 101L),
+                    LongList.of(100L, 101L),
                     List.of(110, 111),
-                    List.of(120L, 121L),
+                    LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
@@ -128,15 +129,15 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     DoubleList.of(0d),
                     FloatList.of(0f),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(0),
-                    List.of(0L),
+                    LongList.of(0L),
                     List.of(false),
                     List.of(""),
                     List.of(ba())
@@ -169,15 +170,15 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
                     List.of(-30, -31),
-                    List.of(-40L, -41L),
+                    LongList.of(-40L, -41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(-70, -71),
-                    List.of(-80L, -81L),
+                    LongList.of(-80L, -81L),
                     List.of(-90, -91),
-                    List.of(-100L, -101L),
+                    LongList.of(-100L, -101L),
                     List.of(-110, -111),
-                    List.of(-120L, -121L),
+                    LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
@@ -521,37 +522,37 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeDoublePacked(1, DoubleList.of(12d, 13d, 14d))
                     .writeFloat(2, 20f)
                     .writeFloat(2, 21f)
-                    .writeFloatPacked(2, List.of(22f, 23f, 24f))
+                    .writeFloatPacked(2, FloatList.of(22f, 23f, 24f))
                     .writeInt32(3, 30)
                     .writeInt32(3, 31)
                     .writeInt32Packed(3, List.of(32, 33, 34))
                     .writeInt64(4, 40L)
                     .writeInt64(4, 41L)
-                    .writeInt64Packed(4, List.of(42L, 43L, 44L))
+                    .writeInt64Packed(4, LongList.of(42L, 43L, 44L))
                     .writeUint32(5, 50)
                     .writeUint32(5, 51)
                     .writeUint32Packed(5, List.of(52, 53, 54))
                     .writeUint64(6, 60L)
                     .writeUint64(6, 61L)
-                    .writeUint64Packed(6, List.of(62L, 63L, 64L))
+                    .writeUint64Packed(6, LongList.of(62L, 63L, 64L))
                     .writeSint32(7, 70)
                     .writeSint32(7, 71)
                     .writeSint32Packed(7, List.of(72, 73, 74))
                     .writeSint64(8, 80L)
                     .writeSint64(8, 81L)
-                    .writeSint64Packed(8, List.of(82L, 83L, 84L))
+                    .writeSint64Packed(8, LongList.of(82L, 83L, 84L))
                     .writeFixed32(9, 90)
                     .writeFixed32(9, 91)
                     .writeFixed32Packed(9, List.of(92, 93, 94))
                     .writeFixed64(10, 100L)
                     .writeFixed64(10, 101L)
-                    .writeFixed64Packed(10, List.of(102L, 103L, 104L))
+                    .writeFixed64Packed(10, LongList.of(102L, 103L, 104L))
                     .writeSfixed32(11, 110)
                     .writeSfixed32(11, 111)
                     .writeSfixed32Packed(11, List.of(112, 113, 114))
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
-                    .writeSfixed64Packed(12, List.of(122L, 123L, 124L))
+                    .writeSfixed64Packed(12, LongList.of(122L, 123L, 124L))
                     .writeBoolUnpacked(13, List.of(true, false))
                     .writeBoolPacked(13, List.of(false, true))
             );
@@ -597,15 +598,15 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
                     List.of(30, 31),
-                    List.of(40L, 41L),
+                    LongList.of(40L, 41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(70, 71),
-                    List.of(80L, 81L),
+                    LongList.of(80L, 81L),
                     List.of(90, 91),
-                    List.of(100L, 101L),
+                    LongList.of(100L, 101L),
                     List.of(110, 111),
-                    List.of(120L, 121L),
+                    LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
@@ -644,15 +645,15 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
                     List.of(-30, -31),
-                    List.of(-40L, -41L),
+                    LongList.of(-40L, -41L),
                     List.of(50, 51),
-                    List.of(60L, 61L),
+                    LongList.of(60L, 61L),
                     List.of(-70, -71),
-                    List.of(-80L, -81L),
+                    LongList.of(-80L, -81L),
                     List.of(-90, -91),
-                    List.of(-100L, -101L),
+                    LongList.of(-100L, -101L),
                     List.of(-110, -111),
-                    List.of(-120L, -121L),
+                    LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))

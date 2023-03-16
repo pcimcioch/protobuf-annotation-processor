@@ -2,6 +2,7 @@ package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.LongList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -49,15 +50,15 @@ class RepeatablePackedTest {
                 DoubleList.of(10d),
                 FloatList.of(20f),
                 List.of(30),
-                List.of(40L),
+                LongList.of(40L),
                 List.of(50),
-                List.of(60L),
+                LongList.of(60L),
                 List.of(70),
-                List.of(80L),
+                LongList.of(80L),
                 List.of(90),
-                List.of(100L),
+                LongList.of(100L),
                 List.of(110),
-                List.of(120L),
+                LongList.of(120L),
                 List.of(true),
                 List.of(1)
         );
@@ -88,15 +89,15 @@ class RepeatablePackedTest {
                 DoubleList.of(10d, 11d),
                 FloatList.of(20f, 21f),
                 List.of(30, 31),
-                List.of(40L, 41L),
+                LongList.of(40L, 41L),
                 List.of(50, 51),
-                List.of(60L, 61L),
+                LongList.of(60L, 61L),
                 List.of(70, 71),
-                List.of(80L, 81L),
+                LongList.of(80L, 81L),
                 List.of(90, 91),
-                List.of(100L, 101L),
+                LongList.of(100L, 101L),
                 List.of(110, 111),
-                List.of(120L, 121L),
+                LongList.of(120L, 121L),
                 List.of(true, false),
                 List.of(1, 2)
         );
@@ -126,8 +127,9 @@ class RepeatablePackedTest {
         List<Integer> enums = new ArrayList<>();
         enums.add(1);
 
-        RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), FloatList.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), enums);
+        RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), FloatList.of(), List.of(), LongList.of(),
+                List.of(), LongList.of(), List.of(), LongList.of(), List.of(), LongList.of(), List.of(), LongList.of(),
+                List.of(), enums);
 
         // when then
         assertThatThrownBy(() -> model.doubles().add(20d))
