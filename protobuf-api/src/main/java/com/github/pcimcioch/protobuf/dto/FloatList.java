@@ -47,7 +47,22 @@ public final class FloatList extends AbstractList<Float> implements RandomAccess
         return size;
     }
 
-    // TODO add better hashcode and equals
+    @Override
+    public int hashCode() {
+        int result = 1;
+        for (int i = 0; i < size; i++) {
+            result = 31 * result + Float.floatToIntBits(values[i]);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof FloatList other && other.size == size
+                ? Arrays.equals(values, 0, size, other.values, 0, size)
+                : super.equals(o);
+    }
 
     /**
      * Returns new builder

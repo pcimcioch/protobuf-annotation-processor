@@ -47,7 +47,23 @@ public final class DoubleList extends AbstractList<Double> implements RandomAcce
         return size;
     }
 
-    // TODO add better hashcode and equals
+    @Override
+    public int hashCode() {
+        int result = 1;
+        for (int i = 0; i < size; i++) {
+            long bits = Double.doubleToLongBits(values[i]);
+            result = 31 * result + (int) (bits ^ (bits >>> 32));
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof DoubleList other && other.size == size
+                ? Arrays.equals(values, 0, size, other.values, 0, size)
+                : super.equals(o);
+    }
 
     /**
      * Returns new builder
