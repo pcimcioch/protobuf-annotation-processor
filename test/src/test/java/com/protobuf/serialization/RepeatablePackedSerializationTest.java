@@ -2,6 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.RepeatableEnum;
@@ -29,15 +30,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
-                    List.of(30, 31),
+                    IntList.of(30, 31),
                     LongList.of(40L, 41L),
-                    List.of(50, 51),
+                    IntList.of(50, 51),
                     LongList.of(60L, 61L),
-                    List.of(70, 71),
+                    IntList.of(70, 71),
                     LongList.of(80L, 81L),
-                    List.of(90, 91),
+                    IntList.of(90, 91),
                     LongList.of(100L, 101L),
-                    List.of(110, 111),
+                    IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of(2, 1)
@@ -101,15 +102,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(0d),
                     FloatList.of(0f),
-                    List.of(0),
+                    IntList.of(0),
                     LongList.of(0L),
-                    List.of(0),
+                    IntList.of(0),
                     LongList.of(0L),
-                    List.of(0),
+                    IntList.of(0),
                     LongList.of(0L),
-                    List.of(0),
+                    IntList.of(0),
                     LongList.of(0L),
-                    List.of(0),
+                    IntList.of(0),
                     LongList.of(0L),
                     List.of(false),
                     List.of(0)
@@ -140,15 +141,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
-                    List.of(-30, -31),
+                    IntList.of(-30, -31),
                     LongList.of(-40L, -41L),
-                    List.of(50, 51),
+                    IntList.of(50, 51),
                     LongList.of(60L, 61L),
-                    List.of(-70, -71),
+                    IntList.of(-70, -71),
                     LongList.of(-80L, -81L),
-                    List.of(-90, -91),
+                    IntList.of(-90, -91),
                     LongList.of(-100L, -101L),
-                    List.of(-110, -111),
+                    IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of(1, 0)
@@ -494,15 +495,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(10d, 11d),
                     FloatList.of(20f, 21f),
-                    List.of(30, 31),
+                    IntList.of(30, 31),
                     LongList.of(40L, 41L),
-                    List.of(50, 51),
+                    IntList.of(50, 51),
                     LongList.of(60L, 61L),
-                    List.of(70, 71),
+                    IntList.of(70, 71),
                     LongList.of(80L, 81L),
-                    List.of(90, 91),
+                    IntList.of(90, 91),
                     LongList.of(100L, 101L),
-                    List.of(110, 111),
+                    IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     List.of(true, false),
                     List.of(1, 2)
@@ -539,15 +540,15 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(-10d, -11d),
                     FloatList.of(-20f, -21f),
-                    List.of(-30, -31),
+                    IntList.of(-30, -31),
                     LongList.of(-40L, -41L),
-                    List.of(50, 51),
+                    IntList.of(50, 51),
                     LongList.of(60L, 61L),
-                    List.of(-70, -71),
+                    IntList.of(-70, -71),
                     LongList.of(-80L, -81L),
-                    List.of(-90, -91),
+                    IntList.of(-90, -91),
                     LongList.of(-100L, -101L),
-                    List.of(-110, -111),
+                    IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     List.of(true, false),
                     List.of(2, 10)

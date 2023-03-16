@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 
 import java.util.Objects;
@@ -85,8 +86,9 @@ public final class FieldDefinition {
         return switch (protoKind) {
             case DOUBLE -> rules.repeated() ? canonicalName(DoubleList.class) : simpleName("double");
             case FLOAT -> rules.repeated() ? canonicalName(FloatList.class)  : simpleName("float");
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
-                    rules.repeated() ? simpleName("Integer").inList() : simpleName("int");
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32 ->
+                    rules.repeated() ? canonicalName(IntList.class) : simpleName("int");
+            case ENUM -> rules.repeated() ? simpleName("Integer").inList() : simpleName("int");
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
                     rules.repeated() ? canonicalName(LongList.class) : simpleName("long");
             case BOOL -> rules.repeated() ? simpleName("Boolean").inList() : simpleName("boolean");
