@@ -10,6 +10,7 @@ import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
+import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -305,10 +306,11 @@ class BuilderClassFactory {
             return initializer(switch (field.protoKind()) {
                 case DOUBLE -> "com.github.pcimcioch.protobuf.dto.DoubleList.builder()";
                 case FLOAT -> "com.github.pcimcioch.protobuf.dto.FloatList.builder()";
-                case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> "com.github.pcimcioch.protobuf.dto.IntList.builder()";
+                case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
+                        "com.github.pcimcioch.protobuf.dto.IntList.builder()";
                 case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> "com.github.pcimcioch.protobuf.dto.LongList.builder()";
                 case BOOL -> "com.github.pcimcioch.protobuf.dto.BooleanList.builder()";
-                default -> "new java.util.ArrayList<>()";
+                case STRING, BYTES, MESSAGE -> "com.github.pcimcioch.protobuf.dto.ObjectList.builder()";
             });
         }
 
@@ -335,19 +337,17 @@ class BuilderClassFactory {
             case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> canonicalName(IntList.Builder.class);
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> canonicalName(LongList.Builder.class);
             case BOOL -> canonicalName(BooleanList.Builder.class);
-            default -> field.javaFieldType();
+            case STRING -> canonicalName(ObjectList.Builder.class).of(simpleName("String"));
+            case BYTES -> canonicalName(ObjectList.Builder.class).of(canonicalName(ByteArray.class));
+            case MESSAGE -> canonicalName(ObjectList.Builder.class).of(field.protobufType());
         };
     }
 
     private static String fieldToRecordTransform(FieldDefinition field) {
-        if (!field.rules().repeated()) {
-            return field.javaFieldName();
-        }
+        return field.rules().repeated()
+                ? field.javaFieldName() + ".build()"
+                : field.javaFieldName();
 
-        return switch (field.protoKind()) {
-            case STRING, BYTES, MESSAGE -> field.javaFieldName();
-            default -> field.javaFieldName() + ".build()";
-        };
     }
 
     private static TypeName singleAddType(FieldDefinition field) {

@@ -797,24 +797,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    // TODO remove
-    public ProtobufWriter writeStringUnpacked(int number, List<String> values) throws IOException {
-        for (String value : values) {
-            output.writeVarint32(LEN.tagFrom(number));
-            output.writeString(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes list of string
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
     public ProtobufWriter writeStringUnpacked(int number, ObjectList<String> values) throws IOException {
         for (String value : values) {
             output.writeVarint32(LEN.tagFrom(number));
@@ -851,25 +833,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    // TODO remove
-    public ProtobufWriter writeBytesUnpacked(int number, List<ByteArray> values) throws IOException {
-        for (ByteArray value : values) {
-            output.writeVarint32(LEN.tagFrom(number));
-            output.writeBytes(value.internalData());
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes list of bytes
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    @SuppressWarnings("deprecation")
     public ProtobufWriter writeBytesUnpacked(int number, ObjectList<ByteArray> values) throws IOException {
         for (ByteArray value : values) {
             output.writeVarint32(LEN.tagFrom(number));
@@ -889,25 +852,6 @@ public class ProtobufWriter implements AutoCloseable {
      */
     public ProtobufWriter writeMessage(int number, ProtobufMessage<?> value) throws IOException {
         if (value != null) {
-            output.writeVarint32(LEN.tagFrom(number));
-            output.writeVarint32(value.protobufSize());
-            value.writeTo(this);
-        }
-
-        return this;
-    }
-
-    /**
-     * Write list of messages
-     *
-     * @param number field number
-     * @param values messages to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeMessageUnpacked(int number, List<? extends ProtobufMessage<?>> values) throws IOException {
-        for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());
             value.writeTo(this);

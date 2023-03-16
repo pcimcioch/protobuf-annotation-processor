@@ -83,12 +83,8 @@ class NullabilityTest {
 
     @Test
     void repeatableScalarNullValues() {
-        // given
-        RepeatableScalar.Builder builder = RepeatableScalar.builder()
-                .strings(asList(null, "test"));
-
         // when then
-        assertThatThrownBy(builder::build)
+        assertThatThrownBy(() -> RepeatableScalar.builder().doubles(asList(null, 0d)))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -147,12 +143,8 @@ class NullabilityTest {
 
     @Test
     void repeatableMessageNullValues() {
-        // given
-        RepeatableOtherWork.Builder builder = RepeatableOtherWork.builder()
-                .addresses(asList(null, null));
-
         // when then
-        assertThatThrownBy(builder::build)
+        assertThatThrownBy(() -> RepeatableOtherWork.builder().addresses(asList(null, null)))
                 .isInstanceOf(NullPointerException.class);
     }
 }

@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
+import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -1371,27 +1372,27 @@ class SizeTest {
 
         @ParameterizedTest
         @MethodSource("unpackedSource")
-        void unpackedSize(int number, List<ByteArray> values, int expectedSize) {
+        void unpackedSize(int number, ObjectList<ByteArray> values, int expectedSize) {
             // when then
             assertThat(Size.ofBytesUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
             return Stream.of(
-                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(), 0),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1)), 3),
-                    Arguments.of(NUMBER_1_BIG, List.of(ba(1)), 3),
-                    Arguments.of(NUMBER_2_SMALL, List.of(ba(1)), 4),
-                    Arguments.of(NUMBER_2_BIG, List.of(ba(1)), 4),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(ba(1)), 3),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of(ba(1)), 3),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of(ba(1)), 4),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(ba(1)), 4),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1, 2, 3, 4)), 6),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(ba(1, 2, 3, 4)), 6),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
-                    Arguments.of(NUMBER_1_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
-                    Arguments.of(NUMBER_2_SMALL, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17),
-                    Arguments.of(NUMBER_2_BIG, List.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17)
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 13),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(ba(1), ba(2), ba(), ba(10, 20, 30)), 17)
             );
         }
     }
@@ -1425,28 +1426,28 @@ class SizeTest {
 
         @ParameterizedTest
         @MethodSource("unpackedSource")
-        void unpackedSize(int number, List<String> values, int expectedSize) {
+        void unpackedSize(int number, ObjectList<String> values, int expectedSize) {
             // when then
             assertThat(Size.ofStringUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
             return Stream.of(
-                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(), 0),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of("a"), 3),
-                    Arguments.of(NUMBER_1_BIG, List.of("a"), 3),
-                    Arguments.of(NUMBER_2_SMALL, List.of("a"), 4),
-                    Arguments.of(NUMBER_2_BIG, List.of("a"), 4),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("a"), 3),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of("a"), 3),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of("a"), 4),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of("a"), 4),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of("test"), 6),
-                    Arguments.of(NUMBER_1_SMALL, List.of("testść"), 16),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("test"), 6),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("testść"), 16),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of("a", "b", "", "foo"), 13),
-                    Arguments.of(NUMBER_1_BIG, List.of("a", "b", "", "foo"), 13),
-                    Arguments.of(NUMBER_2_SMALL, List.of("a", "b", "", "foo"), 17),
-                    Arguments.of(NUMBER_2_BIG, List.of("a", "b", "", "foo"), 17)
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("a", "b", "", "foo"), 13),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of("a", "b", "", "foo"), 13),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of("a", "b", "", "foo"), 17),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of("a", "b", "", "foo"), 17)
             );
         }
     }
@@ -1481,27 +1482,27 @@ class SizeTest {
 
         @ParameterizedTest
         @MethodSource("unpackedSource")
-        void unpackedSize(int number, List<TestMessage> values, int expectedSize) {
+        void unpackedSize(int number, ObjectList<TestMessage> values, int expectedSize) {
             // when then
             assertThat(Size.ofMessageUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
             return Stream.of(
-                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(), 0),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(message(1)), 3),
-                    Arguments.of(NUMBER_1_BIG, List.of(message(1)), 3),
-                    Arguments.of(NUMBER_2_SMALL, List.of(message(1)), 4),
-                    Arguments.of(NUMBER_2_BIG, List.of(message(1)), 4),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(message(1)), 3),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of(message(1)), 3),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of(message(1)), 4),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(message(1)), 4),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(message(4)), 6),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(message(4)), 6),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(message(1), message(1), message(0), message(3)), 13),
-                    Arguments.of(NUMBER_1_BIG, List.of(message(1), message(1), message(0), message(3)), 13),
-                    Arguments.of(NUMBER_2_SMALL, List.of(message(1), message(1), message(0), message(3)), 17),
-                    Arguments.of(NUMBER_2_BIG, List.of(message(1), message(1), message(0), message(3)), 17)
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of(message(1), message(1), message(0), message(3)), 13),
+                    Arguments.of(NUMBER_1_BIG, ObjectList.of(message(1), message(1), message(0), message(3)), 13),
+                    Arguments.of(NUMBER_2_SMALL, ObjectList.of(message(1), message(1), message(0), message(3)), 17),
+                    Arguments.of(NUMBER_2_BIG, ObjectList.of(message(1), message(1), message(0), message(3)), 17)
             );
         }
 

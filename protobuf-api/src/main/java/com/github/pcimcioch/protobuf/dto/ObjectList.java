@@ -70,7 +70,7 @@ public final class ObjectList<T> extends AbstractList<T> implements RandomAccess
      * Create new list from given elements
      *
      * @param elements elements
-     * @param <E> element type
+     * @param <E>      element type
      * @return new list
      */
     @SafeVarargs
@@ -82,7 +82,7 @@ public final class ObjectList<T> extends AbstractList<T> implements RandomAccess
      * Return immutable copy of given collection
      *
      * @param elements elements
-     * @param <E> element type
+     * @param <E>      element type
      * @return object list
      */
     public static <E> ObjectList<E> copyOf(Collection<E> elements) {
@@ -117,6 +117,9 @@ public final class ObjectList<T> extends AbstractList<T> implements RandomAccess
          * @param element element to add
          */
         public void add(V element) {
+            if (element == null) {
+                throw new NullPointerException();
+            }
             grow(1);
             values[size++] = element;
         }
@@ -129,13 +132,11 @@ public final class ObjectList<T> extends AbstractList<T> implements RandomAccess
         public void addAll(Collection<V> elements) {
             grow(elements.size());
 
-            if (elements instanceof ObjectList<?> our) {
-                System.arraycopy(our.values, 0, values, size, our.size);
-                size += our.size;
-            } else {
-                for (V element : elements) {
-                    values[size++] = element;
+            for (V element : elements) {
+                if (element == null) {
+                    throw new NullPointerException();
                 }
+                values[size++] = element;
             }
         }
 

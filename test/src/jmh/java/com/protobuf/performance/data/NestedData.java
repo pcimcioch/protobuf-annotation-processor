@@ -36,13 +36,21 @@ public class NestedData {
     }
 
     private Data our() {
-        return new Data("1.0.0", "This is test data", 1676725565L, ourChunks());
+        return Data.builder()
+                .version("1.0.0")
+                .description("This is test data")
+                .timestamp(1676725565L)
+                .chunks(ourChunks())
+                .build();
     }
 
     private static List<Chunk> ourChunks() {
         List<Chunk> chunks = new ArrayList<>(10);
         for (int i = 0; i < 10; i++) {
-            chunks.add(new Chunk("Chunk " + i, ourPoints(i)));
+            chunks.add(Chunk.builder()
+                    .id("Chunk " + i)
+                    .points(ourPoints(i))
+                    .build());
         }
 
         return chunks;

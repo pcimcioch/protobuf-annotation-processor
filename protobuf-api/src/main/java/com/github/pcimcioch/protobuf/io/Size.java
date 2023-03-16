@@ -828,23 +828,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO remove
-    public static int ofBytesUnpacked(int number, List<ByteArray> values) {
-        int size = tagSize(number) * values.size();
-        for (ByteArray value : values) {
-            size += varint32Size(value.length()) + value.length();
-        }
-
-        return size;
-    }
-
-    /**
-     * Returns unpacked list of bytes size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
     public static int ofBytesUnpacked(int number, ObjectList<ByteArray> values) {
         int size = tagSize(number) * values.size();
         for (ByteArray value : values) {
@@ -868,24 +851,6 @@ public final class Size {
         int valueSize = stringSize(value);
 
         return tagSize(number) + varint32Size(valueSize) + valueSize;
-    }
-
-    /**
-     * Returns unpacked list of string size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofStringUnpacked(int number, List<String> values) {
-        int size = tagSize(number) * values.size();
-        for (String value : values) {
-            int valueSize = stringSize(value);
-            size += varint32Size(valueSize) + valueSize;
-        }
-
-        return size;
     }
 
     /**
@@ -919,24 +884,6 @@ public final class Size {
 
         int valueSize = value.protobufSize();
         return tagSize(number) + varint32Size(valueSize) + valueSize;
-    }
-
-    /**
-     * Returns unpacked list of message size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofMessageUnpacked(int number, List<? extends ProtobufMessage<?>> values) {
-        int size = tagSize(number) * values.size();
-        for (ProtobufMessage<?> value : values) {
-            int valueSize = value.protobufSize();
-            size += varint32Size(valueSize) + valueSize;
-        }
-
-        return size;
     }
 
     /**

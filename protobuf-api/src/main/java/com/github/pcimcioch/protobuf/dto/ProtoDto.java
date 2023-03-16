@@ -1,8 +1,5 @@
 package com.github.pcimcioch.protobuf.dto;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Utils for Protobuf Data Transfer Objects
  */
@@ -135,7 +132,7 @@ public final class ProtoDto {
      * Copy list of objects. Returned list is unmodifiable
      *
      * @param value list to copy
-     * @param <T> element type
+     * @param <T>   element type
      * @return list copy
      */
     public static <T> ObjectList<T> copy(ObjectList<T> value) {
@@ -151,18 +148,6 @@ public final class ProtoDto {
      */
     public static <T extends ProtobufMessage<T>> T copy(T value) {
         return value == null || value.isEmpty() ? null : value;
-    }
-
-    /**
-     * Copy list of elements. Returned list is unmodifiable
-     *
-     * @param value list to copy
-     * @param <T>   type of the list element
-     * @return list copy
-     */
-    public static <T> List<T> copy(Collection<? extends T> value) {
-        // TODO [performance] if we get rid of this copying it would be faster
-        return value == null ? List.of() : List.copyOf(value);
     }
 
     /**
@@ -255,22 +240,6 @@ public final class ProtoDto {
     }
 
     /**
-     * Merge two lists
-     *
-     * @param current current value
-     * @param toMerge value to merge
-     * @param <T>     type of the message
-     * @return merged lists
-     */
-    public static <T> List<T> merge(List<T> current, List<T> toMerge) {
-        if (toMerge != null && !toMerge.isEmpty()) {
-            current.addAll(toMerge);
-        }
-
-        return current;
-    }
-
-    /**
      * Merge two lists of doubles
      *
      * @param current current value
@@ -350,7 +319,7 @@ public final class ProtoDto {
      *
      * @param current current value
      * @param toMerge value to merge
-     * @param <T> element type
+     * @param <T>     element type
      * @return merged lists
      */
     public static <T> ObjectList.Builder<T> merge(ObjectList.Builder<T> current, ObjectList<T> toMerge) {

@@ -7,6 +7,7 @@ import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
+import com.github.pcimcioch.protobuf.dto.ObjectList;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -92,9 +93,9 @@ public final class FieldDefinition {
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
                     rules.repeated() ? canonicalName(LongList.class) : simpleName("long");
             case BOOL -> rules.repeated() ? canonicalName(BooleanList.class) : simpleName("boolean");
-            case STRING -> rules.repeated() ? simpleName("String").inList() : simpleName("String");
-            case BYTES -> rules.repeated() ? canonicalName(ByteArray.class).inList() : canonicalName(ByteArray.class);
-            case MESSAGE -> rules.repeated() ? protobufType.inList() : protobufType;
+            case STRING -> rules.repeated() ? canonicalName(ObjectList.class).of(simpleName("String")) : simpleName("String");
+            case BYTES -> rules.repeated() ? canonicalName(ObjectList.class).of(canonicalName(ByteArray.class)) : canonicalName(ByteArray.class);
+            case MESSAGE -> rules.repeated() ? canonicalName(ObjectList.class).of(protobufType) : protobufType;
         };
     }
 

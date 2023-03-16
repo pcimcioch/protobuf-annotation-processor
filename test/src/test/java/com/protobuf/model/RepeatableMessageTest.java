@@ -1,5 +1,6 @@
 package com.protobuf.model;
 
+import com.github.pcimcioch.protobuf.dto.ObjectList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ class RepeatableMessageTest {
     @Test
     void singleElements() {
         // when
-        RepeatableOtherWork model = new RepeatableOtherWork(List.of(address1));
+        RepeatableOtherWork model = new RepeatableOtherWork(ObjectList.of(address1));
 
         // then
         assertThat(model.addresses()).containsExactly(address1);
@@ -42,7 +43,7 @@ class RepeatableMessageTest {
     @Test
     void multipleElements() {
         // when
-        RepeatableOtherWork model = new RepeatableOtherWork(List.of(address1, address2));
+        RepeatableOtherWork model = new RepeatableOtherWork(ObjectList.of(address1, address2));
 
         // then
         assertThat(model.addresses()).containsExactly(address1, address2);
@@ -50,26 +51,9 @@ class RepeatableMessageTest {
     }
 
     @Test
-    void modifyInputList() {
-        // given
-        List<RepeatableOtherAddress> input = new ArrayList<>();
-        input.add(address1);
-        RepeatableOtherWork model = new RepeatableOtherWork(input);
-
-        // when
-        input.add(address2);
-
-        // then
-        assertThat(model.addresses()).containsExactly(address1);
-        assertThat(model.protobufSize()).isEqualTo(10);
-    }
-
-    @Test
     void modifyOutputList() {
         // given
-        List<RepeatableOtherAddress> input = new ArrayList<>();
-        input.add(address1);
-        RepeatableOtherWork model = new RepeatableOtherWork(input);
+        RepeatableOtherWork model = new RepeatableOtherWork(ObjectList.of(address1));
 
         // when then
         assertThatThrownBy(() -> model.addresses().add(address2))

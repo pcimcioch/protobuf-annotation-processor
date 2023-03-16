@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
+import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;
@@ -46,8 +47,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     BooleanList.of(true, false),
-                    List.of("test1", "test2"),
-                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+                    ObjectList.of("test1", "test2"),
+                    ObjectList.of(ba(1, 2, 3), ba(20, 30, 40))
             );
 
             // when then
@@ -141,8 +142,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     IntList.of(0),
                     LongList.of(0L),
                     BooleanList.of(false),
-                    List.of(""),
-                    List.of(ba())
+                    ObjectList.of(""),
+                    ObjectList.of(ba())
             );
 
             // when then
@@ -182,8 +183,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     BooleanList.of(true, false),
-                    List.of("test1", "test2"),
-                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+                    ObjectList.of("test1", "test2"),
+                    ObjectList.of(ba(1, 2, 3), ba(20, 30, 40))
             );
 
             // when then
@@ -610,8 +611,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     BooleanList.of(true, false),
-                    List.of("test1", "test2"),
-                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+                    ObjectList.of("test1", "test2"),
+                    ObjectList.of(ba(1, 2, 3), ba(20, 30, 40))
             );
 
             // when
@@ -657,8 +658,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     BooleanList.of(true, false),
-                    List.of("test1", "test2"),
-                    List.of(ba(1, 2, 3), ba(20, 30, 40))
+                    ObjectList.of("test1", "test2"),
+                    ObjectList.of(ba(1, 2, 3), ba(20, 30, 40))
             );
 
             // when
