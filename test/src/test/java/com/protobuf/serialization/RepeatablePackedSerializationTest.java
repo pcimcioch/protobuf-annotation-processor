@@ -1,5 +1,6 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
@@ -40,7 +41,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     LongList.of(100L, 101L),
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     IntList.of(2, 1)
             );
 
@@ -112,7 +113,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     LongList.of(0L),
                     IntList.of(0),
                     LongList.of(0L),
-                    List.of(false),
+                    BooleanList.of(false),
                     IntList.of(0)
             );
 
@@ -151,7 +152,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     LongList.of(-100L, -101L),
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     IntList.of(1, 0)
             );
 
@@ -203,7 +204,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFixed64Packed(10, LongList.of(100L, 101L))
                     .writeSfixed32Packed(11, IntList.of(110, 111))
                     .writeSfixed64Packed(12, LongList.of(120L, 121L))
-                    .writeBoolPacked(13, List.of(true, false))
+                    .writeBoolPacked(13, BooleanList.of(true, false))
                     .writeInt32Packed(14, IntList.of(2, 0))
             );
 
@@ -234,7 +235,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeInt64Packed(4, LongList.of(40L, 41L, 42L))
                     .writeSint32Packed(7, IntList.of(70, 71))
                     .writeSfixed32Packed(11, IntList.of(110))
-                    .writeBoolPacked(13, List.of(false, true, true))
+                    .writeBoolPacked(13, BooleanList.of(false, true, true))
             );
 
             // then
@@ -269,7 +270,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFloatPacked(2, FloatList.of(21f))
                     .writeUint64Packed(6, LongList.of(61L))
                     .writeInt64Packed(4, LongList.of(41L))
-                    .writeBoolPacked(13, List.of(true))
+                    .writeBoolPacked(13, BooleanList.of(true))
                     .writeSint64Packed(8, LongList.of(80L))
                     .writeSint64Packed(8, LongList.of(81L))
                     .writeFixed32Packed(9, IntList.of(91))
@@ -277,7 +278,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFixed64Packed(10, LongList.of(101L))
                     .writeSfixed32Packed(11, IntList.of(111))
                     .writeSfixed64Packed(12, LongList.of(121L))
-                    .writeBoolPacked(13, List.of(false))
+                    .writeBoolPacked(13, BooleanList.of(false))
                     .writeInt32Packed(14, IntList.of(2))
             );
 
@@ -317,7 +318,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFixed64Packed(30, LongList.of(1100L, 1101L))
                     .writeSfixed32Packed(31, IntList.of(1110, 1111))
                     .writeSfixed64Packed(32, LongList.of(1120L, 1121L))
-                    .writeBoolPacked(33, List.of(true, false))
+                    .writeBoolPacked(33, BooleanList.of(true, false))
                     // record
                     .writeDoublePacked(1, DoubleList.of(10d))
                     .writeFloatPacked(2, FloatList.of(20f))
@@ -331,7 +332,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFixed64Packed(10, LongList.of(100L))
                     .writeSfixed32Packed(11, IntList.of(110))
                     .writeSfixed64Packed(12, LongList.of(120L))
-                    .writeBoolPacked(13, List.of(true))
+                    .writeBoolPacked(13, BooleanList.of(true))
                     .writeInt32Packed(14, IntList.of(10))
                     // different wire type
                     .writeFloat(1, 11f)
@@ -385,7 +386,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeFixed64Packed(10, LongList.of(-100L, -101L))
                     .writeSfixed32Packed(11, IntList.of(-110, -111))
                     .writeSfixed64Packed(12, LongList.of(-120L, -121L))
-                    .writeBoolPacked(13, List.of(true, false))
+                    .writeBoolPacked(13, BooleanList.of(true, false))
                     .writeInt32Packed(14, IntList.of(1, 2))
             );
 
@@ -448,8 +449,8 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
                     .writeSfixed64Packed(12, LongList.of(122L, 123L, 124L))
-                    .writeBoolUnpacked(13, List.of(true, false))
-                    .writeBoolPacked(13, List.of(false, true))
+                    .writeBoolUnpacked(13, BooleanList.of(true, false))
+                    .writeBoolPacked(13, BooleanList.of(false, true))
                     .writeInt32(14, 1)
                     .writeInt32Packed(14, IntList.of(2, 0))
             );
@@ -505,7 +506,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     LongList.of(100L, 101L),
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     IntList.of(1, 2)
             );
 
@@ -550,7 +551,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     LongList.of(-100L, -101L),
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     IntList.of(2, 10)
             );
 

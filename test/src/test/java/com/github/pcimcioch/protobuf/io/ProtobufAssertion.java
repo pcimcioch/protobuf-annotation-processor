@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
@@ -8,7 +9,6 @@ import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -399,12 +399,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion boolPacked(int number, Boolean... expectedValues) {
+    public ProtobufAssertion boolPacked(int number, boolean... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofBoolPacked(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofBoolPacked(BooleanList.of(expectedValues)));
 
             for (boolean expectedValue : expectedValues) {
                 assertThat(input.readBoolean()).isEqualTo(expectedValue);

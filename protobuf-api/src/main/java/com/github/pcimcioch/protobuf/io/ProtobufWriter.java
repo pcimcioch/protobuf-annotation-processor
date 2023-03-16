@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
@@ -739,10 +740,10 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeBoolUnpacked(int number, List<Boolean> values) throws IOException {
-        for (boolean value : values) {
+    public ProtobufWriter writeBoolUnpacked(int number, BooleanList values) throws IOException {
+        for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
-            output.writeBoolean(value);
+            output.writeBoolean(values.getBoolean(i));
         }
 
         return this;
@@ -756,15 +757,15 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeBoolPacked(int number, List<Boolean> values) throws IOException {
+    public ProtobufWriter writeBoolPacked(int number, BooleanList values) throws IOException {
         if (values.isEmpty()) {
             return this;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
         output.writeVarint32(Size.ofBoolPacked(values));
-        for (boolean value : values) {
-            output.writeBoolean(value);
+        for (int i = 0; i < values.size(); i++) {
+            output.writeBoolean(values.getBoolean(i));
         }
 
         return this;

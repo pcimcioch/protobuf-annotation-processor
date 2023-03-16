@@ -1,5 +1,6 @@
 package com.protobuf.serialization;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
@@ -44,7 +45,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     LongList.of(100L, 101L),
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
             );
@@ -139,7 +140,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     LongList.of(0L),
                     IntList.of(0),
                     LongList.of(0L),
-                    List.of(false),
+                    BooleanList.of(false),
                     List.of(""),
                     List.of(ba())
             );
@@ -180,7 +181,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     LongList.of(-100L, -101L),
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
             );
@@ -261,7 +262,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(11, 111)
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
-                    .writeBoolUnpacked(13, List.of(true, false))
+                    .writeBoolUnpacked(13, BooleanList.of(true, false))
                     .writeString(14, "test1")
                     .writeString(14, "test2")
                     .writeBytes(15, ba(1, 2, 3))
@@ -299,7 +300,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSint32(7, 70)
                     .writeSint32(7, 71)
                     .writeSfixed32(11, 110)
-                    .writeBoolUnpacked(13, List.of(false, true, true))
+                    .writeBoolUnpacked(13, BooleanList.of(false, true, true))
                     .writeString(14, "test")
                     .writeString(14, "test")
             );
@@ -337,7 +338,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeFloat(2, 21f)
                     .writeUint64(6, 61L)
                     .writeInt64(4, 41L)
-                    .writeBoolUnpacked(13, List.of(true))
+                    .writeBoolUnpacked(13, BooleanList.of(true))
                     .writeSint64(8, 80L)
                     .writeBytes(15, ba(1, 2, 3))
                     .writeSint64(8, 81L)
@@ -346,7 +347,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeFixed64(10, 101L)
                     .writeSfixed32(11, 111)
                     .writeSfixed64(12, 121L)
-                    .writeBoolUnpacked(13, List.of(false))
+                    .writeBoolUnpacked(13, BooleanList.of(false))
                     .writeString(14, "test2")
                     .writeBytes(15, ba(20, 30, 40))
             );
@@ -400,7 +401,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(31, 1111)
                     .writeSfixed64(32, 1120L)
                     .writeSfixed64(32, 1121L)
-                    .writeBoolUnpacked(33, List.of(true, false))
+                    .writeBoolUnpacked(33, BooleanList.of(true, false))
                     .writeString(34, "test10")
                     .writeString(34, "test20")
                     .writeBytes(35, ba(5, 6, 7))
@@ -487,7 +488,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(11, -111)
                     .writeSfixed64(12, -120L)
                     .writeSfixed64(12, -121L)
-                    .writeBoolUnpacked(13, List.of(true, false))
+                    .writeBoolUnpacked(13, BooleanList.of(true, false))
                     .writeString(14, "test1")
                     .writeString(14, "test2")
                     .writeBytes(15, ba(1, 2, 3))
@@ -554,8 +555,8 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
                     .writeSfixed64Packed(12, LongList.of(122L, 123L, 124L))
-                    .writeBoolUnpacked(13, List.of(true, false))
-                    .writeBoolPacked(13, List.of(false, true))
+                    .writeBoolUnpacked(13, BooleanList.of(true, false))
+                    .writeBoolPacked(13, BooleanList.of(false, true))
             );
 
             // then
@@ -608,7 +609,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     LongList.of(100L, 101L),
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
             );
@@ -655,7 +656,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     LongList.of(-100L, -101L),
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
-                    List.of(true, false),
+                    BooleanList.of(true, false),
                     List.of("test1", "test2"),
                     List.of(ba(1, 2, 3), ba(20, 30, 40))
             );

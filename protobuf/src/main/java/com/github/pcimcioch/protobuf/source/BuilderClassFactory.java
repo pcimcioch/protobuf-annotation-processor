@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.code.ClassSource;
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.InitializerSource;
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
@@ -306,6 +307,7 @@ class BuilderClassFactory {
                 case FLOAT -> "com.github.pcimcioch.protobuf.dto.FloatList.builder()";
                 case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> "com.github.pcimcioch.protobuf.dto.IntList.builder()";
                 case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> "com.github.pcimcioch.protobuf.dto.LongList.builder()";
+                case BOOL -> "com.github.pcimcioch.protobuf.dto.BooleanList.builder()";
                 default -> "new java.util.ArrayList<>()";
             });
         }
@@ -332,6 +334,7 @@ class BuilderClassFactory {
             case FLOAT -> canonicalName(FloatList.Builder.class);
             case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> canonicalName(IntList.Builder.class);
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> canonicalName(LongList.Builder.class);
+            case BOOL -> canonicalName(BooleanList.Builder.class);
             default -> field.javaFieldType();
         };
     }
@@ -342,7 +345,7 @@ class BuilderClassFactory {
         }
 
         return switch (field.protoKind()) {
-            case BOOL, STRING, BYTES, MESSAGE -> field.javaFieldName();
+            case STRING, BYTES, MESSAGE -> field.javaFieldName();
             default -> field.javaFieldName() + ".build()";
         };
     }

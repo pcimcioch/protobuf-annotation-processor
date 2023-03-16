@@ -122,6 +122,16 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of boolean. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @return list copy
+     */
+    public static BooleanList copy(BooleanList value) {
+        return value == null ? BooleanList.of() : value;
+    }
+
+    /**
      * Copy message value
      *
      * @param value value
@@ -302,6 +312,21 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static IntList.Builder merge(IntList.Builder current, IntList toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of boolean
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @return merged lists
+     */
+    public static BooleanList.Builder merge(BooleanList.Builder current, BooleanList toMerge) {
         if (toMerge != null && !toMerge.isEmpty()) {
             current.addAll(toMerge);
         }

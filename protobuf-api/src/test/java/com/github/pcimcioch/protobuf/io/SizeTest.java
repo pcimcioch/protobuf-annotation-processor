@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
@@ -1278,66 +1279,66 @@ class SizeTest {
 
         @ParameterizedTest
         @MethodSource("unpackedSource")
-        void unpackedSize(int number, List<Boolean> values, int expectedSize) {
+        void unpackedSize(int number, BooleanList values, int expectedSize) {
             // when then
             assertThat(Size.ofBoolUnpacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> unpackedSource() {
             return Stream.of(
-                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(), 0),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(true), 2),
-                    Arguments.of(NUMBER_1_BIG, List.of(true), 2),
-                    Arguments.of(NUMBER_2_SMALL, List.of(true), 3),
-                    Arguments.of(NUMBER_2_BIG, List.of(true), 3),
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(true), 2),
+                    Arguments.of(NUMBER_1_BIG, BooleanList.of(true), 2),
+                    Arguments.of(NUMBER_2_SMALL, BooleanList.of(true), 3),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(true), 3),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(true, false, false, true), 8),
-                    Arguments.of(NUMBER_1_BIG, List.of(true, false, false, true), 8),
-                    Arguments.of(NUMBER_2_SMALL, List.of(true, false, false, true), 12),
-                    Arguments.of(NUMBER_2_BIG, List.of(true, false, false, true), 12)
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(true, false, false, true), 8),
+                    Arguments.of(NUMBER_1_BIG, BooleanList.of(true, false, false, true), 8),
+                    Arguments.of(NUMBER_2_SMALL, BooleanList.of(true, false, false, true), 12),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(true, false, false, true), 12)
             );
         }
 
         @ParameterizedTest
         @MethodSource("packedSource")
-        void packedSize(int number, List<Boolean> values, int expectedSize) {
+        void packedSize(int number, BooleanList values, int expectedSize) {
             // when then
             assertThat(Size.ofBoolPacked(number, values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedSource() {
             return Stream.of(
-                    Arguments.of(NUMBER_1_SMALL, List.of(), 0),
-                    Arguments.of(NUMBER_2_BIG, List.of(), 0),
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(), 0),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(true), 3),
-                    Arguments.of(NUMBER_1_BIG, List.of(true), 3),
-                    Arguments.of(NUMBER_2_SMALL, List.of(true), 4),
-                    Arguments.of(NUMBER_2_BIG, List.of(true), 4),
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(true), 3),
+                    Arguments.of(NUMBER_1_BIG, BooleanList.of(true), 3),
+                    Arguments.of(NUMBER_2_SMALL, BooleanList.of(true), 4),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(true), 4),
 
-                    Arguments.of(NUMBER_1_SMALL, List.of(true, false, false, true), 6),
-                    Arguments.of(NUMBER_1_BIG, List.of(true, false, false, true), 6),
-                    Arguments.of(NUMBER_2_SMALL, List.of(true, false, false, true), 7),
-                    Arguments.of(NUMBER_2_BIG, List.of(true, false, false, true), 7)
+                    Arguments.of(NUMBER_1_SMALL, BooleanList.of(true, false, false, true), 6),
+                    Arguments.of(NUMBER_1_BIG, BooleanList.of(true, false, false, true), 6),
+                    Arguments.of(NUMBER_2_SMALL, BooleanList.of(true, false, false, true), 7),
+                    Arguments.of(NUMBER_2_BIG, BooleanList.of(true, false, false, true), 7)
             );
         }
 
         @ParameterizedTest
         @MethodSource("packedNoTagSource")
-        void packedNoTagSize(List<Boolean> values, int expectedSize) {
+        void packedNoTagSize(BooleanList values, int expectedSize) {
             // when then
             assertThat(Size.ofBoolPacked(values)).isEqualTo(expectedSize);
         }
 
         private static Stream<Arguments> packedNoTagSource() {
             return Stream.of(
-                    Arguments.of(List.of(), 0),
+                    Arguments.of(BooleanList.of(), 0),
 
-                    Arguments.of(List.of(true), 1),
+                    Arguments.of(BooleanList.of(true), 1),
 
-                    Arguments.of(List.of(true, false, false, true), 4)
+                    Arguments.of(BooleanList.of(true, false, false, true), 4)
             );
         }
     }

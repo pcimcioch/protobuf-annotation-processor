@@ -1,5 +1,6 @@
 package com.github.pcimcioch.protobuf.io;
 
+import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
@@ -124,8 +125,6 @@ public final class Size {
     public static int ofFloatPacked(FloatList values) {
         return values.size() * 4;
     }
-
-
 
     /**
      * Returns int32 size
@@ -777,7 +776,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int ofBoolUnpacked(int number, List<Boolean> values) {
+    public static int ofBoolUnpacked(int number, BooleanList values) {
         return values.size() * (tagSize(number) + 1);
     }
 
@@ -788,7 +787,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int ofBoolPacked(int number, List<Boolean> values) {
+    public static int ofBoolPacked(int number, BooleanList values) {
         if (values.isEmpty()) {
             return 0;
         }
@@ -802,11 +801,7 @@ public final class Size {
      * @param values values
      * @return size
      */
-    public static int ofBoolPacked(List<Boolean> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
+    public static int ofBoolPacked(BooleanList values) {
         return values.size();
     }
 
