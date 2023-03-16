@@ -132,6 +132,17 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of objects. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @param <T> element type
+     * @return list copy
+     */
+    public static <T> ObjectList<T> copy(ObjectList<T> value) {
+        return value == null ? ObjectList.of() : value;
+    }
+
+    /**
      * Copy message value
      *
      * @param value value
@@ -327,6 +338,22 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static BooleanList.Builder merge(BooleanList.Builder current, BooleanList toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of objects
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @param <T> element type
+     * @return merged lists
+     */
+    public static <T> ObjectList.Builder<T> merge(ObjectList.Builder<T> current, ObjectList<T> toMerge) {
         if (toMerge != null && !toMerge.isEmpty()) {
             current.addAll(toMerge);
         }
