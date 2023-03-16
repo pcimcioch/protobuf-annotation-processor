@@ -2,6 +2,7 @@ package com.github.pcimcioch.protobuf.io;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
+import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.io.exception.InputEndedException;
 
@@ -98,12 +99,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion int32Packed(int number, Integer... expectedValues) {
+    public ProtobufAssertion int32Packed(int number, int... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofInt32Packed(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofInt32Packed(IntList.of(expectedValues)));
 
             for (int expectedValue : expectedValues) {
                 assertThat(input.readVarint32()).isEqualTo(expectedValue);
@@ -158,12 +159,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion uint32Packed(int number, Integer... expectedValues) {
+    public ProtobufAssertion uint32Packed(int number, int... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofUint32Packed(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofUint32Packed(IntList.of(expectedValues)));
 
             for (int expectedValue : expectedValues) {
                 assertThat(input.readVarint32()).isEqualTo(expectedValue);
@@ -218,12 +219,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sint32Packed(int number, Integer... expectedValues) {
+    public ProtobufAssertion sint32Packed(int number, int... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofSint32Packed(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSint32Packed(IntList.of(expectedValues)));
 
             for (int expectedValue : expectedValues) {
                 assertThat(input.readZigZag32()).isEqualTo(expectedValue);
@@ -278,12 +279,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion fixed32Packed(int number, Integer... expectedValues) {
+    public ProtobufAssertion fixed32Packed(int number, int... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofFixed32Packed(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofFixed32Packed(IntList.of(expectedValues)));
 
             for (int expectedValue : expectedValues) {
                 assertThat(input.readFixedInt()).isEqualTo(expectedValue);
@@ -338,12 +339,12 @@ public final class ProtobufAssertion {
         return this;
     }
 
-    public ProtobufAssertion sfixed32Packed(int number, Integer... expectedValues) {
+    public ProtobufAssertion sfixed32Packed(int number, int... expectedValues) {
         int expectedTag = number << 3 | 2;
 
         try {
             assertThat(input.readVarint32()).isEqualTo(expectedTag);
-            assertThat(input.readVarint32()).isEqualTo(Size.ofSfixed32Packed(List.of(expectedValues)));
+            assertThat(input.readVarint32()).isEqualTo(Size.ofSfixed32Packed(IntList.of(expectedValues)));
 
             for (int expectedValue : expectedValues) {
                 assertThat(input.readFixedInt()).isEqualTo(expectedValue);

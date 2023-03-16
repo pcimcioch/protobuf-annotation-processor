@@ -116,34 +116,6 @@ public final class Size {
     }
 
     /**
-     * Returns unpacked list of floats size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofFloatUnpacked(int number, List<Float> values) {
-        return values.size() * (tagSize(number) + 4);
-    }
-
-    /**
-     * Returns packed list of floats size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofFloatPacked(int number, List<Float> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-        int size = values.size() * 4;
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
      * Returns packed list of floats size without tag
      *
      * @param values values
@@ -168,64 +140,6 @@ public final class Size {
         }
 
         return tagSize(number) + varint32Size(value);
-    }
-
-    /**
-     * Returns unpacked list of int32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofInt32Unpacked(int number, List<Integer> values) {
-        int size = tagSize(number) * values.size();
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return size;
-    }
-
-    /**
-     * Returns packed list of int32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofInt32Packed(int number, List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
-     * Returns packed list of int32 size without tag
-     *
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofInt32Packed(List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return size;
     }
 
     /**
@@ -375,64 +289,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO remove
-    public static int ofUint32Unpacked(int number, List<Integer> values) {
-        int size = tagSize(number) * values.size();
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return size;
-    }
-
-    /**
-     * Returns unpacked list of yint32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofUint32Packed(int number, List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
-     * Returns unpacked list of yint32 size without tag
-     *
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofUint32Packed(List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += varint32Size(value);
-        }
-
-        return size;
-    }
-
-    /**
-     * Returns unpacked list of yint32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
     public static int ofUint32Unpacked(int number, IntList values) {
         int size = tagSize(number) * values.size();
         for (int i = 0; i < values.size(); i++) {
@@ -564,64 +420,6 @@ public final class Size {
         }
 
         return tagSize(number) + zigzag32Size(value);
-    }
-
-    /**
-     * Returns unpacked list of sint32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSint32Unpacked(int number, List<Integer> values) {
-        int size = tagSize(number) * values.size();
-        for (Integer value : values) {
-            size += zigzag32Size(value);
-        }
-
-        return size;
-    }
-
-    /**
-     * Returns packed list of sint32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSint32Packed(int number, List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += zigzag32Size(value);
-        }
-
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
-     * Returns packed list of sint32 size without tag
-     *
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSint32Packed(List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = 0;
-        for (Integer value : values) {
-            size += zigzag32Size(value);
-        }
-
-        return size;
     }
 
     /**
@@ -771,50 +569,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO remove
-    public static int ofFixed32Unpacked(int number, List<Integer> values) {
-        return values.size() * (tagSize(number) + 4);
-    }
-
-    /**
-     * Returns packed list of fixed32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofFixed32Packed(int number, List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = values.size() * 4;
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
-     * Returns packed list of fixed32 size without tag
-     *
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofFixed32Packed(List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        return values.size() * 4;
-    }
-
-    /**
-     * Returns unpacked list of fixed32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
     public static int ofFixed32Unpacked(int number, IntList values) {
         return values.size() * (tagSize(number) + 4);
     }
@@ -910,50 +664,6 @@ public final class Size {
         }
 
         return tagSize(number) + 4;
-    }
-
-    /**
-     * Returns unpacked list of sfixed32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSfixed32Unpacked(int number, List<Integer> values) {
-        return values.size() * (tagSize(number) + 4);
-    }
-
-    /**
-     * Returns packed list of sfixed32 size
-     *
-     * @param number tag number
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSfixed32Packed(int number, List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        int size = values.size() * 4;
-        return tagSize(number) + varint32Size(size) + size;
-    }
-
-    /**
-     * Returns packed list of sfixed32 size without tag
-     *
-     * @param values values
-     * @return size
-     */
-    // TODO remove
-    public static int ofSfixed32Packed(List<Integer> values) {
-        if (values.isEmpty()) {
-            return 0;
-        }
-
-        return values.size() * 4;
     }
 
     /**

@@ -179,47 +179,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    // TODO remove
-    public ProtobufWriter writeInt32Unpacked(int number, List<Integer> values) throws IOException {
-        for (int value : values) {
-            output.writeVarint32(VARINT.tagFrom(number));
-            output.writeVarint32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of int32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeInt32Packed(int number, List<Integer> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofInt32Packed(values));
-        for (int value : values) {
-            output.writeVarint32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of int32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
     public ProtobufWriter writeInt32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
@@ -318,47 +277,6 @@ public class ProtobufWriter implements AutoCloseable {
     public ProtobufWriter writeUint32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
-            output.writeVarint32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of uint32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeUint32Unpacked(int number, List<Integer> values) throws IOException {
-        for (int value : values) {
-            output.writeVarint32(VARINT.tagFrom(number));
-            output.writeVarint32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of uint32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeUint32Packed(int number, List<Integer> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofUint32Packed(values));
-        for (int value : values) {
             output.writeVarint32(value);
         }
 
@@ -485,47 +403,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    // TODO remove
-    public ProtobufWriter writeSint32Unpacked(int number, List<Integer> values) throws IOException {
-        for (int value : values) {
-            output.writeVarint32(VARINT.tagFrom(number));
-            output.writeZigZag32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of sint32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeSint32Packed(int number, List<Integer> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofSint32Packed(values));
-        for (int value : values) {
-            output.writeZigZag32(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of sint32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
     public ProtobufWriter writeSint32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
@@ -638,47 +515,6 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    // TODO remove
-    public ProtobufWriter writeFixed32Unpacked(int number, List<Integer> values) throws IOException {
-        for (int value : values) {
-            output.writeVarint32(I32.tagFrom(number));
-            output.writeFixedInt(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of fixed32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeFixed32Packed(int number, List<Integer> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofFixed32Packed(values));
-        for (int value : values) {
-            output.writeFixedInt(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of fixed32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
     public ProtobufWriter writeFixed32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I32.tagFrom(number));
@@ -777,47 +613,6 @@ public class ProtobufWriter implements AutoCloseable {
     public ProtobufWriter writeSfixed32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(I32.tagFrom(number));
-            output.writeFixedInt(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes unpacked list of sfixed32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeSfixed32Unpacked(int number, List<Integer> values) throws IOException {
-        for (int value : values) {
-            output.writeVarint32(I32.tagFrom(number));
-            output.writeFixedInt(value);
-        }
-
-        return this;
-    }
-
-    /**
-     * Writes packed list of sfixed32
-     *
-     * @param number field number
-     * @param values values to write
-     * @return this
-     * @throws IOException in case of any data write error
-     */
-    // TODO remove
-    public ProtobufWriter writeSfixed32Packed(int number, List<Integer> values) throws IOException {
-        if (values.isEmpty()) {
-            return this;
-        }
-
-        output.writeVarint32(LEN.tagFrom(number));
-        output.writeVarint32(Size.ofSfixed32Packed(values));
-        for (int value : values) {
             output.writeFixedInt(value);
         }
 
