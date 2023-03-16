@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.model.field;
 import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -82,7 +83,7 @@ public final class FieldDefinition {
     public TypeName javaFieldType() {
         return switch (protoKind) {
             case DOUBLE -> rules.repeated() ? canonicalName(DoubleList.class) : simpleName("double");
-            case FLOAT -> rules.repeated() ? simpleName("Float").inList() : simpleName("float");
+            case FLOAT -> rules.repeated() ? canonicalName(FloatList.class)  : simpleName("float");
             case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
                     rules.repeated() ? simpleName("Integer").inList() : simpleName("int");
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->

@@ -1,6 +1,7 @@
 package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ class RepeatableScalarTest {
         // when
         RepeatableScalar model = new RepeatableScalar(
                 DoubleList.of(10d),
-                List.of(20f),
+                FloatList.of(20f),
                 List.of(30),
                 List.of(40L),
                 List.of(50),
@@ -82,7 +83,7 @@ class RepeatableScalarTest {
         // when
         RepeatableScalar model = new RepeatableScalar(
                 DoubleList.of(10d, 11d),
-                List.of(20f, 21f),
+                FloatList.of(20f, 21f),
                 List.of(30, 31),
                 List.of(40L, 41L),
                 List.of(50, 51),
@@ -120,8 +121,8 @@ class RepeatableScalarTest {
     @Test
     void modifyOutputList() {
         // given
-        RepeatableScalar model = new RepeatableScalar(DoubleList.of(), List.of(), List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
+        RepeatableScalar model = new RepeatableScalar(DoubleList.of(), FloatList.of(), List.of(), List.of(), List.of(),
+                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of());
 
         // when then
         assertThatThrownBy(() -> model.doubles().add(20d))

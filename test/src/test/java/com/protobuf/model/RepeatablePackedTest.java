@@ -1,6 +1,7 @@
 package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ class RepeatablePackedTest {
         // when
         RepeatablePacked model = new RepeatablePacked(
                 DoubleList.of(10d),
-                List.of(20f),
+                FloatList.of(20f),
                 List.of(30),
                 List.of(40L),
                 List.of(50),
@@ -85,7 +86,7 @@ class RepeatablePackedTest {
         // when
         RepeatablePacked model = new RepeatablePacked(
                 DoubleList.of(10d, 11d),
-                List.of(20f, 21f),
+                FloatList.of(20f, 21f),
                 List.of(30, 31),
                 List.of(40L, 41L),
                 List.of(50, 51),
@@ -125,8 +126,8 @@ class RepeatablePackedTest {
         List<Integer> enums = new ArrayList<>();
         enums.add(1);
 
-        RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), List.of(), List.of(), List.of(), List.of(), List.of(),
-                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), enums);
+        RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), FloatList.of(), List.of(), List.of(),
+                List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), List.of(), enums);
 
         // when then
         assertThatThrownBy(() -> model.doubles().add(20d))

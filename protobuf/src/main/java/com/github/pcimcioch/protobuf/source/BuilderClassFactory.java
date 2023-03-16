@@ -6,6 +6,7 @@ import com.github.pcimcioch.protobuf.code.InitializerSource;
 import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
@@ -26,7 +27,6 @@ import static com.github.pcimcioch.protobuf.code.TypeName.canonicalName;
 import static com.github.pcimcioch.protobuf.code.TypeName.simpleName;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.privateVisibility;
 import static com.github.pcimcioch.protobuf.code.VisibilitySource.publicVisibility;
-import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.DOUBLE;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 
@@ -301,6 +301,7 @@ class BuilderClassFactory {
         if (field.rules().repeated()) {
             return initializer(switch (field.protoKind()) {
                 case DOUBLE -> "com.github.pcimcioch.protobuf.dto.DoubleList.builder()";
+                case FLOAT -> "com.github.pcimcioch.protobuf.dto.FloatList.builder()";
                 default -> "new java.util.ArrayList<>()";
             });
         }
@@ -318,17 +319,26 @@ class BuilderClassFactory {
     }
 
     private static TypeName builderFieldType(FieldDefinition field) {
-        if (field.rules().repeated() && field.protoKind() == DOUBLE) {
-            return canonicalName(DoubleList.Builder.class);
+        if (!field.rules().repeated()) {
+            return field.javaFieldType();
         }
-        return field.javaFieldType();
+
+        return switch (field.protoKind()) {
+            case DOUBLE -> canonicalName(DoubleList.Builder.class);
+            case FLOAT -> canonicalName(FloatList.Builder.class);
+            default -> field.javaFieldType();
+        };
     }
 
     private static String fieldToRecordTransform(FieldDefinition field) {
-        if (field.rules().repeated() && field.protoKind() == DOUBLE) {
-            return field.javaFieldName() + ".build()";
+        if (!field.rules().repeated()) {
+            return field.javaFieldName();
         }
-        return field.javaFieldName();
+
+        return switch (field.protoKind()) {
+            case DOUBLE, FLOAT -> field.javaFieldName() + ".build()";
+            default -> field.javaFieldName();
+        };
     }
 
     private static TypeName singleAddType(FieldDefinition field) {

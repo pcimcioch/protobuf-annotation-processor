@@ -1,6 +1,7 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.protobuf.model.RepeatableEnum;
 import com.protobuf.model.RepeatableEnumProto;
@@ -26,7 +27,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(10d, 11d),
-                    List.of(20f, 21f),
+                    FloatList.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
                     List.of(50, 51),
@@ -98,7 +99,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(0d),
-                    List.of(0f),
+                    FloatList.of(0f),
                     List.of(0),
                     List.of(0L),
                     List.of(0),
@@ -137,7 +138,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(-10d, -11d),
-                    List.of(-20f, -21f),
+                    FloatList.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
                     List.of(50, 51),
@@ -491,7 +492,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(10d, 11d),
-                    List.of(20f, 21f),
+                    FloatList.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
                     List.of(50, 51),
@@ -536,7 +537,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
             // given
             RepeatablePacked record = new RepeatablePacked(
                     DoubleList.of(-10d, -11d),
-                    List.of(-20f, -21f),
+                    FloatList.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
                     List.of(50, 51),

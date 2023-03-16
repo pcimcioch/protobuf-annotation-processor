@@ -2,6 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.io.ProtobufWriter;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;
@@ -30,7 +31,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given
             RepeatableScalar record = new RepeatableScalar(
                     DoubleList.of(10d, 11d),
-                    List.of(20f, 21f),
+                    FloatList.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
                     List.of(50, 51),
@@ -125,7 +126,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given
             RepeatableScalar record = new RepeatableScalar(
                     DoubleList.of(0d),
-                    List.of(0f),
+                    FloatList.of(0f),
                     List.of(0),
                     List.of(0L),
                     List.of(0),
@@ -166,7 +167,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given
             RepeatableScalar record = new RepeatableScalar(
                     DoubleList.of(-10d, -11d),
-                    List.of(-20f, -21f),
+                    FloatList.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
                     List.of(50, 51),
@@ -594,7 +595,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given
             RepeatableScalar record = new RepeatableScalar(
                     DoubleList.of(10d, 11d),
-                    List.of(20f, 21f),
+                    FloatList.of(20f, 21f),
                     List.of(30, 31),
                     List.of(40L, 41L),
                     List.of(50, 51),
@@ -641,7 +642,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             // given
             RepeatableScalar record = new RepeatableScalar(
                     DoubleList.of(-10d, -11d),
-                    List.of(-20f, -21f),
+                    FloatList.of(-20f, -21f),
                     List.of(-30, -31),
                     List.of(-40L, -41L),
                     List.of(50, 51),
