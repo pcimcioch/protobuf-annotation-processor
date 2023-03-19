@@ -9,15 +9,16 @@ import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.OutputStream;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.github.pcimcioch.protobuf.io.ByteUtils.ba;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SizeTest {
@@ -1449,6 +1450,26 @@ class SizeTest {
                     Arguments.of(NUMBER_2_SMALL, ObjectList.of("a", "b", "", "foo"), 17),
                     Arguments.of(NUMBER_2_BIG, ObjectList.of("a", "b", "", "foo"), 17)
             );
+        }
+
+        @Test
+        void characterSize() {
+            int tagSize = 2;
+
+            for (int codepoint = Character.MIN_CODE_POINT; codepoint <= Character.MAX_CODE_POINT; codepoint++) {
+                if (codepoint == Character.MIN_SURROGATE) {
+                    codepoint = Character.MAX_SURROGATE + 1;
+                }
+                if (!Character.isDefined(codepoint)) {
+                    continue;
+                }
+
+                // given
+                String test = new String(Character.toChars(codepoint));
+
+                // when then
+                assertThat(test.getBytes(UTF_8).length + tagSize).isEqualTo(Size.ofString(1, test));
+            }
         }
     }
 

@@ -178,7 +178,6 @@ public final class TypeName {
      *
      * @return whether type is primitive
      */
-    // TODO add tests
     public boolean isPrimitive() {
         return "".equals(packageName) && classNames.size() == 1 && Character.isLowerCase(simpleName().charAt(0));
     }

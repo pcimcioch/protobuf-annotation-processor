@@ -218,4 +218,43 @@ class TypeNameTest {
         assertThat(result).isEqualTo(base);
         assertThat(result.canonicalName()).isEqualTo("com.example.Base");
     }
+
+    @ParameterizedTest
+    @MethodSource("primitiveNames")
+    void isPrimitive(TypeName type) {
+        // when then
+        assertThat(type.isPrimitive()).isTrue();
+    }
+
+    static Stream<TypeName> primitiveNames() {
+        return Stream.of(
+                simpleName("int"),
+                simpleName("long"),
+                simpleName("float"),
+                simpleName("double"),
+                simpleName("byte"),
+                simpleName("short"),
+                simpleName("char"),
+                simpleName("boolean")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("notPrimitiveNames")
+    void isNotPrimitive(TypeName type) {
+        // when then
+        assertThat(type.isPrimitive()).isFalse();
+    }
+
+    static Stream<TypeName> notPrimitiveNames() {
+        return Stream.of(
+                simpleName("Integer"),
+                simpleName("Long"),
+                simpleName("Float"),
+                simpleName("Double"),
+                simpleName("String"),
+                canonicalName(List.class),
+                canonicalName("com.example.Dto")
+        );
+    }
 }

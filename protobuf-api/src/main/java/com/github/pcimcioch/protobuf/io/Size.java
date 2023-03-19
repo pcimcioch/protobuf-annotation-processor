@@ -9,10 +9,6 @@ import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
-import java.util.List;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 /**
  * Utils to compute size of given value
  */
@@ -848,6 +844,7 @@ public final class Size {
         if ("".equals(value)) {
             return 0;
         }
+        // TODO add jmh tests and try to create misformatted string? Or utf16 string?
         int valueSize = stringSize(value);
 
         return tagSize(number) + varint32Size(valueSize) + valueSize;
@@ -958,7 +955,20 @@ public final class Size {
     }
 
     private static int stringSize(String value) {
-        // TODO [performance] this is quite slow and high-resource use
-        return value.getBytes(UTF_8).length;
+        int count = 0;
+        for (int i = 0, len = value.length(); i < len; i++) {
+            char ch = value.charAt(i);
+            if (ch <= 0x7F) {
+                count++;
+            } else if (ch <= 0x7FF) {
+                count += 2;
+            } else if (Character.isHighSurrogate(ch)) {
+                count += 4;
+                ++i;
+            } else {
+                count += 3;
+            }
+        }
+        return count;
     }
 }

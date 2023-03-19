@@ -60,7 +60,6 @@ abstract class ProtobufOutput implements AutoCloseable {
     }
 
     void writeString(String value) throws IOException {
-        // TODO [performance] not the most efficient way to handle string
         writeBytes(value.getBytes(UTF_8));
     }
 
