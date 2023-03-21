@@ -136,6 +136,11 @@ public final class EnumList<T extends ProtobufEnumeration> extends AbstractList<
          * @param elements elements to add
          */
         public void addAll(Collection<V> elements) {
+            if (elements instanceof EnumList<V> enumElements) {
+                addAllValues(enumElements.valuesList());
+                return;
+            }
+
             for (V element : elements) {
                 if (element == null) {
                     throw new NullPointerException();

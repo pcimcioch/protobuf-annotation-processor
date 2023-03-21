@@ -140,6 +140,17 @@ public final class ProtoDto {
     }
 
     /**
+     * Copy list of enums. Returned list is unmodifiable
+     *
+     * @param value list to copy
+     * @param <T>   element type
+     * @return list copy
+     */
+    public static <T extends ProtobufEnumeration> EnumList<T> copy(EnumList<T> value) {
+        return value == null ? EnumList.of() : value;
+    }
+
+    /**
      * Copy message value
      *
      * @param value value
@@ -323,6 +334,22 @@ public final class ProtoDto {
      * @return merged lists
      */
     public static <T> ObjectList.Builder<T> merge(ObjectList.Builder<T> current, ObjectList<T> toMerge) {
+        if (toMerge != null && !toMerge.isEmpty()) {
+            current.addAll(toMerge);
+        }
+
+        return current;
+    }
+
+    /**
+     * Merge two lists of enums
+     *
+     * @param current current value
+     * @param toMerge value to merge
+     * @param <T>     element type
+     * @return merged lists
+     */
+    public static <T extends ProtobufEnumeration> EnumList.Builder<T> merge(EnumList.Builder<T> current, EnumList<T> toMerge) {
         if (toMerge != null && !toMerge.isEmpty()) {
             current.addAll(toMerge);
         }

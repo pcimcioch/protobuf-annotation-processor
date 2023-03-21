@@ -3,6 +3,7 @@ package com.github.pcimcioch.protobuf.io;
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
@@ -844,7 +845,6 @@ public final class Size {
         if ("".equals(value)) {
             return 0;
         }
-        // TODO add jmh tests and try to create misformatted string? Or utf16 string?
         int valueSize = stringSize(value);
 
         return tagSize(number) + varint32Size(valueSize) + valueSize;
@@ -898,6 +898,28 @@ public final class Size {
         }
 
         return size;
+    }
+
+    /**
+     * Returns unpacked list of enums size
+     *
+     * @param number tag number
+     * @param values values
+     * @return size
+     */
+    public static int ofEnumUnpacked(int number, EnumList<?> values) {
+        return ofInt32Unpacked(number, values.valuesList());
+    }
+
+    /**
+     * Returns packed list of enums size
+     *
+     * @param number tag number
+     * @param values values
+     * @return size
+     */
+    public static int ofEnumPacked(int number, EnumList<?> values) {
+        return ofInt32Packed(number, values.valuesList());
     }
 
     private static int tagSize(int number) {

@@ -3,15 +3,16 @@ package com.github.pcimcioch.protobuf.io;
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
+import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 import static com.github.pcimcioch.protobuf.io.WireType.I32;
 import static com.github.pcimcioch.protobuf.io.WireType.I64;
@@ -790,7 +791,7 @@ public class ProtobufWriter implements AutoCloseable {
     }
 
     /**
-     * Writes list of string
+     * Writes unpacked list of string
      *
      * @param number field number
      * @param values values to write
@@ -825,7 +826,7 @@ public class ProtobufWriter implements AutoCloseable {
     }
 
     /**
-     * Writes list of bytes
+     * Writes unpacked list of bytes
      *
      * @param number field number
      * @param values values to write
@@ -861,7 +862,7 @@ public class ProtobufWriter implements AutoCloseable {
     }
 
     /**
-     * Write list of messages
+     * Write unpacked list of messages
      *
      * @param number field number
      * @param values messages to write
@@ -876,6 +877,30 @@ public class ProtobufWriter implements AutoCloseable {
         }
 
         return this;
+    }
+
+    /**
+     * Write unpacked list of enums
+     *
+     * @param number field number
+     * @param values enums to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter writeEnumUnpacked(int number, EnumList<?> values) throws IOException {
+        return writeInt32Unpacked(number, values.valuesList());
+    }
+
+    /**
+     * Write packed list of enums
+     *
+     * @param number field number
+     * @param values enums to write
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter writeEnumPacked(int number, EnumList<?> values) throws IOException {
+        return writeInt32Packed(number, values.valuesList());
     }
 
     @Override

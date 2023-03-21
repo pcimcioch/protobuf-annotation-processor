@@ -3,10 +3,12 @@ package com.github.pcimcioch.protobuf.io;
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
+import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,12 @@ import java.io.OutputStream;
 import java.util.stream.Stream;
 
 import static com.github.pcimcioch.protobuf.io.ByteUtils.ba;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_1;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_128;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_2;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_M1;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_MAX;
+import static com.github.pcimcioch.protobuf.io.SizeTest.Enums.TestEnum.V_MIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -1558,6 +1566,96 @@ class SizeTest {
             @Override
             public int protobufSize() {
                 return size;
+            }
+        }
+    }
+
+    @Nested
+    class Enums {
+
+        @ParameterizedTest
+        @MethodSource("unpackedSource")
+        void unpackedSize(int number, EnumList<?> values, int expectedSize) {
+            // when then
+            assertThat(Size.ofEnumUnpacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> unpackedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_1), 2),
+                    Arguments.of(NUMBER_1_BIG, EnumList.of(TestEnum::from, V_1), 2),
+                    Arguments.of(NUMBER_2_SMALL, EnumList.of(TestEnum::from, V_1), 3),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(TestEnum::from, V_1), 3),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_MIN), 11),
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_MAX), 6),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 18),
+                    Arguments.of(NUMBER_1_BIG, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 18),
+                    Arguments.of(NUMBER_2_SMALL, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 22),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 22)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(int number, EnumList<?> values, int expectedSize) {
+            // when then
+            assertThat(Size.ofEnumPacked(number, values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(), 0),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(), 0),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_1), 3),
+                    Arguments.of(NUMBER_1_BIG, EnumList.of(TestEnum::from, V_1), 3),
+                    Arguments.of(NUMBER_2_SMALL, EnumList.of(TestEnum::from, V_1), 4),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(TestEnum::from, V_1), 4),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_MIN), 12),
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_MAX), 7),
+
+                    Arguments.of(NUMBER_1_SMALL, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 16),
+                    Arguments.of(NUMBER_1_BIG, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 16),
+                    Arguments.of(NUMBER_2_SMALL, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 17),
+                    Arguments.of(NUMBER_2_BIG, EnumList.of(TestEnum::from, V_1, V_128, V_M1, V_2), 17)
+            );
+        }
+
+        enum TestEnum implements ProtobufEnumeration {
+            V_1(1),
+            V_2(2),
+            V_M1(-1),
+            V_128(128),
+            V_MIN(Integer.MIN_VALUE),
+            V_MAX(Integer.MAX_VALUE);
+
+            private final int number;
+
+            TestEnum(int number) {
+                this.number = number;
+            }
+
+            @Override
+            public int number() {
+                return number;
+            }
+
+            private static TestEnum from(int i) {
+                return switch (i) {
+                    case 1 -> V_1;
+                    case 2 -> V_2;
+                    case -1 -> V_M1;
+                    case 128 -> V_128;
+                    case Integer.MIN_VALUE -> V_MIN;
+                    case Integer.MAX_VALUE -> V_MAX;
+                    default -> throw new IllegalArgumentException();
+                };
             }
         }
     }
