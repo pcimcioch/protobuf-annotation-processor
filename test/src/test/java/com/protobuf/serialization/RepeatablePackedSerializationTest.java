@@ -2,6 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
@@ -42,7 +43,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     BooleanList.of(true, false),
-                    IntList.of(2, 1)
+                    EnumList.of(RepeatableEnum::forNumber, 2, 1)
             );
 
             // when then
@@ -114,7 +115,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(0),
                     LongList.of(0L),
                     BooleanList.of(false),
-                    IntList.of(0)
+                    EnumList.of(RepeatableEnum::forNumber, 0)
             );
 
             // when then
@@ -153,7 +154,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     BooleanList.of(true, false),
-                    IntList.of(1, 0)
+                    EnumList.of(RepeatableEnum::forNumber, 1, 0)
             );
 
             // when then
@@ -507,7 +508,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(110, 111),
                     LongList.of(120L, 121L),
                     BooleanList.of(true, false),
-                    IntList.of(1, 2)
+                    EnumList.of(RepeatableEnum::forNumber, 1, 2)
             );
 
             // when
@@ -552,7 +553,7 @@ class RepeatablePackedSerializationTest extends SerializationTestBase {
                     IntList.of(-110, -111),
                     LongList.of(-120L, -121L),
                     BooleanList.of(true, false),
-                    IntList.of(2, 10)
+                    EnumList.of(RepeatableEnum::forNumber, 2, 10)
             );
 
             // when

@@ -79,6 +79,23 @@ public final class EnumList<T extends ProtobufEnumeration> extends AbstractList<
     }
 
     /**
+     * Create new list from given elements
+     *
+     * @param enumMapper enumeration factory
+     * @param elements   elements
+     * @param <E>        element type
+     * @return new list
+     */
+    public static <E extends ProtobufEnumeration> EnumList<E> of(IntFunction<E> enumMapper, int... elements) {
+        IntList.Builder intElements = IntList.builder();
+        for (int element : elements) {
+            intElements.add(element);
+        }
+
+        return new EnumList<>(intElements.build(), enumMapper);
+    }
+
+    /**
      * Return immutable copy of given collection
      *
      * @param enumMapper enumeration factory

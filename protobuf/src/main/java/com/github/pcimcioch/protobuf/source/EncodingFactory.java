@@ -50,7 +50,7 @@ class EncodingFactory {
         String method = switch (field.protoKind()) {
             case DOUBLE -> "writeDouble";
             case FLOAT -> "writeFloat";
-            case INT32, ENUM -> "writeInt32";
+            case INT32 -> "writeInt32";
             case INT64 -> "writeInt64";
             case UINT32 -> "writeUint32";
             case UINT64 -> "writeUint64";
@@ -64,6 +64,7 @@ class EncodingFactory {
             case STRING -> "writeString";
             case MESSAGE -> "writeMessage";
             case BYTES -> "writeBytes";
+            case ENUM -> field.rules().repeated() ? "writeEnum" : "writeInt32";
         };
 
         return method + suffix;

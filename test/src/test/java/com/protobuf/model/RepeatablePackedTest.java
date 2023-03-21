@@ -2,6 +2,7 @@ package com.protobuf.model;
 
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
@@ -62,7 +63,7 @@ class RepeatablePackedTest {
                 IntList.of(110),
                 LongList.of(120L),
                 BooleanList.of(true),
-                IntList.of(1)
+                EnumList.of(RepeatableEnum::forNumber, 1)
         );
 
         // then
@@ -101,7 +102,7 @@ class RepeatablePackedTest {
                 IntList.of(110, 111),
                 LongList.of(120L, 121L),
                 BooleanList.of(true, false),
-                IntList.of(1, 2)
+                EnumList.of(RepeatableEnum::forNumber, 1, 2)
         );
 
         // then
@@ -128,7 +129,7 @@ class RepeatablePackedTest {
         // given
         RepeatablePacked model = new RepeatablePacked(DoubleList.of(10d), FloatList.of(), IntList.of(),
                 LongList.of(), IntList.of(), LongList.of(), IntList.of(), LongList.of(), IntList.of(), LongList.of(),
-                IntList.of(), LongList.of(), BooleanList.of(), IntList.of(1));
+                IntList.of(), LongList.of(), BooleanList.of(), EnumList.of(RepeatableEnum::forNumber, 1));
 
         // when then
         assertThatThrownBy(() -> model.doubles().add(20d))

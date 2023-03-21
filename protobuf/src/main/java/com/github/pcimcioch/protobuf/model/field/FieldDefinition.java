@@ -4,6 +4,7 @@ import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
@@ -87,15 +88,18 @@ public final class FieldDefinition {
     public TypeName javaFieldType() {
         return switch (protoKind) {
             case DOUBLE -> rules.repeated() ? canonicalName(DoubleList.class) : simpleName("double");
-            case FLOAT -> rules.repeated() ? canonicalName(FloatList.class)  : simpleName("float");
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
+            case FLOAT -> rules.repeated() ? canonicalName(FloatList.class) : simpleName("float");
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32 ->
                     rules.repeated() ? canonicalName(IntList.class) : simpleName("int");
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
                     rules.repeated() ? canonicalName(LongList.class) : simpleName("long");
             case BOOL -> rules.repeated() ? canonicalName(BooleanList.class) : simpleName("boolean");
-            case STRING -> rules.repeated() ? canonicalName(ObjectList.class).of(simpleName("String")) : simpleName("String");
-            case BYTES -> rules.repeated() ? canonicalName(ObjectList.class).of(canonicalName(ByteArray.class)) : canonicalName(ByteArray.class);
+            case STRING ->
+                    rules.repeated() ? canonicalName(ObjectList.class).of(simpleName("String")) : simpleName("String");
+            case BYTES ->
+                    rules.repeated() ? canonicalName(ObjectList.class).of(canonicalName(ByteArray.class)) : canonicalName(ByteArray.class);
             case MESSAGE -> rules.repeated() ? canonicalName(ObjectList.class).of(protobufType) : protobufType;
+            case ENUM -> rules.repeated() ? canonicalName(EnumList.class).of(protobufType) : simpleName("int");
         };
     }
 
@@ -105,7 +109,9 @@ public final class FieldDefinition {
      * @return field name
      */
     public String javaFieldName() {
-        return protoKind == ENUM ? name + "Value" : name;
+        return (protoKind == ENUM && !rules().repeated())
+                ? name + "Value"
+                : name;
     }
 
     /**

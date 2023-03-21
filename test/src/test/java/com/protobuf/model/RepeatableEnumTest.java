@@ -1,6 +1,6 @@
 package com.protobuf.model;
 
-import com.github.pcimcioch.protobuf.dto.IntList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ class RepeatableEnumTest {
     @Test
     void singleElements() {
         // when
-        RepeatableEnumMessage model = new RepeatableEnumMessage(IntList.of(1));
+        RepeatableEnumMessage model = new RepeatableEnumMessage(EnumList.of(RepeatableEnum::forNumber, 1));
 
         // then
         assertThat(model.orders()).containsExactly(SECOND);
@@ -42,7 +42,7 @@ class RepeatableEnumTest {
     @Test
     void multipleElements() {
         // when
-        RepeatableEnumMessage model = new RepeatableEnumMessage(IntList.of(1, 2));
+        RepeatableEnumMessage model = new RepeatableEnumMessage(EnumList.of(RepeatableEnum::forNumber, 1, 2));
 
         // then
         assertThat(model.orders()).containsExactly(SECOND, THIRD);
@@ -53,7 +53,7 @@ class RepeatableEnumTest {
     @Test
     void modifyOutputList() {
         // given
-        RepeatableEnumMessage model = new RepeatableEnumMessage(IntList.of(1));
+        RepeatableEnumMessage model = new RepeatableEnumMessage(EnumList.of(RepeatableEnum::forNumber, 1));
 
         // when then
         assertThatThrownBy(() -> model.ordersValue().add(2))

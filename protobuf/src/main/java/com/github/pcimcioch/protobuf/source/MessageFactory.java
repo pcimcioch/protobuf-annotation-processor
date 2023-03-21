@@ -2,6 +2,8 @@ package com.github.pcimcioch.protobuf.source;
 
 import com.github.pcimcioch.protobuf.code.CodeBody;
 import com.github.pcimcioch.protobuf.code.RecordSource;
+import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.ProtoDto;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
@@ -86,15 +88,13 @@ class MessageFactory {
     }
 
     private void addEnumListGetter(RecordSource source, FieldDefinition field) {
-        // TODO [performance] instead of creating enum list every time create some kind of wrapper list class
-        CodeBody body = body("return $valueName.stream().map($EnumType::forNumber).toList();",
-                param("EnumType", field.protobufType()),
+        CodeBody body = body("return $valueName.valuesList();",
                 param("valueName", field.javaFieldName())
         );
 
-        source.add(method(field.name())
+        source.add(method(field.name() + "Value")
                 .set(publicVisibility())
-                .set(returns(field.protobufType().inList()))
+                .set(returns(IntList.class))
                 .set(body)
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );

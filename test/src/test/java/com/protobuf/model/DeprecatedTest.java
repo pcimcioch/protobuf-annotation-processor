@@ -21,11 +21,11 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedOther")).isFalse();
 
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableField")).isFalse();
-        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableEnum")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "someRepeatableOther")).isFalse();
 
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableField")).isFalse();
-        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableEnum")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.Builder.class, "deprecatedRepeatableOther")).isFalse();
     }
 
@@ -99,7 +99,7 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someOther")).isFalse();
 
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableField")).isFalse();
-        assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableEnumValue")).isFalse();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableEnum")).isFalse();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "someRepeatableOther")).isFalse();
     }
 
@@ -125,7 +125,7 @@ class DeprecatedTest {
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedOther")).isTrue();
 
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableField")).isTrue();
-        assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableEnumValue")).isTrue();
+        assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableEnum")).isTrue();
         assertThat(fieldDeprecated(DeprecatedRecord.class, "deprecatedRepeatableOther")).isTrue();
     }
 

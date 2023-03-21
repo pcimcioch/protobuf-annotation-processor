@@ -20,6 +20,16 @@ public final class InitializerSource {
         return new InitializerSource(value);
     }
 
+    /**
+     * Create new initializer source
+     *
+     * @param body initializer body
+     * @return initializer source
+     */
+    public static InitializerSource initializer(CodeBody body) {
+        return new InitializerSource(body.toString());
+    }
+
     @Override
     public String toString() {
         return value;

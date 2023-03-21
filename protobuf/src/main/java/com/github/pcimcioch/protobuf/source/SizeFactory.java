@@ -44,7 +44,7 @@ class SizeFactory {
         String method = switch (field.protoKind()) {
             case DOUBLE -> "ofDouble";
             case FLOAT -> "ofFloat";
-            case INT32, ENUM -> "ofInt32";
+            case INT32 -> "ofInt32";
             case INT64 -> "ofInt64";
             case UINT32 -> "ofUint32";
             case UINT64 -> "ofUint64";
@@ -58,6 +58,7 @@ class SizeFactory {
             case STRING -> "ofString";
             case MESSAGE -> "ofMessage";
             case BYTES -> "ofBytes";
+            case ENUM -> field.rules().repeated() ? "ofEnum" : "ofInt32";
         };
 
         return method + suffix;

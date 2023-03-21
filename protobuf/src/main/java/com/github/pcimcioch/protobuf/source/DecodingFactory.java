@@ -188,7 +188,7 @@ class DecodingFactory {
                     param("packedFieldTag", LEN.tagFrom(field.number())),
                     param("field", field.javaFieldNamePrefixed("add"))
             );
-            case INT32, ENUM -> body("""
+            case INT32 -> body("""
                             case $fieldTag -> builder.$field(reader.readInt32());
                             case $packedFieldTag -> reader.readInt32Packed(builder::$field);""",
                     param("fieldTag", VARINT.tagFrom(field.number())),
@@ -277,6 +277,13 @@ class DecodingFactory {
                     param("fieldTag", LEN.tagFrom(field.number())),
                     param("merge", field.javaFieldNamePrefixed("add")),
                     param("Type", field.javaFieldType().generic())
+            );
+            case ENUM -> body("""
+                            case $fieldTag -> builder.$field(reader.readInt32());
+                            case $packedFieldTag -> reader.readInt32Packed(builder::$field);""",
+                    param("fieldTag", VARINT.tagFrom(field.number())),
+                    param("packedFieldTag", LEN.tagFrom(field.number())),
+                    param("field", field.javaFieldNamePrefixed("add") + "Value")
             );
         };
     }

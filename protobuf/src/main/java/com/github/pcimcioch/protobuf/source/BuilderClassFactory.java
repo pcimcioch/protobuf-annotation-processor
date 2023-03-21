@@ -7,6 +7,7 @@ import com.github.pcimcioch.protobuf.code.TypeName;
 import com.github.pcimcioch.protobuf.dto.BooleanList;
 import com.github.pcimcioch.protobuf.dto.ByteArray;
 import com.github.pcimcioch.protobuf.dto.DoubleList;
+import com.github.pcimcioch.protobuf.dto.EnumList;
 import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
@@ -130,20 +131,19 @@ class BuilderClassFactory {
 
     private void addEnumListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$valueName.clear();
-                        if ($enumName != null) {
-                          $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        this.$field.clear();
+                        if ($field != null) {
+                          this.$field.addAllValues($field);
                         }
                         return this;""",
-                param("valueName", field.javaFieldName()),
-                param("enumName", field.name())
+                param("field", field.javaFieldName())
         );
 
-        builderClass.add(method(field.name())
+        builderClass.add(method(field.javaFieldName() + "Value")
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.protobufType().inCollection(), field.name()))
+                .add(parameter(simpleName("Integer").inCollection(), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -207,40 +207,36 @@ class BuilderClassFactory {
 
     private void addEnumListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        if ($enumName != null) {
-                          this.$valueName.add($enumName.number());
-                        }
+                        this.$valueName.addValue($valueName);
                         return this;
                         """,
-                param("valueName", field.javaFieldName()),
-                param("enumName", field.name())
+                param("valueName", field.javaFieldName())
         );
 
-        builderClass.add(method(field.namePrefixed("add"))
+        builderClass.add(method(field.namePrefixed("add") + "Value")
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.protobufType(), field.name()))
+                .add(parameter(int.class, field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addEnumListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        if ($enumName != null) {
-                          $enumName.forEach(e -> this.$valueName.add(e.number()));
+                        if ($valueName != null) {
+                          this.$valueName.addAllValues($valueName);
                         }
                         return this;
                         """,
-                param("valueName", field.javaFieldName()),
-                param("enumName", field.name())
+                param("valueName", field.javaFieldName())
         );
 
-        builderClass.add(method(field.namePrefixed("addAll"))
+        builderClass.add(method(field.namePrefixed("addAll") + "Value")
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.protobufType().inCollection(), field.name()))
+                .add(parameter(simpleName("Integer").inCollection(), field.javaFieldName()))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -304,13 +300,16 @@ class BuilderClassFactory {
     private static InitializerSource initializerOf(FieldDefinition field) {
         if (field.rules().repeated()) {
             return initializer(switch (field.protoKind()) {
-                case DOUBLE -> "com.github.pcimcioch.protobuf.dto.DoubleList.builder()";
-                case FLOAT -> "com.github.pcimcioch.protobuf.dto.FloatList.builder()";
-                case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM ->
-                        "com.github.pcimcioch.protobuf.dto.IntList.builder()";
-                case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> "com.github.pcimcioch.protobuf.dto.LongList.builder()";
-                case BOOL -> "com.github.pcimcioch.protobuf.dto.BooleanList.builder()";
-                case STRING, BYTES, MESSAGE -> "com.github.pcimcioch.protobuf.dto.ObjectList.builder()";
+                case DOUBLE -> body("com.github.pcimcioch.protobuf.dto.DoubleList.builder()");
+                case FLOAT -> body("com.github.pcimcioch.protobuf.dto.FloatList.builder()");
+                case INT32, UINT32, SINT32, FIXED32, SFIXED32 ->
+                        body("com.github.pcimcioch.protobuf.dto.IntList.builder()");
+                case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
+                        body("com.github.pcimcioch.protobuf.dto.LongList.builder()");
+                case BOOL -> body("com.github.pcimcioch.protobuf.dto.BooleanList.builder()");
+                case STRING, BYTES, MESSAGE -> body("com.github.pcimcioch.protobuf.dto.ObjectList.builder()");
+                case ENUM -> body("com.github.pcimcioch.protobuf.dto.EnumList.builder($enumType::forNumber)",
+                        param("enumType", field.protobufType()));
             });
         }
 
@@ -334,12 +333,13 @@ class BuilderClassFactory {
         return switch (field.protoKind()) {
             case DOUBLE -> canonicalName(DoubleList.Builder.class);
             case FLOAT -> canonicalName(FloatList.Builder.class);
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> canonicalName(IntList.Builder.class);
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32 -> canonicalName(IntList.Builder.class);
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> canonicalName(LongList.Builder.class);
             case BOOL -> canonicalName(BooleanList.Builder.class);
             case STRING -> canonicalName(ObjectList.Builder.class).of(simpleName("String"));
             case BYTES -> canonicalName(ObjectList.Builder.class).of(canonicalName(ByteArray.class));
             case MESSAGE -> canonicalName(ObjectList.Builder.class).of(field.protobufType());
+            case ENUM -> canonicalName(EnumList.Builder.class).of(field.protobufType());
         };
     }
 
@@ -354,12 +354,12 @@ class BuilderClassFactory {
         return switch (field.protoKind()) {
             case DOUBLE -> simpleName("double");
             case FLOAT -> simpleName("float");
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> simpleName("int");
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32 -> simpleName("int");
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> simpleName("long");
             case BOOL -> simpleName("boolean");
             case STRING -> simpleName("String");
             case BYTES -> canonicalName(ByteArray.class);
-            case MESSAGE -> field.protobufType();
+            case MESSAGE, ENUM -> field.protobufType();
         };
     }
 
@@ -367,12 +367,12 @@ class BuilderClassFactory {
         return switch (field.protoKind()) {
             case DOUBLE -> simpleName("Double").inCollection();
             case FLOAT -> simpleName("Float").inCollection();
-            case INT32, UINT32, SINT32, FIXED32, SFIXED32, ENUM -> simpleName("Integer").inCollection();
+            case INT32, UINT32, SINT32, FIXED32, SFIXED32 -> simpleName("Integer").inCollection();
             case INT64, UINT64, SINT64, FIXED64, SFIXED64 -> simpleName("Long").inCollection();
             case BOOL -> simpleName("Boolean").inCollection();
             case STRING -> simpleName("String").inCollection();
             case BYTES -> canonicalName(ByteArray.class).inCollection();
-            case MESSAGE -> field.protobufType().inCollection();
+            case MESSAGE, ENUM -> field.protobufType().inCollection();
         };
     }
 }
