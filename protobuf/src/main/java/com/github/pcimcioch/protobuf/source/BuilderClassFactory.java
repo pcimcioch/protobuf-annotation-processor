@@ -81,7 +81,7 @@ class BuilderClassFactory {
 
     private void addSingleSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$field = $field;
+                        this.$field = value;
                         return this;""",
                 param("field", field.javaFieldName())
         );
@@ -90,7 +90,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .add(parameter(field.javaFieldType(), "value"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -98,8 +98,8 @@ class BuilderClassFactory {
     private void addListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field.clear();
-                        if ($field != null) {
-                          this.$field.addAll($field);
+                        if (values != null) {
+                          this.$field.addAll(values);
                         }
                         return this;""",
                 param("field", field.javaFieldName())
@@ -109,22 +109,21 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(collectionAddType(field), field.javaFieldName()))
+                .add(parameter(collectionAddType(field), "values"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addEnumSingleSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
-        CodeBody body = body("return this.$valueName($enumName == null ? 0 : $enumName.number());",
-                param("valueName", field.javaFieldName()),
-                param("enumName", field.name())
+        CodeBody body = body("return this.$field(value == null ? 0 : value.number());",
+                param("field", field.javaFieldName())
         );
 
         builderClass.add(method(field.name())
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.protobufType(), field.name()))
+                .add(parameter(field.protobufType(), "value"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -132,8 +131,8 @@ class BuilderClassFactory {
     private void addEnumListSetter(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
                         this.$field.clear();
-                        if ($field != null) {
-                          this.$field.addAllValues($field);
+                        if (values != null) {
+                          this.$field.addAllValues(values);
                         }
                         return this;""",
                 param("field", field.javaFieldName())
@@ -143,7 +142,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(simpleName("Integer").inCollection(), field.javaFieldName()))
+                .add(parameter(simpleName("Integer").inCollection(), "values"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
@@ -165,13 +164,13 @@ class BuilderClassFactory {
         TypeName addType = singleAddType(field);
         CodeBody body = addType.isPrimitive()
                 ? body("""
-                        this.$field.add($field);
+                        this.$field.add(value);
                         return this;
                         """,
                 param("field", field.javaFieldName()))
                 : body("""
-                        if ($field != null) {
-                          this.$field.add($field);
+                        if (value != null) {
+                          this.$field.add(value);
                         }
                         return this;
                         """,
@@ -181,15 +180,15 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(addType, field.javaFieldName()))
+                .add(parameter(addType, "value"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        if ($field != null) {
-                          this.$field.addAll($field);
+                        if (values != null) {
+                          this.$field.addAll(values);
                         }
                         return this;
                         """,
@@ -200,50 +199,50 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(collectionAddType(field), field.javaFieldName()))
+                .add(parameter(collectionAddType(field), "values"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addEnumListAddSingle(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$valueName.addValue($valueName);
+                        this.$field.addValue(value);
                         return this;
                         """,
-                param("valueName", field.javaFieldName())
+                param("field", field.javaFieldName())
         );
 
-        builderClass.add(method(field.namePrefixed("add") + "Value")
+        builderClass.add(method(field.javaFieldNamePrefixed("add") + "Value")
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(int.class, field.javaFieldName()))
+                .add(parameter(int.class, "value"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addEnumListAddCollection(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        if ($valueName != null) {
-                          this.$valueName.addAllValues($valueName);
+                        if (values != null) {
+                          this.$field.addAllValues(values);
                         }
                         return this;
                         """,
-                param("valueName", field.javaFieldName())
+                param("field", field.javaFieldName())
         );
 
-        builderClass.add(method(field.namePrefixed("addAll") + "Value")
+        builderClass.add(method(field.javaFieldNamePrefixed("addAll") + "Value")
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(simpleName("Integer").inCollection(), field.javaFieldName()))
+                .add(parameter(simpleName("Integer").inCollection(), "values"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
 
     private void addFieldMerge(ClassSource builderClass, FieldDefinition field, MessageDefinition message) {
         CodeBody body = body("""
-                        this.$field = $ProtoDto.merge(this.$field, $field);
+                        this.$field = $ProtoDto.merge(this.$field, value);
                         return this;
                         """,
                 param("field", field.javaFieldName()),
@@ -254,7 +253,7 @@ class BuilderClassFactory {
                 .set(publicVisibility())
                 .set(returns(message.builderName()))
                 .set(body)
-                .add(parameter(field.javaFieldType(), field.javaFieldName()))
+                .add(parameter(field.javaFieldType(), "value"))
                 .addIf(annotation(Deprecated.class), field.rules().deprecated())
         );
     }
