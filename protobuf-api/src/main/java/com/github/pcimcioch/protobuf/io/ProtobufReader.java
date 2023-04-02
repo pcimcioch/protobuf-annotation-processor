@@ -458,7 +458,7 @@ public class ProtobufReader {
      * @return unknown field
      * @throws IOException in case of any data read error
      */
-    public UnknownField readUnknown(int tag) throws IOException {
+    public UnknownField readUnknownField(int tag) throws IOException {
         return UnknownField.read(tag, input);
     }
 

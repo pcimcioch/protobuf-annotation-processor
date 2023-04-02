@@ -306,7 +306,7 @@ class BuilderClassFactory {
                 case INT64, UINT64, SINT64, FIXED64, SFIXED64 ->
                         body("com.github.pcimcioch.protobuf.dto.LongList.builder()");
                 case BOOL -> body("com.github.pcimcioch.protobuf.dto.BooleanList.builder()");
-                case STRING, BYTES, MESSAGE -> body("com.github.pcimcioch.protobuf.dto.ObjectList.builder()");
+                case STRING, BYTES, MESSAGE, UNKNOWN -> body("com.github.pcimcioch.protobuf.dto.ObjectList.builder()");
                 case ENUM -> body("com.github.pcimcioch.protobuf.dto.EnumList.builder($enumType::forNumber)",
                         param("enumType", field.protobufType()));
             });
@@ -320,7 +320,7 @@ class BuilderClassFactory {
             case BOOL -> "false";
             case STRING -> "\"\"";
             case BYTES -> "com.github.pcimcioch.protobuf.dto.ByteArray.empty()";
-            case MESSAGE -> "null";
+            case MESSAGE, UNKNOWN -> "null";
         });
     }
 
@@ -337,7 +337,7 @@ class BuilderClassFactory {
             case BOOL -> canonicalName(BooleanList.Builder.class);
             case STRING -> canonicalName(ObjectList.Builder.class).of(simpleName("String"));
             case BYTES -> canonicalName(ObjectList.Builder.class).of(canonicalName(ByteArray.class));
-            case MESSAGE -> canonicalName(ObjectList.Builder.class).of(field.protobufType());
+            case MESSAGE, UNKNOWN -> canonicalName(ObjectList.Builder.class).of(field.protobufType());
             case ENUM -> canonicalName(EnumList.Builder.class).of(field.protobufType());
         };
     }
@@ -358,7 +358,7 @@ class BuilderClassFactory {
             case BOOL -> simpleName("boolean");
             case STRING -> simpleName("String");
             case BYTES -> canonicalName(ByteArray.class);
-            case MESSAGE, ENUM -> field.protobufType();
+            case MESSAGE, ENUM, UNKNOWN -> field.protobufType();
         };
     }
 
@@ -371,7 +371,7 @@ class BuilderClassFactory {
             case BOOL -> simpleName("Boolean").inCollection();
             case STRING -> simpleName("String").inCollection();
             case BYTES -> canonicalName(ByteArray.class).inCollection();
-            case MESSAGE, ENUM -> field.protobufType().inCollection();
+            case MESSAGE, ENUM, UNKNOWN -> field.protobufType().inCollection();
         };
     }
 }

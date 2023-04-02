@@ -8,6 +8,7 @@ import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import static com.github.pcimcioch.protobuf.code.CodeBody.body;
 import static com.github.pcimcioch.protobuf.code.CodeBody.param;
@@ -21,6 +22,7 @@ import static com.github.pcimcioch.protobuf.io.WireType.I32;
 import static com.github.pcimcioch.protobuf.io.WireType.I64;
 import static com.github.pcimcioch.protobuf.io.WireType.LEN;
 import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UNKNOWN;
 
 class DecodingFactory {
 
@@ -91,11 +93,9 @@ class DecodingFactory {
             body.appendln(decodingCode(field));
         }
 
-        return body.append("""
-                    default -> reader.skip(tag);
-                }
-                """
-        );
+        body.appendln(defaultCode(message));
+
+        return body.append("}");
     }
 
     private CodeBody decodingCode(FieldDefinition field) {
@@ -169,6 +169,7 @@ class DecodingFactory {
                     param("merge", field.javaFieldNamePrefixed("merge")),
                     param("Type", field.javaFieldType())
             );
+            case UNKNOWN -> body();
         };
     }
 
@@ -273,9 +274,9 @@ class DecodingFactory {
                     param("fieldTag", LEN.tagFrom(field.number())),
                     param("field", field.javaFieldNamePrefixed("add"))
             );
-            case MESSAGE -> body("case $fieldTag -> builder.$merge(reader.readMessage($Type::parse));",
+            case MESSAGE -> body("case $fieldTag -> builder.$field(reader.readMessage($Type::parse));",
                     param("fieldTag", LEN.tagFrom(field.number())),
-                    param("merge", field.javaFieldNamePrefixed("add")),
+                    param("field", field.javaFieldNamePrefixed("add")),
                     param("Type", field.javaFieldType().generic())
             );
             case ENUM -> body("""
@@ -285,6 +286,18 @@ class DecodingFactory {
                     param("packedFieldTag", LEN.tagFrom(field.number())),
                     param("field", field.javaFieldNamePrefixed("add") + "Value")
             );
+            case UNKNOWN -> body();
         };
+    }
+
+    private CodeBody defaultCode(MessageDefinition message) {
+        Optional<FieldDefinition> defaultField = message.fields().stream()
+                .filter(f -> f.protoKind() == UNKNOWN)
+                .findFirst();
+
+        return defaultField
+                .map(field -> body("default -> builder.$field(reader.readUnknownField(tag));",
+                        param("field", field.javaFieldNamePrefixed("add"))))
+                .orElse(body("default -> reader.skip(tag);"));
     }
 }

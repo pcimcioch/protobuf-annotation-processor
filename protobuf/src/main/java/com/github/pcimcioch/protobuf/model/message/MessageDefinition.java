@@ -1,8 +1,9 @@
 package com.github.pcimcioch.protobuf.model.message;
 
-import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 import com.github.pcimcioch.protobuf.code.TypeName;
+import com.github.pcimcioch.protobuf.model.field.FieldDefinition;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,16 +26,18 @@ public class MessageDefinition {
     /**
      * Constructor
      *
-     * @param name         name of the message
-     * @param fields       fields of the message
-     * @param reserved     reserved fields
-     * @param messages     nested messages
-     * @param enumerations nested enumerations
+     * @param name                 name of the message
+     * @param fields               fields of the message
+     * @param reserved             reserved fields
+     * @param messages             nested messages
+     * @param enumerations         nested enumerations
+     * @param supportUnknownFields whether to support unknown fields
      */
     public MessageDefinition(TypeName name, List<FieldDefinition> fields, ReservedDefinition reserved,
-                             List<MessageDefinition> messages, List<EnumerationDefinition> enumerations) {
+                             List<MessageDefinition> messages, List<EnumerationDefinition> enumerations,
+                             boolean supportUnknownFields) {
         this.name = Valid.name(name);
-        this.fields = Valid.fields(fields, reserved);
+        this.fields = Valid.fields(extendFields(fields, supportUnknownFields), reserved);
         this.messages = Valid.messages(name, messages);
         this.enumerations = Valid.enumerations(name, enumerations);
     }
@@ -95,6 +98,17 @@ public class MessageDefinition {
     @Override
     public int hashCode() {
         return Objects.hash(name, fields, messages, enumerations);
+    }
+
+    private static List<FieldDefinition> extendFields(List<FieldDefinition> fields, boolean supportUnknownFields) {
+        if (fields == null || !supportUnknownFields) {
+            return fields;
+        }
+
+        List<FieldDefinition> newFields = new ArrayList<>(fields);
+        newFields.add(FieldDefinition.unknown());
+
+        return newFields;
     }
 
     private static final class Valid {

@@ -9,6 +9,7 @@ import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
+import com.github.pcimcioch.protobuf.io.UnknownField;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKin
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.ENUM;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.MESSAGE;
 import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.STRING;
+import static com.github.pcimcioch.protobuf.model.field.FieldDefinition.ProtoKind.UNKNOWN;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertFalse;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertNonNull;
 import static com.github.pcimcioch.protobuf.model.validation.Assertions.assertTrue;
@@ -38,7 +40,7 @@ public final class FieldDefinition {
 
     private FieldDefinition(String name, int number, ProtoKind protoKind, FieldRules rules, TypeName protobufType) {
         this.name = Valid.name(name);
-        this.number = Valid.number(number);
+        this.number = Valid.number(number, protoKind);
         this.protoKind = Valid.protoType(protoKind);
         this.rules = Valid.rules(protoKind, rules);
         this.protobufType = Valid.protobufType(protoKind, protobufType);
@@ -98,7 +100,7 @@ public final class FieldDefinition {
                     rules.repeated() ? canonicalName(ObjectList.class).of(simpleName("String")) : simpleName("String");
             case BYTES ->
                     rules.repeated() ? canonicalName(ObjectList.class).of(canonicalName(ByteArray.class)) : canonicalName(ByteArray.class);
-            case MESSAGE -> rules.repeated() ? canonicalName(ObjectList.class).of(protobufType) : protobufType;
+            case MESSAGE, UNKNOWN -> rules.repeated() ? canonicalName(ObjectList.class).of(protobufType) : protobufType;
             case ENUM -> rules.repeated() ? canonicalName(EnumList.class).of(protobufType) : simpleName("int");
         };
     }
@@ -197,6 +199,20 @@ public final class FieldDefinition {
     }
 
     /**
+     * Creates new field for unknown fields
+     *
+     * @return field for unknown fields
+     */
+    public static FieldDefinition unknown() {
+        return new FieldDefinition(
+                "unknownFields",
+                0,
+                UNKNOWN,
+                new FieldRules(false, true, false),
+                canonicalName(UnknownField.class));
+    }
+
+    /**
      * Protobuf field type
      */
     public enum ProtoKind {
@@ -283,7 +299,12 @@ public final class FieldDefinition {
         /**
          * Other message
          */
-        MESSAGE;
+        MESSAGE,
+
+        /**
+         * Unknown fields
+         */
+        UNKNOWN;
 
         /**
          * Returns enum representing this protobuf scalar type
@@ -316,8 +337,8 @@ public final class FieldDefinition {
     private static final class Valid {
         private static final Pattern namePattern = Pattern.compile("^[a-zA-z_][a-zA-Z0-9_]*$");
 
-        private static int number(int number) {
-            assertTrue(number > 0, "Number must be positive, but was: " + number);
+        private static int number(int number, ProtoKind protoKind) {
+            assertTrue(protoKind == UNKNOWN || number > 0, "Number must be positive, but was: " + number);
             return number;
         }
 

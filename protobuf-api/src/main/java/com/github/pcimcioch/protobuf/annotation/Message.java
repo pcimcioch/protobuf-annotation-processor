@@ -34,6 +34,17 @@ public @interface Message {
      * @return reserved
      */
     Reserved reserved() default @Reserved;
+
+    /**
+     * Whether unknown fields should be supported.
+     * <p>
+     * If disabled, unknown fields will be ignored during read.
+     * <p>
+     * If enabled, they will be saved in the message.
+     *
+     * @return support unknown fields
+     */
+    boolean supportUnknownFields() default false;
 }
 
 

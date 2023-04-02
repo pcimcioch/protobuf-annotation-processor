@@ -885,7 +885,7 @@ public class ProtobufWriter implements AutoCloseable {
      * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUnknownFields(ObjectList<UnknownField> values) throws IOException {
+    public ProtobufWriter writeUnknownFieldsUnpacked(ObjectList<UnknownField> values) throws IOException {
         for (UnknownField value : values) {
             value.writeTo(output);
         }

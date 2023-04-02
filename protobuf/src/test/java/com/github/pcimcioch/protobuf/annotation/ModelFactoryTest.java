@@ -292,6 +292,7 @@ class ModelFactoryTest {
                             "com.example",
                             message("MyMessage",
                                     reserved("TEST", 10, 20, range(100, 200)),
+                                    false,
                                     field("int32", "field", 1))));
 
             // when
@@ -301,6 +302,7 @@ class ModelFactoryTest {
             ProtoDefinitions expected = definitions(
                     messageDef("com.example.MyMessage",
                             reservedDef("TEST", 10, 20, range(100, 200)),
+                            false,
                             scalarField("int32", "field", 1)));
 
             assertThat(definitions).isEqualTo(expected);
@@ -618,10 +620,10 @@ class ModelFactoryTest {
     }
 
     private static Message message(String name, Field... fields) {
-        return message(name, NO_RESERVED, fields);
+        return message(name, NO_RESERVED, false, fields);
     }
 
-    private static Message message(String name, Reserved reserved, Field... fields) {
+    private static Message message(String name, Reserved reserved, boolean supportUnknownFields, Field... fields) {
         return new Message() {
             @Override
             public String name() {
@@ -641,6 +643,11 @@ class ModelFactoryTest {
             @Override
             public Class<? extends Annotation> annotationType() {
                 return Message.class;
+            }
+
+            @Override
+            public boolean supportUnknownFields() {
+                return supportUnknownFields;
             }
         };
     }
@@ -796,16 +803,18 @@ class ModelFactoryTest {
     }
 
     private static MessageDefinition messageDef(String name, Object... elements) {
-        return messageDef(name, NO_RESERVED_DEF, elements);
+        return messageDef(name, NO_RESERVED_DEF, false, elements);
     }
 
-    private static MessageDefinition messageDef(String name, ReservedDefinition reserved, Object... elements) {
+    // TODO add tests for unknown fields
+    private static MessageDefinition messageDef(String name, ReservedDefinition reserved, Boolean supportUnknownFields, Object... elements) {
         return new MessageDefinition(
                 canonicalName(name),
                 extractList(FieldDefinition.class, elements),
                 reserved,
                 extractList(MessageDefinition.class, elements),
-                extractList(EnumerationDefinition.class, elements)
+                extractList(EnumerationDefinition.class, elements),
+                supportUnknownFields
         );
     }
 

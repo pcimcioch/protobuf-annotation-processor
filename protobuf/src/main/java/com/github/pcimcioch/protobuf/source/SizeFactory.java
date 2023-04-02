@@ -20,11 +20,8 @@ class SizeFactory {
 
         body.appendln("int totalSize = 0;");
         for (FieldDefinition field : message.fields()) {
-            body.appendln("totalSize += $Size.$method($number, $name);",
-                    param("Size", Size.class),
-                    param("method", sizeMethod(field)),
-                    param("number", field.number()),
-                    param("name", field.javaFieldName())
+            body.appendln("totalSize += $method;",
+                    param("method", sizeMethod(field))
             );
         }
         body.append("return totalSize;");
@@ -37,30 +34,38 @@ class SizeFactory {
         );
     }
 
-    private String sizeMethod(FieldDefinition field) {
+    private CodeBody sizeMethod(FieldDefinition field) {
         String suffix = field.rules().repeated()
                 ? field.rules().packed() ? "Packed" : "Unpacked"
                 : "";
         String method = switch (field.protoKind()) {
-            case DOUBLE -> "ofDouble";
-            case FLOAT -> "ofFloat";
-            case INT32 -> "ofInt32";
-            case INT64 -> "ofInt64";
-            case UINT32 -> "ofUint32";
-            case UINT64 -> "ofUint64";
-            case SINT32 -> "ofSint32";
-            case SINT64 -> "ofSint64";
-            case FIXED32 -> "ofFixed32";
-            case FIXED64 -> "ofFixed64";
-            case SFIXED32 -> "ofSfixed32";
-            case SFIXED64 -> "ofSfixed64";
-            case BOOL -> "ofBool";
-            case STRING -> "ofString";
-            case MESSAGE -> "ofMessage";
-            case BYTES -> "ofBytes";
-            case ENUM -> field.rules().repeated() ? "ofEnum" : "ofInt32";
+            case DOUBLE -> "$Size.ofDouble$suffix($number, $name)";
+            case FLOAT -> "$Size.ofFloat$suffix($number, $name)";
+            case INT32 -> "$Size.ofInt32$suffix($number, $name)";
+            case INT64 -> "$Size.ofInt64$suffix($number, $name)";
+            case UINT32 -> "$Size.ofUint32$suffix($number, $name)";
+            case UINT64 -> "$Size.ofUint64$suffix($number, $name)";
+            case SINT32 -> "$Size.ofSint32$suffix($number, $name)";
+            case SINT64 -> "$Size.ofSint64$suffix($number, $name)";
+            case FIXED32 -> "$Size.ofFixed32$suffix($number, $name)";
+            case FIXED64 -> "$Size.ofFixed64$suffix($number, $name)";
+            case SFIXED32 -> "$Size.ofSfixed32$suffix($number, $name)";
+            case SFIXED64 -> "$Size.ofSfixed64$suffix($number, $name)";
+            case BOOL -> "$Size.ofBool$suffix($number, $name)";
+            case STRING -> "$Size.ofString$suffix($number, $name)";
+            case MESSAGE -> "$Size.ofMessage$suffix($number, $name)";
+            case BYTES -> "$Size.ofBytes$suffix($number, $name)";
+            case UNKNOWN -> "$Size.ofUnknownFields$suffix($name)";
+            case ENUM -> field.rules().repeated()
+                    ? "$Size.ofEnum$suffix($number, $name)"
+                    : "$Size.ofInt32$suffix($number, $name)";
         };
 
-        return method + suffix;
+        return body(method,
+                param("Size", Size.class),
+                param("number", field.number()),
+                param("name", field.javaFieldName()),
+                param("suffix", suffix)
+        );
     }
 }

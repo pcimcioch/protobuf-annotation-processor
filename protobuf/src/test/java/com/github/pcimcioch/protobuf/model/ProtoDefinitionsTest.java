@@ -222,7 +222,7 @@ class ProtoDefinitionsTest {
         );
         ReservedDefinition nothingReserved = new ReservedDefinition(Set.of(), Set.of(), Set.of());
 
-        return new MessageDefinition(type, fields, nothingReserved, emptyList(), emptyList());
+        return new MessageDefinition(type, fields, nothingReserved, emptyList(), emptyList(), false);
     }
 
     private static EnumerationDefinition enumeration(String typeCanonical) {

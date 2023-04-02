@@ -55,7 +55,8 @@ public class ModelFactory {
                 buildFields(hierarchyResolver, message),
                 buildReserved(message.reserved()),
                 buildMessages(hierarchyResolver, clazz.messages()),
-                buildEnumerations(clazz.enumerations())
+                buildEnumerations(clazz.enumerations()),
+                message.supportUnknownFields()
         );
     }
 

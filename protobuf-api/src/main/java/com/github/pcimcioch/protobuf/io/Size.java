@@ -901,6 +901,21 @@ public final class Size {
     }
 
     /**
+     * Returns unpacked list of unknown fields size
+     *
+     * @param values values
+     * @return size
+     */
+    // TODO add tests
+    public static int ofUnknownFieldsUnpacked(ObjectList<UnknownField> values) {
+        int size = 0;
+        for (UnknownField value : values) {
+            size += value.protobufSize();
+        }
+        return size;
+    }
+
+    /**
      * Returns unpacked list of enums size
      *
      * @param number tag number
@@ -922,11 +937,11 @@ public final class Size {
         return ofInt32Packed(number, values.valuesList());
     }
 
-    private static int tagSize(int number) {
+    static int tagSize(int number) {
         return varint32Size(number << 3);
     }
 
-    private static int varint32Size(int value) {
+    static int varint32Size(int value) {
         if ((value & (~0 << 7)) == 0) {
             return 1;
         }
@@ -945,7 +960,7 @@ public final class Size {
         return 5;
     }
 
-    private static int varint64Size(long value) {
+    static int varint64Size(long value) {
         if ((value & (~0L << 7)) == 0L) {
             return 1;
         }
@@ -968,15 +983,15 @@ public final class Size {
         return bytes;
     }
 
-    private static int zigzag32Size(int value) {
+    static int zigzag32Size(int value) {
         return varint32Size((value << 1) ^ (value >> 31));
     }
 
-    private static int zigzag64Size(long value) {
+    static int zigzag64Size(long value) {
         return varint64Size((value << 1) ^ (value >> 63));
     }
 
-    private static int stringSize(String value) {
+    static int stringSize(String value) {
         int count = 0;
         for (int i = 0, len = value.length(); i < len; i++) {
             char ch = value.charAt(i);

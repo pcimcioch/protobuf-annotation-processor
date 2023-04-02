@@ -63,6 +63,7 @@ class EncodingFactory {
             case BOOL -> "writeBool";
             case STRING -> "writeString";
             case MESSAGE -> "writeMessage";
+            case UNKNOWN -> "writeUnknownFieldsUnpacked";
             case BYTES -> "writeBytes";
             case ENUM -> field.rules().repeated() ? "writeEnum" : "writeInt32";
         };

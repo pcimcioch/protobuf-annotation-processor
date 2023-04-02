@@ -110,7 +110,8 @@ class ProtoDefinitionsWrapperTest {
                 List.of(scalar("field", 1, "int32", new FieldRules(false, false, false))),
                 new ReservedDefinition(emptySet(), emptySet(), emptySet()),
                 emptyList(),
-                emptyList()
+                emptyList(),
+                false
         );
     }
 

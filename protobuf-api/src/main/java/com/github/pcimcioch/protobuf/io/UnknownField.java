@@ -23,6 +23,8 @@ public abstract sealed class UnknownField {
 
     abstract void writeTo(ProtobufOutput output) throws IOException;
 
+    abstract int protobufSize();
+
     static void skip(int tag, ProtobufInput input) throws IOException {
         try {
             switch (WireType.fromTag(tag)) {
@@ -85,6 +87,11 @@ public abstract sealed class UnknownField {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
         }
+
+        @Override
+        int protobufSize() {
+            return 4;
+        }
     }
 
     /**
@@ -117,6 +124,11 @@ public abstract sealed class UnknownField {
         void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
+        }
+
+        @Override
+        int protobufSize() {
+            return 8;
         }
     }
 
@@ -151,6 +163,11 @@ public abstract sealed class UnknownField {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
         }
+
+        @Override
+        int protobufSize() {
+            return Size.tagSize(number) + Size.varint64Size(value);
+        }
     }
 
     /**
@@ -184,6 +201,11 @@ public abstract sealed class UnknownField {
         void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
+        }
+
+        @Override
+        int protobufSize() {
+            return Size.tagSize(number) + Size.varint32Size(value.length()) + value.length();
         }
     }
 }
