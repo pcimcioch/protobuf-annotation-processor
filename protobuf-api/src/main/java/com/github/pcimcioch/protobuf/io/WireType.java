@@ -49,6 +49,16 @@ public enum WireType {
     }
 
     /**
+     * Return number of given tag
+     *
+     * @param tag tag
+     * @return number
+     */
+    public static int numberFrom(int tag) {
+        return tag >>> WIRE_BITS;
+    }
+
+    /**
      * Create wire type from given tag
      *
      * @param tag tag

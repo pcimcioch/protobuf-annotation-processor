@@ -448,18 +448,18 @@ public class ProtobufReader {
      * @throws IOException in case of any data read error
      */
     public void skip(int tag) throws IOException {
-        try {
-            switch (WireType.fromTag(tag)) {
-                case VARINT -> input.readVarint64();
-                case I64 -> input.skip(8);
-                case LEN -> input.skip(input.readVarint32());
-                case SGROUP -> throw new UnsupportedWireTypeException("SGROUP");
-                case EGROUP -> throw new UnsupportedWireTypeException("EGROUP");
-                case I32 -> input.skip(4);
-            }
-        } catch (IllegalArgumentException ex) {
-            throw new UnknownWireTypeException();
-        }
+        UnknownField.skip(tag, input);
+    }
+
+    /**
+     * Reads unknown field
+     *
+     * @param tag tag
+     * @return unknown field
+     * @throws IOException in case of any data read error
+     */
+    public UnknownField readUnknown(int tag) throws IOException {
+        return UnknownField.read(tag, input);
     }
 
     /**

@@ -8,7 +8,6 @@ import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
-import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
 
 import java.io.IOException;
@@ -874,6 +873,21 @@ public class ProtobufWriter implements AutoCloseable {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());
             value.writeTo(this);
+        }
+
+        return this;
+    }
+
+    /**
+     * Write unknown fields
+     *
+     * @param values fields
+     * @return this
+     * @throws IOException in case of any data write error
+     */
+    public ProtobufWriter writeUnknownFields(ObjectList<UnknownField> values) throws IOException {
+        for (UnknownField value : values) {
+            value.writeTo(output);
         }
 
         return this;
