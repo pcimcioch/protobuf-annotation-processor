@@ -26,9 +26,9 @@ You can define your protobuf schema using only java annotations
 @Message(
         name = "SimpleRecord",
         fields = {
-                @Field(type = "int32", name = "amount", number = 0),
-                @Field(type = "double", name = "latitude", number = 1),
-                @Field(type = "double", name = "longitude", number = 2)
+                @Field(type = "int32", name = "amount", number = 1),
+                @Field(type = "double", name = "latitude", number = 2),
+                @Field(type = "double", name = "longitude", number = 3)
         }
 )
 class Main {
@@ -80,13 +80,13 @@ Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
   <dependency>
     <groupId>com.github.pcimcioch</groupId>
     <artifactId>protobuf-api</artifactId>
-    <version>0.0.9</version>
+    <version>1.0.0</version>
   </dependency>
 
   <dependency>
     <groupId>com.github.pcimcioch</groupId>
     <artifactId>protobuf</artifactId>
-    <version>0.0.9</version>
+    <version>1.0.0</version>
     <optional>true</optional>
   </dependency>
 </dependencies>
