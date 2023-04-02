@@ -44,13 +44,14 @@ publishing {
         val url = if (project.version.toString().contains("SNAPSHOT")) "https://oss.sonatype.org/content/repositories/snapshots" else "https://oss.sonatype.org/service/local/staging/deploy/maven2"
         maven(url) {
             credentials {
-                username = project.findProperty("ossrh.username")?.toString() ?: ""
-                password = project.findProperty("ossrh.password")?.toString() ?: ""
+                username = project.findProperty("ossrhUsername")?.toString() ?: ""
+                password = project.findProperty("ossrhPassword")?.toString() ?: ""
             }
         }
     }
 }
 
 signing {
+    useInMemoryPgpKeys(project.findProperty("signingKey").toString(), project.findProperty("signingPassword").toString())
     sign(publishing.publications["maven"])
 }
