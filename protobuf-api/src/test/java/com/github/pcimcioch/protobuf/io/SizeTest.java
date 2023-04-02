@@ -1429,7 +1429,7 @@ class SizeTest {
                     Arguments.of(NUMBER_2_BIG, "a", 4),
 
                     Arguments.of(NUMBER_1_SMALL, "test12", 8),
-                    Arguments.of(NUMBER_1_SMALL, "testąę", 16)
+                    Arguments.of(NUMBER_1_SMALL, "test\u0105\u0119", 10)
             );
         }
 
@@ -1451,7 +1451,7 @@ class SizeTest {
                     Arguments.of(NUMBER_2_BIG, ObjectList.of("a"), 4),
 
                     Arguments.of(NUMBER_1_SMALL, ObjectList.of("test"), 6),
-                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("testść"), 16),
+                    Arguments.of(NUMBER_1_SMALL, ObjectList.of("test\u015B\u0107"), 10),
 
                     Arguments.of(NUMBER_1_SMALL, ObjectList.of("a", "b", "", "foo"), 13),
                     Arguments.of(NUMBER_1_BIG, ObjectList.of("a", "b", "", "foo"), 13),

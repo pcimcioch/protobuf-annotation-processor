@@ -477,7 +477,7 @@ class ProtoIOTest {
             return Stream.of(
                     Arguments.of("", b(0b0)),
                     Arguments.of("abc", b(0b11, 97, 98, 99)),
-                    Arguments.of("ąęć", b(0b1111, -61, -124, -30, -128, -90, -61, -124, -30, -124, -94, -61, -124, -30, -128, -95))
+                    Arguments.of("\u0105\u0119\u0107", b(6, -60, -123, -60, -103, -60, -121))
             );
         }
 

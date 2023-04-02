@@ -1,0 +1,22 @@
+name: Performance Tests
+
+on: [ workflow_dispatch ]
+
+jobs:
+  jmh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: 'gradle'
+      - name: Run JMH Tests
+        run: ./gradlew jmh
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmh-results
+          path: test/build/results/jmh/results.json
