@@ -1,4 +1,4 @@
-name: Build
+name: Publish
 
 on:
   release:
@@ -28,3 +28,4 @@ jobs:
           ORG_GRADLE_PROJECT_ossrh_password: ${{ secrets.OSSRH_PASSWORD }}
           ORG_GRADLE_PROJECT_signing_keyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signing_password: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_secretKeyRingFile: ~/.gnupg/secring.gpg
