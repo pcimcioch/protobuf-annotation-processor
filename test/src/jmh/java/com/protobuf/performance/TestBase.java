@@ -10,9 +10,6 @@ import org.openjdk.jmh.annotations.Warmup;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.Throughput)
-// TODO configuration for fast tests only. Change
-@Fork(1)
-@Measurement(iterations = 1)
-@Warmup(iterations = 1)
+@Fork(3)
 public class TestBase {
 }
