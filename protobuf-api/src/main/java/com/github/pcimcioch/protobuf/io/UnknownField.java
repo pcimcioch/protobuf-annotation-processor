@@ -90,7 +90,7 @@ public abstract sealed class UnknownField {
 
         @Override
         int protobufSize() {
-            return 4;
+            return Size.tagSize(number) + 4;
         }
     }
 
@@ -128,7 +128,7 @@ public abstract sealed class UnknownField {
 
         @Override
         int protobufSize() {
-            return 8;
+            return Size.tagSize(number) + 8;
         }
     }
 

@@ -10,6 +10,10 @@ import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.dto.ProtobufEnumeration;
 import com.github.pcimcioch.protobuf.dto.ProtobufMessage;
+import com.github.pcimcioch.protobuf.io.UnknownField.BytesField;
+import com.github.pcimcioch.protobuf.io.UnknownField.I32Field;
+import com.github.pcimcioch.protobuf.io.UnknownField.I64Field;
+import com.github.pcimcioch.protobuf.io.UnknownField.VarintField;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +38,9 @@ class SizeTest {
     private static final int NUMBER_1_BIG = 0b1111;
     private static final int NUMBER_2_SMALL = 0b10000;
     private static final int NUMBER_2_BIG = 0b11111111111;
+
+    private static final int VALUE_1_BIG = 0b1111111;
+    private static final int VALUE_2_SMALL = 0b10000000;
 
     @Nested
     class Doubles {
@@ -1406,6 +1413,7 @@ class SizeTest {
         }
     }
 
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     @Nested
     class Strings {
 
@@ -1657,6 +1665,58 @@ class SizeTest {
                     default -> throw new IllegalArgumentException();
                 };
             }
+        }
+    }
+
+    @Nested
+    class UnknownFields {
+
+        @ParameterizedTest
+        @MethodSource("packedSource")
+        void packedSize(ObjectList<UnknownField> values, int expectedSize) {
+            // when then
+            assertThat(Size.ofUnknownFieldsUnpacked(values)).isEqualTo(expectedSize);
+        }
+
+        private static Stream<Arguments> packedSource() {
+            return Stream.of(
+                    Arguments.of(ObjectList.of(), 0),
+
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_1_SMALL, 0)), 5),
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_1_SMALL, Integer.MIN_VALUE)), 5),
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_1_SMALL, Integer.MAX_VALUE)), 5),
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_2_SMALL, 0)), 6),
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_2_SMALL, Integer.MIN_VALUE)), 6),
+                    Arguments.of(ObjectList.of(new I32Field(NUMBER_2_SMALL, Integer.MAX_VALUE)), 6),
+
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_1_SMALL, 0L)), 9),
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_1_SMALL, Long.MIN_VALUE)), 9),
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_1_SMALL, Long.MAX_VALUE)), 9),
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_2_SMALL, 0L)), 10),
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_2_SMALL, Long.MIN_VALUE)), 10),
+                    Arguments.of(ObjectList.of(new I64Field(NUMBER_2_SMALL, Long.MAX_VALUE)), 10),
+
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_1_SMALL, 0)), 2),
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_1_SMALL, VALUE_1_BIG)), 2),
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_1_SMALL, VALUE_2_SMALL)), 3),
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_2_SMALL, 0)), 3),
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_2_SMALL, VALUE_1_BIG)), 3),
+                    Arguments.of(ObjectList.of(new VarintField(NUMBER_2_SMALL, VALUE_2_SMALL)), 4),
+
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_1_SMALL, ba())), 2),
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_1_SMALL, ba(1))), 3),
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_1_SMALL, ba(1, 2, 3, 4, 5, 6))), 8),
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_2_SMALL, ba())), 3),
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_2_SMALL, ba(1))), 4),
+                    Arguments.of(ObjectList.of(new BytesField(NUMBER_2_SMALL, ba(1, 2, 3, 4, 5, 6))), 9),
+
+                    Arguments.of(ObjectList.of(
+                            new I32Field(NUMBER_1_SMALL, 123456),
+                            new I64Field(NUMBER_1_BIG, 87654321L),
+                            new VarintField(NUMBER_2_BIG, 0),
+                            new BytesField(NUMBER_2_BIG, ba(10, 11, 12))
+                    ), 23)
+            );
         }
     }
 }

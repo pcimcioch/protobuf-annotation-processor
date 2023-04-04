@@ -13,6 +13,7 @@ import com.github.pcimcioch.protobuf.model.message.MessageDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition;
 import com.github.pcimcioch.protobuf.model.message.ReservedDefinition.Range;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -55,15 +56,20 @@ public class ModelFactory {
                 buildFields(hierarchyResolver, message),
                 buildReserved(message.reserved()),
                 buildMessages(hierarchyResolver, clazz.messages()),
-                buildEnumerations(clazz.enumerations()),
-                message.supportUnknownFields()
+                buildEnumerations(clazz.enumerations())
         );
     }
 
     private List<FieldDefinition> buildFields(HierarchyResolver hierarchyResolver, Message message) {
-        return Arrays.stream(message.fields())
-                .map(field -> this.buildField(hierarchyResolver, field))
-                .toList();
+        List<FieldDefinition> fields = new ArrayList<>();
+        for (Field field : message.fields()) {
+            fields.add(buildField(hierarchyResolver, field));
+        }
+        if (message.supportUnknownFields()) {
+            fields.add(FieldDefinition.unknown());
+        }
+
+        return fields;
     }
 
     private FieldDefinition buildField(HierarchyResolver hierarchyResolver, Field field) {

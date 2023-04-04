@@ -906,7 +906,6 @@ public final class Size {
      * @param values values
      * @return size
      */
-    // TODO add tests
     public static int ofUnknownFieldsUnpacked(ObjectList<UnknownField> values) {
         int size = 0;
         for (UnknownField value : values) {
