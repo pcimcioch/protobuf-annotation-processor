@@ -2,7 +2,7 @@ package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.ObjectList;
 import com.github.pcimcioch.protobuf.io.ProtobufAssertion;
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.RepeatableOtherAddress;
 import com.protobuf.model.RepeatableOtherAddressProto;
 import com.protobuf.model.RepeatableOtherWork;
@@ -225,7 +225,7 @@ class RepeatableMessageSerializationTest extends SerializationTestBase {
         }
     }
 
-    private RepeatableOtherWork deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private RepeatableOtherWork deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(RepeatableOtherWork::parse, RepeatableOtherWork::parse, writerAction);
     }
 

@@ -7,7 +7,7 @@ import com.github.pcimcioch.protobuf.dto.FloatList;
 import com.github.pcimcioch.protobuf.dto.IntList;
 import com.github.pcimcioch.protobuf.dto.LongList;
 import com.github.pcimcioch.protobuf.dto.ObjectList;
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.google.protobuf.ByteString;
 import com.protobuf.model.RepeatableScalar;
 import com.protobuf.model.RepeatableScalarProto;
@@ -263,11 +263,12 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(11, 111)
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
-                    .writeBoolUnpacked(13, BooleanList.of(true, false))
+                    .writeBool(13, true)
+                    .writeBool(13, false)
                     .writeString(14, "test1")
                     .writeString(14, "test2")
-                    .writeBytes(15, ba(1, 2, 3))
-                    .writeBytes(15, ba(20, 30, 40))
+                    .writeBytes(15, b(1, 2, 3))
+                    .writeBytes(15, b(20, 30, 40))
             );
 
             // then
@@ -301,7 +302,9 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSint32(7, 70)
                     .writeSint32(7, 71)
                     .writeSfixed32(11, 110)
-                    .writeBoolUnpacked(13, BooleanList.of(false, true, true))
+                    .writeBool(13, false)
+                    .writeBool(13, true)
+                    .writeBool(13, true)
                     .writeString(14, "test")
                     .writeString(14, "test")
             );
@@ -339,18 +342,18 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeFloat(2, 21f)
                     .writeUint64(6, 61L)
                     .writeInt64(4, 41L)
-                    .writeBoolUnpacked(13, BooleanList.of(true))
+                    .writeBool(13, true)
                     .writeSint64(8, 80L)
-                    .writeBytes(15, ba(1, 2, 3))
+                    .writeBytes(15, b(1, 2, 3))
                     .writeSint64(8, 81L)
                     .writeFixed32(9, 91)
                     .writeSfixed64(12, 120L)
                     .writeFixed64(10, 101L)
                     .writeSfixed32(11, 111)
                     .writeSfixed64(12, 121L)
-                    .writeBoolUnpacked(13, BooleanList.of(false))
+                    .writeBool(13, false)
                     .writeString(14, "test2")
-                    .writeBytes(15, ba(20, 30, 40))
+                    .writeBytes(15, b(20, 30, 40))
             );
 
             // then
@@ -402,11 +405,12 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(31, 1111)
                     .writeSfixed64(32, 1120L)
                     .writeSfixed64(32, 1121L)
-                    .writeBoolUnpacked(33, BooleanList.of(true, false))
+                    .writeBool(33, true)
+                    .writeBool(33, false)
                     .writeString(34, "test10")
                     .writeString(34, "test20")
-                    .writeBytes(35, ba(5, 6, 7))
-                    .writeBytes(35, ba(25, 35, 45))
+                    .writeBytes(35, b(5, 6, 7))
+                    .writeBytes(35, b(25, 35, 45))
                     // record
                     .writeDouble(1, 10d)
                     .writeFloat(2, 20f)
@@ -422,7 +426,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, 120L)
                     .writeBool(13, true)
                     .writeString(14, "test1")
-                    .writeBytes(15, ba(1, 2, 3))
+                    .writeBytes(15, b(1, 2, 3))
                     // different wire type
                     .writeFloat(1, 11f)
                     .writeDouble(2, 21d)
@@ -489,11 +493,12 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed32(11, -111)
                     .writeSfixed64(12, -120L)
                     .writeSfixed64(12, -121L)
-                    .writeBoolUnpacked(13, BooleanList.of(true, false))
+                    .writeBool(13, true)
+                    .writeBool(13, false)
                     .writeString(14, "test1")
                     .writeString(14, "test2")
-                    .writeBytes(15, ba(1, 2, 3))
-                    .writeBytes(15, ba(20, 30, 40))
+                    .writeBytes(15, b(1, 2, 3))
+                    .writeBytes(15, b(20, 30, 40))
             );
 
             // then
@@ -522,42 +527,43 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
             RepeatableScalar record = deserialize(writer -> writer
                     .writeDouble(1, 10d)
                     .writeDouble(1, 11d)
-                    .writeDoublePacked(1, DoubleList.of(12d, 13d, 14d))
+                    .writeDoublePacked(1, 12d, 13d, 14d)
                     .writeFloat(2, 20f)
                     .writeFloat(2, 21f)
-                    .writeFloatPacked(2, FloatList.of(22f, 23f, 24f))
+                    .writeFloatPacked(2, 22f, 23f, 24f)
                     .writeInt32(3, 30)
                     .writeInt32(3, 31)
-                    .writeInt32Packed(3, IntList.of(32, 33, 34))
+                    .writeInt32Packed(3, 32, 33, 34)
                     .writeInt64(4, 40L)
                     .writeInt64(4, 41L)
-                    .writeInt64Packed(4, LongList.of(42L, 43L, 44L))
+                    .writeInt64Packed(4, 42L, 43L, 44L)
                     .writeUint32(5, 50)
                     .writeUint32(5, 51)
-                    .writeUint32Packed(5, IntList.of(52, 53, 54))
+                    .writeUint32Packed(5, 52, 53, 54)
                     .writeUint64(6, 60L)
                     .writeUint64(6, 61L)
-                    .writeUint64Packed(6, LongList.of(62L, 63L, 64L))
+                    .writeUint64Packed(6, 62L, 63L, 64L)
                     .writeSint32(7, 70)
                     .writeSint32(7, 71)
-                    .writeSint32Packed(7, IntList.of(72, 73, 74))
+                    .writeSint32Packed(7, 72, 73, 74)
                     .writeSint64(8, 80L)
                     .writeSint64(8, 81L)
-                    .writeSint64Packed(8, LongList.of(82L, 83L, 84L))
+                    .writeSint64Packed(8, 82L, 83L, 84L)
                     .writeFixed32(9, 90)
                     .writeFixed32(9, 91)
-                    .writeFixed32Packed(9, IntList.of(92, 93, 94))
+                    .writeFixed32Packed(9, 92, 93, 94)
                     .writeFixed64(10, 100L)
                     .writeFixed64(10, 101L)
-                    .writeFixed64Packed(10, LongList.of(102L, 103L, 104L))
+                    .writeFixed64Packed(10, 102L, 103L, 104L)
                     .writeSfixed32(11, 110)
                     .writeSfixed32(11, 111)
-                    .writeSfixed32Packed(11, IntList.of(112, 113, 114))
+                    .writeSfixed32Packed(11, 112, 113, 114)
                     .writeSfixed64(12, 120L)
                     .writeSfixed64(12, 121L)
-                    .writeSfixed64Packed(12, LongList.of(122L, 123L, 124L))
-                    .writeBoolUnpacked(13, BooleanList.of(true, false))
-                    .writeBoolPacked(13, BooleanList.of(false, true))
+                    .writeSfixed64Packed(12, 122L, 123L, 124L)
+                    .writeBool(13, true)
+                    .writeBool(13, false)
+                    .writeBoolPacked(13, false, true)
             );
 
             // then
@@ -827,7 +833,7 @@ class RepeatableScalarSerializationTest extends SerializationTestBase {
         }
     }
 
-    private RepeatableScalar deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private RepeatableScalar deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(RepeatableScalar::parse, RepeatableScalar::parse, writerAction);
     }
 

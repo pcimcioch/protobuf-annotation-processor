@@ -1,8 +1,7 @@
 package com.protobuf.serialization;
 
 import com.github.pcimcioch.protobuf.dto.EnumList;
-import com.github.pcimcioch.protobuf.dto.IntList;
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.RepeatableEnum;
 import com.protobuf.model.RepeatableEnumMessage;
 import com.protobuf.model.RepeatableEnumMessageProto;
@@ -74,7 +73,8 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         void fullObject() throws IOException {
             // given when
             RepeatableEnumMessage record = deserialize(writer -> writer
-                    .writeInt32Unpacked(1, IntList.of(2, 0))
+                    .writeInt32(1, 2)
+                    .writeInt32(1, 0)
             );
 
             // then
@@ -101,7 +101,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
             // given when
             RepeatableEnumMessage record = deserialize(writer -> writer
                     .writeInt32(1, 1)
-                    .writeInt32Packed(1, IntList.of(2, 0))
+                    .writeInt32Packed(1, 2, 0)
             );
 
             // then
@@ -222,7 +222,7 @@ class RepeatableEnumSerializationTest extends SerializationTestBase {
         }
     }
 
-    private RepeatableEnumMessage deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private RepeatableEnumMessage deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(RepeatableEnumMessage::parse, RepeatableEnumMessage::parse, writerAction);
     }
 

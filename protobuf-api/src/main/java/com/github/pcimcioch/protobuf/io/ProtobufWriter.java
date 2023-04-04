@@ -49,16 +49,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeDouble(int number, double value) throws IOException {
+    public void writeDouble(int number, double value) throws IOException {
         if (value != 0d) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeDouble(value);
         }
-
-        return this;
     }
 
     /**
@@ -66,16 +63,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeDoubleUnpacked(int number, DoubleList values) throws IOException {
+    public void writeDoubleUnpacked(int number, DoubleList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeDouble(values.getDouble(i));
         }
-
-        return this;
     }
 
     /**
@@ -83,12 +77,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeDoublePacked(int number, DoubleList values) throws IOException {
+    public void writeDoublePacked(int number, DoubleList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -96,8 +89,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeDouble(values.getDouble(i));
         }
-
-        return this;
     }
 
     /**
@@ -105,16 +96,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFloat(int number, float value) throws IOException {
+    public void writeFloat(int number, float value) throws IOException {
         if (value != 0f) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFloat(value);
         }
-
-        return this;
     }
 
     /**
@@ -122,16 +110,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFloatUnpacked(int number, FloatList values) throws IOException {
+    public void writeFloatUnpacked(int number, FloatList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFloat(values.getFloat(i));
         }
-
-        return this;
     }
 
     /**
@@ -139,12 +124,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFloatPacked(int number, FloatList values) throws IOException {
+    public void writeFloatPacked(int number, FloatList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -152,8 +136,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeFloat(values.getFloat(i));
         }
-
-        return this;
     }
 
     /**
@@ -161,16 +143,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt32(int number, int value) throws IOException {
+    public void writeInt32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
         }
-
-        return this;
     }
 
     /**
@@ -178,16 +157,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt32Unpacked(int number, IntList values) throws IOException {
+    public void writeInt32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -195,12 +171,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt32Packed(int number, IntList values) throws IOException {
+    public void writeInt32Packed(int number, IntList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return ;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -208,8 +183,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -217,16 +190,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt64(int number, long value) throws IOException {
+    public void writeInt64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
         }
-
-        return this;
     }
 
     /**
@@ -234,16 +204,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt64Unpacked(int number, LongList values) throws IOException {
+    public void writeInt64Unpacked(int number, LongList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -251,12 +218,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeInt64Packed(int number, LongList values) throws IOException {
+    public void writeInt64Packed(int number, LongList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -264,8 +230,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -273,16 +237,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint32(int number, int value) throws IOException {
+    public void writeUint32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(value);
         }
-
-        return this;
     }
 
     /**
@@ -290,16 +251,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint32Unpacked(int number, IntList values) throws IOException {
+    public void writeUint32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -307,12 +265,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint32Packed(int number, IntList values) throws IOException {
+    public void writeUint32Packed(int number, IntList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -320,8 +277,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -329,16 +284,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint64(int number, long value) throws IOException {
+    public void writeUint64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
         }
-
-        return this;
     }
 
     /**
@@ -346,16 +298,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint64Unpacked(int number, LongList values) throws IOException {
+    public void writeUint64Unpacked(int number, LongList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -363,12 +312,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUint64Packed(int number, LongList values) throws IOException {
+    public void writeUint64Packed(int number, LongList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -376,8 +324,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -385,16 +331,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint32(int number, int value) throws IOException {
+    public void writeSint32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag32(value);
         }
-
-        return this;
     }
 
     /**
@@ -402,16 +345,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint32Unpacked(int number, IntList values) throws IOException {
+    public void writeSint32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -419,12 +359,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint32Packed(int number, IntList values) throws IOException {
+    public void writeSint32Packed(int number, IntList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -432,8 +371,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeZigZag32(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -441,16 +378,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint64(int number, long value) throws IOException {
+    public void writeSint64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag64(value);
         }
-
-        return this;
     }
 
     /**
@@ -458,16 +392,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint64Unpacked(int number, LongList values) throws IOException {
+    public void writeSint64Unpacked(int number, LongList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeZigZag64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -475,12 +406,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSint64Packed(int number, LongList values) throws IOException {
+    public void writeSint64Packed(int number, LongList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -488,8 +418,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeZigZag64(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -497,16 +425,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed32(int number, int value) throws IOException {
+    public void writeFixed32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
         }
-
-        return this;
     }
 
     /**
@@ -514,16 +439,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed32Unpacked(int number, IntList values) throws IOException {
+    public void writeFixed32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -531,12 +453,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed32Packed(int number, IntList values) throws IOException {
+    public void writeFixed32Packed(int number, IntList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -544,8 +465,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeFixedInt(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -553,16 +472,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed64(int number, long value) throws IOException {
+    public void writeFixed64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
         }
-
-        return this;
     }
 
     /**
@@ -570,16 +486,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed64Unpacked(int number, LongList values) throws IOException {
+    public void writeFixed64Unpacked(int number, LongList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -587,12 +500,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeFixed64Packed(int number, LongList values) throws IOException {
+    public void writeFixed64Packed(int number, LongList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -600,8 +512,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeFixedLong(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -609,16 +519,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed32(int number, int value) throws IOException {
+    public void writeSfixed32(int number, int value) throws IOException {
         if (value != 0) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
         }
-
-        return this;
     }
 
     /**
@@ -626,16 +533,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed32Unpacked(int number, IntList values) throws IOException {
+    public void writeSfixed32Unpacked(int number, IntList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -643,12 +547,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed32Packed(int number, IntList values) throws IOException {
+    public void writeSfixed32Packed(int number, IntList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -656,8 +559,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeFixedInt(values.getInt(i));
         }
-
-        return this;
     }
 
     /**
@@ -665,16 +566,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed64(int number, long value) throws IOException {
+    public void writeSfixed64(int number, long value) throws IOException {
         if (value != 0L) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
         }
-
-        return this;
     }
 
     /**
@@ -682,16 +580,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed64Unpacked(int number, LongList values) throws IOException {
+    public void writeSfixed64Unpacked(int number, LongList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -699,12 +594,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeSfixed64Packed(int number, LongList values) throws IOException {
+    public void writeSfixed64Packed(int number, LongList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -712,8 +606,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeFixedLong(values.getLong(i));
         }
-
-        return this;
     }
 
     /**
@@ -721,16 +613,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeBool(int number, boolean value) throws IOException {
+    public void writeBool(int number, boolean value) throws IOException {
         if (value) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeBoolean(true);
         }
-
-        return this;
     }
 
     /**
@@ -738,16 +627,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeBoolUnpacked(int number, BooleanList values) throws IOException {
+    public void writeBoolUnpacked(int number, BooleanList values) throws IOException {
         for (int i = 0; i < values.size(); i++) {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeBoolean(values.getBoolean(i));
         }
-
-        return this;
     }
 
     /**
@@ -755,12 +641,11 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeBoolPacked(int number, BooleanList values) throws IOException {
+    public void writeBoolPacked(int number, BooleanList values) throws IOException {
         if (values.isEmpty()) {
-            return this;
+            return;
         }
 
         output.writeVarint32(LEN.tagFrom(number));
@@ -768,8 +653,6 @@ public class ProtobufWriter implements AutoCloseable {
         for (int i = 0; i < values.size(); i++) {
             output.writeBoolean(values.getBoolean(i));
         }
-
-        return this;
     }
 
     /**
@@ -777,16 +660,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeString(int number, String value) throws IOException {
+    public void writeString(int number, String value) throws IOException {
         if (!"".equals(value)) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeString(value);
         }
-
-        return this;
     }
 
     /**
@@ -794,16 +674,13 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeStringUnpacked(int number, ObjectList<String> values) throws IOException {
+    public void writeStringUnpacked(int number, ObjectList<String> values) throws IOException {
         for (String value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeString(value);
         }
-
-        return this;
     }
 
     /**
@@ -811,17 +688,14 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  value to write
-     * @return this
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    public ProtobufWriter writeBytes(int number, ByteArray value) throws IOException {
+    public void writeBytes(int number, ByteArray value) throws IOException {
         if (!value.isEmpty()) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
         }
-
-        return this;
     }
 
     /**
@@ -829,17 +703,14 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values values to write
-     * @return this
      * @throws IOException in case of any data write error
      */
     @SuppressWarnings("deprecation")
-    public ProtobufWriter writeBytesUnpacked(int number, ObjectList<ByteArray> values) throws IOException {
+    public void writeBytesUnpacked(int number, ObjectList<ByteArray> values) throws IOException {
         for (ByteArray value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
         }
-
-        return this;
     }
 
     /**
@@ -847,17 +718,14 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param value  message to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeMessage(int number, ProtobufMessage<?> value) throws IOException {
+    public void writeMessage(int number, ProtobufMessage<?> value) throws IOException {
         if (value != null) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());
             value.writeTo(this);
         }
-
-        return this;
     }
 
     /**
@@ -865,32 +733,26 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values messages to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeMessageUnpacked(int number, ObjectList<? extends ProtobufMessage<?>> values) throws IOException {
+    public void writeMessageUnpacked(int number, ObjectList<? extends ProtobufMessage<?>> values) throws IOException {
         for (ProtobufMessage<?> value : values) {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeVarint32(value.protobufSize());
             value.writeTo(this);
         }
-
-        return this;
     }
 
     /**
      * Write unknown fields
      *
      * @param values fields
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeUnknownFieldsUnpacked(ObjectList<UnknownField> values) throws IOException {
+    public void writeUnknownFieldsUnpacked(ObjectList<UnknownField> values) throws IOException {
         for (UnknownField value : values) {
             value.writeTo(output);
         }
-
-        return this;
     }
 
     /**
@@ -898,11 +760,10 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values enums to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeEnumUnpacked(int number, EnumList<?> values) throws IOException {
-        return writeInt32Unpacked(number, values.valuesList());
+    public void writeEnumUnpacked(int number, EnumList<?> values) throws IOException {
+        writeInt32Unpacked(number, values.valuesList());
     }
 
     /**
@@ -910,11 +771,10 @@ public class ProtobufWriter implements AutoCloseable {
      *
      * @param number field number
      * @param values enums to write
-     * @return this
      * @throws IOException in case of any data write error
      */
-    public ProtobufWriter writeEnumPacked(int number, EnumList<?> values) throws IOException {
-        return writeInt32Packed(number, values.valuesList());
+    public void writeEnumPacked(int number, EnumList<?> values) throws IOException {
+        writeInt32Packed(number, values.valuesList());
     }
 
     @Override

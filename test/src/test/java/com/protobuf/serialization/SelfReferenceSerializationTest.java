@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.SelfReference;
 import com.protobuf.model.SelfReferenceProto;
 import org.assertj.core.api.ThrowingConsumer;
@@ -126,7 +126,7 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
         @Test
         void fullObject() throws IOException {
             // given
-            SelfReference our = new SelfReference(10, new SelfReference(20 ,new SelfReference(30, null)));
+            SelfReference our = new SelfReference(10, new SelfReference(20, new SelfReference(30, null)));
             SelfReferenceProto proto = SelfReferenceProto.newBuilder()
                     .setValue(10)
                     .setNext(SelfReferenceProto.newBuilder()
@@ -155,7 +155,7 @@ class SelfReferenceSerializationTest extends SerializationTestBase {
         }
     }
 
-    private SelfReference deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private SelfReference deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(SelfReference::parse, SelfReference::parse, writerAction);
     }
 

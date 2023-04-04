@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.OtherMessageAddress;
 import com.protobuf.model.OtherMessageAddressProto;
 import com.protobuf.model.OtherMessageRecord;
@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.protobuf.ByteUtils.ba;
-import static com.protobuf.ByteUtils.concatenate;
 import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
+import static com.protobuf.ByteUtils.b;
+import static com.protobuf.ByteUtils.concatenate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageSerializationTest extends SerializationTestBase {
@@ -194,7 +194,7 @@ class MessageSerializationTest extends SerializationTestBase {
         void unknownFields() throws IOException {
             // given when
             OtherMessageRecord record = deserialize(writer -> writer
-                    .writeBytes(10, ba(10, 20, 30, 40))
+                    .writeBytes(10, b(10, 20, 30, 40))
                     .writeString(1, "Tomas")
                     .writeInt32(2, 40)
                     .writeBytes(3, serialize(address -> address
@@ -517,7 +517,7 @@ class MessageSerializationTest extends SerializationTestBase {
         }
     }
 
-    private OtherMessageRecord deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private OtherMessageRecord deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(OtherMessageRecord::parse, OtherMessageRecord::parse, writerAction);
     }
 

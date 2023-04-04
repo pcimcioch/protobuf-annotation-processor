@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.FullRecord;
 import com.protobuf.model.FullRecordProto;
 import org.assertj.core.api.ThrowingConsumer;
@@ -11,14 +11,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static com.protobuf.ByteUtils.b;
 import static com.protobuf.ByteUtils.ba;
 import static com.protobuf.ByteUtils.bs;
-import static com.github.pcimcioch.protobuf.io.ProtobufAssertion.assertProto;
 import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -168,7 +167,7 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, 120L)
                     .writeBool(13, true)
                     .writeString(14, "test")
-                    .writeBytes(15, ba(1, 20, 3))
+                    .writeBytes(15, b(1, 20, 3))
             );
 
             // then
@@ -227,7 +226,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         void fullObjectReverseOrder() throws IOException {
             // given when
             FullRecord record = deserialize(writer -> writer
-                    .writeBytes(15, ba(1, 20, 3))
+                    .writeBytes(15, b(1, 20, 3))
                     .writeString(14, "test")
                     .writeBool(13, true)
                     .writeSfixed64(12, 120L)
@@ -283,7 +282,7 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(32, 1200L)
                     .writeBool(33, false)
                     .writeString(34, "foobar")
-                    .writeBytes(35, ba(10, 20, 30, 40, 50))
+                    .writeBytes(35, b(10, 20, 30, 40, 50))
                     // record
                     .writeDouble(1, 10d)
                     .writeFloat(2, 20f)
@@ -299,7 +298,7 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, 120L)
                     .writeBool(13, true)
                     .writeString(14, "test")
-                    .writeBytes(15, ba(1, 20, 3))
+                    .writeBytes(15, b(1, 20, 3))
                     // same number different type
                     .writeFloat(1, 11f)
                     .writeDouble(2, 21d)
@@ -358,7 +357,7 @@ class ScalarSerializationTest extends SerializationTestBase {
                     .writeSfixed64(12, -120L)
                     .writeBool(13, true)
                     .writeString(14, "test")
-                    .writeBytes(15, ba(1, 20, 3))
+                    .writeBytes(15, b(1, 20, 3))
             );
 
             // then
@@ -677,7 +676,7 @@ class ScalarSerializationTest extends SerializationTestBase {
         }
     }
 
-    private FullRecord deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private FullRecord deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(FullRecord::parse, FullRecord::parse, writerAction);
     }
 

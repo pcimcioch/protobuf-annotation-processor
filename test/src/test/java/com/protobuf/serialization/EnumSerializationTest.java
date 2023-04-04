@@ -1,6 +1,6 @@
 package com.protobuf.serialization;
 
-import com.github.pcimcioch.protobuf.io.ProtobufWriter;
+import com.github.pcimcioch.protobuf.io.ProtobufEncoder;
 import com.protobuf.model.SimpleEnum;
 import com.protobuf.model.SimpleEnumMessage;
 import com.protobuf.model.SimpleEnumMessageProto;
@@ -187,7 +187,7 @@ class EnumSerializationTest extends SerializationTestBase {
         }
     }
 
-    private SimpleEnumMessage deserialize(ThrowingConsumer<ProtobufWriter> writerAction) throws IOException {
+    private SimpleEnumMessage deserialize(ThrowingConsumer<ProtobufEncoder> writerAction) throws IOException {
         return deserialize(SimpleEnumMessage::parse, SimpleEnumMessage::parse, writerAction);
     }
 
