@@ -26,6 +26,10 @@ public final class ByteUtils {
         return ByteString.copyFrom(b(bytes));
     }
 
+    public static ByteString bs(ByteArray bytes) {
+        return ByteString.copyFrom(bytes.toByteArray());
+    }
+
     public static byte[] concatenate(byte[] first, byte[] second) {
         byte[] concatenated = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, concatenated, first.length, second.length);

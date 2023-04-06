@@ -1,4 +1,5 @@
 # Protobuf Annotation Processor
+
 This library was created to generate java data classes for protobuf binary format using java annotation processor
 mechanism.
 Currently, the library is in the early stage of development and support only most basic functionalities.
@@ -20,9 +21,11 @@ only serialization logic. By definition, they are immutable and provide good equ
 implementations.
 
 # Quick Start
+
 You can define your protobuf schema using only java annotations
 
 ```java
+
 @Message(
         name = "SimpleRecord",
         fields = {
@@ -66,6 +69,7 @@ class Main {
 There is also a plan to support `*.proto` files as a source of protobuf schema, but **it is not implemented yet**
 
 # Maven Repository
+
 Library is available in Central Maven Repository
 
 ```kotlin
@@ -76,30 +80,33 @@ annotationProcessor("com.github.pcimcioch:protobuf:1.0.0")
 Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
 
 ```xml
-<dependencies>
-  <dependency>
-    <groupId>com.github.pcimcioch</groupId>
-    <artifactId>protobuf-api</artifactId>
-    <version>1.0.0</version>
-  </dependency>
 
-  <dependency>
-    <groupId>com.github.pcimcioch</groupId>
-    <artifactId>protobuf</artifactId>
-    <version>1.0.0</version>
-    <optional>true</optional>
-  </dependency>
+<dependencies>
+    <dependency>
+        <groupId>com.github.pcimcioch</groupId>
+        <artifactId>protobuf-api</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.pcimcioch</groupId>
+        <artifactId>protobuf</artifactId>
+        <version>1.0.0</version>
+        <optional>true</optional>
+    </dependency>
 </dependencies>
 ```
 
 Note that `protobuf` is `optional` dependency, not need to propagate it any further
 
 # Examples
+
 For full documentation just see [examples in the test module](test/src/main/java/com/protobuf/model)
 
 # Similar Solutions
 
 ## Official Protoc Compiler
+
 The best solution in terms of the support and feature-completeness is official
 [protobuf library](https://developers.google.com/protocol-buffers/docs/javatutorial) from the Google.
 
@@ -112,6 +119,7 @@ To easily incorporate it in your build pipeline you can use some 3rd party plugi
 [protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin)
 
 ## Protostuff
+
 [Protostuff](https://protostuff.github.io/docs/protostuff-runtime/) is an annotation-based solution to turn existing
 POJOs
 into the protobuf serializers / deserializers.
@@ -124,6 +132,7 @@ to annotate, it does not create whole classes for you (which may be advantage or
 need)
 
 # Features
+
 For general Protobuf documentation
 see [official documentation](https://developers.google.com/protocol-buffers/docs/proto3)
 This library will support only `proto3` specification
@@ -143,7 +152,7 @@ Current feature support:
 | Reserved Fields             | <https://developers.google.com/protocol-buffers/docs/proto3#reserved>               | ✔️ Supported                                         |
 | Using Other Message Types   | <https://developers.google.com/protocol-buffers/docs/proto3#other>                  | ✔️ Supported                                         |
 | Nested Types                | <https://developers.google.com/protocol-buffers/docs/proto3#nested>                 | ✔️ Supported                                         |
-| Unknown Fields              | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | ⏳ Not yet supported                                  |
+| Unknown Fields              | <https://developers.google.com/protocol-buffers/docs/proto3#unknowns>               | ✔️ Supported, disabled by default                    |
 | Maps                        | <https://developers.google.com/protocol-buffers/docs/proto3#maps>                   | ⏳ Not yet supported                                  |
 | Option java_package         | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported                                         |
 | Option java_multiple_files  | <https://developers.google.com/protocol-buffers/docs/proto3#options>                | ✔️ Supported, `false` by default                     |
@@ -156,8 +165,11 @@ Current feature support:
 | JSON Mapping                | <https://developers.google.com/protocol-buffers/docs/proto3#json>                   | ⭕ Not planned to be supported                        |
 
 ## Performance
-There are few [JMH performance tests](test/src/jmh/java/com/protobuf/performance/ReadScalarTest.java) that compare this
-solution with protoc. Generally it seems that this solution is faster when reading, comparable when writing and worse when writing heavily nested objects.
 
-As always in such cases, do not relay on this benchmark. If you want to know which solution would be best for your application, 
+There are few [JMH performance tests](test/src/jmh/java/com/protobuf/performance/ReadScalarTest.java) that compare this
+solution with protoc. Generally it seems that this solution is faster when reading, comparable when writing and worse
+when writing heavily nested objects.
+
+As always in such cases, do not relay on this benchmark. If you want to know which solution would be best for your
+application,
 prepare your own benchmark covering your exact use case and exact runtime environment.

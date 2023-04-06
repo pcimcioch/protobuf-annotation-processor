@@ -27,11 +27,7 @@ class EncodingFactory {
 
         for (FieldDefinition field : message.fields()) {
             body.appendExceptFirst("\n");
-            body.append("writer.$method($number, $name);",
-                    param("method", encodingMethod(field)),
-                    param("number", field.number()),
-                    param("name", field.javaFieldName())
-            );
+            body.append(encodingMethod(field));
         }
 
         record.add(method("writeTo")
@@ -43,31 +39,35 @@ class EncodingFactory {
         );
     }
 
-    private String encodingMethod(FieldDefinition field) {
+    private CodeBody encodingMethod(FieldDefinition field) {
         String suffix = field.rules().repeated()
                 ? field.rules().packed() ? "Packed" : "Unpacked"
                 : "";
         String method = switch (field.protoKind()) {
-            case DOUBLE -> "writeDouble";
-            case FLOAT -> "writeFloat";
-            case INT32 -> "writeInt32";
-            case INT64 -> "writeInt64";
-            case UINT32 -> "writeUint32";
-            case UINT64 -> "writeUint64";
-            case SINT32 -> "writeSint32";
-            case SINT64 -> "writeSint64";
-            case FIXED32 -> "writeFixed32";
-            case FIXED64 -> "writeFixed64";
-            case SFIXED32 -> "writeSfixed32";
-            case SFIXED64 -> "writeSfixed64";
-            case BOOL -> "writeBool";
-            case STRING -> "writeString";
-            case MESSAGE -> "writeMessage";
-            case UNKNOWN -> "writeUnknownFieldsUnpacked";
-            case BYTES -> "writeBytes";
-            case ENUM -> field.rules().repeated() ? "writeEnum" : "writeInt32";
+            case DOUBLE -> "writer.writeDouble$suffix($number, $name);";
+            case FLOAT -> "writer.writeFloat$suffix($number, $name);";
+            case INT32 -> "writer.writeInt32$suffix($number, $name);";
+            case INT64 -> "writer.writeInt64$suffix($number, $name);";
+            case UINT32 -> "writer.writeUint32$suffix($number, $name);";
+            case UINT64 -> "writer.writeUint64$suffix($number, $name);";
+            case SINT32 -> "writer.writeSint32$suffix($number, $name);";
+            case SINT64 -> "writer.writeSint64$suffix($number, $name);";
+            case FIXED32 -> "writer.writeFixed32$suffix($number, $name);";
+            case FIXED64 -> "writer.writeFixed64$suffix($number, $name);";
+            case SFIXED32 -> "writer.writeSfixed32$suffix($number, $name);";
+            case SFIXED64 -> "writer.writeSfixed64$suffix($number, $name);";
+            case BOOL -> "writer.writeBool$suffix($number, $name);";
+            case STRING -> "writer.writeString$suffix($number, $name);";
+            case MESSAGE -> "writer.writeMessage$suffix($number, $name);";
+            case UNKNOWN -> "writer.writeUnknownFields$suffix($name);";
+            case BYTES -> "writer.writeBytes$suffix($number, $name);";
+            case ENUM -> field.rules().repeated() ? "writer.writeEnum$suffix($number, $name);" : "writer.writeInt32$suffix($number, $name);";
         };
 
-        return method + suffix;
+        return body(method,
+                param("suffix", suffix),
+                param("number", field.number()),
+                param("name", field.javaFieldName())
+        );
     }
 }

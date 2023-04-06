@@ -116,3 +116,8 @@ message RepeatablePackedProto {
   repeated bool bools = 13 [packed = true];
   repeated RepeatableEnumProto orders = 14 [packed = true];
 }
+
+// ******************** Unknown Fields ********************
+message UnknownFieldsRecordProto {
+  int32 amount = 1;
+}
