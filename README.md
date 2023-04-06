@@ -73,8 +73,8 @@ There is also a plan to support `*.proto` files as a source of protobuf schema, 
 Library is available in Central Maven Repository
 
 ```kotlin
-implementation("com.github.pcimcioch:protobuf-api:1.0.0")
-annotationProcessor("com.github.pcimcioch:protobuf:1.0.0")
+implementation("com.github.pcimcioch:protobuf-api:1.1.0")
+annotationProcessor("com.github.pcimcioch:protobuf:1.1.0")
 ```
 
 Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
@@ -85,13 +85,13 @@ Note that `protobuf-api` is `implementation` dependency, not `compileOnly`.
     <dependency>
         <groupId>com.github.pcimcioch</groupId>
         <artifactId>protobuf-api</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </dependency>
 
     <dependency>
         <groupId>com.github.pcimcioch</groupId>
         <artifactId>protobuf</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <optional>true</optional>
     </dependency>
 </dependencies>
