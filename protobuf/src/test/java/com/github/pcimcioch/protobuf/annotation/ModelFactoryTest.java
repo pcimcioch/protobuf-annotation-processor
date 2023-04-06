@@ -89,6 +89,29 @@ class ModelFactoryTest {
 
             assertThat(definitions).isEqualTo(expected);
         }
+
+        @Test
+        void unknownFields() {
+            // given
+            ProtoFiles files = files(
+                    file(
+                            "com.example",
+                            message("MyMessage",
+                                    NO_RESERVED,
+                                    true,
+                                    field("int32", "field", 1))));
+
+            // when
+            ProtoDefinitions definitions = testee.buildProtoDefinitions(files);
+
+            // then
+            ProtoDefinitions expected = definitions(
+                    messageDef("com.example.MyMessage",
+                            scalarField("int32", "field", 1),
+                            FieldDefinition.unknown()));
+
+            assertThat(definitions).isEqualTo(expected);
+        }
     }
 
     @Nested
@@ -805,7 +828,6 @@ class ModelFactoryTest {
         return messageDef(name, NO_RESERVED_DEF, elements);
     }
 
-    // TODO add tests for unknown fields
     private static MessageDefinition messageDef(String name, ReservedDefinition reserved, Object... elements) {
         return new MessageDefinition(
                 canonicalName(name),

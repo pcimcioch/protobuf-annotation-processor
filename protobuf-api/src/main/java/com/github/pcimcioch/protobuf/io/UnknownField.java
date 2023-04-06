@@ -14,17 +14,30 @@ import static com.github.pcimcioch.protobuf.io.WireType.VARINT;
 /**
  * Unknown field
  */
-public abstract sealed class UnknownField {
-    final int number;
+public sealed interface UnknownField {
 
-    UnknownField(int number) {
-        this.number = number;
-    }
+    /**
+     * Write to the output
+     *
+     * @param output output
+     * @throws IOException exception
+     */
+    void writeTo(ProtobufOutput output) throws IOException;
 
-    abstract void writeTo(ProtobufOutput output) throws IOException;
+    /**
+     * Size in protobuf format
+     *
+     * @return size
+     */
+    int protobufSize();
 
-    abstract int protobufSize();
-
+    /**
+     * Skips given tag
+     *
+     * @param tag   tag to skip
+     * @param input input
+     * @throws IOException in case of any read errors
+     */
     static void skip(int tag, ProtobufInput input) throws IOException {
         try {
             switch (WireType.fromTag(tag)) {
@@ -40,6 +53,14 @@ public abstract sealed class UnknownField {
         }
     }
 
+    /**
+     * Reads unknown field
+     *
+     * @param tag   tag
+     * @param input input
+     * @return unknown type field
+     * @throws IOException in case of any read errors
+     */
     @SuppressWarnings("deprecation")
     static UnknownField read(int tag, ProtobufInput input) throws IOException {
         try {
@@ -58,153 +79,81 @@ public abstract sealed class UnknownField {
 
     /**
      * Unknown I32 field
+     *
+     * @param number number
+     * @param value  value
      */
-    public static final class I32Field extends UnknownField {
-        private final int value;
-
-        /**
-         * Constructor
-         *
-         * @param number field number
-         * @param value  value
-         */
-        public I32Field(int number, int value) {
-            super(number);
-            this.value = value;
-        }
-
-        /**
-         * Returns value
-         *
-         * @return value
-         */
-        public int value() {
-            return value;
-        }
+    record I32Field(int number, int value) implements UnknownField {
 
         @Override
-        void writeTo(ProtobufOutput output) throws IOException {
+        public void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(I32.tagFrom(number));
             output.writeFixedInt(value);
         }
 
         @Override
-        int protobufSize() {
+        public int protobufSize() {
             return Size.tagSize(number) + 4;
         }
     }
 
     /**
      * Unknown I64 field
+     *
+     * @param number number
+     * @param value  value
      */
-    public static final class I64Field extends UnknownField {
-        private final long value;
-
-        /**
-         * Constructor
-         *
-         * @param number field number
-         * @param value  value
-         */
-        public I64Field(int number, long value) {
-            super(number);
-            this.value = value;
-        }
-
-        /**
-         * Returns value
-         *
-         * @return value
-         */
-        public long value() {
-            return value;
-        }
+    record I64Field(int number, long value) implements UnknownField {
 
         @Override
-        void writeTo(ProtobufOutput output) throws IOException {
+        public void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(I64.tagFrom(number));
             output.writeFixedLong(value);
         }
 
         @Override
-        int protobufSize() {
+        public int protobufSize() {
             return Size.tagSize(number) + 8;
         }
     }
 
     /**
      * Unknown Varint field
+     *
+     * @param number number
+     * @param value  value
      */
-    public static final class VarintField extends UnknownField {
-        private final long value;
-
-        /**
-         * Constructor
-         *
-         * @param number field number
-         * @param value  value
-         */
-        public VarintField(int number, long value) {
-            super(number);
-            this.value = value;
-        }
-
-        /**
-         * Returns value
-         *
-         * @return value
-         */
-        public long value() {
-            return value;
-        }
+    record VarintField(int number, long value) implements UnknownField {
 
         @Override
-        void writeTo(ProtobufOutput output) throws IOException {
+        public void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(VARINT.tagFrom(number));
             output.writeVarint64(value);
         }
 
         @Override
-        int protobufSize() {
+        public int protobufSize() {
             return Size.tagSize(number) + Size.varint64Size(value);
         }
     }
 
     /**
      * Unknown bytes field
+     *
+     * @param number number
+     * @param value  value
      */
-    public static final class BytesField extends UnknownField {
-        private final ByteArray value;
-
-        /**
-         * Constructor
-         *
-         * @param number field number
-         * @param value  value
-         */
-        public BytesField(int number, ByteArray value) {
-            super(number);
-            this.value = value;
-        }
-
-        /**
-         * Returns value
-         *
-         * @return value
-         */
-        public ByteArray value() {
-            return value;
-        }
+    record BytesField(int number, ByteArray value) implements UnknownField {
 
         @Override
         @SuppressWarnings("deprecation")
-        void writeTo(ProtobufOutput output) throws IOException {
+        public void writeTo(ProtobufOutput output) throws IOException {
             output.writeVarint32(LEN.tagFrom(number));
             output.writeBytes(value.internalData());
         }
 
         @Override
-        int protobufSize() {
+        public int protobufSize() {
             return Size.tagSize(number) + Size.varint32Size(value.length()) + value.length();
         }
     }
